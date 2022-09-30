@@ -1,0 +1,111 @@
+.transaction-detail {
+    .btn-box {
+        padding: 0 57px 25px;
+    }
+    .card-border {
+                border-bottom: 1px solid rgba(228, 231, 232, 0.6);
+    }
+    .title {
+        line-height: 62px;
+        background: #f8fcff;
+        font-size: 15px;
+        font-weight: bold;
+      }
+    .link {
+        color: #037dd6;
+        a {
+            color: #037dd6;
+        }
+    }
+
+    .green {
+        color: rgba(40, 167, 69, 1);
+    }
+    &-tit {
+        .icon-box {
+            &-br {
+                width: 35px;
+                height: 35px;
+                i {
+                    color: #3AAE55;
+                }
+                &::after {
+                    border-radius: 50%;
+                    border-color: #3AAE55;
+                }
+            }
+        }
+       .text-tit {
+        line-height: 20px;
+        font-size: 15px;
+       }
+
+        i {
+            font-size: 20px;
+            color: #737272;
+        }
+    }
+    .tran-form {
+        border: 1PX solid rgba($color: #E4E7E8, $alpha: .7);
+        border-radius: 10px;
+        margin: 25px 15px 0;
+    }
+    .form-box {
+
+        .card {
+            padding: 9px 0;
+            &.smallpad {
+                padding-top: 11px;
+                line-height: 16px;
+                padding-bottom: 0;
+                margin-bottom: 10px;
+            }
+            &.smallpad2 {
+                padding-bottom: 11px;
+                padding-top: 0;
+            }
+            &.card-sml {
+                line-height: 16px;
+                margin-bottom: 6px;
+                padding: 0;
+            }
+            &.card-sml.pt-10 {
+                padding-top: 10px;
+            }
+            &.card-sml.pb-10 {
+                padding-bottom: 10px;
+            }
+            .label,.value {
+                line-height: 16px;
+                font-size: 12px;
+            }
+            .label {
+                color: #848484;
+            }
+            .value.status1 span {
+                display: inline-block;
+                line-height: 14px;
+                color: rgba(58, 174, 85, 1);
+                background: #E5FFEB;
+                padding: 0 5px;
+                border-radius: 7px;
+            }
+            .value.status0 span {
+                display: inline-block;
+                line-height: 14px;
+                color: rgb(214, 25, 25);
+                background: #ffe8e5;
+                padding: 0 5px;
+                border-radius: 7px;
+            }
+        }
+
+    }
+    .btn-group {
+        padding-left: 44px;
+        padding-right: 44px;
+        & button:nth-of-type(1){
+            margin-right: 40px;
+        }
+    }
+}

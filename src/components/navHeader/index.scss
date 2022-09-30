@@ -1,0 +1,315 @@
+
+.pay-success {
+  text-align: center;
+  font-size: 20px;
+  color: rgba(5, 126, 214, 1);
+}
+.code,.nav-icon {
+  width: 56.69px;
+}
+.circle-loading {
+  width: 100px;
+  height: 100px;
+}
+
+.circle-success-text {
+  font-size: 16px;
+  color: rgba(5, 126, 214, 1);
+}
+
+.to-exchanges {
+  a {
+    color: rgba(5, 126, 214, 1);
+    font-size: 12px;
+    display: inline-block;
+    text-decoration: underline;
+  }
+
+  height: 20px;
+}
+
+.nav-header {
+  height: 48PX;
+  background: #fff;
+  box-sizing: border-box;
+  box-shadow: 0 1px 2px rgb(135 134 134 / 10%);
+
+  &.paddingTop {
+    padding-top: 12px;
+  }
+
+  .nav-header-con {
+    max-width:750px;
+    width: 100%;
+    width: -webkit-fill-available;
+  }
+
+  .active {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(5, 126, 214, 1);
+    margin-right: 4px;
+  }
+
+  .title {
+
+    &-big {
+      font-size: 16px;
+      line-height: 17px;
+      // font-weight: bold;
+    }
+
+    &-small {
+      color: rgba(132, 140, 150, 1);
+      font-size: 9px;
+    }
+  }
+
+  .nav-icon {
+    padding: 0 15px;
+    .icon-box {
+      width: 15px;
+      height: 20px;
+
+      i {
+        color: rgba(3, 125, 214, 1);
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.slider-con {
+
+  .slider-bg {
+    .company {
+      display: flex;
+
+      .company-logo {
+        width: 24px;
+        height: 24px;
+        line-height: 16px;
+        border-radius: 50%;
+        line-height: 16px;
+
+        .compy_img {
+          object-fit: contain;
+          width: 20px;
+        }
+      }
+
+      .company-name {
+        font-size: 12px;
+        color: #000;
+        font-weight: 700;
+        line-height: 24px;
+        margin-left: 2px;
+      }
+    }
+
+    padding:32px 0 14px 16px;
+    background: rgba(241, 243, 244, 1);
+
+    .slider-top {
+      font-size: 12px;
+      line-height: 16px;
+
+      .circle-icon {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #ccc;
+        margin-right: 10px;
+      }
+    }
+
+    .user-img {
+      margin: 16px 0 7px;
+      &-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid rgba(3, 125, 214, 1);
+        background: rgba(234, 234, 234, 1);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .account {
+      height: 18px;
+      font-size: 20px;
+      margin-top: 7px;
+    }
+
+    .account-amount {
+      font-size: 16px;
+      line-height: 15px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .account-address {
+      line-height: 15px;
+      font-size: 10px;
+      color: rgba(121, 121, 121, 1);
+      letter-spacing: -0.7px;
+    }
+
+    .account-import-btn {
+      .import-btn {
+        border-radius: 25px;
+        line-height: 20px;
+        border: 1px solid rgba(149, 156, 165, 1);
+        width: 80px;
+        font-size: 9px;
+        margin-top: 10px;
+        color: rgba(121, 121, 121, 1);
+      }
+    }
+  }
+
+  .slider-bottom {
+    .send-add-groups {
+      padding: 15px;
+
+      .van-button {
+        width: 110px;
+      }
+    }
+
+    .setting-list {
+      margin-top: 20px;
+      .place-icon {
+        display: inline-block;
+        width: 15px;
+        margin-right: 14px;
+      }
+
+      .setting-btn {
+        padding: 0 12px 0 15px;
+        font-size: 15px;
+        line-height: 39px;
+        color: rgba(133, 141, 150, 1);
+        transition: ease .3s;
+        &:hover {
+          background: #E9F5FE;
+          color: #037CD6;
+          padding-left: 20px;
+          i {
+            color: #037CD6;
+          }
+        }
+        i {
+          display: inline-block;
+          font-size: 17px;
+          width: 27px;
+        }
+
+        &.active {
+          background: #E9F5FE;
+          border-top-right-radius: 19px;
+          border-bottom-right-radius: 19px;
+          color: #037CD6;
+        }
+        span {
+          word-break: keep-all;
+        }
+      }
+
+      .setting-btn-img-a {
+        width: 15px;
+        margin-right: 15px;
+      }
+
+      .setting-btn-img-b {
+        width: 17px;
+        margin-right: 15px;
+      }
+
+      .title-active {
+        color: #037CD6;
+      }
+
+      .setting-btn-img-i {
+        // margin-left: 33px;
+        float: right;
+      }
+
+      .setting-btn-img-i-active {
+        // margin-left: 13px;
+        float: right;
+        color: #037CD6;
+      }
+
+      .send {
+        line-height: 25px;
+        margin-left: 45px;
+        font-size: 12px;
+      }
+
+      .sends {
+        color: #858D96;
+      }
+
+      .sends-active {
+        color: #037CD6 !important;
+      }
+    }
+  }
+
+}
+
+.sheet-bar {
+  height: 26px;
+
+  &-con {
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba($color: #000, $alpha: 0.3);
+  }
+}
+
+
+.toggle-network {
+  &-title {
+    font-size: 15px;
+    line-height: 21px;
+    padding: 14px 0;
+  }
+}
+
+.other-list {
+  &-tit {
+    padding: 0 18px;
+    font-size: 10px;
+    line-height: 40px;
+  }
+
+  &-box {
+    max-height: 200px;
+    overflow-y: scroll;
+  }
+}
+
+.right-img {
+  width: 18px;
+  height: 18px;
+  margin-top: -2px;
+}
+
+@media screen and (max-width:750px) {
+  .nav-header-slider-box {
+    width: 75%;
+  }
+}
+@media screen and (min-width:750px) {
+  .nav-header-slider-box {
+    width: 400px;
+  }
+}

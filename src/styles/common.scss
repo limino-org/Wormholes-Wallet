@@ -1,0 +1,330 @@
+html,
+body {
+  min-height: 100vh;
+  -webkit-overflow-scrolling: touch;
+  -webkit-touch-callout: none;
+  user-select: none;
+  background-color: #f7f7f7;
+}
+
+.loading-box {
+  height: 300px;
+}
+* {
+  box-sizing: border-box;
+  font-size: 12px;
+}
+
+.container {
+  max-width: 750px;
+  margin: 0 auto;
+  position: relative;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.text {
+  &-center {
+    text-align: center;
+  }
+
+  &-left {
+    text-align: left;
+  }
+
+  &-right {
+    text-align: right;
+  }
+
+  &-ellipsis {
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  // Text is forced to wrap
+  &-wrap {
+    word-wrap: break-word;
+  }
+
+  // Enforce no line breaks
+  &-nowrap {
+    word-wrap: keep-all;
+    white-space: nowrap;
+  }
+
+  // Financial font
+  &-oswald {
+    font-family: Oswald;
+  }
+
+  // capital
+  &-up {
+    text-transform: uppercase;
+  }
+}
+
+*::-webkit-scrollbar {
+  width: 0 !important;
+  display: none;
+}
+
+.clickActive:hover {
+  cursor: pointer;
+}
+
+// click stream
+.clickActive:active {
+  background: rgba($color: #cccccc, $alpha: .2);
+}
+
+.van-toast__text {
+  word-break: break-word;
+}
+
+// hovering
+.hover {
+  cursor: pointer;
+}
+
+.cancel,
+.menu,
+.actions-btn,
+.account-icon,
+.information,
+.transfer,
+.account-list-component-card,
+.use-max,
+.nav-header-con,
+.listType,
+.import-btn,
+.account,
+.copy-info,
+.actions-list-card {
+  cursor: pointer;
+}
+
+.van-button--plain:hover,.van-button--default:hover {
+  border: 1px solid #037CD6;
+  color: #037CD6;
+}
+.van-dialog {
+  overflow: scroll;
+  top: 50%;
+  .van-dialog__content {
+    border-radius: 10px;
+    overflow-x: hidden;
+  }
+  &.van-popup--center {
+    padding-bottom: 1PX;
+  }
+}
+.van-button--danger {
+  // background-color: #D73A49;
+}
+.van-button--primary:hover {
+  background: #1198ec;
+}
+.van-dialog__footer {
+  button {
+    color: #000;
+  }
+  button:hover {
+    border: none;
+  }
+}
+.van-button--plain.van-button--primary:hover {
+  color: #ffff;
+}
+.van-button:before {
+  // transform: inherit;
+}
+.minus-pledge-dialog {
+  overflow: inherit;
+  .van-dialog__content {
+    overflow: inherit;
+  }
+  .sheet-header {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+}
+.van-icon-cross {
+  cursor: pointer;
+  transition: ease .3s;
+
+  &:hover {
+    color: #333 !important;
+  }
+}
+
+.van-cell .van-field__body {
+  height: 44px;
+  border: 1px solid #B3B3B3;
+  border-radius: 5px;
+  padding: 0 10px;
+  transition: ease 0.3s;
+  font-size: 12px;
+  &:hover {
+    border-color: #037CD6;
+  }
+}
+.van-field__error-message {
+  line-height: 14px;
+}
+
+.account-action-sheet,.accept-popup-top,.receive-sheet-popup {
+  max-width: 750px;
+  left: auto;
+}
+
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease-in;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+
+.back {
+  color: #037CD6;
+  font-size: 12px;
+}
+
+.el-popper {
+  z-index: 10 !important;
+}
+
+.van-icon-question {
+  cursor: pointer;
+  margin-left: 5px !important;
+  color: #848484;
+  font-size: 12px;
+}
+
+
+.btn-groups {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 25px;
+}
+
+
+.nft-tag-popover {
+  .van-popover__content {
+    background: #3AAE55;
+    border-radius: 5px;
+    padding: 2px 5px;
+    color: #fff;
+    font-size: 12px;
+  }
+  .van-popover__arrow {
+    color: #3AAE55;
+  }
+}
+
+
+.tooltip2 {
+  z-index: 1000;
+}
+
+
+.appendto1,.appendto2 {
+  &.van-popover {
+    max-width: 343px;
+  }
+  border-radius: 4px;
+  .van-popover__arrow {
+    color: #037CD6;
+  }
+  .van-popover__content {
+    background: #037CD6;
+    color: #fff;
+    padding: 10px;
+    line-height: 16px;
+  }
+  z-index: 1 !important;
+}
+
+.dialog-box-service {
+  border-radius: 0;
+}
+
+.popover-btn-tip {
+  .van-popover__arrow {
+    color: #9A9A9A;
+  }
+  .van-popover__content {
+    background: #9A9A9A;
+    max-width: 400px;
+
+  }
+
+
+}
+
+.appendtobear {
+
+  background-color: #f1f3f4 !important;
+}
+
+.appendtobear > span::before {
+  background-color: #848484 !important;
+  border: none !important;
+}
+.appendtobear {
+  background-color: #848484 !important;
+  border: none !important;
+  max-width: 350px !important;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 10 !important;
+  .van-popover__arrow {
+    color: #848484;
+  }
+  &.van-popover--light .van-popover__content {
+    background: none;
+    color: #fff;
+    box-shadow: none;
+  }
+}
+.van-popover__wrapper {
+  .van-icon-question {
+    margin-left: 0 !important;
+  }
+}
+
+.popover-blue {
+  .van-popover__content {
+    background: #037CD6;
+
+  }
+  .van-popover__arrow {
+    color: #037CD6;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  html {
+    font-size: 40PX !important; // ignored
+  }
+  .el-popper,.van-popover {
+    max-width: 220px;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .el-popper,.van-popover {
+    max-width: 160px;
+  }
+  
+}

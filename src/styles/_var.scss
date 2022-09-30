@@ -1,0 +1,37 @@
+:root {
+    // Popup window rounded corners
+    --van-dialog-border-radius: 10px;
+    // Popup window width
+    --van-dialog-width: 350px;
+    // Popover confirm button color
+    --van-dialog-confirm-button-text-color:rgba(3, 125, 214, 1);
+    // Popover button font
+    --van-font-size-lg: 12px;
+    // Button border color
+    --van-button-primary-border-color: rgba(2, 136, 219, 1);
+    // Button font size
+    --van-button-default-font-size: 16px;
+    // Button with rounded corners
+    --van-button-border-radius: 22PX;
+
+    // Button rounded default button font color
+    --van-button-primary-background-color:rgba(3, 125, 214, 1);
+    // The border color
+    --van-border-color:rgba(236, 237, 239, 1);
+    // Button default height
+    --van-button-default-height: 44px;
+    // Mask Mask color
+    --van-overlay-background-color: rgba(0, 0, 0, .7);
+    --van-border-color:rgba(209, 212, 215, 1);
+    --van-button-default-border-color: #000;
+    --van-button-danger-background-color:#D73A49;
+    --van-button-danger-border-color:#D73A49;
+    --van-border-width-base:1px;
+}
+
+.color-error {
+    color: #D73A49;
+}
+.color-warn {
+    color: #FFBE00;
+}
