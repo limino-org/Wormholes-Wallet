@@ -595,10 +595,13 @@ export default {
           "account/connectConstract",
           tokenContractAddress
         );
+        const am = (amount.value || 0) + ''
+        console.log('am---1', am)
+        const amountWei = web3.utils.toWei(am,'ether')
         const gas = await contractWithSigner.estimateGas
           .transfer(
             toAddress.value || '0xE2012DdE16A246b5D935f2f96F88bDc1012C2e07',
-            (amount.value || "1") + ""
+            amountWei
           )
           console.warn(
               "gas----------------==",

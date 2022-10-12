@@ -145,6 +145,7 @@ import store from "@/store";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { toUsd } from "@//utils/filters";
+import { web3 } from '@/utils/web3';
 
 export default {
   name: "gass-fee-page",
@@ -240,6 +241,9 @@ export default {
       const { tokenContractAddress } = chooseToken.value;
       // Token transfer dynamic estimation gaslimit
       if (tokenContractAddress) {
+        const am = (amount.value || 0) + ''
+        console.log('am---1', am)
+        const amountWei = web3.utils.toWei(am,'ether')
         // Get contract token instance object
         const { contractWithSigner, contract } = await dispatch(
           "account/connectConstract",
@@ -248,7 +252,7 @@ export default {
         contractWithSigner.estimateGas
           .transfer(
             toAddress.value || accountInfo.value.address,
-            (amount.value || "0") + ""
+            amountWei
           )
           .then((gas: any) => {
             gasLimit.value = utils.formatUnits(gas, "wei");

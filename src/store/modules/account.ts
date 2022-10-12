@@ -1,6 +1,9 @@
 import { Toast, Notify } from "vant";
 import { ethers, utils } from "ethers";
 import BigNumber from "bignumber.js";
+import {
+  web3,
+} from "@/utils/web3";
 // @ts-ignore
 window.utils = utils;
 import {
@@ -934,8 +937,10 @@ export default {
             address
           );
           console.log(" contract.estimate", contract, contractWithSigner);
+          
+          const amountWei = web3.utils.toWei((amount || 0) + '','ether')
           contractWithSigner.estimateGas
-            .transfer(to, amount)
+            .transfer(to, amountWei)
             .then((gas: any) => {
               const gasp = new BigNumber(gasPrice)
                 .dividedBy(1000000000)
@@ -947,7 +952,7 @@ export default {
               };
               console.log("transferParams", transferParams);
               contractWithSigner
-                .transfer(to, amount, transferParams)
+                .transfer(to, amountWei, transferParams)
                 .then((data: any) => {
                   // Add to transaction queue
                   commit("ADD_TRANACTIONLIST", JSON.parse(JSON.stringify(data)));
@@ -1178,7 +1183,7 @@ export default {
         Promise.all(plist).then((result) => {
           for (let i = 0; i < tokens.length; i++) {
             // @ts-ignore
-            tokens[i].balance = result[i].toString();
+            tokens[i].balance = utils.formatEther(result[i]);
           }
         });
       }
@@ -1200,9 +1205,9 @@ export default {
           wallet.provider
         );
         const contractWithSigner = contract.connect(wallet);
-        return Promise.resolve(
-          await contractWithSigner.balanceOf(wallet.address)
-        );
+        console.warn("contractWithSigner--------------", contractWithSigner);
+        const amount = await contractWithSigner.balanceOf(wallet.address)
+        return Promise.resolve(utils.formatEther(amount));
       } catch (err) {
         return Promise.reject(err);
       }

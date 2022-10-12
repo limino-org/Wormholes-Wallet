@@ -5,7 +5,7 @@ module.exports = {
   productionSourceMap: !isProduct,
   publicPath: isProduct ? '/wallet/' : '',
   devServer: {
-    https: false,
+    https: true,
     proxy: {
       '/createExchange': {
         target: 'http://192.168.1.235:9006',

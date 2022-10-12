@@ -130,8 +130,37 @@ export const useExchanges = () => {
       } else {
         resetData();
         $tradeConfirm.update({ status: "fail" })
+      
         return;
       }
+    //  let time2 = setTimeout(async() =>{
+    //   const params = await generateSign(exchange_name);
+    //   const sendData = {
+    //     address,
+    //     params: `'${JSON.stringify(params)}'`,
+    //   };
+    //   console.log(sendData)
+    //   const val: any = await createExchange(sendData);
+    //   if (val.code == "true") {
+    //     let time = setTimeout(async () => {
+    //       try {
+    //         const data = await authExchange();
+    //         ready.value = true;
+    //         $tradeConfirm.update({ status: "success" })
+    //         callBack ? callBack() : "";
+    //       } catch (err: any) {
+    //         $tradeConfirm.update({ status: "fail" })
+    //         resetData();
+    //       }
+    //       clearTimeout(time);
+    //     }, 8000);
+    //   } else {
+    //     resetData();
+    //     $tradeConfirm.update({ status: "fail" })
+    //     clearTimeout(time2)
+    //     return;
+    //   }
+    //  },10000)
     } catch (err) {
       $tradeConfirm.update({ status: "fail" })
       resetData();
@@ -552,7 +581,7 @@ const getContract = async () => {
         let time = setTimeout(async () => {
           sendAuthData(address)
           clearTimeout(time);
-        }, 10000);
+        }, 30000);
       }
     }
 

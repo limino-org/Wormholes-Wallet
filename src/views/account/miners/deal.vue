@@ -183,9 +183,9 @@
         >
           <van-icon name="question" color="#9A9A9A" />
         </el-tooltip>
-      </div> -->
-      <!-- <div class="create-new-password nodeIpt" v-if="!isModif">
-        <van-form @submit="onSubmit" ref="formDom">
+      </div>
+      <div class="create-new-password nodeIpt" v-if="!isModif">
+        <van-form @submit="onSubmit" ref="formDom2">
           <div
             :class="
               isError
@@ -219,6 +219,7 @@
             v-if="!showCloseBtn && isModif"
             theme="dark"
             :close-on-click-outside="false"
+            z-index="1"
             placement="top"
             trigger="manual"
             class="popover-btn-tip"
@@ -819,10 +820,14 @@ export default defineComponent({
       successDialog.value = false;
       showCreateExchange.value = false;
     };
+    const networkList = computed(() => store.state.account.netWorkList)
+    const mainNetwork = computed(() => networkList.value.find((item:any) => item.id == 'wormholes-network-1'))
     const asynPwd2 = async (val: string) => {
+      
       isError.value = false;
       if (!name.value) {
-        return true;
+        return t('minerspledge.nodeErr');
+;
       }
       if (RegUrl.test(name.value)) {
         //Verify node chainId
@@ -832,20 +837,26 @@ export default defineComponent({
         try {
           const provider = ethers.getDefaultProvider(name.value);
           const { chainId } = await provider.getNetwork();
-          if (chainId != 51888 && chainId != 51889) {
+          debugger
+          const mainProvider = ethers.getDefaultProvider(mainNetwork.value.URL)
+          debugger
+          const {chainId: mainChainId} = await mainProvider.getNetwork()
+          console.warn('mainChainId', mainChainId)
+          console.warn('chainId', chainId)
+          if (chainId != mainChainId) {
             isError.value = true;
-            return `Invalid chainId ${chainId}`;
+            return t('minerspledge.invalidChainId',{chainId});
           }
           return true;
         } catch (err) {
           isError.value = true;
-          return "Invalid node";
+          return t('minerspledge.invalidNode')
         } finally {
           Toast.clear();
         }
       } else {
         isError.value = true;
-        return "Node format incorrect";
+        return t('minerspledge.nodeErr');
       }
     };
    
@@ -911,6 +922,7 @@ export default defineComponent({
     const isWarning = ref(false);
     const isError = ref(false);
     const formDom = ref();
+    const formDom2 = ref()
     const router = useRouter();
     const back = () => {
       router.back();
@@ -926,18 +938,34 @@ export default defineComponent({
         return;
       }
       // The pledge amount
-      if(!name.value){
-        $dialog.open({title:t('minerspledge.beValidator'),message:t("minerspledge.warn"),type:'warn',callBack:() => {
-          openConfirmInfoModal()
-        }});
-        return
+      // if(!name.value){
+        
+      //   $dialog.open({title:t('minerspledge.beValidator'),message:t("minerspledge.warn"),type:'warn',callBack:() => {
+      //     openConfirmInfoModal()
+      //   }});
+      //   return
+      // }
+      debugger
+      try {
+        // await formDom2.value.validate();
+        openConfirmInfoModal()
+      }catch(err) {
+        console.error(err)
+        // @ts-ignore
+        const [data] = err
+        const {message} = data
+        $toast.warn(message)
       }
-      openConfirmInfoModal()
+      // try {
+      //   console.log('formDom', formDom.value)
+      //   openConfirmInfoModal()
+      // }catch(err) {
+      //   $dialog.open({title:t('minerspledge.beValidator'),message:err?.toString(),type:'warn'})
+      // }
     };
 
     const openConfirmInfoModal = async() => {
       try {
-        // await formDom.value.validate();
         isError.value = false;
         isAffirmDialog.value = true;
       } catch (error) {
@@ -1081,6 +1109,7 @@ export default defineComponent({
       handleAccount,
       handleAddBlur,
       selectAccount,
+      formDom2,
       formatValueNumber,
       closeDialogSubmit,
       closeDialogTime,

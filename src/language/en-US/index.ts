@@ -705,6 +705,9 @@ export default {
     accessCMS: 'Access CMS',
   },
   minerspledge: {
+    invalidChainId:"Invalid chainId {chainid}",
+    invalidNode:"Invalid node",
+    nodeErr:"Node format incorrect",
     minerspledge: 'MINERS PLEDGE',
     miners_pledge: 'Miners pledge',
     unfortunately: 'Unfortunately,the node is wrong',

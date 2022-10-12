@@ -698,6 +698,9 @@ export default {
     },
     // 矿工质押
     minerspledge: {
+        invalidChainId:"无效的链Id {chainid}",
+        invalidNode:"无效的节点",
+        nodeErr:"节点格式有误",
         minerspledge: '矿工质押',
         miners_pledge: '矿工质押',
         unfortunately: '遗憾地告知您，节点是错误的',

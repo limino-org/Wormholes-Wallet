@@ -127,7 +127,7 @@
 </template>
 
 <script lang="ts">
-import { Button, Overlay, Field, Toast, Icon } from "vant";
+import { Button, Overlay, Field, Toast, Icon,Dialog } from "vant";
 import { ref, SetupContext, computed, nextTick, watch } from "vue";
 import { ethers, utils } from "ethers";
 import { formatEther, toUsd } from "@/utils/filters";
@@ -259,7 +259,7 @@ export default {
 }
 .custom-overlay {
   display: flex;
-
+z-index: 100;
   .miners {
     width: 341px;
     min-height: 560px;
