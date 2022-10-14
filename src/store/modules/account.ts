@@ -14,6 +14,7 @@ import {
   CreateWalletByMnemonicParams,
   createRandomWallet,
 } from "@/utils/ether";
+
 import { getRandomIcon } from "@/utils/index";
 import { toRaw } from "vue";
 import { TransactionData, TransactionParams } from "./index";
@@ -26,6 +27,7 @@ import {
   NetWorkData,
   netWorklist,
   TransactionList,
+  chessIcons,
   TransactionRecord,
 } from "@/enum/network";
 // import { getEtherBalances } from "@mycrypto/eth-scan";
@@ -41,6 +43,7 @@ import { getContractAddress } from "@/http/modules/common";
 import localforage from 'localforage';
 import { useToast } from "@/plugins/toast";
 import Bignumber from 'bignumber.js'
+import { fa } from "element-plus/es/locale";
 export interface State {
   mnemonic: Mnemonic;
   path: string;
@@ -377,6 +380,20 @@ export default {
     // Delete network by ID
     DETETE_NETWORK(state: State, id: string) {
       const list = state.netWorkList.filter((item) => item.id != id);
+      // reset icon
+      list.forEach((item, idx) => {
+        item.icon = chessIcons[idx]
+      })
+      if(state.currentNetwork.id == id) {
+        list.forEach(item => {
+          if(item.isMain) {
+            item.select = true
+          } else {
+            item.select = false
+          }
+        })
+        state.currentNetwork = list[0]
+      }
       state.netWorkList = list;
     },
     // Modify network data according to ID
@@ -1183,7 +1200,7 @@ export default {
         Promise.all(plist).then((result) => {
           for (let i = 0; i < tokens.length; i++) {
             // @ts-ignore
-            tokens[i].balance = utils.formatEther(result[i]);
+            tokens[i].balance = result[i];
           }
         });
       }

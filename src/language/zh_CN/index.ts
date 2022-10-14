@@ -56,11 +56,11 @@ export default {
         continue: "继续",
         back: '返回',
         next: '下一步',
-        serviceandPrivacyNotice: '请查看 Wormholes ERB 钱包服务条款和隐私声明',
+        serviceandPrivacyNotice: '请查看 Limino ERB 钱包服务条款和隐私声明',
         memErr: "助记词格式有误，请确认后重新提交",
         isServiceandPrivacyNotice: "请务必检查服务条款和隐私政策 ",
         isServiceandPrivacyNotices: "请务必勾选用户协议 ",
-        pwdTip: "通过继续，您同意 Wormholes 的 {br} {link1}&{link2}",
+        pwdTip: "通过继续，您同意 Limino 的 {br} {link1}&{link2}",
         link1: "Terms of Use",
         link2: "Privacy Notice"
 
@@ -202,8 +202,6 @@ export default {
         suretocancel: '你确定要取消吗？',
         breakGuide: "确定取消引导操作流程吗?",
         connect: "连接到 Wormholes",
-        connect2: "使用Wormholes连接",
-        connect3: "已成功连接到Wormholes",
         connectTxt: "连接",
         installMetaMask: "你未安装钱包，请先安装MetaMask",
         back: "返回",

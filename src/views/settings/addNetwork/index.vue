@@ -11,7 +11,7 @@
     </div>
 
     <div>
-      <van-form @submit="onSubmit">
+      <van-form ref="form">
         <div class="label text-bold">
           <span>*</span>{{ t("addNetwork.networkname") }}
         </div>
@@ -99,7 +99,7 @@
               @click="handleDelNet"
               >{{ t("addNetwork.delete") }}</van-button
             >
-            <van-button block type="primary" native-type="submit">
+            <van-button block type="primary" :loading="loading" @click="onSubmit">
               {{ isModif ? t("addNetwork.submit") : t("addNetwork.add") }}
             </van-button>
           </div>
@@ -139,6 +139,7 @@ export default {
   setup() {
     const { t } = useI18n();
     const store = useStore();
+    const form = ref()
     const { query } = useRoute();
     const appProvide = inject("appProvide");
     const data = typeof query.data == "string" ? JSON.parse(query.data) : {};
@@ -151,7 +152,7 @@ export default {
       id,
       icon: qicon,
     }: any = data;
-    const { state, commit } = store;
+    const { state, commit,dispatch } = store;
     const label: Ref<string> = ref(qlabel);
     const URL: Ref<string> = ref(qurl);
     const chainId: Ref<number> = ref(qid);
@@ -239,21 +240,20 @@ export default {
     });
     const netWorkList = computed(() => state.account.netWorkList);
     const { $toast } = useToast();
+    const loading: Ref<boolean> = ref(false);
 
-    const onSubmit = () => {
-      console.warn("netWorkList", netWorkList);
-      // if (hasChainId.value) {
-      //   let time = setTimeout(() => {
-      //     saveData();
-      //     clearTimeout(time);
-      //   }, 1000);
-      //   return;
-      // }
+    const onSubmit = async() => {
       loading.value = true;
+      try {
+        await form.value.validate()
       let time = setTimeout(()=>{
         saveData();
         clearTimeout(time)
-      },0)
+      },300)
+      }catch(err){
+        loading.value = false;
+      }
+
     };
     const nameError = ref(false)
     const asyncName = (v: string) => {
@@ -263,7 +263,6 @@ export default {
         return t('addNetwork.inputnetworknameoptional')
       }
     }
-    const loading: Ref<boolean> = ref(false);
     const saveData = () => {
 
       // Verify whether the URL Chain ID is duplicate
@@ -284,10 +283,12 @@ export default {
         icon: qicon && qicon != undefined ? qicon : icon,
       };
       console.log("netWork", netWork, qicon);
+      !isModif.value ? netWork.isMain = false : ''
       store.commit(
         isModif.value ? "account/MODIF_NETWORK" : "account/PUSH_NETWORK",
         netWork
       );
+      dispatch("account/getProviderWallet");
       handleUpdate();
       loading.value = false;
       $toast.success(
@@ -306,6 +307,7 @@ export default {
       }).then(() => {
         // on confirm
         store.commit("account/DETETE_NETWORK", id);
+        dispatch("account/getProviderWallet");
         $toast.success(
           t("addNetwork.deletingnetworksucceeded", { qlabel: qlabel })
         );
@@ -317,10 +319,9 @@ export default {
     const getChainId = async () => {
       try {
         const url = URL.value;
-        const wallet = await getWallet();
         const provider = ethers.getDefaultProvider(url);
-        const newwallet = wallet.connect(provider);
-        const network = await newwallet.provider.getNetwork();
+        const network = await provider.getNetwork();
+        debugger
         urlError.value = false;
         chainId.value = network.chainId;
       } catch (err: any) {
@@ -342,11 +343,13 @@ export default {
       t,
       onSubmit,
       label,
+      form,
       URL,
       chainId,
       ID,
       currencySymbol,
       browser,
+      loading,
       RegUrl,
       asyncurl,
       urlError,

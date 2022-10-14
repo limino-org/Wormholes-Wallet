@@ -160,7 +160,7 @@
                 </template>
               </van-popover>
             </div>
-            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ 1)</div>
+            <div class="card-value gasfee">≈{{gasFee}} ERB(≈${{toUsd(gasFee,5)}})</div>
           </div>
         </div>
         <i18n-t
@@ -171,7 +171,7 @@
         >
           <template v-slot:link>
             <a
-              :href="VUE_APP_EXCHANGES_URL"
+              :href="VUE_APP_SNFTSEXCHANGE_URL"
               target="_blank"
               rel="noopener noreferrer"
               >{{ t("converSnft.buy") }}</a
@@ -401,7 +401,7 @@ import { useToast } from "@/plugins/toast";
 import BigNumber from "bignumber.js";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
-import { VUE_APP_EXCHANGES_URL } from "@/enum/env";
+import { VUE_APP_EXCHANGES_URL, VUE_APP_SNFTSEXCHANGE_URL } from "@/enum/env";
 import SnftModal from "./snftModal.vue";
 import { getRandomColor } from "@/utils";
 import { web3 } from "@/utils/web3";
@@ -891,6 +891,7 @@ export default defineComponent({
       show,
       layoutType,
       isSelectAll,
+      VUE_APP_SNFTSEXCHANGE_URL,
       sumN,
       toUsd,
       t,
@@ -1283,8 +1284,7 @@ export default defineComponent({
       color: #8f8f8f;
       :deep(){
         .van-popover__wrapper {
-          width: 10px;
-          height: 10px;
+          margin-left: 4px;
         }
       }
     }

@@ -12,7 +12,7 @@ export const VUE_APP_NODE_WORM_URL = decode(process.env.VUE_APP_NODE_WORM_URL ||
 
 
 
-
+export const VUE_APP_SNFTSEXCHANGE_URL = decode(process.env.VUE_APP_SNFTSEXCHANGE_URL || '')
 
 
 export const VUE_APP_SCAN_URL = decode(process.env.VUE_APP_SCAN_URL || '')

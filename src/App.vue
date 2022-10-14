@@ -67,13 +67,13 @@ export default {
     });
     window.onload = () => {
       loading.value = false;
-      let time = setTimeout(function () {
-        commit("account/UPDATE_WORMHOLES_URL", {
-          URL: "https://api.wormholes.com",
-          browser: "https://www.wormholesscan.com/#/",
-        });
-        clearTimeout(time);
-      }, 1000);
+      // let time = setTimeout(function () {
+      //   commit("account/UPDATE_WORMHOLES_URL", {
+      //     URL: "https://api.wormholes.com",
+      //     browser: "https://www.wormholesscan.com/#/",
+      //   });
+      //   clearTimeout(time);
+      // }, 1000);
     };
     onMounted(() => {
       const { handleUpdate, broad } = useBroadCast();
