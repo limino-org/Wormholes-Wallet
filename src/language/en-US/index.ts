@@ -180,7 +180,7 @@ export default {
     all: "All",
     conver: "Conver",
     copyAddr: "Address Hash Copied",
-    confirmExit:"Confirm exit",
+    confirmExit:"Confirm Exit",
     guideBtnTip:"Your digital wallet data is only saved on your browser's local storage; be sure to create a backup to avoid potential permanent losses. Uninstalling your browser and/or clearing your browser data will also potentially result in permanent losses!",
     asyncData:"Data synchronization, please wait."
 

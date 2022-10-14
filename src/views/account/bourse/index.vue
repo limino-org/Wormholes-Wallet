@@ -231,7 +231,7 @@
               "
               @click="changeServerIndex(1)"
             >
-              <span class="t1 flex center">280ERB</span>
+              <span class="t1 flex center">200ERB</span>
 
               <span class="t2 flex center"
                 ><span>Best</span>
@@ -242,7 +242,7 @@
                 ></i
               ></span>
 
-              <span class="t1 flex center">{{toUsd(280,0)}}$</span>
+              <span class="t1 flex center">{{toUsd(200,0)}}$</span>
             </div>
           </template>
         </van-popover>
