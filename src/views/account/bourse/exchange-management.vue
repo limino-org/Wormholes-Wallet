@@ -170,6 +170,7 @@ export default {
           address,
           "latest",
         ]);
+        console.warn(accountInfo)
         exchangeName.value = decode(accountInfo.ExchangerName);
       } finally {
         loading.value = false;

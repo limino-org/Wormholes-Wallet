@@ -3,7 +3,7 @@ import { useStore } from "vuex";
 import { Toast } from "vant";
 import { computed, onMounted, ref, Ref, watch } from "vue";
 import { ethers } from "ethers";
-import { ExchangeStatus, getWallet, TransactionReceipt, handleGetTranactionReceipt, TransactionTypes } from "@/store/modules/account";
+import { ExchangeStatus, getWallet, TransactionReceipt, handleGetTranactionReceipt, TransactionTypes, clone } from "@/store/modules/account";
 import { hashMessage } from "@/utils/ether";
 import { useSign } from "@/views/sign/hooks/sign";
 import { web3 } from "@/utils/web3";
@@ -43,48 +43,66 @@ export const useExchanges = () => {
   const { toSign, sign } = useSign();
 
   const sendTx2 = async (amount: any, callBack?: Function) => {
-   try {
-    const wallet = await getWallet()
-    const contractWithSigner = await getContract();
-    const { address } = wallet
-    const data = await contractWithSigner.functions.payForRenew({
-      value: ethers.utils.parseEther(amount + ''),
-    });
-    callBack ? callBack() : "";
-    localStorage.setItem('tx2', JSON.stringify(data))
-    // debugger
-    $tradeConfirm.update({ status: "approve" })
-    const receipt = await wallet.provider.waitForTransaction(data.hash)
-    localStorage.setItem('receipt2', JSON.stringify(receipt))
-    const symbol = state.account.currentNetwork.currencySymbol
-    const rep: TransactionReceipt = handleGetTranactionReceipt(
-      TransactionTypes.contract,
-      receipt,
-      data,
-      symbol
-    );
-    const { status } = receipt;
-    if (status == 0) {
+    try {
+      // @ts-ignore
+      const network = clone(store.state.account.currentNetwork)
+      const wallet = await getWallet()
+      const contractWithSigner = await getContract();
+      const { address } = wallet
+      const data = await contractWithSigner.functions.payForRenew({
+        value: ethers.utils.parseEther(amount + ''),
+      });
+      const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = data;
+      store.commit("account/PUSH_TXQUEUE", {
+        hash,
+        from,
+        gasLimit,
+        gasPrice,
+        nonce,
+        to,
+        type,
+        value,
+        transitionType: null,
+        txType: TransactionTypes.contract,
+        network
+      });
+      callBack ? callBack() : "";
+      localStorage.setItem('tx2', JSON.stringify(data))
+      // debugger
+      $tradeConfirm.update({ status: "approve" })
+      const receipt = await wallet.provider.waitForTransaction(data.hash)
+      localStorage.setItem('receipt2', JSON.stringify(receipt))
+      const symbol = state.account.currentNetwork.currencySymbol
+      const rep: TransactionReceipt = handleGetTranactionReceipt(
+        TransactionTypes.contract,
+        receipt,
+        data,
+        // @ts-ignore
+        clone(store.state.account.currentNetwork)
+
+      );
+      const { status } = receipt;
+      if (status == 0) {
+        $tradeConfirm.update({ status: "fail" })
+        resetData();
+        Toast(i18n.global.t("userexchange.transactionfailed"));
+        return Promise.reject()
+      }
+      dispatch("account/updateAllBalance");
+      commit("account/PUSH_TRANSACTION", rep);
+      return Promise.resolve(receipt)
+    } catch (err) {
       $tradeConfirm.update({ status: "fail" })
+      console.log(err)
+      console.log("==========err2=============")
+      Toast(err.toString());
       resetData();
-      Toast(i18n.global.t("userexchange.transactionfailed"));
       return Promise.reject()
     }
-    dispatch("account/updateAllBalance");
-    commit("account/PUSH_TRANSACTION", rep);
-    return Promise.resolve(receipt)
-   }catch(err){
-    $tradeConfirm.update({ status: "fail" })
-    console.log(err)
-    console.log("==========err2=============")
-    Toast(err.toString());
-    resetData();
-    return Promise.reject()
-   }
   }
 
   const send2 = async (amount: number = 200, exchange_name: string, callBack = () => { }, isDialog = true) => {
-    if(isDialog) {
+    if (isDialog) {
       $tradeConfirm.open({
         approveMessage: i18n.global.t('createExchange.create_approve'),
         successMessage: i18n.global.t('createExchange.create_waiting'),
@@ -97,7 +115,7 @@ export const useExchanges = () => {
     }
 
     const wallet = await getWallet()
-    const {address} = wallet
+    const { address } = wallet
     try {
       const receipt = await sendTx2(amount)
       const { status } = receipt;
@@ -130,37 +148,37 @@ export const useExchanges = () => {
       } else {
         resetData();
         $tradeConfirm.update({ status: "fail" })
-      
+
         return;
       }
-    //  let time2 = setTimeout(async() =>{
-    //   const params = await generateSign(exchange_name);
-    //   const sendData = {
-    //     address,
-    //     params: `'${JSON.stringify(params)}'`,
-    //   };
-    //   console.log(sendData)
-    //   const val: any = await createExchange(sendData);
-    //   if (val.code == "true") {
-    //     let time = setTimeout(async () => {
-    //       try {
-    //         const data = await authExchange();
-    //         ready.value = true;
-    //         $tradeConfirm.update({ status: "success" })
-    //         callBack ? callBack() : "";
-    //       } catch (err: any) {
-    //         $tradeConfirm.update({ status: "fail" })
-    //         resetData();
-    //       }
-    //       clearTimeout(time);
-    //     }, 8000);
-    //   } else {
-    //     resetData();
-    //     $tradeConfirm.update({ status: "fail" })
-    //     clearTimeout(time2)
-    //     return;
-    //   }
-    //  },10000)
+      //  let time2 = setTimeout(async() =>{
+      //   const params = await generateSign(exchange_name);
+      //   const sendData = {
+      //     address,
+      //     params: `'${JSON.stringify(params)}'`,
+      //   };
+      //   console.log(sendData)
+      //   const val: any = await createExchange(sendData);
+      //   if (val.code == "true") {
+      //     let time = setTimeout(async () => {
+      //       try {
+      //         const data = await authExchange();
+      //         ready.value = true;
+      //         $tradeConfirm.update({ status: "success" })
+      //         callBack ? callBack() : "";
+      //       } catch (err: any) {
+      //         $tradeConfirm.update({ status: "fail" })
+      //         resetData();
+      //       }
+      //       clearTimeout(time);
+      //     }, 8000);
+      //   } else {
+      //     resetData();
+      //     $tradeConfirm.update({ status: "fail" })
+      //     clearTimeout(time2)
+      //     return;
+      //   }
+      //  },10000)
     } catch (err) {
       $tradeConfirm.update({ status: "fail" })
       resetData();
@@ -191,12 +209,12 @@ export const useExchanges = () => {
             exchange_name,
             // Authorized version (fixed)
             version: 1,
-             // One Click Exchange founder's address (wallet address)
-            exchanger_owner, 
-           // Licensee's address (fixed address, provided by Li Gong)
-            to, 
+            // One Click Exchange founder's address (wallet address)
+            exchanger_owner,
+            // Licensee's address (fixed address, provided by Li Gong)
+            to,
             // The block height of the chain at the time of authorization, which is used to determine the validity of the authorization (obtained from the block browser, if not, write first).
-            block_number: blockNumber, 
+            block_number: blockNumber,
             sig: sigstr,
           };
           resolve(params)
@@ -208,7 +226,7 @@ export const useExchanges = () => {
   };
 
   // Even contract, issue trade
-const getContract = async () => {
+  const getContract = async () => {
     const wallet = await getWallet();
     const { URL } = state.account.currentNetwork;
     let provider = ethers.getDefaultProvider(URL);
@@ -243,7 +261,7 @@ const getContract = async () => {
     const { address } = wallet;
     const baseName = encode(name);
     try {
-      const rate_str: number = fee_rate? new BigNumber(fee_rate).multipliedBy(10).toNumber() : 100
+      const rate_str: number = fee_rate ? new BigNumber(fee_rate).multipliedBy(10).toNumber() : 100
       const str = `wormholes:{"version": "0","type": 11,"fee_rate": ${rate_str},"name":"${baseName}","url":""}`;
       // const str = `wormholes:{"type":"9", "proxy_address":"0x591813F0D13CE48f0E29081200a96565f466B212", "version":"0.0.1"}`
       const data3 = toHex(str);
@@ -253,12 +271,28 @@ const getContract = async () => {
         value: ethers.utils.parseEther(amount + ''),
         data: `0x${data3}`,
       };
+      // @ts-ignore
+      const network = clone(store.state.account.currentNetwork)
       // debugger
       wallet.sendTransaction(tx1).then((receipt: any) => {
-        const { hash } = receipt;
+        const { from, gasLimit, gasPrice, hash, nonce, to, type, value, error } = receipt;
+        store.commit("account/PUSH_TXQUEUE", {
+          hash,
+          from,
+          gasLimit,
+          gasPrice,
+          nonce,
+          to,
+          type,
+          value,
+          transitionType: '11',
+          txType: TransactionTypes.default,
+          // @ts-ignore
+          network
+        });
         localStorage.setItem('tx1', JSON.stringify(receipt))
-        if(!isServer){
-          $tradeConfirm.update({status:"approve"})
+        if (!isServer) {
+          $tradeConfirm.update({ status: "approve" })
         }
         wallet.provider
           .waitForTransaction(hash).then(async (receipt2: any) => {
@@ -269,20 +303,22 @@ const getContract = async () => {
               TransactionTypes.default,
               receipt2,
               receipt,
-              symbol
+              // @ts-ignore
+              network
+
             );
             commit("account/PUSH_TRANSACTION", rep);
-            if(!isServer) {
-              if(status == 0) {
-                $tradeConfirm.update({status:"fail"})
+            if (!isServer) {
+              if (status == 0) {
+                $tradeConfirm.update({ status: "fail" })
               } else {
-                $tradeConfirm.update({status:"success",callBack(){router.replace({name:"exchange-management"})}})
+                $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "exchange-management" }) } })
               }
             }
             // Send the second stroke
             if (isServer) {
-              if(!exchanger_flag && newStatus == 2){
-                $tradeConfirm.update({status:"success",callBack(){router.replace({name:"exchange-management"})}})
+              if (!exchanger_flag && newStatus == 2) {
+                $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "exchange-management" }) } })
                 return
               }
               send2(200, name)
@@ -291,15 +327,15 @@ const getContract = async () => {
 
       }).catch((err: any) => {
         Toast(err.reason);
-        if(!isServer){
-          $tradeConfirm.update({status:"fail"})
+        if (!isServer) {
+          $tradeConfirm.update({ status: "fail" })
         }
         resetData();
 
       });
     } catch (err: any) {
-      if(!isServer){
-        $tradeConfirm.update({status:"fail"})
+      if (!isServer) {
+        $tradeConfirm.update({ status: "fail" })
       }
     }
   };
@@ -357,20 +393,35 @@ const getContract = async () => {
       console.warn('tx1', tx1)
       console.warn('amount', amount)
 
+      // @ts-ignore
+      const network = clone(store.state.account.currentNetwork)
 
       const receipt: any = await wallet.sendTransaction(tx1)
+      const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = receipt;
+      store.commit("account/PUSH_TXQUEUE", {
+        hash,
+        from,
+        gasLimit,
+        gasPrice,
+        nonce,
+        to,
+        type,
+        value,
+        transitionType: '9',
+        txType: TransactionTypes.other,
+        // @ts-ignore
+        network
+      });
       localStorage.setItem('tx', JSON.stringify(receipt))
 
       $tradeConfirm.update({ status: "approve" })
-      const { hash } = receipt;
       const receipt2 = await wallet.provider.waitForTransaction(hash)
 
-      const symbol = state.account.currentNetwork.currencySymbol
       const rep: TransactionReceipt = handleGetTranactionReceipt(
         TransactionTypes.default,
         receipt2,
         receipt,
-        symbol
+        network
       );
       commit("account/PUSH_TRANSACTION", rep);
       const { status } = receipt2
@@ -454,7 +505,7 @@ const getContract = async () => {
   };
 
   // One click to open the exchange
-  const createExchanges = async (name: string, amount: number,  fee_rate?: number) => {
+  const createExchanges = async (name: string, amount: number, fee_rate?: number) => {
     const exchangeStatus: ExchangeStatus = state.account.exchangeStatus
     const {
       status,
@@ -504,13 +555,28 @@ const getContract = async () => {
       value: ethers.utils.parseEther("0"),
       data: `0x${data3}`,
     };
-
+    // @ts-ignore
+    const network = clone(store.state.account.currentNetwork)
     return new Promise((resolve, reject) => {
+
       wallet
         .sendTransaction(tx1)
         .then((receipt: any) => {
+          const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = receipt;
+          store.commit("account/PUSH_TXQUEUE", {
+            hash,
+            from,
+            gasLimit,
+            gasPrice,
+            nonce,
+            to,
+            type,
+            value,
+            transitionType: '22',
+            txType: TransactionTypes.other,
+            network
+          });
           $tradeConfirm.update({ status: "approve" })
-          const { hash } = receipt;
           localStorage.setItem("close-exchange-tx", JSON.stringify(receipt));
           wallet.provider
             .waitForTransaction(hash)
@@ -520,7 +586,7 @@ const getContract = async () => {
                 TransactionTypes.default,
                 receipt2,
                 receipt,
-                symbol
+                network
               );
               commit("account/PUSH_TRANSACTION", rep);
               await dispatch("account/getExchangeStatus");
@@ -604,14 +670,14 @@ const getContract = async () => {
 
 
 
-// Add the pledge amount  
+  // Add the pledge amount  
   const addExchangeBalance = async (
     amount: number,
   ) => {
     debugger
     const wallet = await getWallet();
     const { address } = wallet;
-   // Add the pledge amount
+    // Add the pledge amount
     const str = `wormholes:{"version": "0.0.1","type": 21}`;
     const data3 = toHex(str);
     const tx1 = {
@@ -630,7 +696,25 @@ const getContract = async () => {
     })
     // Send the first pledge amount
     try {
+      // @ts-ignore
+      const network = clone(store.state.account.currentNetwork)
+
       const data1 = await wallet.sendTransaction(tx1);
+      const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = data1;
+      store.commit("account/PUSH_TXQUEUE", {
+        hash,
+        from,
+        gasLimit,
+        gasPrice,
+        nonce,
+        to,
+        type,
+        value,
+        transitionType: '21',
+        txType: TransactionTypes.other,
+        // @ts-ignore
+        network
+      });
       $tradeConfirm.update({ status: TradeStatus.approve })
       localStorage.setItem("data1", JSON.stringify(data1));
       const receipt1 = await wallet.provider.waitForTransaction(data1.hash);
@@ -639,7 +723,7 @@ const getContract = async () => {
         TransactionTypes.default,
         receipt1,
         data1,
-        symbol
+        network
       );
       dispatch("account/updateAllBalance");
       commit("account/PUSH_TRANSACTION", rep);
@@ -673,7 +757,23 @@ const getContract = async () => {
       }
     })
     try {
+      // @ts-ignore
+      const network = clone(store.state.account.currentNetwork)
       const data1 = await wallet.sendTransaction(tx1);
+      const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = data1;
+      store.commit("account/PUSH_TXQUEUE", {
+        hash,
+        from,
+        gasLimit,
+        gasPrice,
+        nonce,
+        to,
+        type,
+        value,
+        transitionType: '22',
+        txType: TransactionTypes.other,
+        network
+      });
       $tradeConfirm.update({ status: TradeStatus.approve })
       localStorage.setItem("data1", JSON.stringify(data1));
       const receipt1 = await wallet.provider.waitForTransaction(data1.hash);
@@ -683,7 +783,7 @@ const getContract = async () => {
         TransactionTypes.default,
         receipt1,
         data1,
-        symbol
+        network
       );
       dispatch("account/updateAllBalance");
       commit("account/PUSH_TRANSACTION", rep);

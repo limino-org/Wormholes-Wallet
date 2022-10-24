@@ -56,11 +56,11 @@ export default {
         continue: "继续",
         back: '返回',
         next: '下一步',
-        serviceandPrivacyNotice: '请查看 Limino ERB 钱包服务条款和隐私声明',
+        serviceandPrivacyNotice: '请查看 Wormholes ERB 钱包服务条款和隐私声明',
         memErr: "助记词格式有误，请确认后重新提交",
         isServiceandPrivacyNotice: "请务必检查服务条款和隐私政策 ",
         isServiceandPrivacyNotices: "请务必勾选用户协议 ",
-        pwdTip: "通过继续，您同意 Limino 的 {br} {link1}&{link2}",
+        pwdTip: "通过继续，您同意 Wormholes 的 {br} {link1}&{link2}",
         link1: "Terms of Use",
         link2: "Privacy Notice"
 
@@ -167,6 +167,7 @@ export default {
 
     },
     common: {
+        days:"天",
         commingsoon: "即将来临",
         setting: '设置',
         failedtoload: '加载钱包失败',
@@ -202,6 +203,8 @@ export default {
         suretocancel: '你确定要取消吗？',
         breakGuide: "确定取消引导操作流程吗?",
         connect: "连接到 Wormholes",
+        connect2: "使用Wormholes连接",
+        connect3: "已成功连接到Wormholes",
         connectTxt: "连接",
         installMetaMask: "你未安装钱包，请先安装MetaMask",
         back: "返回",
@@ -224,7 +227,9 @@ export default {
         copyAddr: "地址哈希复制",
         confirmExit:"确认退出",
         guideBtnTip:"您的数字钱包数据仅保存在您浏览器的本地存储中；请务必创建备份以避免潜在的永久性损失。卸载浏览器和/或清除浏览器数据也可能导致永久性损失",
-        asyncData:"数据同步中，请稍后"
+        asyncData:"数据同步中，请稍后",
+        convertAmount:"转换金额"
+
 
     },
     //侧边栏 
@@ -657,7 +662,7 @@ export default {
         staking:"质押 & 赎回",
         stakingDesc:"添加质押或赎回您的质押",
         server:"服务器",
-        serverDesc:"365 Days / 0 Hours",
+        serverDesc:"365 天 / 8760 小时",
         pageTip:"这是交易所管理页面。如果你想去交易所的页面，点击“交易所”。如果你想进入交易所的控制台，点击“控制台”。如果你想添加质押量或赎回你的质押，点击在“Staking & Redemption”。如果要更改服务器的设置，请单击“Server”。",
         serveTip1:"这是您必须为服务器支付一年的费用。",
         serveTip2:"这是您离开我们服务器的使用时间。",
@@ -734,9 +739,7 @@ export default {
         addTit: "追加的质押金额",
         addTip: "这是追加的质押金额",
         proxyAccountTip: "提示：质押期为一年。详情请参阅条款和规定。",
-
-
-
+        closeTip2:"抱歉，质押时间超过1年才可赎回。",
 
         beValidator: "成为矿工",
         modifValidator:"矿工管理",
@@ -801,8 +804,8 @@ export default {
         confirm: '确认',
         balance: '余额:',
         congratulations: '恭喜，修改成功，恭喜，节点正确。',
-        addStake: "挖矿收益",
-        addStakeTip: "这是将要添加的质押金额"
+        addStake: "追加金额",
+        addStakeTip: "这是追加质押的金额。"
 
 
     },
@@ -1110,7 +1113,7 @@ export default {
     bourse: {
         placename: "请输入名称",
         vainame: "名称不能为空",
-        vainame2: "4-12个长度,支持中英文、数字",
+        vainame2: "4-20个长度,支持中英文、数字",
         placenode: "请输入节点",
         vainode: "节点有误",
         placeamount: "请输入追加金额",
@@ -1193,4 +1196,7 @@ export default {
         amountcannotbelessthan: '金额不能小于{props}',
     },
 
+    error:{
+        500:"参数有误"
+    }
 }

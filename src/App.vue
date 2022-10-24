@@ -55,10 +55,8 @@ export default {
     const loading = ref(true);
     onBeforeMount(async () => {
       commit("system/UPDATE_TRANSFERUSDRATE", 0.5);
-
       commit("account/UPDATE_NETSTATUS", NetStatus.pendding);
       commit("system/UPDATA_CONVERSATIONID", guid());
-
 
       let time = setTimeout(async () => {
         await dispatch("account/waitTxQueueResponse");
@@ -112,10 +110,7 @@ export default {
         }, 5000);
       })();
 
-      let time = setTimeout(async () => {
-        await dispatch("account/waitTxQueueResponse");
-        clearTimeout(time);
-      }, 10000);
+
     });
     return {
       loading,

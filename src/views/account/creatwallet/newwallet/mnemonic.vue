@@ -203,12 +203,8 @@ export default {
   .iconele {
     width: 20px;
   }
-.icon-yanjing {
-  color: #037cd6;
-  font-size: 18px;
-}
 .icon-yanjing1 {
-  font-size: 14px;
+  color: #037cd6;
 }
 .logo {
   width: 20px !important;

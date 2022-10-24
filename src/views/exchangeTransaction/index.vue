@@ -1,5 +1,4 @@
 <template>
-  <van-sticky>
     <NavHeader :hasRight="false">
       <template v-slot:left>
         <div class="flex center cancel" @click="clickLeft">
@@ -7,7 +6,6 @@
         </div>
       </template>
     </NavHeader>
-  </van-sticky>
   <div class="page-container">
     <div class="userinfo">
       <div class="from mb-10 mt-20">
@@ -75,7 +73,7 @@ import TransactionConfirm from "@/views/account/components/transactionConfirm/in
 import { addressMask, getestimateGas, decimal } from "@/utils/filters";
 import { ethers, utils } from "ethers";
 import { web3 } from "@/utils/web3";
-import { getWallet } from "@/store/modules/account";
+import { getWallet,clone, TransactionTypes } from "@/store/modules/account";
 import { useI18n } from "vue-i18n";
 import { getRandomIcon } from "@/utils/index";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
@@ -132,7 +130,23 @@ export default {
         },
       };
       try {
+        // @ts-ignore
+        const network = clone(store.state.account.currentNetwork)
         const receipt = await dispatch("account/sendTransaction", tx1);
+        const { from, gasLimit, gasPrice, hash, nonce, to, type, value,error } = receipt;
+        store.commit("account/PUSH_TXQUEUE", {
+          hash,
+          from,
+          gasLimit,
+          gasPrice,
+          nonce,
+          to,
+          type,
+          value,
+          txType: TransactionTypes.default,
+          transitionType: null,
+          network
+        });
         const back = decode(backUrl)
         const newBack =`${back}${back.indexOf('?') > -1 ? '&' : '?'}` 
         $tradeConfirm.update({

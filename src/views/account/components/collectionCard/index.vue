@@ -12,7 +12,7 @@
         >
           <i
             :class="`iconfont  ${
-              txTypeToIcon(data.txType)
+              txTypeToIcon(data)
             }`"
           ></i>
         </div>
@@ -20,7 +20,7 @@
       <div class="token-info flex center">
         <div>
           <div class="name">
-            {{ transactiontxType(data.txType) }}
+            {{ handleTxType(data) }}
             <span :class="`status${data.status}`">
               {{ transactionStatus(data.status) }}
             </span>
@@ -36,10 +36,10 @@
     <div class="collection-card-right flex center">
       <div>
         <div class="van-ellipsis text-right val lh-18">
-          {{ utils.formatEther(data.value) }} {{data.symbol}}
+         {{data.transitionType == '6' ? '+' + data.convertAmount : '-' + utils.formatEther(data.value)}} {{data.symbol}}
         </div>
         <div class="van-ellipsis text-right usd lh-18">
-          {{ toUsdSymbol(utils.formatEther(data.value), 2) }} 
+          {{data.transitionType == '6' ? toUsdSymbol(data.convertAmount, 4) : toUsdSymbol(utils.formatEther(data.value),4)}} 
         </div>
       </div>
     </div>
@@ -101,9 +101,13 @@ export default defineComponent({
     const fromAddress = computed(() => {
       return addressMask(props.data.from);
     });
-    const txTypeToIcon = (type: string) => {
+    const txTypeToIcon = (data: any) => {
+      const {txType,transitionType} = data
       let s = ''
-      switch(type.trim()){
+      if(transitionType == '6') {
+        return 'icon-caozuo-xunhuan1'
+      }
+      switch(txType.trim()){
         case 'send':
         case 'other':
           s = 'icon-jiantou_youshang'
@@ -113,6 +117,15 @@ export default defineComponent({
           break;
       }
       return s
+    }
+    const handleTxType = (item: any) => {
+      const {transitionType,txType} = item
+      console.warn('transitionType', transitionType)
+     if(transitionType && transitionType == '6') {
+        return t('common.conver')
+     } else {
+      return transactiontxType(txType)
+     }
     }
     return {
       t,
@@ -127,8 +140,8 @@ export default defineComponent({
       utils,
       toUsdSymbol,
       transactionStatus,
-      transactiontxType,
       currentNetwork,
+      handleTxType
     };
   },
 });

@@ -58,6 +58,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { useCountDown } from '@vant/use';
 import { useTradeConfirm } from '@/plugins/tradeConfirmationsModal'
+import {clone} from '@/store/modules/account'
 
 export default defineComponent({
   name: 'send-confirm-modal',
@@ -147,6 +148,8 @@ export default defineComponent({
       const callBack = () => {
             router.replace({name:'wallet'})
           }
+                // @ts-ignore
+     const network = clone(store.state.account.currentNetwork)
       const params = {
         ...props.data,
         call(data: any){
@@ -160,6 +163,7 @@ export default defineComponent({
         }
       }
       nextLoading.value = true
+      
       $tradeConfirm.open()
       store
         .dispatch(value ? 'account/transaction' : 'account/tokenTransaction', params)

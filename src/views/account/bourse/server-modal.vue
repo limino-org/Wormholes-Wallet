@@ -53,7 +53,7 @@
             </template>
           </van-popover>
         </div>
-        <div class="value lh-16">300 days / 1560 hour</div>
+        <div class="value lh-16">{{t('createExchange.serverDesc')}}</div>
       </div>
       <div class="card">
         <div class="label lh-16 mb-2">
@@ -76,7 +76,7 @@
             </template>
           </van-popover>
         </div>
-        <div class="value lh-16">365 days</div>
+        <div class="value lh-16">365 {{t('common.days')}}</div>
       </div>
       <div class="card">
         <div class="label lh-16 mb-2">

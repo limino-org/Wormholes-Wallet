@@ -65,7 +65,7 @@ import { useRouter } from 'vue-router'
 import { getRandomIcon } from '@/utils'
 import CollectionCard from '@/views/account/components/collectionCard/index.vue'
 import { TransactionTypes } from '@/store/modules/account'
-
+import localforage from 'localforage'
 export default {
   name: 'transaction-history',
   components: {
@@ -87,6 +87,8 @@ export default {
     const appProvide = inject('appProvide')
     const { t } = useI18n()
     const store = useStore()
+      console.log('-=============================',)
+
     const tabs = reactive({
       list: [
         { name: t('transationHistory.all'), value: 1, select: true },
@@ -116,41 +118,56 @@ export default {
     const back = () => {
       router.go(-1)
     }
-
+    const { accountInfo, currentNetwork } = store.state.account
+    
     // Current account transaction list
-    let tlist: any = []
-    try {
-      Object.keys(store.state.account.currentNetwork.transactionList).forEach(key => {
-        store.state.account.currentNetwork.transactionList[key].forEach((item: any) => {
-          tlist.push(item)
+    let tlist: any = ref([])
+    onMounted(async() => {
+      console.log('----------------------------------------',currentNetwork)
+      const txList: any = await localforage.getItem(`txlist-${currentNetwork.id}`) || {}
+      try {
+      Object.keys(txList).forEach(key => {
+        txList[key].forEach((item: any) => {
+          tlist.value.push(item)
         })
       })
     } catch (err) {
-      tlist = []
+      tlist.value = []
     }
+    console.log('tlist', tlist.value)
+    })
+    // try {
+    //   Object.keys(store.state.account.currentNetwork.transactionList).forEach(key => {
+    //     store.state.account.currentNetwork.transactionList[key].forEach((item: any) => {
+    //       tlist.value.push(item)
+    //     })
+    //   })
+    // } catch (err) {
+    //   tlist.value = []
+    // }
 
     // All transactions
     const transactionList = computed(() => {
-      return tlist.sort((a: any,b:any) =>  new Date(b.date).getTime() - new Date(a.date).getTime())
+      return tlist.value.sort((a: any,b:any) =>  new Date(b.date).getTime() - new Date(a.date).getTime())
     })
 
     // Send record
     const sendList = computed(() => {
-      const newlist = tlist || []
+      const newlist = tlist.value || []
       return newlist.filter((item: any) => {
         return item.txType == TransactionTypes.default
       })
     })
     // swap transaction
     const swapList = computed(() => {
-      const newlist = tlist || []
+      const newlist = tlist.value || []
       return newlist.filter((item: any) => {
         return item.txType == TransactionTypes.swap
       })
     })
     // Other records
     const otherList = computed(() => {
-      const newlist = tlist || []
+      const newlist = tlist.value || []
       return newlist.filter((item: any) => {
         return item.txType == TransactionTypes.other || item.txType == TransactionTypes.contract
       })

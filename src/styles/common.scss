@@ -200,13 +200,13 @@ body {
 }
 
 .el-popper {
-  z-index: 10 !important;
+  z-index: 100 !important;
 }
 
 .van-icon-question {
   cursor: pointer;
   margin-left: 5px !important;
-  color: #848484 !important;
+  color: #848484;
   font-size: 12px;
 }
 
@@ -229,7 +229,6 @@ body {
   }
   .van-popover__arrow {
     color: #3AAE55;
-    left: 50%;
   }
 }
 
@@ -298,11 +297,11 @@ body {
     box-shadow: none;
   }
 }
-.van-popover__wrapper {
-  .van-icon-question {
-    margin-left: 0 !important;
-  }
-}
+// .van-popover__wrapper {
+//   .van-icon-question {
+//     margin-left: 0 !important;
+//   }
+// }
 
 .popover-blue {
   .van-popover__content {

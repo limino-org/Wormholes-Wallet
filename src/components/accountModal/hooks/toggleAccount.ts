@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SetupContext, Ref, ref, reactive, defineComponent, computed, toRaw, nextTick } from "vue";
 import { CreateWalletByJsonParams, CreateWalletByMnemonicParams } from '@/utils/ether'
 import { useStore } from "vuex";
@@ -8,14 +9,13 @@ import { encryptPrivateKey, EncryptPrivateKeyParams } from '@/utils/web3'
 import eventBus from "@/utils/bus";
 import { useBroadCast } from '@/utils/broadCast'
 import i18n from "@/language/index";
-
+import store from '@/store/index'
 import { Toast } from "vant";
 import router from "@/router";
 import { Mnemonic } from "ethers/lib/utils";
 import { useExchanges } from "@/hooks/useExchanges";
 import localforage from "localforage";
 export const useToggleAccount = () => {
-  const store = useStore()
   const { commit, dispatch, state } = store
   const { handleUpdate } = useBroadCast()
   const createLoading: Ref<boolean> = ref(false)
@@ -52,7 +52,9 @@ export const useToggleAccount = () => {
           initExchangeData()
         }
       })
+
       handleUpdate()
+      return wall
     } catch (err) {
       const errstr = String(err)
       if (errstr.indexOf('password') > -1) {

@@ -1,9 +1,6 @@
 import { Toast, Notify } from "vant";
 import { ethers, utils } from "ethers";
 import BigNumber from "bignumber.js";
-import {
-  web3,
-} from "@/utils/web3";
 // @ts-ignore
 window.utils = utils;
 import {
@@ -14,7 +11,6 @@ import {
   CreateWalletByMnemonicParams,
   createRandomWallet,
 } from "@/utils/ether";
-
 import { getRandomIcon } from "@/utils/index";
 import { toRaw } from "vue";
 import { TransactionData, TransactionParams } from "./index";
@@ -27,7 +23,6 @@ import {
   NetWorkData,
   netWorklist,
   TransactionList,
-  chessIcons,
   TransactionRecord,
 } from "@/enum/network";
 // import { getEtherBalances } from "@mycrypto/eth-scan";
@@ -43,7 +38,7 @@ import { getContractAddress } from "@/http/modules/common";
 import localforage from 'localforage';
 import { useToast } from "@/plugins/toast";
 import Bignumber from 'bignumber.js'
-import { fa } from "element-plus/es/locale";
+import { web3 } from "@/utils/web3";
 export interface State {
   mnemonic: Mnemonic;
   path: string;
@@ -176,7 +171,6 @@ const createWallet = async () => {
       // @ts-ignore
       const wall = wa.connect(provider)
       const network = await wall.provider.getNetwork()
-
       wallet = wall
       store.commit('account/UPDATE_NETSTATUS', NetStatus.success)
       return Promise.resolve(wall)
@@ -380,20 +374,6 @@ export default {
     // Delete network by ID
     DETETE_NETWORK(state: State, id: string) {
       const list = state.netWorkList.filter((item) => item.id != id);
-      // reset icon
-      list.forEach((item, idx) => {
-        item.icon = chessIcons[idx]
-      })
-      if(state.currentNetwork.id == id) {
-        list.forEach(item => {
-          if(item.isMain) {
-            item.select = true
-          } else {
-            item.select = false
-          }
-        })
-        state.currentNetwork = list[0]
-      }
       state.netWorkList = list;
     },
     // Modify network data according to ID
@@ -415,38 +395,32 @@ export default {
     },
     // A list of transactions pushed to the current account
     // Transaction list pushed to current account
-    PUSH_TRANSACTION(state: State, value: TransactionReceipt) {
-      const { to, from, tokenAddress } = value;
-      const currentNetwork: NetWorkData = { ...toRaw(state.currentNetwork) };
-      const netWorkList = toRaw(state.netWorkList);
-      const tokenAdd = tokenAddress ? tokenAddress.toUpperCase() : '';
+    async PUSH_TRANSACTION(state: State, value: TransactionReceipt) {
+      const { to, from, tokenAddress,network } = value;
+      const txNetwork: NetWorkData = {...network};
+      const {id, currencySymbol} = txNetwork
       const formAdd = from.toUpperCase();
-      const len2 =
-        typeof currentNetwork.transactionList[formAdd] != undefined &&
-          currentNetwork.transactionList[formAdd]
-          ? currentNetwork.transactionList[formAdd].length
-          : 0;
-
-      if (len2) {
-        Object.keys(currentNetwork.transactionList).forEach((key) => {
-          const keyVal = key.toUpperCase();
-          if (keyVal == formAdd) {
-            const hashList = currentNetwork.transactionList[keyVal].map(item => item.hash)
-            if (!hashList.includes(value.hash)) {
-              currentNetwork.transactionList[keyVal].unshift(value);
-            }
-          }
-        });
+      const txListKey = `txlist-${id}`
+      let txList: any = await localforage.getItem(txListKey)
+      console.log('txList', txList)
+      if(txList && typeof txList == 'object') {
+        const receipt = {...value,symbol:currencySymbol}
+        if(txList[formAdd] && txList[formAdd].length) {
+          const hasHash = txList[formAdd].find((tx: any) => tx.hash.toUpperCase() == value.hash.toUpperCase())
+          !hasHash ? txList[formAdd].unshift(clone(receipt)) : ''
+        } else {
+          txList[formAdd] = [clone(receipt)]
+        }
       } else {
-        currentNetwork.transactionList[formAdd] = [value];
-      }
-      for (let i = 0; i < netWorkList.length; i++) {
-        if (netWorkList[i].chainId == currentNetwork.chainId) {
-          netWorkList[i] = currentNetwork;
+        const receipt = {...value,symbol:currencySymbol}
+        txList = {
+          [formAdd]:[clone(receipt)]
         }
       }
-      state.currentNetwork = currentNetwork;
-      state.netWorkList = netWorkList;
+      store.commit('account/DEL_TXQUEUE', value)
+      console.log('set txList', txList)
+      // save txlist
+      localforage.setItem(txListKey, clone(txList))
     },
     // Push to transaction queue
     ADD_TRANACTIONLIST(state: State, data: any) {
@@ -593,18 +567,23 @@ export default {
       state.firstTime = bool
     },
     // New trades are pushed to the trade queue
-    PUSH_TXQUEUE(state: State, tx: any) {
-      const list = localStorage.getItem('txQueue')
-      const txQueue = list ? JSON.parse(list) : []
+    async PUSH_TXQUEUE(state: State, tx: any) {
+      const { network: { id } } = tx
+      const queuekey = `txQueue-${id}`
+      const list: any = await localforage.getItem(queuekey)
+      const txQueue = list && list.length ? list : []
       txQueue.push(tx)
-      localStorage.setItem('txQueue', JSON.stringify(txQueue))
+      await localforage.setItem(queuekey, txQueue)
     },
     // Delete data from a queue
-    DEL_TXQUEUE(state: State, tx: any) {
-      const list = localStorage.getItem('txQueue')
-      const txQueue = list ? JSON.parse(list) : []
-      const newList = txQueue.filter((item: any) => item.hash != tx.hash)
-      localStorage.setItem('txQueue', JSON.stringify(newList))
+    // Delete data from a queue
+    async DEL_TXQUEUE(state: State, tx: any) {
+      const {network:{id}} = tx
+      const queueKey = `txQueue-${id}`
+      const list: any = await localforage.getItem(queueKey)
+      const txQueue = list && list.length ? list : []
+      const newList = txQueue.filter((item: any) => item.hash.toUpperCase() != tx.hash.toUpperCase())
+      await localforage.setItem(queueKey, newList)
     },
     UPDATE_ACCOUNT(state: State, account: State) {
       state.accountInfo = account.accountInfo
@@ -890,7 +869,8 @@ export default {
     ) {
       const { to, value, call, gasPrice, gasLimit } = params;
       const gasp = gasPrice ? new BigNumber(gasPrice).dividedBy(1000000000).toFixed(12) : '0.0000000012';
-      debugger
+      const {currentNetwork} = state
+
       let tx = {
         to,
         value: utils.parseEther(value),
@@ -905,6 +885,20 @@ export default {
       return new Promise((resolve, reject) => {
         sendPromise
           .then((data: any) => {
+            const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = data;
+            store.commit("account/PUSH_TXQUEUE", {
+              hash,
+              from,
+              gasLimit,
+              gasPrice,
+              nonce,
+              to,
+              type,
+              value,
+              transitionType: null,
+              txType: TransactionTypes.default,
+              network: clone(currentNetwork)
+            });
             // Add to transaction queue
             commit("ADD_TRANACTIONLIST", JSON.parse(JSON.stringify(data)));
             resolve(data);
@@ -916,7 +910,7 @@ export default {
                   TransactionTypes.default,
                   receipt,
                   data,
-                  symbol
+                  currentNetwork
                 );
                 call ? call(rep) : "";
                 // Update transaction queue
@@ -943,7 +937,7 @@ export default {
       { state, commit, dispatch }: any,
       params: SendTokenParams
     ) {
-      const { address, amount, to, gasPrice, gasLimit, call } = params;
+      const { address: tokenAddress, amount, to, gasPrice, gasLimit, call } = params;
       // Update recent contacts
       commit("PUSH_RECENTLIST", to);
       return new Promise(async (resolve, reject) => {
@@ -951,11 +945,11 @@ export default {
           // Get contract token instance object
           const { contractWithSigner, contract } = await dispatch(
             "connectConstract",
-            address
+            tokenAddress
           );
-          console.log(" contract.estimate", contract, contractWithSigner);
-          
           const amountWei = web3.utils.toWei((amount || 0) + '','ether')
+
+          console.log(" contract.estimate", contract, contractWithSigner);
           contractWithSigner.estimateGas
             .transfer(to, amountWei)
             .then((gas: any) => {
@@ -971,6 +965,20 @@ export default {
               contractWithSigner
                 .transfer(to, amountWei, transferParams)
                 .then((data: any) => {
+                  const { from, gasLimit, gasPrice, hash, nonce, type, value } = data;
+                  store.commit("account/PUSH_TXQUEUE", {
+                    hash,
+                    from,
+                    gasLimit,
+                    gasPrice,
+                    nonce,
+                    to,
+                    type,
+                    value,
+                    transitionType: null,
+                    txType: TransactionTypes.default,
+                    network: clone(state.currentNetwork)
+                  });
                   // Add to transaction queue
                   commit("ADD_TRANACTIONLIST", JSON.parse(JSON.stringify(data)));
                   sessionStorage.setItem("token tx", JSON.stringify(data));
@@ -986,14 +994,14 @@ export default {
                         JSON.stringify(receipt)
                       );
 
-                      const token = state.currentNetwork.tokens[wallet.address.toUpperCase()].find((item: any) => item.tokenContractAddress.toUpperCase() == address.toUpperCase())
-                      const symbol = token.symbol
+                      const token = state.currentNetwork.tokens[wallet.address.toUpperCase()].find((item: any) => item.tokenContractAddress.toUpperCase() == tokenAddress.toUpperCase())
                       const rep: TransactionReceipt =
                         handleGetTranactionReceipt(
                           TransactionTypes.default,
                           receipt,
-                          data,
-                          symbol,
+                          {...data,to},
+      // @ts-ignore
+      clone(state.currentNetwork)
                         );
                       call ? call(rep) : "";
                       // Update transaction queue
@@ -1001,7 +1009,7 @@ export default {
                       // Update account balance
                       dispatch("updateTokensBalances");
                       // Add to transaction
-                      commit("PUSH_TRANSACTION", { ...rep, tokenAddress: address });
+                      commit("PUSH_TRANSACTION", { ...rep, tokenAddress });
                     });
                 })
                 .catch((err: any) => {
@@ -1018,27 +1026,120 @@ export default {
         }
       });
     },
+    // async tokenTransaction(
+    //   { state, commit, dispatch }: any,
+    //   params: SendTokenParams
+    // ) {
+    //   const { address: tokenAddress, amount, to, gasPrice, gasLimit, call } = params;
+    //   // Update recent contacts
+    //   commit("PUSH_RECENTLIST", to);
+    //   return new Promise(async (resolve, reject) => {
+    //     try {
+    //       // Get contract token instance object
+    //       const { contractWithSigner, contract } = await dispatch("connectConstract", tokenAddress);
+    //       console.log(" contract.estimate", contract, contractWithSigner);
+    //       const amountWei = web3.utils.toWei((amount || 0) + '','ether')
+    //       console.log('amountWei---2', amountWei)
+    //       const gas = await contractWithSigner.estimateGas.transfer(to, amountWei )
+    //       const gasp = new BigNumber(gasPrice)
+    //         .dividedBy(1000000000)
+    //         .toFixed(12);
+    //       console.log("gas-->", utils.formatEther(gas));
+    //       const transferParams = {
+    //         gasLimit: gasLimit,
+    //         gasPrice: ethers.utils.parseEther(gasp),
+    //       };
+          
+    //       const token = state.currentNetwork.tokens[wallet.address.toUpperCase()].find((item: any) => item.tokenContractAddress.toUpperCase() == tokenAddress.toUpperCase())
+    //       const symbol = token.symbol
+    //       const data = await contractWithSigner.transfer(to, amountWei, transferParams)
+    //       // const { from, gasLimit: gasLi, gasPrice: gasp2, hash, nonce,  type, value } = data;
+    //       // commit("PUSH_TXQUEUE", {
+    //       //   date: new Date(),
+    //       //   hash,
+    //       //   from,
+    //       //   gasLimit: gasLi,
+    //       //   gasPrice: gasp2,
+    //       //   nonce,
+    //       //   to,
+    //       //   type,
+    //       //   value,
+    //       //   network: clone({...state.currentNetwork, currencySymbol: symbol}),
+    //       //   txType: TransactionTypes.default
+    //       // });
+    //       // const penddingRep = handleGetPenddingTranactionReceipt(TransactionTypes.contract,data, symbol)
+    //       // commit("PUSH_TRANSACTION", {...penddingRep,tokenAddress: address});
+    //       // Add to transaction queue
+          
+
+
+
+          
+    //       commit("ADD_TRANACTIONLIST", JSON.parse(JSON.stringify(data)));
+    //       sessionStorage.setItem("token tx", JSON.stringify(data));
+    //       resolve(data);
+    //       // Monitor on chain confirmation
+    //       const receipt = await wallet.provider.waitForTransaction(data.hash)
+    //       // Rewrite balance consistent with ordinary transaction bigNumber
+    //       data.value = utils.parseEther(amount);
+    //       sessionStorage.setItem(
+    //         "token receipt",
+    //         JSON.stringify(receipt)
+    //       );
+    //       const {currentNetwork} = state
+    //       const rep: TransactionReceipt =
+    //         handleGetTranactionReceipt(
+    //           TransactionTypes.default,
+    //           receipt,
+    //           data,
+    //           {...currentNetwork, currencySymbol: symbol},
+    //         );
+    //       // Update transaction queue
+    //       commit("UPDATE_TRANACTIONLIST", rep);
+    //       call ? call(rep) : "";
+    //       // Update account balance
+    //       dispatch("updateTokensBalances");
+    //       // Add to transaction
+    //       commit("PUSH_TRANSACTION", { ...rep, tokenAddress });
+    //     } catch (err) {
+    //       reject(err);
+    //     }
+    //   });
+    // },
     // send data
     async sendTransaction({ commit, dispatch, state }: any, tx: any) {
       const { to, from, data, callBack } = tx
       commit("PUSH_RECENTLIST", to);
       try {
+              // @ts-ignore
+      const network = clone(store.state.account.currentNetwork)
         const wallet = await getWallet();
         const res = await wallet.sendTransaction({
           to,
           from,
           data
         })
+        const { gasLimit, gasPrice, hash, nonce, type, value } = res;
+        store.commit("account/PUSH_TXQUEUE", {
+          hash,
+          from,
+          gasLimit,
+          gasPrice,
+          nonce,
+          type,
+          value,
+          transitionType: null,
+          txType: TransactionTypes.default,
+          network
+        });
         commit("ADD_TRANACTIONLIST", JSON.parse(JSON.stringify(res)));
         callBack ? callBack() : ''
         const receipt = await wallet.provider.waitForTransaction(res.hash);
-        const symbol = state.currentNetwork.currencySymbol
         const rep: TransactionReceipt = handleGetTranactionReceipt(
           TransactionTypes.default,
           receipt,
           res,
-          symbol
-        );
+          network);
         // Update transaction queue
         commit("UPDATE_TRANACTIONLIST", rep);
         // Add to transaction
@@ -1119,7 +1220,7 @@ export default {
       const logoUrl = "eth.jpg";
       let balance = "0";
       try {
-        balance = await contactObj.contractWithSigner.balanceOf(wallet.address);
+        balance = utils.formatEther(await contactObj.contractWithSigner.balanceOf(wallet.address));
       } catch (err: any) {
         // Toast(i18n.global.t("account.importerror"));
         return Promise.reject(i18n.global.t("common.importerror"));
@@ -1200,7 +1301,7 @@ export default {
         Promise.all(plist).then((result) => {
           for (let i = 0; i < tokens.length; i++) {
             // @ts-ignore
-            tokens[i].balance = result[i];
+            tokens[i].balance = result[i].toString();
           }
         });
       }
@@ -1222,9 +1323,10 @@ export default {
           wallet.provider
         );
         const contractWithSigner = contract.connect(wallet);
-        console.warn("contractWithSigner--------------", contractWithSigner);
         const amount = await contractWithSigner.balanceOf(wallet.address)
-        return Promise.resolve(utils.formatEther(amount));
+        return Promise.resolve(
+          utils.formatEther(amount)
+        );
       } catch (err) {
         return Promise.reject(err);
       }
@@ -1242,7 +1344,6 @@ export default {
     // Address cannot be empty! Access to on-chain account data
     async getChainAccountInfo({ commit, state }: any) {
       const wallet = await getWallet()
-      debugger
       try {
         const accountInfo = await wallet.provider.send("eth_getAccountInfo", [
           state.accountInfo.address,
@@ -1255,22 +1356,41 @@ export default {
     },
     // The result of polling the transaction queue
     async waitTxQueueResponse({ commit, state }: any) {
-      const list = localStorage.getItem('txQueue')
-      const txQueue = list ? JSON.parse(list) : []
+      const {id} = state.currentNetwork
+      const queuekey = `txQueue-${id}`
+      const list: any = await localforage.getItem(queuekey)
+      const txQueue = list && list.length ? list : []
+      const newWallet = await getWallet()
       if (!txQueue.length) {
         return Promise.resolve()
       }
       try {
         for await (const iterator of txQueue) {
-          const data1 = await wallet.provider.waitForTransaction(
-            iterator.hash
-          );
-          const symbol = state.currentNetwork.currencySymbol;
+          const {hash, transitionType, nft_address, blockNumber, network} = iterator
+          const data1 = await newWallet.provider.waitForTransaction(hash);
+          let convertAmount: any = ''
+          if(transitionType && transitionType == '6') {
+            const nftAccountInfo = await newWallet.provider.send(
+              "eth_getAccountInfo",
+              [nft_address,  web3.utils.toHex((data1.blockNumber - 1).toString())]
+            );
+            const {MergeLevel, MergeNumber} = nftAccountInfo
+            if(MergeLevel === 0) {
+              convertAmount = new BigNumber(MergeNumber).multipliedBy(0.095).toNumber()
+            }else if(MergeLevel === 1) {
+              convertAmount = new BigNumber(MergeNumber).multipliedBy(16).multipliedBy(0.143).toNumber()
+            } else if(MergeLevel === 2) {
+              convertAmount = new BigNumber(MergeNumber).multipliedBy(256).multipliedBy(0.271).toNumber()
+            } else if(MergeLevel === 3) {
+              convertAmount = new BigNumber(MergeNumber).multipliedBy(4096).multipliedBy(0.65).toNumber()
+            }
+            
+          }
           const rep: TransactionReceipt = handleGetTranactionReceipt(
             TransactionTypes.other,
             data1,
-            iterator,
-            symbol
+            {...iterator,convertAmount},
+            network
           );
           commit("DEL_TXQUEUE", { ...iterator });
           commit("PUSH_TRANSACTION", { ...rep });
@@ -1287,10 +1407,12 @@ export default {
 
 // Transactions
 export type TransactionReceipt = {
+  network: NetWorkData,
   // Transaction type is used for list / detail display
   txType: string;
   // Transaction type
   type: number;
+  blockNumber: any,
   // state
   status: number;
   // date
@@ -1309,9 +1431,13 @@ export type TransactionReceipt = {
   hash: string;
   // gas price
   effectiveGasPrice: BigNumber;
-  // symbol
-  symbol: string
-  tokenAddress?: string
+  tokenAddress?: string,
+  // transition type
+  transitionType? : string
+  // nft_address
+  nft_address?: string
+  //  convert amount
+  convertAmount? : string
 };
 
 // Transaction type
@@ -1326,6 +1452,9 @@ export enum TransactionTypes {
   other = "other",
   // receive
   receive = "receive",
+  // convert
+  convert = "convert",
+
 }
 
 
@@ -1340,10 +1469,10 @@ export function handleGetTranactionReceipt(
   txType: string,
   receipt: any,
   tx: any,
-  symbol: string
+  network: NetWorkData
 ) {
-  const { from, to, value, nonce, hash } = tx;
-  const { gasUsed, status, effectiveGasPrice, type } = receipt;
+  const { from, to, value, nonce, hash, transitionType, nft_address, convertAmount } = tx;
+  const { gasUsed, status, effectiveGasPrice, type, blockNumber } = receipt;
   const date = new Date();
   sessionStorage.setItem("receipt", JSON.stringify(receipt));
   sessionStorage.setItem("tx", JSON.stringify(tx));
@@ -1368,7 +1497,17 @@ export function handleGetTranactionReceipt(
     gasUsed,
     hash,
     effectiveGasPrice,
-    symbol
+    blockNumber,
+    transitionType: transitionType || '',
+    nft_address: nft_address || '',
+    convertAmount: convertAmount || '',
+    network
   };
   return rec;
+}
+
+
+
+export const clone = (params = {}) => {
+  return JSON.parse(JSON.stringify(params))
 }

@@ -123,14 +123,14 @@
   </div>
 </template>
 <script lang="ts">
-import { ref } from "@vue/reactivity";
+import { ref, onActivated } from "vue";
 import { getWallet } from "@/store/modules/account";
 import { utils } from "ethers";
 import BigNumber from "bignumber.js";
 import { computed, onMounted } from "@vue/runtime-core";
 import { useI18n } from "vue-i18n";
 import NavHeader from '@/components/navHeader/index.vue'
-
+import { web3 } from "@/utils/web3";
 import {
   Icon,
   Toast,
@@ -144,8 +144,7 @@ import {
 import store from "@/store";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { toUsd } from "@//utils/filters";
-import { web3 } from '@/utils/web3';
+import { toUsd } from "@/utils/filters";
 
 export default {
   name: "gass-fee-page",
@@ -238,29 +237,30 @@ export default {
     });
     // Set gaslimit dynamically
     const calcGasLimit = async () => {
-      const { tokenContractAddress } = chooseToken.value;
-      // Token transfer dynamic estimation gaslimit
-      if (tokenContractAddress) {
-        const am = (amount.value || 0) + ''
-        console.log('am---1', am)
-        const amountWei = web3.utils.toWei(am,'ether')
-        // Get contract token instance object
-        const { contractWithSigner, contract } = await dispatch(
-          "account/connectConstract",
-          tokenContractAddress
-        );
-        contractWithSigner.estimateGas
-          .transfer(
-            toAddress.value || accountInfo.value.address,
-            amountWei
-          )
-          .then((gas: any) => {
-            gasLimit.value = utils.formatUnits(gas, "wei");
-          });
-      } else {
-        gasLimit.value = 21000;
-      }
-    };
+    const { tokenContractAddress } = chooseToken.value;
+    // Token transfer dynamic estimation gaslimit
+    if (tokenContractAddress) {
+      const amountWei = web3.utils.toWei(amount.value.toString(),'ether')
+      // Get contract token instance object
+      const { contractWithSigner, contract } = await dispatch(
+        "account/connectConstract",
+        tokenContractAddress
+      );
+      contractWithSigner.estimateGas
+        .transfer(
+          toAddress.value || accountInfo.value.address,
+          amountWei
+        )
+        .then((gas: any) => {
+          const limitWei = utils.formatUnits(gas, "wei")
+          gasLimit.value = parseFloat(new BigNumber(limitWei).plus(new BigNumber(limitWei).multipliedBy(0.2)).toFixed(0));
+          console.log('gasLimit.value', gasLimit.value,limitWei)
+
+        });
+    } else {
+      gasLimit.value = 21000;
+    }
+  };
 
     // gasPrice  Exchange for us dollars
     const gasPriceUsd = computed(() => {
@@ -317,7 +317,7 @@ export default {
       };
       router.replace({ name: backUrl || "send", query });
     };
-    onMounted(async () => {
+    onActivated(async () => {
       calcGasLimit();
       initGas();
     });

@@ -99,7 +99,7 @@ import {
   onMounted,
   watch,
 } from "vue";
-import { getWallet } from "@/store/modules/account";
+import { getWallet,clone ,TransactionTypes} from "@/store/modules/account";
 import { useStore } from "vuex";
 import { useI18n } from 'vue-i18n';
 
@@ -166,9 +166,24 @@ export default {
           data: `0x${data3}`,
         };
         console.log(tx1);
-
+        // @ts-ignore
+        const network = clone(store.state.account.currentNetwork)
         const wallet = await getWallet();
         const receipt: any = await wallet.sendTransaction(tx1);
+        const { from, gasLimit, gasPrice, hash, nonce, to, type, value,error } = receipt;
+        store.commit("account/PUSH_TXQUEUE", {
+          hash,
+          from,
+          gasLimit,
+          gasPrice,
+          nonce,
+          to,
+          type,
+          value,
+          transitionType: '25',
+          txType: TransactionTypes.other,
+          network
+        });
         const res = await wallet.provider.waitForTransaction(receipt.hash)
         console.log(receipt);
         console.log("receiptreceiptreceiptreceiptreceipt");

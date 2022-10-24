@@ -27,17 +27,17 @@
   </van-sticky>
   <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
     <div>
-      <div class="snftcontainer" v-for="(item, i) in list" :key="i">
+      <div class="snftcontainer hover" v-for="(item, i) in list" :key="i" @click.stop="toNftExchange(item)">
         <div class="snftcontainer_left">
           <div class="checkbox_img flex center" v-if="isSelectComputed">
             <i
               v-if="item.flag"
-              @click="item.flag = !item.flag"
+              @click.stop="item.flag = !item.flag"
               class="iconfont icon-xuanzhong2"
             ></i>
             <i
               v-else
-              @click="item.flag = !item.flag"
+              @click.stop="item.flag = !item.flag"
               class="iconfont icon-xuanzhong"
             ></i>
           </div>
@@ -55,7 +55,7 @@
             </div>
             <div class="snftmiddle flex column between">
               <div class="flex between center-v snftName">
-                <span class="f-12 lh-12">{{ item.collections }}</span
+                <span class="f-12 lh-12">{{ item.collections }} <span v-show="item.tag === 'F'">/#{{item.snftPosition}}</span></span
                 ><NftTag :tag="item.tag" />
               </div>
               <div class="snftleftcolleaddre flex center-v">
@@ -103,7 +103,7 @@
           <div class="total">
             {{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)
           </div>
-          <div class="usd">{{ sumAll }}ERB <span>( ≈$0)</span></div>
+          <div class="usd">{{ sumAll }}ERB <span>( ≈${{toUsd( sumAll,4)}})</span></div>
         </div>
       </div>
       <div class="snft_bottom-right hover" @click="showTime">
@@ -160,7 +160,7 @@
                 </template>
               </van-popover>
             </div>
-            <div class="card-value gasfee">≈{{gasFee}} ERB(≈${{toUsd(gasFee,5)}})</div>
+            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
           </div>
         </div>
         <i18n-t
@@ -171,7 +171,7 @@
         >
           <template v-slot:link>
             <a
-              :href="VUE_APP_SNFTSEXCHANGE_URL"
+              :href="VUE_APP_EXCHANGES_URL"
               target="_blank"
               rel="noopener noreferrer"
               >{{ t("converSnft.buy") }}</a
@@ -255,7 +255,7 @@ name="question hover"
                 </template>
               </van-popover>
             </div>
-            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ 1)</div>
+            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
           </div>
         </div>
 
@@ -335,7 +335,7 @@ name="question hover"
                 </template>
               </van-popover>
             </div>
-            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ 1)</div>
+            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
           </div>
         </div>
 
@@ -369,7 +369,7 @@ name="question hover"
 
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core";
-import { computed, ref } from "vue";
+import { computed, ref,onBeforeMount, onMounted } from "vue";
 import { useStore } from "vuex";
 import {
   getNftOwner,
@@ -396,17 +396,18 @@ import {
 } from "vant";
 import eventBus from "@/utils/bus";
 import { useI18n } from "vue-i18n";
-import { getGasFee, getWallet } from "@/store/modules/account";
+import { clone, getGasFee, getWallet } from "@/store/modules/account";
 import { useToast } from "@/plugins/toast";
 import BigNumber from "bignumber.js";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
-import { VUE_APP_EXCHANGES_URL, VUE_APP_SNFTSEXCHANGE_URL } from "@/enum/env";
+import { VUE_APP_EXCHANGES_URL } from "@/enum/env";
 import SnftModal from "./snftModal.vue";
 import { getRandomColor } from "@/utils";
 import { web3 } from "@/utils/web3";
 import { toUsd } from "@/utils/filters";
 import { ethers } from "ethers";
+import { TransactionTypes } from "@/store/modules/account";
 export default defineComponent({
   name: "nft-list",
   props: {
@@ -440,6 +441,9 @@ export default defineComponent({
     const store = useStore();
     const { t } = useI18n();
     const nftErr = ref(false);
+    const network = ref({
+      chainId: 51891
+    })
     const layoutType = computed(() => store.state.system.layoutType);
     const list: any = ref([]);
     const accountInfo = computed(() => store.state.account.accountInfo);
@@ -453,6 +457,14 @@ export default defineComponent({
       },
     });
 
+    onMounted(async() => {
+      // const wallet = await getWallet()
+      // const nftAccountInfo = await wallet.provider.send(
+      //         "eth_getAccountInfo",
+      //         ['0x8000000000000000000000000000000000015a94', "latest"]
+      //       );
+      //       debugger
+    })
     const show = ref(false);
     
     const hex2int = (hex: any) => {
@@ -468,12 +480,18 @@ export default defineComponent({
         }
         a[i] = code;
       }
-
+      console.log('a', a)
       return a.reduce(function (acc, c) {
         acc = 16 * acc + c;
         return acc;
       }, 0);
     };
+
+    const snftPosition = (nft_address: string) =>{
+      const str = nft_address.substr(41)
+      console.log('last str', str)
+      return Number(`0x${str || 0}`) + 1
+    }
     const sumP = computed(() => {
       return list.value.filter((l: any) => l.flag && l.tag == "P").length;
     });
@@ -596,6 +614,7 @@ export default defineComponent({
           const str1 = item.nft_address.substr(item.nft_address.length - 2);
           // The last 2 digits of the position in SNFT are converted to hexadecimal +1
           item.position = hex2int(str1) + 1;
+          item.snftPosition = snftPosition(item.nft_address)
           // convert
           const str2 = item.nft_address.substr(item.nft_address.length - 4);
           // The last four digits of the position in the period turn to hexadecimal +1
@@ -624,6 +643,11 @@ export default defineComponent({
         loading.value = false;
       }
     };
+
+    onBeforeMount(async() => {
+      const wallet = await getWallet()
+      network.value = await wallet.provider.getNetwork()
+    })
     const isSelectAll = ref(false);
     const isSelectAllChange = () => {
       isSelectAll.value = !isSelectAll.value;
@@ -713,7 +737,6 @@ export default defineComponent({
     });
 
     const handleSubmit = async () => {
-      debugger
       const wallet = await getWallet();
       const data: any = list.value.filter((f: any) => f.flag);
       if (data.length) {
@@ -735,19 +758,23 @@ export default defineComponent({
             onLoad();
           },
         });
-
+        let transitionType = ''
         try {
           for await (const iterator of data) {
+            const {nft_address} = iterator
             let str = "";
             switch (tabIndex.value) {
               case "2":
-                str = `wormholes:{"type":6,"nft_address":"${iterator.nft_address}","version":"v0.0.1"}`;
+              transitionType = '6'
+                str = `wormholes:{"type":6,"nft_address":"${nft_address}","version":"v0.0.1"}`;
                 break;
               case "3":
-                str = `wormholes:{"type":7,"nft_address":"${iterator.nft_address}","version":"0.0.1"}`;
+              transitionType = '7'
+                str = `wormholes:{"type":7,"nft_address":"${nft_address}","version":"0.0.1"}`;
                 break;
               case "1":
-                str = `wormholes:{"type":8,"nft_address":"${iterator.nft_address}","version":"0.0.1"}`;
+              transitionType = '8'
+                str = `wormholes:{"type":8,"nft_address":"${nft_address}","version":"0.0.1"}`;
                 break;
             }
 
@@ -758,9 +785,12 @@ export default defineComponent({
               data: `0x${data3}`,
      
             };
+              // @ts-ignore
+              const network = clone(store.state.account.currentNetwork)
 
             const receipt: any = await wallet.sendTransaction(tx1);
             txQueue.push(receipt);
+            console.log('receipt', receipt)
             const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = receipt;
             store.commit("account/PUSH_TXQUEUE", {
               hash,
@@ -771,6 +801,10 @@ export default defineComponent({
               to,
               type,
               value,
+              transitionType,
+              txType: TransactionTypes.other,
+              nft_address,
+              network
             });
           }
           $tradeConfirm.update({
@@ -870,7 +904,29 @@ export default defineComponent({
     const showTip4 = ref(false);
     const showTip5 = ref(false);
     const showTip6 = ref(false);
+
+
+    const toNftExchange = (item: any) => {
+      const { tag, snft_address } = item
+      // :http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#/   51888
+      // 51891:https://snft.wormholestest.com
+      const {source_url, metaData} = item
+      const {collection_creator_addr, collections:collection_name,nft_contract_addr,nft_token_id } = metaData
+
+      const domain = network.value && network.value.chainId === 51888 ? 'http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#/' : 'https://snft.wormholestest.com/#/'
+      let str = ''
+      if(tag == 'P') {
+        str = `account?user=${accountInfo.value.address}`
+      }else if(tag == 'C'){
+        str = `collections?collection_name=${collection_name}&collection_creator_addr=${collection_creator_addr}`
+      }else if(tag == 'N' || tag == 'F') {
+        str = `assets/detail?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}&source_url=${source_url}`
+      }
+      const newUrl = `${domain}${str}`
+      location.href = newUrl
+    }
     return {
+      toNftExchange,
       myprofit,
       historyProfit,
       showTip1,
@@ -891,7 +947,6 @@ export default defineComponent({
       show,
       layoutType,
       isSelectAll,
-      VUE_APP_SNFTSEXCHANGE_URL,
       sumN,
       toUsd,
       t,
@@ -1284,7 +1339,8 @@ export default defineComponent({
       color: #8f8f8f;
       :deep(){
         .van-popover__wrapper {
-          margin-left: 4px;
+          width: 10px;
+          height: 10px;
         }
       }
     }

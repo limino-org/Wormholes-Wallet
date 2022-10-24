@@ -225,7 +225,7 @@
             class="popover-btn-tip"
           >
             <div class="f-12 pl-10 pr-10 pt-10 pb-10 ">
-              {{ t("bourse.closeTip") }}
+              {{ t("minerspledge.closeTip2") }}
             </div>
             <template #reference>
               <van-button

@@ -254,6 +254,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        path: '/sendOpenExchangeTransaction',
+        name:"sendOpenExchangeTransaction",
+        component: () => import('@/views/sendOpenExchangeTransaction/index.vue'),
+        meta: {
+          auth: true,
+        }
+      },
+      {
         path: '/exchangeSign',
         name: 'exchangeSign',
         component: () => import('@/views/exchangeSign/index.vue'),

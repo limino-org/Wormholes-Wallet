@@ -30,8 +30,8 @@
           <div class="value">#{{ data.nonce }}</div>
         </div>
         <div class="card flex between card-sml pt-10">
-          <div class="label">{{t('transactionDetails.transferAmount')}}</div>
-          <div class="value">{{ utils.formatEther(data.value) }} {{currentNetwork.currencySymbol}}</div>
+          <div class="label">{{data.transitionType == '6' ? t('common.convertAmount') : t('transactionDetails.transferAmount')}}</div>
+          <div class="value">{{ data.transitionType == '6' ? '+' + data.convertAmount : '-' + utils.formatEther(data.value) }} {{currentNetwork.currencySymbol}}</div>
         </div>
         <div class="card flex between card-sml">
           <div class="label">{{t('transactionDetails.gasfee')}}

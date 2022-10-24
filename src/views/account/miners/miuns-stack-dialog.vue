@@ -141,6 +141,7 @@ import {
   getWallet,
   handleGetTranactionReceipt,
   TransactionTypes,
+  clone
 } from "@/store/modules/account";
 import { BigNumber } from "bignumber.js";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
@@ -195,8 +196,25 @@ export default {
           value: ethers.utils.parseEther(amount + ""),
           data: `0x${data}`,
         };
+        // @ts-ignore
+        const network = clone(store.state.account.currentNetwork)
 
         const data1 = await wallet.sendTransaction(tx1);
+        const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = data1;
+        store.commit("account/PUSH_TXQUEUE", {
+          hash,
+          from,
+          gasLimit,
+          gasPrice,
+          nonce,
+          to,
+          type,
+          value,
+          txType: TransactionTypes.other,
+          transitionType: '10',
+          network
+        });
+
         $tradeConfirm.update({ status: "approve" });
         const receipt1 = await wallet.provider.waitForTransaction(data1.hash);
         if (receipt1.status == 1) {
@@ -204,13 +222,12 @@ export default {
         } else {
           $tradeConfirm.update({ status: "fail" });
         }
-        const symbol = state.account.currentNetwork.currencySymbol;
 
         const rep = handleGetTranactionReceipt(
-          TransactionTypes.default,
+          TransactionTypes.other,
           receipt1,
           data1,
-          symbol
+          network
         );
         dispatch("account/updateAllBalance");
         commit("account/PUSH_TRANSACTION", rep);
@@ -505,6 +522,9 @@ export default {
 }
 .exchange-z {
   border: none;
+  span {
+    color: #3aae55;
+  }
 }
 .c2 {
   color: #3aae55;

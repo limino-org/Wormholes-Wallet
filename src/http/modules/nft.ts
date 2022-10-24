@@ -5,7 +5,7 @@ const isProduct = process.env.NODE_ENV == 'production' ? true : false
 const service = '/exchans'
 
 // const exchantest = isProduct ? '/c0x5051580802283c7b053d234d124b199045ead750' : ''
-const exchantest = isProduct ? '' : ''
+const exchantest = isProduct ? '' : '/c0x5051580802283c7b053d234d124b199045ead750' 
 
 const wormholesscanApi = '/contractApi'
 

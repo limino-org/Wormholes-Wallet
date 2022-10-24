@@ -100,9 +100,9 @@ import {
   Button,
   CellGroup,
 } from "vant";
+import { ExchangeStatus, getWallet, TransactionReceipt, handleGetTranactionReceipt, TransactionTypes ,clone} from "@/store/modules/account";
 import { utils } from "ethers";
 import { toHex } from "@/utils/utils";
-import { getWallet } from "@/store/modules/account";
 import { ref, Ref, reactive, onMounted, computed, toRaw } from "vue";
 import NavHeader from "@/components/navHeader/index.vue";
 import { useRoute, useRouter } from "vue-router";
@@ -179,8 +179,23 @@ export default {
         tx1["data"] = `0x${newStr}`;
       }
       localStorage.setItem('sendData', JSON.stringify(tx1))
+      const network = clone(store.state.account.currentNetwork)
+
       wallet.sendTransaction(tx1).then((transactionTX: any) => {
-        const { hash, error } = transactionTX;
+        const { from, gasLimit, gasPrice, hash, nonce, to, type, value,error } = transactionTX;
+        store.commit("account/PUSH_TXQUEUE", {
+          hash,
+          from,
+          gasLimit,
+          gasPrice,
+          nonce,
+          to,
+          type,
+          value,
+          txType:TransactionTypes.default,
+          transitionType: '11',
+          network
+        });
         transactiontx.value = transactionTX;
         wallet.provider.waitForTransaction(hash).then((res: any) => {
           receipt.value = res;

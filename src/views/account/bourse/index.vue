@@ -78,7 +78,7 @@
       </div>
       <div v-if="isExchanger_flag" class="f-14 text-bold mt-8">
         {{ exchangerBalance }} ERB
-        <span>≈{{ toUsd(exchangerBalance, 2) }}</span>
+        <span>≈${{ toUsd(exchangerBalance, 2) }}</span>
       </div>
 
       <div class="bourse-container-meaning bt mt-14" v-if="!isExchanger_flag">

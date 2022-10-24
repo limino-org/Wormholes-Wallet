@@ -14,9 +14,9 @@
             <i class="iconfont icon-bottom"></i>
           </div>
           <div class="actions-list-card-label text-center">{{ t("wallet.takeover") }}</div>
-          <van-popup v-model:show="showAcceptCode" class="receive-sheet-popup" teleport="#page-box"  position="bottom" round>
+          <!-- <van-popup v-model:show="showAcceptCode" class="receive-sheet-popup" teleport="#page-box"  position="bottom" round>
             <AcceptCode />
-          </van-popup>
+          </van-popup> -->
         </div>
         <div class="actions-list-card" @click="toSend">
           <div class="actions-list-card-icon flex center">
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="swap-list">
-      <CollectionCard @handleClick="handleView(item)" v-for="item in transactionList" :key="item.address" :data="item" />
+      <CollectionCard @handleClick="handleView(item)" v-for="item in txList" :key="item.address" :data="item" />
       <NoData v-if="!transactionList.length" :message="$t('wallet.no')" />
       <i18n-t tag="div" keypath="wallet.toBrowser" class="flex center scan-link pb-30">
         <template v-slot:link>
@@ -53,7 +53,7 @@ import { hexValue } from '@ethersproject/bytes'
 import { useI18n } from 'vue-i18n'
 import NoData from '@/components/noData/index.vue'
 import {VUE_APP_SCAN_URL} from '@/enum/env'
-
+import localforage from 'localforage'
 export default {
   components: {
     [Icon.name]: Icon,
@@ -73,15 +73,12 @@ export default {
     const { tokenContractAddress } = query
     const accountInfo = computed(() => store.state.account.accountInfo)
     const currentNetwork = computed(() => store.state.account.currentNetwork)
-    const transactionList = computed(() => {
-      const { accountInfo } = store.state.account
-      const { address } = accountInfo
-      const list = currentNetwork.value.transactionList[address.toUpperCase()]
-      return list || []
-    })
+    const transactionList = ref([])
     const pageData = reactive({ data: {} })
     pageData.data = query
-  
+    const txList = computed(() => {
+      return transactionList.value.sort((a: any,b:any) =>  new Date(b.date).getTime() - new Date(a.date).getTime())
+    })
     const toogleAcceptCode = () => {
           const params = {
         type: "receive",
@@ -101,9 +98,22 @@ export default {
       });
     }
 
-    const toBuy = () => {
-    }
+    onMounted(async() => {
+      const txList: any = await localforage.getItem(`txlist-${currentNetwork.value.id}`) || {}
+      console.log('txList', txList)
+      try {
+      Object.keys(txList).forEach(add => {
+        const badd = add.toUpperCase()
+        if(badd == accountInfo.value.address.toUpperCase()) {
+          const list: never[] = Array.isArray(txList[badd]) ? txList[badd] : []
+          transactionList.value.push(...list)
+        }
 
+      })
+    } catch (err) {
+      transactionList.value = []
+    }
+    })
     const toSend = () => {
       router.push({ name: 'send', query })
     }
@@ -123,7 +133,6 @@ export default {
       accountInfo,
       toogleAcceptCode,
       toSend,
-      toBuy,
       toSwap,
       handleView,
       handleClose,
@@ -134,7 +143,8 @@ export default {
       transactionList,
       pageData,
       toUsd,
-      VUE_APP_SCAN_URL
+      VUE_APP_SCAN_URL,
+      txList
     }
   }
 }

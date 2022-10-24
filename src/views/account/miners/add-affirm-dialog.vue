@@ -454,6 +454,9 @@ z-index: 100;
 }
 .exchange-z {
   border: none;
+  span {
+    color: #3aae55;
+  }
 }
 .c2 {
   color: #3aae55;
