@@ -9,7 +9,6 @@
       </div>
       <router-view v-else />
     </div>
-
     <div class="van-safe-area-bottom"></div>
   </div>
 </template>

@@ -2,7 +2,9 @@
   <van-sticky>
     <NavHeader :title="t('setting.transitionHistory')">
       <template v-slot:left>
-       <span class="back hover f-12" @click="back">{{t('createAccountpage.back')}}</span>
+        <span class="back hover f-12" @click="back">{{
+          t("createAccountpage.back")
+        }}</span>
       </template>
     </NavHeader>
   </van-sticky>
@@ -20,12 +22,30 @@
       </div>
     </van-sticky> -->
     <div class="all" v-show="chooseTabdata.value == 1">
-      <!-- Transactions -->
       <div v-if="transactionList.length">
         <CollectionCard @handleClick="handleView(item)" v-for="item in transactionList" :key="item.to" :data="item" />
       </div>
       <no-data v-else />
     </div>
+    <!-- <div class="all">
+      <el-table-v2
+        :columns="columns"
+        :data="transactionList"
+        :row-height="40"
+        :width="700"
+        :height="`calc(100vh - 60px)`"
+        :footer-height="50"
+        row-key="item"
+      >
+        <template #row="scope">
+          <CollectionCard
+              @handleClick="handleView(scope)"
+              :key="scope.to"
+              :data="scope"
+            />
+        </template>
+      </el-table-v2>
+    </div> -->
     <!-- <div class="receive" v-show="chooseTabdata.value == 2"></div>
     <div class="send" v-show="chooseTabdata.value == 3">
       <div v-if="sendList.length">
@@ -48,26 +68,61 @@
     </div> -->
   </div>
   <!-- View transaction details -->
-  <van-dialog v-model:show="showTransactionModal" title :showCancelButton="false" :showConfirmButton="false" closeOnClickOverlay>
-    <TransactionDetail @handleClose="handleClose" :data="transactionData.data" />
+  <van-dialog
+    v-model:show="showTransactionModal"
+    title
+    :showCancelButton="false"
+    :showConfirmButton="false"
+    closeOnClickOverlay
+  >
+    <TransactionDetail
+      @handleClose="handleClose"
+      :data="transactionData.data"
+    />
   </van-dialog>
 </template>
-<script lang="ts">
-import { ref, Ref, computed, toRaw, SetupContext, onMounted, reactive,inject } from 'vue'
-import { Icon, NavBar, Form, Field, CellGroup, Button, Tab, Tabs, Dialog, IndexBar, IndexAnchor, Sticky, Toast, Empty } from 'vant'
-import TokenCard from '@/views/account/components/tokenCard/index.vue'
-import TransactionDetail from '@/views/account/components/transactionDetail/index.vue'
+<script lang="tsx">
+import {
+  ref,
+  Ref,
+  computed,
+  toRaw,
+  SetupContext,
+  onMounted,
+  reactive,
+  inject,
+} from "vue";
+import {
+  Icon,
+  NavBar,
+  Form,
+  Field,
+  CellGroup,
+  Button,
+  Tab,
+  Tabs,
+  Dialog,
+  IndexBar,
+  IndexAnchor,
+  Sticky,
+  Toast,
+  Empty,
+} from "vant";
+import TokenCard from "@/views/account/components/tokenCard/index.vue";
+import TransactionDetail from "@/views/account/components/transactionDetail/index.vue";
 
-import NavHeader from '@/components/navHeader/index.vue'
-import { useStore } from 'vuex'
-import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
-import { getRandomIcon } from '@/utils'
-import CollectionCard from '@/views/account/components/collectionCard/index.vue'
-import { TransactionTypes } from '@/store/modules/account'
-import localforage from 'localforage'
+import NavHeader from "@/components/navHeader/index.vue";
+import { useStore } from "vuex";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import { getRandomIcon } from "@/utils";
+import { ElTableV2 } from "element-plus";
+import CollectionCard from "@/views/account/components/collectionCard/index.vue";
+import { TransactionTypes } from "@/store/modules/account";
+import localforage from "localforage";
+import { Column } from "element-plus/lib/components";
 export default {
-  name: 'transaction-history',
+  name: "transaction-history",
   components: {
     [Icon.name]: Icon,
     [Form.name]: Form,
@@ -81,61 +136,66 @@ export default {
     [Empty.name]: Empty,
     CollectionCard,
     TransactionDetail,
-    NavHeader
+    NavHeader,
+    ElTableV2,
   },
   setup() {
-    const appProvide = inject('appProvide')
-    const { t } = useI18n()
-    const store = useStore()
-      console.log('-=============================',)
+    const appProvide = inject("appProvide");
+    const { t } = useI18n();
+    const store = useStore();
+    console.log("-=============================");
 
     const tabs = reactive({
       list: [
-        { name: t('transationHistory.all'), value: 1, select: true },
+        { name: t("transationHistory.all"), value: 1, select: true },
         // { name: "Receive", value: 2, select: false },
-        { name: t('transationHistory.send'), value: 3, select: false },
-        { name: t('transationHistory.swap'), value: 4, select: false },
-        { name: t('transationHistory.other'), value: 5, select: false }
-      ]
-    })
+        { name: t("transationHistory.send"), value: 3, select: false },
+        { name: t("transationHistory.swap"), value: 4, select: false },
+        { name: t("transationHistory.other"), value: 5, select: false },
+      ],
+    });
     const changeTab = (e: any) => {
-      const { value, select } = e
+      const { value, select } = e;
       if (select) {
-        return
+        return;
       } else {
         tabs.list.forEach((item, idx) => {
           if (item.value == value) {
-            item.select = true
+            item.select = true;
           } else {
-            item.select = false
+            item.select = false;
           }
-        })
+        });
       }
-    }
+    };
     // Selected tab'
-    const chooseTabdata = computed(() => tabs.list.find(item => item.select))
-    const router = useRouter()
+    const chooseTabdata = computed(() => tabs.list.find((item) => item.select));
+    const router = useRouter();
     const back = () => {
-      router.go(-1)
-    }
-    const { accountInfo, currentNetwork } = store.state.account
-    
+      router.go(-1);
+    };
+    const { accountInfo, currentNetwork } = store.state.account;
+
     // Current account transaction list
-    let tlist: any = ref([])
-    onMounted(async() => {
-      console.log('----------------------------------------',currentNetwork)
-      const txList: any = await localforage.getItem(`txlist-${currentNetwork.id}`) || {}
+    let tlist: any = ref([]);
+    onMounted(async () => {
+      console.log("----------------------------------------", currentNetwork);
+      const txList: any =
+        (await localforage.getItem(`txlist-${currentNetwork.id}`)) || {};
       try {
-      Object.keys(txList).forEach(key => {
-        txList[key].forEach((item: any) => {
-          tlist.value.push(item)
-        })
-      })
-    } catch (err) {
-      tlist.value = []
-    }
-    console.log('tlist', tlist.value)
-    })
+        Object.keys(txList).forEach((key) => {
+          txList[key].forEach((item: any) => {
+            tlist.value.push(item);
+          });
+        });
+      } catch (err) {
+        tlist.value = [];
+      }
+      // for (let i = 0; i < 6000; i++) {
+      //   tlist.value.push(tlist.value[0]);
+      // }
+      console.log("tlist", tlist.value);
+    });
     // try {
     //   Object.keys(store.state.account.currentNetwork.transactionList).forEach(key => {
     //     store.state.account.currentNetwork.transactionList[key].forEach((item: any) => {
@@ -148,43 +208,58 @@ export default {
 
     // All transactions
     const transactionList = computed(() => {
-      return tlist.value.sort((a: any,b:any) =>  new Date(b.date).getTime() - new Date(a.date).getTime())
-    })
+      return tlist.value.sort(
+        (a: any, b: any) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+    });
 
     // Send record
     const sendList = computed(() => {
-      const newlist = tlist.value || []
+      const newlist = tlist.value || [];
       return newlist.filter((item: any) => {
-        return item.txType == TransactionTypes.default
-      })
-    })
+        return item.txType == TransactionTypes.default;
+      });
+    });
     // swap transaction
     const swapList = computed(() => {
-      const newlist = tlist.value || []
+      const newlist = tlist.value || [];
       return newlist.filter((item: any) => {
-        return item.txType == TransactionTypes.swap
-      })
-    })
+        return item.txType == TransactionTypes.swap;
+      });
+    });
     // Other records
     const otherList = computed(() => {
-      const newlist = tlist.value || []
+      const newlist = tlist.value || [];
       return newlist.filter((item: any) => {
-        return item.txType == TransactionTypes.other || item.txType == TransactionTypes.contract
-      })
-    })
+        return (
+          item.txType == TransactionTypes.other ||
+          item.txType == TransactionTypes.contract
+        );
+      });
+    });
     // Transaction details data
-    let transactionData: any = reactive({ data: {} })
-    const showTransactionModal: Ref<boolean> = ref(false)
+    let transactionData: any = reactive({ data: {} });
+    const showTransactionModal: Ref<boolean> = ref(false);
     // View transaction details event
     const handleView = (e: any) => {
-      transactionData.data = e
-      showTransactionModal.value = true
-    }
+      transactionData.data = e;
+      showTransactionModal.value = true;
+    };
     const handleClose = () => {
-      showTransactionModal.value = false
-    }
+      showTransactionModal.value = false;
+    };
+    const columns: any = ref([
+      {
+        key: "",
+        title: "",
+        dataKey: "",
+        width: "100%",
+      }
+    ]);
     return {
       tabs,
+      columns,
       changeTab,
       t,
       chooseTabdata,
@@ -197,10 +272,10 @@ export default {
       showTransactionModal,
       otherList,
       swapList,
-      appProvide
-    }
-  }
-}
+      appProvide,
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 .transaction-history {

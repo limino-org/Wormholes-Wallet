@@ -1358,48 +1358,69 @@ export default {
     async waitTxQueueResponse({ commit, state }: any) {
       const {id} = state.currentNetwork
       const queuekey = `txQueue-${id}`
-      const list: any = await localforage.getItem(queuekey)
-      const txQueue = list && list.length ? list : []
-      const newWallet = await getWallet()
-      if (!txQueue.length) {
-        return Promise.resolve()
-      }
-      try {
-        for await (const iterator of txQueue) {
-          const {hash, transitionType, nft_address, blockNumber, network} = iterator
-          const data1 = await newWallet.provider.waitForTransaction(hash);
-          let convertAmount: any = ''
-          if(transitionType && transitionType == '6') {
-            const nftAccountInfo = await newWallet.provider.send(
-              "eth_getAccountInfo",
-              [nft_address,  web3.utils.toHex((data1.blockNumber - 1).toString())]
-            );
-            const {MergeLevel, MergeNumber} = nftAccountInfo
-            if(MergeLevel === 0) {
-              convertAmount = new BigNumber(MergeNumber).multipliedBy(0.095).toNumber()
-            }else if(MergeLevel === 1) {
-              convertAmount = new BigNumber(MergeNumber).multipliedBy(16).multipliedBy(0.143).toNumber()
-            } else if(MergeLevel === 2) {
-              convertAmount = new BigNumber(MergeNumber).multipliedBy(256).multipliedBy(0.271).toNumber()
-            } else if(MergeLevel === 3) {
-              convertAmount = new BigNumber(MergeNumber).multipliedBy(4096).multipliedBy(0.65).toNumber()
-            }
-            
+      return new Promise((resolve, reject) => {
+        let time = setTimeout(async() => {
+          const list: any = await localforage.getItem(queuekey)
+          const txQueue = list && list.length ? list : []
+          const newWallet = await getWallet()
+          if (!txQueue.length) {
+            resolve(true)
           }
-          const rep: TransactionReceipt = handleGetTranactionReceipt(
-            TransactionTypes.other,
-            data1,
-            {...iterator,convertAmount},
-            network
-          );
-          commit("DEL_TXQUEUE", { ...iterator });
-          commit("PUSH_TRANSACTION", { ...rep });
-        }
-        return Promise.resolve()
-      } catch (err) {
-        console.error(err)
-        return Promise.reject(err)
-      }
+          try {
+            for await (const iterator of txQueue) {
+              let {hash, transitionType, nft_address, blockNumber, network, txType} = iterator
+              const data1 = await newWallet.provider.waitForTransaction(hash);
+              let convertAmount: any = ''
+              if(transitionType && transitionType == '6') {
+                const len = nft_address.length
+                switch(len) {
+                  case 42:
+                    break;
+                  case 41:
+                    nft_address += '0'
+                    break;
+                  case 40:
+                    nft_address += '00'
+                    break;
+                  case 39:
+                    nft_address += '000'
+                    break;
+                }
+                const nftAccountInfo = await newWallet.provider.send(
+                  "eth_getAccountInfo",
+                  [nft_address,  web3.utils.toHex((data1.blockNumber - 1).toString())]
+                );
+                const {MergeLevel, MergeNumber} = nftAccountInfo
+                if(MergeLevel === 0) {
+                  convertAmount = new BigNumber(MergeNumber).multipliedBy(0.095).toNumber()
+                }else if(MergeLevel === 1) {
+                  convertAmount = new BigNumber(MergeNumber).multipliedBy(16).multipliedBy(0.143).toNumber()
+                } else if(MergeLevel === 2) {
+                  convertAmount = new BigNumber(MergeNumber).multipliedBy(256).multipliedBy(0.271).toNumber()
+                } else if(MergeLevel === 3) {
+                  convertAmount = new BigNumber(MergeNumber).multipliedBy(4096).multipliedBy(0.65).toNumber()
+                }
+                
+              }
+              const rep: TransactionReceipt = handleGetTranactionReceipt(
+                txType ||TransactionTypes.other,
+                data1,
+                {...iterator,convertAmount},
+                network
+              );
+              commit("DEL_TXQUEUE", { ...iterator });
+              commit("PUSH_TRANSACTION", { ...rep });
+            }
+            resolve(true)
+          } catch (err) {
+            console.error(err)
+            reject(err)
+          }finally{
+            clearTimeout(time)
+          }
+        }, 1000)
+      })
+
     }
   },
   namespaced: true,
@@ -1479,7 +1500,7 @@ export function handleGetTranactionReceipt(
   let newType = txType;
   // If it is a contract transaction and to is 0xFFFFFF, rewrite to swap type
   if (
-    txType == TransactionTypes.contract &&
+    txType == TransactionTypes.contract && to &&
     to.toUpperCase() ==
     "0xffffffffffffffffffffffffffffffffffffffff".toUpperCase()
   ) {

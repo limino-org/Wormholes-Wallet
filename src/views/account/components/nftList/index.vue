@@ -26,7 +26,7 @@
     </div>
   </van-sticky>
   <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
-    <div>
+    <div class="snft-list-box">
       <div class="snftcontainer hover" v-for="(item, i) in list" :key="i" @click.stop="toNftExchange(item)">
         <div class="snftcontainer_left">
           <div class="checkbox_img flex center" v-if="isSelectComputed">
@@ -312,7 +312,7 @@ name="question hover"
                 </template>
               </van-popover>
             </div>
-            <div class="card-value">1 year</div>
+            <div class="card-value">1 {{t('createExchange.year')}}</div>
           </div>
           <div class="card">
             <div class="card-label gasfee">
@@ -923,7 +923,7 @@ export default defineComponent({
         str = `assets/detail?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}&source_url=${source_url}`
       }
       const newUrl = `${domain}${str}`
-      location.href = newUrl
+      window.open(newUrl)
     }
     return {
       toNftExchange,
@@ -977,6 +977,9 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+.snft-list-box {
+  padding-bottom: 40px;
+}
 .tab-box {
   position: relative;
   background: #fff;
@@ -1057,7 +1060,7 @@ export default defineComponent({
         font-size: 20px;
       }
     }
-    margin-right: 7px;
+    padding:7px 7px 7px 0;
   }
   .img-p {
     position: relative;
@@ -1148,7 +1151,6 @@ export default defineComponent({
       font-size: 20px;
     }
   }
-  margin-right: 5px;
 }
 </style>
 
