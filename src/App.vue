@@ -46,7 +46,6 @@ export default {
 
   setup() {
     const { commit, dispatch, state } = useStore();
-
     const { t } = useI18n();
     const router = useRouter();
 

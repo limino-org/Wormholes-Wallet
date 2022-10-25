@@ -150,6 +150,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+:deep(){
+  .van-dialog__footer {
+    display: none;
+  }
+}
 .currency {
   .scan-link {
     color: #848484;
