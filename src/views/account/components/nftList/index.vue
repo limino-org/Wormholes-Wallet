@@ -27,9 +27,30 @@
   </van-sticky>
   <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
     <div class="snft-list-box">
-      <div :class="`snftcontainer hover ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" :title="item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : t('wallet.snftUnfree')" v-for="(item, i) in list" :key="i" @click.stop="toNftExchange(item)">
+      <div
+        :class="`snftcontainer hover ${
+          item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined'
+            ? ''
+            : 'disabled'
+        }`"
+        :title="
+          item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined'
+            ? ''
+            : t('wallet.snftUnfree')
+        "
+        v-for="(item, i) in list"
+        :key="i"
+        @click.stop="toNftExchange(item)"
+      >
         <div class="snftcontainer_left">
-          <div :class="`checkbox_img flex center ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" v-if="isSelectComputed">
+          <div
+            :class="`checkbox_img flex center ${
+              item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined'
+                ? ''
+                : 'disabled'
+            }`"
+            v-if="isSelectComputed"
+          >
             <i
               v-if="item.flag"
               @click.stop="handleSelect(item)"
@@ -55,7 +76,11 @@
             </div>
             <div class="snftmiddle flex column between">
               <div class="flex between center-v snftName">
-                <span class="f-12 lh-12">{{ item.collections }} <span v-show="item.tag === 'F'">/#{{item.snftPosition}}</span></span
+                <span class="f-12 lh-12"
+                  >{{ item.collections }}
+                  <span v-show="item.tag === 'F'"
+                    >/#{{ item.snftPosition }}</span
+                  ></span
                 ><NftTag :tag="item.tag" />
               </div>
               <div class="snftleftcolleaddre flex center-v">
@@ -64,7 +89,6 @@
             </div>
           </div>
         </div>
-
       </div>
       <div v-if="finished && !list.length">
         <NoData />
@@ -103,7 +127,9 @@
           <div class="total">
             {{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)
           </div>
-          <div class="usd">{{ sumAll }}ERB <span>( ≈${{toUsd( sumAll,4)}})</span></div>
+          <div class="usd">
+            {{ sumAll }}ERB <span>( ≈${{ toUsd(sumAll, 4) }})</span>
+          </div>
         </div>
       </div>
       <div class="snft_bottom-right hover" @click="showTime">
@@ -127,17 +153,19 @@
         <div class="confirm-card" v-if="tabIndex == 2">
           <div class="card">
             <div class="card-label">
-              <span>{{  t("converSnft.select") }}</span>
-        
+              <span>{{ t("converSnft.select") }}</span>
             </div>
-            <div class="card-value ">{{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)</div>
+            <div class="card-value">
+              {{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)
+            </div>
           </div>
           <div class="card">
             <div class="card-label">
               <span>{{ t("converSnft.amount") }}</span>
-        
             </div>
-            <div class="card-value ">{{ sumAll }}ERB ≈${{toUsd(sumAll,2)}}</div>
+            <div class="card-value">
+              {{ sumAll }}ERB ≈${{ toUsd(sumAll, 2) }}
+            </div>
           </div>
           <div class="card">
             <div class="card-label gasfee">
@@ -160,7 +188,9 @@
                 </template>
               </van-popover>
             </div>
-            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
+            <div class="card-value gasfee">
+              ≈{{ gasFee }} ERB(≈ $ {{ toUsd(gasFee, 8) }})
+            </div>
           </div>
         </div>
         <i18n-t
@@ -179,32 +209,42 @@
           </template>
         </i18n-t>
         <div class="confirm-card" v-if="tabIndex == 1">
-                  <div class="card">
+          <div class="card">
             <div class="card-label">{{ t("converSnft.select") }}</div>
-            <div class="card-value">{{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)</div>
+            <div class="card-value">
+              {{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)
+            </div>
           </div>
           <div class="card">
             <div class="card-label">{{ t("converSnft.amount") }}</div>
-            <div class="card-value">{{sumAll}}ERB(≈${{toUsd(sumAll,2)}})</div>
+            <div class="card-value">
+              {{ sumAll }}ERB(≈${{ toUsd(sumAll, 2) }})
+            </div>
           </div>
           <div class="card">
-<div class="card-label">
-<span>{{ t("bourse.hsitoryReturn") }}</span>
-<van-popover
- v-model:show="showTip2"
-theme="dark"
-placement="top"
-trigger="manual"
->
-<div class="f-12 pl-10 pr-10 pt-10 pb-10 popover-tip">
-{{ t("bourse.tip6") }} 
-</div>
-<template #reference>
-<van-icon
-@mouseenter="showTip2 = true"
- @mouseout="showTip2 = false"
-name="question hover"
-/>
+            <div class="card-label">
+              <span>{{ t("bourse.hsitoryReturn") }}</span>
+              <van-popover
+                v-model:show="showTip2"
+                theme="dark"
+                placement="top"
+                trigger="manual"
+              >
+                <div class="f-12 pl-10 pr-10 pt-10 pb-10 popover-tip">
+                  {{ t("bourse.tip6") }}
+                </div>
+                <template #reference>
+                  <van-icon
+                    @mouseenter="showTip2 = true"
+                    @mouseout="showTip2 = false"
+                    name="question hover"
+                  /> </template
+              ></van-popover>
+            </div>
+          </div>
+        </div>
+      </div></div
+  ></van-dialog>
 </template>
 </van-popover>
 </div>
@@ -224,12 +264,12 @@ name="question hover"
                   {{ t("converSnft.iconmeTip") }}
                 </div>
                 <template #reference>
-                  <van-icon
-                    @mouseenter="showTip1 = true"
-                    @mouseout="showTip1 = false"
-                    name="question hover"
-                  />
-                </template>
+  <van-icon
+    @mouseenter="showTip1 = true"
+    @mouseout="showTip1 = false"
+    name="question hover"
+  />
+</template>
               </van-popover>
             </div>
             <div class="card-value">≈{{myprofit}} ERB(≈ ${{toUsd(myprofit,2)}})</div>
@@ -247,12 +287,12 @@ name="question hover"
                   {{ t("common.gasFee") }}
                 </div>
                 <template #reference>
-                  <van-icon
-                    @mouseenter="showTip3 = true"
-                    @mouseout="showTip3 = false"
-                    name="question hover"
-                  />
-                </template>
+  <van-icon
+    @mouseenter="showTip3 = true"
+    @mouseout="showTip3 = false"
+    name="question hover"
+  />
+</template>
               </van-popover>
             </div>
             <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
@@ -281,12 +321,12 @@ name="question hover"
                   {{ t("converSnft.iconmeTip") }}
                 </div>
                 <template #reference>
-                  <van-icon
-                    @mouseenter="showTip1 = true"
-                    @mouseout="showTip1 = false"
-                    name="question hover"
-                  />
-                </template>
+  <van-icon
+    @mouseenter="showTip1 = true"
+    @mouseout="showTip1 = false"
+    name="question hover"
+  />
+</template>
               </van-popover>
             </div>
             <div class="card-value">≈{{myprofit}} ERB(≈ ${{toUsd(myprofit,6)}})</div>
@@ -304,12 +344,12 @@ name="question hover"
                   {{ t("common.gasFee") }} 
                 </div>
                 <template #reference>
-                  <van-icon
-                    @mouseenter="showTip2 = true"
-                    @mouseout="showTip2 = false"
-                    name="question hover"
-                  />
-                </template>
+  <van-icon
+    @mouseenter="showTip2 = true"
+    @mouseout="showTip2 = false"
+    name="question hover"
+  />
+</template>
               </van-popover>
             </div>
             <div class="card-value">1 {{t('createExchange.year')}}</div>
@@ -327,12 +367,12 @@ name="question hover"
                   {{ t("common.gasFee") }}
                 </div>
                 <template #reference>
-                  <van-icon
-                    @mouseenter="showTip3 = true"
-                    @mouseout="showTip3 = false"
-                    name="question hover"
-                  />
-                </template>
+  <van-icon
+    @mouseenter="showTip3 = true"
+    @mouseout="showTip3 = false"
+    name="question hover"
+  />
+</template>
               </van-popover>
             </div>
             <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
@@ -369,14 +409,14 @@ name="question hover"
 
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core";
-import { computed, ref,onBeforeMount, onMounted } from "vue";
+import { computed, ref, onBeforeMount, onMounted } from "vue";
 import { useStore } from "vuex";
 import {
   getNftOwner,
   getOwnerSnftList,
   queryArraySnft,
   snft_com_page,
-  getAccount
+  getAccount,
 } from "@/http/modules/nft";
 import dialogWarning from "@/components/dialogWarning/message.vue";
 import NftTag from "./nftTag.vue";
@@ -442,8 +482,8 @@ export default defineComponent({
     const { t } = useI18n();
     const nftErr = ref(false);
     const network = ref({
-      chainId: 51891
-    })
+      chainId: 51891,
+    });
     const layoutType = computed(() => store.state.system.layoutType);
     const list: any = ref([]);
     const accountInfo = computed(() => store.state.account.accountInfo);
@@ -457,16 +497,16 @@ export default defineComponent({
       },
     });
 
-    onMounted(async() => {
+    onMounted(async () => {
       // const wallet = await getWallet()
       // const nftAccountInfo = await wallet.provider.send(
       //         "eth_getAccountInfo",
       //         ['0x8000000000000000000000000000000000015a94', "latest"]
       //       );
       //       debugger
-    })
+    });
     const show = ref(false);
-    
+
     const hex2int = (hex: any) => {
       let len = hex.length,
         a = new Array(len),
@@ -480,18 +520,18 @@ export default defineComponent({
         }
         a[i] = code;
       }
-      console.log('a', a)
+      console.log("a", a);
       return a.reduce(function (acc, c) {
         acc = 16 * acc + c;
         return acc;
       }, 0);
     };
 
-    const snftPosition = (nft_address: string) =>{
-      const str = nft_address.substr(41)
-      console.log('last str', str)
-      return Number(`0x${str || 0}`) + 1
-    }
+    const snftPosition = (nft_address: string) => {
+      const str = nft_address.substr(41);
+      console.log("last str", str);
+      return Number(`0x${str || 0}`) + 1;
+    };
     const sumP = computed(() => {
       return list.value.filter((l: any) => l.flag && l.tag == "P").length;
     });
@@ -505,19 +545,25 @@ export default defineComponent({
       return list.value.filter((l: any) => l.flag && l.tag == "F").length;
     });
     const sumAll = computed(() => {
-      const pnum = new BigNumber(sumP.value).multipliedBy(4096).multipliedBy(0.65);
-      const cnum = new BigNumber(sumC.value).multipliedBy(256).multipliedBy(0.271);
-      const nnum = new BigNumber(sumN.value).multipliedBy(16).multipliedBy(0.143);
+      const pnum = new BigNumber(sumP.value)
+        .multipliedBy(4096)
+        .multipliedBy(0.65);
+      const cnum = new BigNumber(sumC.value)
+        .multipliedBy(256)
+        .multipliedBy(0.271);
+      const nnum = new BigNumber(sumN.value)
+        .multipliedBy(16)
+        .multipliedBy(0.143);
       const fnum = new BigNumber(sumF.value).multipliedBy(0.095);
       return pnum.plus(cnum).plus(nnum).plus(fnum).toString();
     });
     const showTime = () => {
       const data = list.value.filter((f: any) => f.flag);
       if (data.length) {
-        // 
+        //
         show.value = true;
-        calcProfit()
-        calcGasFee()
+        calcProfit();
+        calcGasFee();
         let setIntervalValue = setInterval(() => {
           if (Time.value > 0) {
             Time.value -= 1;
@@ -545,23 +591,22 @@ export default defineComponent({
       page_size: "30",
       status: "3",
     };
-   
 
     const onLoad = async () => {
-      let wallet = null
-      let blockNumber = 0
-      let network: any = null
+      let wallet = null;
+      let blockNumber = 0;
+      let network: any = null;
       params2.status = tabIndex.value;
       loading.value = true;
       try {
-        if(!wallet&& tabIndex.value == '1'){
-          wallet = await getWallet()
+        if (!wallet && tabIndex.value == "1") {
+          wallet = await getWallet();
           blockNumber = await wallet.provider.getBlockNumber();
-          network = await wallet.provider.getNetwork()
-          console.log('wallet.value--', wallet)
+          network = await wallet.provider.getNetwork();
+          console.log("wallet.value--", wallet);
         }
-        console.log('wallet.value', wallet)
-        
+        console.log("wallet.value", wallet);
+
         const { nfts } = await snft_com_page(params2);
         const nftAddList = nfts.map((item: any) => {
           const len = item.address.length;
@@ -590,8 +635,10 @@ export default defineComponent({
         });
 
         nfts.forEach((item: any) => {
-          if(tabIndex.value == '1' && item.pledge_number !== null) {
-            item.hasUnfreeze = (blockNumber - Number(item.pledge_number)) > (network && network.chainId === 51888 ? 73 : 6307201)
+          if (tabIndex.value == "1" && item.pledge_number !== null) {
+            item.hasUnfreeze =
+              blockNumber - Number(item.pledge_number) >
+              (network && network.chainId === 51888 ? 73 : 6307201);
           }
           const reallen = item.address.length;
           let str = item.address;
@@ -630,7 +677,7 @@ export default defineComponent({
           const str1 = item.nft_address.substr(item.nft_address.length - 2);
           // The last 2 digits of the position in SNFT are converted to hexadecimal +1
           item.position = hex2int(str1) + 1;
-          item.snftPosition = snftPosition(item.nft_address)
+          item.snftPosition = snftPosition(item.nft_address);
           // convert
           const str2 = item.nft_address.substr(item.nft_address.length - 4);
           // The last four digits of the position in the period turn to hexadecimal +1
@@ -661,10 +708,10 @@ export default defineComponent({
       }
     };
 
-    onBeforeMount(async() => {
-      const wallet = await getWallet()
-      network.value = await wallet.provider.getNetwork()
-    })
+    onBeforeMount(async () => {
+      const wallet = await getWallet();
+      network.value = await wallet.provider.getNetwork();
+    });
     const isSelectAll = ref(false);
     const isSelectAllChange = () => {
       isSelectAll.value = !isSelectAll.value;
@@ -691,7 +738,7 @@ export default defineComponent({
       finished.value = false;
       params2.page = "1";
       list.value = [];
-      value.value = false
+      value.value = false;
       // onLoad();
     };
     eventBus.on("changeAccount", (address) => {
@@ -705,9 +752,9 @@ export default defineComponent({
     ]);
     const tabIndex = ref("3");
     const handleTab = (v: string, i: number) => {
-      if(loading.value){
-        Toast(t('common.loadingWait'))
-        return
+      if (loading.value) {
+        Toast(t("common.loadingWait"));
+        return;
       }
       tabIndex.value = v;
       tabList.value.forEach((item, idx) => {
@@ -725,9 +772,9 @@ export default defineComponent({
     const value = ref(false);
     const showConvert = ref(false);
     const handleTabModal = () => {
-      if(loading.value){
-        Toast(t('common.loadingWait'))
-        return
+      if (loading.value) {
+        Toast(t("common.loadingWait"));
+        return;
       }
       tabModal.value = !tabModal.value;
     };
@@ -783,22 +830,22 @@ export default defineComponent({
             onLoad();
           },
         });
-        let transitionType = ''
+        let transitionType = "";
         try {
           for await (const iterator of data) {
-            const {nft_address} = iterator
+            const { nft_address } = iterator;
             let str = "";
             switch (tabIndex.value) {
               case "2":
-              transitionType = '6'
+                transitionType = "6";
                 str = `wormholes:{"type":6,"nft_address":"${nft_address}","version":"v0.0.1"}`;
                 break;
               case "3":
-              transitionType = '7'
+                transitionType = "7";
                 str = `wormholes:{"type":7,"nft_address":"${nft_address}","version":"0.0.1"}`;
                 break;
               case "1":
-              transitionType = '8'
+                transitionType = "8";
                 str = `wormholes:{"type":8,"nft_address":"${nft_address}","version":"0.0.1"}`;
                 break;
             }
@@ -808,15 +855,15 @@ export default defineComponent({
               from: accountInfo.value.address,
               to: accountInfo.value.address,
               data: `0x${data3}`,
-     
             };
-              // @ts-ignore
-              const network = clone(store.state.account.currentNetwork)
+            // @ts-ignore
+            const network = clone(store.state.account.currentNetwork);
 
             const receipt: any = await wallet.sendTransaction(tx1);
             txQueue.push(receipt);
-            console.log('receipt', receipt)
-            const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = receipt;
+            console.log("receipt", receipt);
+            const { from, gasLimit, gasPrice, hash, nonce, to, type, value } =
+              receipt;
             store.commit("account/PUSH_TXQUEUE", {
               hash,
               from,
@@ -829,7 +876,7 @@ export default defineComponent({
               transitionType,
               txType: TransactionTypes.other,
               nft_address,
-              network
+              network,
             });
           }
           $tradeConfirm.update({
@@ -866,60 +913,60 @@ export default defineComponent({
       return str;
     });
 
-    
-    const myprofit = ref('')
-    const historyProfit = ref('')
-        const calcProfit = async() => {
-      const wallet = await getWallet()
-          const  blockNumber = await wallet.provider.getBlockNumber();
-          
-          const blockn = web3.utils.toHex(blockNumber.toString());
-      const data = await wallet.provider.send('eth_getValidator',[blockn])
-          // const data2 = await getAccount(accountInfo.value.address)
-          let total = new BigNumber(0)
-          data.Validators.forEach((item:any) =>{
-            total = total.plus(item.Balance)
-          } )
-        const totalStr = total.div(1000000000000000000).toFixed(6)
-        const totalprofit = store.state.account.minerTotalProfit 
-        const totalPledge = new BigNumber(sumAll.value)
-        myprofit.value = new BigNumber(totalprofit).multipliedBy(totalPledge.div(totalStr)).toFixed(6)
-        historyProfit.value = new BigNumber(totalprofit).multipliedBy(new BigNumber(sumAll.value).div(totalStr)).toFixed(6)
-    }
+    const myprofit = ref("");
+    const historyProfit = ref("");
+    const calcProfit = async () => {
+      const wallet = await getWallet();
+      const blockNumber = await wallet.provider.getBlockNumber();
 
-    const gasFee = ref('')
-    const calcGasFee = async() => {
+      const blockn = web3.utils.toHex(blockNumber.toString());
+      const data = await wallet.provider.send("eth_getValidator", [blockn]);
+      // const data2 = await getAccount(accountInfo.value.address)
+      let total = new BigNumber(0);
+      data.Validators.forEach((item: any) => {
+        total = total.plus(item.Balance);
+      });
+      const totalStr = total.div(1000000000000000000).toFixed(6);
+      const totalprofit = store.state.account.minerTotalProfit;
+      const totalPledge = new BigNumber(sumAll.value);
+      myprofit.value = new BigNumber(totalprofit)
+        .multipliedBy(totalPledge.div(totalStr))
+        .toFixed(6);
+      historyProfit.value = new BigNumber(totalprofit)
+        .multipliedBy(new BigNumber(sumAll.value).div(totalStr))
+        .toFixed(6);
+    };
+
+    const gasFee = ref("");
+    const calcGasFee = async () => {
       let str = "";
-      const {nft_address}: any = list.value.length ? list.value[0] : {}
-            switch (tabIndex.value) {
-              case "2":
-                str = `wormholes:{"type":6,"nft_address":"${nft_address}","version":"v0.0.1"}`;
-                break;
-              case "3":
-                str = `wormholes:{"type":7,"nft_address":"${nft_address}","version":"0.0.1"}`;
-                break;
-              case "1":
-                str = `wormholes:{"type":8,"nft_address":"${nft_address}","version":"0.0.1"}`;
-                break;
-            }
+      const { nft_address }: any = list.value.length ? list.value[0] : {};
+      switch (tabIndex.value) {
+        case "2":
+          str = `wormholes:{"type":6,"nft_address":"${nft_address}","version":"v0.0.1"}`;
+          break;
+        case "3":
+          str = `wormholes:{"type":7,"nft_address":"${nft_address}","version":"0.0.1"}`;
+          break;
+        case "1":
+          str = `wormholes:{"type":8,"nft_address":"${nft_address}","version":"0.0.1"}`;
+          break;
+      }
       const data3 = toHex(str);
-          const tx1 = {
-            to: accountInfo.value.address,
-            value: ethers.utils.parseEther(0 + ""),
-            data: `0x${data3}`,
-          };
-          const gas: any = await getGasFee(tx1)
-          try {
-            const totalNum = sumP.value + sumN.value + sumF.value + sumC.value
-            // @ts-ignore
-            gasFee.value = new BigNumber(
-              gas
-            ).multipliedBy(totalNum)
-              .toFixed(9);
-          } catch (err: any) {
-            console.error(err);
-          }
-    }
+      const tx1 = {
+        to: accountInfo.value.address,
+        value: ethers.utils.parseEther(0 + ""),
+        data: `0x${data3}`,
+      };
+      const gas: any = await getGasFee(tx1);
+      try {
+        const totalNum = sumP.value + sumN.value + sumF.value + sumC.value;
+        // @ts-ignore
+        gasFee.value = new BigNumber(gas).multipliedBy(totalNum).toFixed(9);
+      } catch (err: any) {
+        console.error(err);
+      }
+    };
     const showTip1 = ref(false);
     const showTip2 = ref(false);
     const showTip3 = ref(false);
@@ -927,39 +974,45 @@ export default defineComponent({
     const showTip5 = ref(false);
     const showTip6 = ref(false);
 
-
     const toNftExchange = (item: any) => {
-      const { tag, snft_address } = item
+      const { tag, snft_address } = item;
       // :http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#/   51888
       // 51891:https://snft.wormholestest.com
-      const {source_url, metaData} = item
-      const {collection_creator_addr, collections:collection_name,nft_contract_addr,nft_token_id } = metaData
+      const { source_url, metaData } = item;
+      const {
+        collection_creator_addr,
+        collections: collection_name,
+        nft_contract_addr,
+        nft_token_id,
+      } = metaData;
 
-      const domain = network.value && network.value.chainId === 51888 ? 'http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#/' : 'https://snft.wormholestest.com/#/'
-      let str = ''
-      if(tag == 'P') {
-        str = `account?user=${accountInfo.value.address}`
-      }else if(tag == 'C'){
-        str = `collections?collection_name=${collection_name}&collection_creator_addr=${collection_creator_addr}`
-      }else if(tag == 'N' || tag == 'F') {
-        str = `assets/detail?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}&source_url=${source_url}`
+      const domain =
+        network.value && network.value.chainId === 51888
+          ? "http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#/"
+          : "https://snft.wormholestest.com/#/";
+      let str = "";
+      if (tag == "P") {
+        str = `account?user=${accountInfo.value.address}`;
+      } else if (tag == "C") {
+        str = `collections?collection_name=${collection_name}&collection_creator_addr=${collection_creator_addr}`;
+      } else if (tag == "N" || tag == "F") {
+        str = `assets/detail?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}&source_url=${source_url}`;
       }
-      const newUrl = `${domain}${str}`
-      window.open(newUrl)
-    }
-
+      const newUrl = `${domain}${str}`;
+      window.open(newUrl);
+    };
 
     const handleSelect = (item: any) => {
-      if(tabIndex.value !== '1') {
-        item.flag = !item.flag
-        return
+      if (tabIndex.value !== "1") {
+        item.flag = !item.flag;
+        return;
       }
-      if(tabIndex.value === '1' && item.hasUnfreeze) {
-        item.flag = !item.flag
-        return
+      if (tabIndex.value === "1" && item.hasUnfreeze) {
+        item.flag = !item.flag;
+        return;
       }
-      Toast(t('wallet.snftUnfree'))
-    }
+      Toast(t("wallet.snftUnfree"));
+    };
     return {
       handleSelect,
       toNftExchange,
@@ -1026,8 +1079,6 @@ export default defineComponent({
   .van-sticky--fixed {
     border-bottom: 1px solid rgb(135 134 134 / 50%);
   }
-
-
 }
 .switch-box {
   position: absolute;
@@ -1083,14 +1134,15 @@ export default defineComponent({
   display: flex;
   align-items: center;
   &.disabled {
-    cursor:default;
+    cursor: default;
     .img-p .van-image {
       filter: grayscale(100%);
     }
     .number {
       background: #ccc !important;
     }
-    .snftmiddle-text,.snftName {
+    .snftmiddle-text,
+    .snftName {
       color: #ccc !important;
     }
     .iconfont {
@@ -1114,7 +1166,7 @@ export default defineComponent({
         font-size: 20px;
       }
     }
-    padding:7px 7px 7px 0;
+    padding: 7px 7px 7px 0;
   }
   .img-p {
     position: relative;
@@ -1393,7 +1445,7 @@ export default defineComponent({
     &-label {
       line-height: 16px;
       color: #8f8f8f;
-      :deep(){
+      :deep() {
         .van-popover__wrapper {
           width: 10px;
           height: 10px;
