@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <div class="card flex between" @click="showServerModal = true">
+      <div class="card flex between" @click="handleAddModel">
         <div class="info">
           <div class="label">{{ t("createExchange.server") }}</div>
           <div class="desc">{{ t("createExchange.serverDesc") }}</div>
@@ -92,7 +92,7 @@ import { encode, decode } from "js-base64";
 
 import Tip from "@/components/tip/index.vue";
 import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
-import { Button, Icon, Loading } from "vant";
+import { Button, Icon, Loading, Toast } from "vant";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -105,6 +105,9 @@ import {
 import { getWallet } from "@/store/modules/account";
 import eventBus from "@/utils/bus";
 import { nextTick } from "process";
+import { ethers } from 'ethers';
+import BigNumber from 'bignumber.js';
+import { useToast } from '@/plugins/toast';
 
 export default {
   name: "exchange-manage",
@@ -200,8 +203,25 @@ export default {
     const handleUpdateStatus = () => {
       initData()
     }
+    const {$toast} = useToast()
+    const handleAddModel = async() => {
+      Toast.loading({
+        duration:0
+      })
+      const wallet = await getWallet()
+      const balance = await wallet.getBalance()
+      const ethBalance = ethers.utils.formatEther(balance)
+      if(new BigNumber(ethBalance).lt(201)) {
+        $toast.warn(t('createExchange.nomoney'))
+        Toast.clear()
+        return
+      }
+      Toast.clear()
+      showServerModal.value = true
+    }
     return {
       handleUpdateStatus,
+      handleAddModel,
       t,
       back,
       exchangeStatus,

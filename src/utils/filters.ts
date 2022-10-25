@@ -96,9 +96,9 @@ export const toUsd = (v: string | number, keepDotLength = 18) => {
       return 0;
     }
     return new BigNumber(v)
-      .multipliedBy(0.5)
-      .toFixed(keepDotLength, 1)
-      .toString();
+    .multipliedBy(0.5)
+    .toFixed(keepDotLength, 1)
+    .toString();
   };
 
 // Calculate ETH transfer transaction fees

@@ -150,7 +150,8 @@ export default {
         convertComplete: "转换完成",
         selectSNFT: "您还未选择任何SNFT",
         buySnft: "你有 S-NFT 吗？ {link}",
-        findMore: "寻找更多"
+        findMore: "寻找更多",
+        snftUnfree:"该质押的SNFT还未解冻！"
 
     },
     converSnft: {
@@ -228,7 +229,8 @@ export default {
         confirmExit:"确认退出",
         guideBtnTip:"您的数字钱包数据仅保存在您浏览器的本地存储中；请务必创建备份以避免潜在的永久性损失。卸载浏览器和/或清除浏览器数据也可能导致永久性损失",
         asyncData:"数据同步中，请稍后",
-        convertAmount:"转换金额"
+        convertAmount:"转换金额",
+        loadingWait:"加载中，请稍后!"
 
 
     },

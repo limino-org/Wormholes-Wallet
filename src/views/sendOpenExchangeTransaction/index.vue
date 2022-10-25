@@ -95,6 +95,7 @@ const { $tradeConfirm } = useTradeConfirm();
 const newErbAbi = require("@/assets/json/packagePay.json");
 
 const { abi, address: contractAddress } = newErbAbi;
+debugger
 const { t } = useI18n();
 const { sendTo } = useExchanges();
 const { query } = useRoute();
@@ -120,10 +121,11 @@ async function getContract(wallet: any) {
   if (!contractAddress) {
     throw new Error("error contractAddress cant't be null");
   }
-  const { URL } = currentNetwork.value;
-  let provider = ethers.getDefaultProvider(URL);
+  let provider = ethers.getDefaultProvider(currentNetwork.value.URL);
   const contract = new ethers.Contract(contractAddress, abi, provider);
+  debugger
   const contractWithSigner = contract.connect(wallet);
+  debugger
   return contractWithSigner;
 }
 const callBack = () => {
@@ -159,14 +161,16 @@ async function toSend() {
     // sendLoading.value = true
     const wallet = await getWallet();
     const data1 = await send1(name, fee_rate, pledge);
-    const [data2, data3] = await send2(package_id, amount);
+    debugger
+    const data2 = await send2(package_id, amount);
+    debugger
     $tradeConfirm.update({ status: "approve" });
     const { hash: hash1 } = data1;
     const { hash: hash2 } = data2;
-    const { hash: hash3 } = data3;
     const receipt1 = await wallet.provider.waitForTransaction(hash1);
-    const receipt2 = await wallet.provider.waitForTransaction(hash2);
-    const receipt3 = await wallet.provider.waitForTransaction(hash3);
+    debugger
+    const receipt2 = await data2.wait();
+    debugger
     const rep1: TransactionReceipt = handleGetTranactionReceipt(
       TransactionTypes.default,
       receipt1,
@@ -179,19 +183,13 @@ async function toSend() {
       data2,
       network
     );
-    const rep3: TransactionReceipt = handleGetTranactionReceipt(
-      TransactionTypes.contract,
-      receipt3,
-      data3,
-      network
-    );
     commit("account/PUSH_TRANSACTION", rep1);
     commit("account/PUSH_TRANSACTION", rep2);
-    commit("account/PUSH_TRANSACTION", rep3);
+    // commit("account/PUSH_TRANSACTION", rep3);
     const { status: status1 } = receipt1;
     const { status: status2 } = receipt2;
-    const { status: status3 } = receipt3;
-    if (!status1 || !status2 || !status3) {
+    // const { status: status3 } = receipt3;
+    if (!status1 || !status2) {
       let time = setTimeout(() => {
         $tradeConfirm.update({ status: "fail" });
         clearTimeout(time);
@@ -307,8 +305,11 @@ async function send2(package_id: string = "", amount: string = "0") {
     const network = clone(state.account.currentNetwork);
     const wallet = await getWallet();
     const contractWithSigner = await getContract(wallet);
-    const data = await contractWithSigner.functions.payForPackage(package_id);
-    debugger;
+    const value = ethers.utils.parseEther(amount + '')
+    const data = await contractWithSigner.functions.payForPackage(package_id +'',{
+      value
+    });
+
     const {
       from: from2,
       gasLimit: gasLimit2,
@@ -333,25 +334,7 @@ async function send2(package_id: string = "", amount: string = "0") {
       network,
     });
     localStorage.setItem("contact 1", JSON.stringify(data));
-    const data2 = await wallet.sendTransaction({
-      value: ethers.utils.parseEther(amount + ""),
-    });
-    const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = data2;
-    commit("account/PUSH_TXQUEUE", {
-      hash,
-      from,
-      gasLimit,
-      gasPrice,
-      nonce,
-      to,
-      type,
-      value,
-      transitionType: null,
-      txType: TransactionTypes.contract,
-      network,
-    });
-
-    return Promise.resolve([data, data2]);
+    return Promise.resolve(data);
   } catch (err) {
     $tradeConfirm.update({ status: "fail" });
     return Promise.reject();

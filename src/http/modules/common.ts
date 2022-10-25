@@ -82,6 +82,10 @@ const contractApi = isProduct ? 'contractApi' : 'contractApi'
 export const checkAuth = (address: string) => {
     return httpGet(`${contractApi}/extra/checkAuth`,{address})
 }
+// Query the account information of the specified address
+export const getAccountAddr = (address: string) => {
+    return httpGet(`${contractApi}/account/${address}`,{})
+}
 
 
 // Get user NFT reward information  nftaward/v1/queryuseraward

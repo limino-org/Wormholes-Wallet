@@ -30,7 +30,7 @@ import { utils } from "ethers";
 
 import { useExchanges } from "@/hooks/useExchanges";
 import { useI18n } from "vue-i18n";
-import { getWallet, NetStatus } from "./store/modules/account";
+import { getWallet, NetStatus, getGasFee} from "./store/modules/account";
 import { version } from "@/enum/version";
 import { useBroadCast } from "@/utils/broadCast";
 import { guid } from "@/utils/utils";

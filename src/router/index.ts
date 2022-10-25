@@ -22,7 +22,6 @@ import mnemonic from '@/views/mnemonic/route'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
     component: Home,
     redirect: { name: 'wallet' },
     children: [

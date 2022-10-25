@@ -42,7 +42,9 @@ export default {
     convertComplete: "For complete",
     selectSNFT: "You have not selected any S-NFTs",
     buySnft: "Do you have S-NFT? {link}",
-    findMore: "Find More"
+    findMore: "Find More",
+    snftUnfree:"The SNFT of this pledge has not been unfrozen!"
+
 
 
 
@@ -184,7 +186,9 @@ export default {
     confirmExit:"Confirm Exit",
     guideBtnTip:"Your digital wallet data is only saved on your browser's local storage; be sure to create a backup to avoid potential permanent losses. Uninstalling your browser and/or clearing your browser data will also potentially result in permanent losses!",
     asyncData:"Data synchronization, please wait.",
-    convertAmount:"Convert amount"
+    convertAmount:"Convert amount",
+    loadingWait:"Loading, please wait!"
+
 
   },
   sidebar: {

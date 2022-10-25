@@ -27,17 +27,17 @@
   </van-sticky>
   <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
     <div class="snft-list-box">
-      <div class="snftcontainer hover" v-for="(item, i) in list" :key="i" @click.stop="toNftExchange(item)">
+      <div :class="`snftcontainer hover ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" :title="item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : t('wallet.snftUnfree')" v-for="(item, i) in list" :key="i" @click.stop="toNftExchange(item)">
         <div class="snftcontainer_left">
-          <div class="checkbox_img flex center" v-if="isSelectComputed">
+          <div :class="`checkbox_img flex center ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" v-if="isSelectComputed">
             <i
               v-if="item.flag"
-              @click.stop="item.flag = !item.flag"
+              @click.stop="handleSelect(item)"
               class="iconfont icon-xuanzhong2"
             ></i>
             <i
               v-else
-              @click.stop="item.flag = !item.flag"
+              @click.stop="handleSelect(item)"
               class="iconfont icon-xuanzhong"
             ></i>
           </div>
@@ -545,10 +545,23 @@ export default defineComponent({
       page_size: "30",
       status: "3",
     };
+   
+
     const onLoad = async () => {
+      let wallet = null
+      let blockNumber = 0
+      let network: any = null
       params2.status = tabIndex.value;
       loading.value = true;
       try {
+        if(!wallet&& tabIndex.value == '1'){
+          wallet = await getWallet()
+          blockNumber = await wallet.provider.getBlockNumber();
+          network = await wallet.provider.getNetwork()
+          console.log('wallet.value--', wallet)
+        }
+        console.log('wallet.value', wallet)
+        
         const { nfts } = await snft_com_page(params2);
         const nftAddList = nfts.map((item: any) => {
           const len = item.address.length;
@@ -577,6 +590,9 @@ export default defineComponent({
         });
 
         nfts.forEach((item: any) => {
+          if(tabIndex.value == '1' && item.pledge_number !== null) {
+            item.hasUnfreeze = (blockNumber - Number(item.pledge_number)) > (network && network.chainId === 51888 ? 73 : 6307201)
+          }
           const reallen = item.address.length;
           let str = item.address;
           switch (reallen) {
@@ -619,6 +635,7 @@ export default defineComponent({
           const str2 = item.nft_address.substr(item.nft_address.length - 4);
           // The last four digits of the position in the period turn to hexadecimal +1
           item.number = hex2int(str2) + 1;
+
           nftInfoList.forEach((child: any) => {
             if (
               item.realAddr.toUpperCase() == child.nft_address.toUpperCase()
@@ -688,6 +705,10 @@ export default defineComponent({
     ]);
     const tabIndex = ref("3");
     const handleTab = (v: string, i: number) => {
+      if(loading.value){
+        Toast(t('common.loadingWait'))
+        return
+      }
       tabIndex.value = v;
       tabList.value.forEach((item, idx) => {
         if (idx == i) {
@@ -704,6 +725,10 @@ export default defineComponent({
     const value = ref(false);
     const showConvert = ref(false);
     const handleTabModal = () => {
+      if(loading.value){
+        Toast(t('common.loadingWait'))
+        return
+      }
       tabModal.value = !tabModal.value;
     };
 
@@ -883,16 +908,13 @@ export default defineComponent({
             value: ethers.utils.parseEther(0 + ""),
             data: `0x${data3}`,
           };
+          const gas: any = await getGasFee(tx1)
           try {
-            const wallet = await getWallet();
-            const gasPrice = await wallet.provider.getGasPrice();
-            const gasLimit = await wallet.estimateGas(tx1);
             const totalNum = sumP.value + sumN.value + sumF.value + sumC.value
             // @ts-ignore
             gasFee.value = new BigNumber(
-              ethers.utils.formatEther(gasLimit)
-            )
-              .dividedBy(ethers.utils.formatEther(gasPrice)).multipliedBy(totalNum)
+              gas
+            ).multipliedBy(totalNum)
               .toFixed(9);
           } catch (err: any) {
             console.error(err);
@@ -925,7 +947,21 @@ export default defineComponent({
       const newUrl = `${domain}${str}`
       window.open(newUrl)
     }
+
+
+    const handleSelect = (item: any) => {
+      if(tabIndex.value !== '1') {
+        item.flag = !item.flag
+        return
+      }
+      if(tabIndex.value === '1' && item.hasUnfreeze) {
+        item.flag = !item.flag
+        return
+      }
+      Toast(t('wallet.snftUnfree'))
+    }
     return {
+      handleSelect,
       toNftExchange,
       myprofit,
       historyProfit,
@@ -1046,7 +1082,25 @@ export default defineComponent({
   border-bottom: 1px solid #dbd9da;
   display: flex;
   align-items: center;
+  &.disabled {
+    cursor:default;
+    .img-p .van-image {
+      filter: grayscale(100%);
+    }
+    .number {
+      background: #ccc !important;
+    }
+    .snftmiddle-text,.snftName {
+      color: #ccc !important;
+    }
+    .iconfont {
+      color: #ccc;
+    }
+  }
   .checkbox_img {
+    &.disabled {
+      cursor: not-allowed;
+    }
     cursor: pointer;
     // background-color: red;
     i {

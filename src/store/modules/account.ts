@@ -153,34 +153,36 @@ export const getWallet = () => {
   return Promise.resolve(wallet);
 };
 const createWallet = async () => {
-  try {
-    const vuex: any = await localforage.getItem('vuex')
-    if (vuex) {
-      const { accountInfo } = vuex.account;
-      const { keyStore } = accountInfo;
-      const password: string = getCookies("password") || "";
-      if (!password) {
-        const query = getQuery();
-        router.push({ name: "withpassword", query });
-        return Promise.reject(i18n.global.t("common.withpassword"));
-      }
-      // Load the wallet with the password and keyStore
-      const wa = await createWalletByJson({ password, json: keyStore });
-      const { URL } = vuex.account.currentNetwork
-      const provider = ethers.getDefaultProvider(URL)
-      // @ts-ignore
-      const wall = wa.connect(provider)
-      const network = await wall.provider.getNetwork()
-      wallet = wall
-      store.commit('account/UPDATE_NETSTATUS', NetStatus.success)
-      return Promise.resolve(wall)
-    }
-  } catch (err) {
-    console.error('-----------------', err)
-    // Toast(err?.toString())
-    store.commit('account/UPDATE_NETSTATUS', NetStatus.fail)
-    return Promise.reject(null)
-  }
+  const wal: any = await store.dispatch('account/getProviderWallet')
+    return wal
+  // try {
+  //   const vuex: any = await localforage.getItem('vuex')
+  //   if (vuex) {
+  //     const { accountInfo } = vuex.account;
+  //     const { keyStore } = accountInfo;
+  //     const password: string = getCookies("password") || "";
+  //     if (!password) {
+  //       const query = getQuery();
+  //       router.push({ name: "withpassword", query });
+  //       return Promise.reject(i18n.global.t("common.withpassword"));
+  //     }
+  //     // Load the wallet with the password and keyStore
+  //     const wa = await createWalletByJson({ password, json: keyStore });
+  //     const { URL } = vuex.account.currentNetwork
+  //     const provider = ethers.getDefaultProvider(URL)
+  //     // @ts-ignore
+  //     const wall = wa.connect(provider)
+  //     const network = await wall.provider.getNetwork()
+  //     wallet = wall
+  //     store.commit('account/UPDATE_NETSTATUS', NetStatus.success)
+  //     return Promise.resolve(wall)
+  //   }
+  // } catch (err) {
+  //   console.error('-----------------', err)
+  //   // Toast(err?.toString())
+  //   store.commit('account/UPDATE_NETSTATUS', NetStatus.fail)
+  //   return Promise.reject(null)
+  // }
 
 
 }
@@ -624,7 +626,6 @@ export default {
         }
         // Load the wallet with the password and keyStore
         await dispatch("createWalletByJson", { password, json: keyStore });
-
         if (wallet && wallet.provider) {
           return Promise.resolve(wallet);
         } else {
@@ -845,19 +846,54 @@ export default {
 
     },
     // Link to the current network provider wallet instance
-    async getProviderWallet({ commit, state }: any) {
+    async getProviderWallet({ commit, state, dispatch }: any) {
+      let newWallet = null
+      let provider = null
+      const { URL } = state.currentNetwork;
+
+      if(!wallet || !wallet.provider || (wallet && wallet.provider && wallet.provider.connection.url != URL)) {
+        debugger
+        provider = ethers.getDefaultProvider(URL)
+      }
       try {
-        const { URL } = state.currentNetwork;
-        // debugger
-        let provider = ethers.getDefaultProvider(URL);
-        console.log('provider', provider);
-        if (wallet) {
-          const newwallet = wallet.connect(provider);
-          const res = await newwallet.provider.getNetwork()
+        if(!wallet) {
+          const { accountInfo } = state;
+          const { keyStore } = accountInfo;
+          const password: string = getCookies("password") || "";
+          const wall =  await dispatch("createWalletByJson", { password, json: keyStore });
+          newWallet = wall.connect(provider)
+          const res = await newWallet.provider.getNetwork()
           commit('UPDATE_NETSTATUS', NetStatus.success)
-          commit("UPDATE_WALLET", newwallet);
-          return Promise.resolve(newwallet);
+          commit("UPDATE_WALLET", newWallet);
+          return newWallet
         }
+        if(wallet && wallet.provider) {
+          const {connection:{url}} = wallet.provider
+          if(URL != url) {
+            newWallet = wallet.connect(provider);
+            const res = await newWallet.provider.getNetwork()
+            commit('UPDATE_NETSTATUS', NetStatus.success)
+            commit("UPDATE_WALLET", newWallet);
+            return newWallet
+          }
+        }
+        if(wallet && !wallet.provider) {
+          newWallet = wallet.connect(provider);
+          const res = await newWallet.provider.getNetwork()
+          commit('UPDATE_NETSTATUS', NetStatus.success)
+          commit("UPDATE_WALLET", newWallet);
+          return newWallet
+        }
+        if(wallet) {
+          const res = await wallet.provider.getNetwork()
+          commit('UPDATE_NETSTATUS', NetStatus.success)
+          commit("UPDATE_WALLET", newWallet);
+          return wallet
+        } else {
+          commit('UPDATE_NETSTATUS', NetStatus.fail)
+          return Promise.reject();
+        }
+
       } catch (err: any) {
         commit('UPDATE_NETSTATUS', NetStatus.fail)
         return Promise.reject(err);
