@@ -624,7 +624,7 @@ export default {
     staking:"Staking & Redemption",
     stakingDesc:"Add stake or redeem your stake",
     server:"Server",
-    serverDesc:"365 Days / 8760 Hours",
+    serverDesc:"{days} Days / {hours} Hours",
     pageTip:"This is the exchange management page.If you want to go to Exchange's page ,click on \"Exchange\".If you want to he exchange's console,click on \"console\".If you want to add the stake amount or redeem your staking,click on \"Staking & Redemption\".If you want to change the setting of server,Click on \"Server\".",
     serveTip1:"This is the fee you have to pay for the server for one year.",
     serveTip2:"This is the using time of our server you left.",

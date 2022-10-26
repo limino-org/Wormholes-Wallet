@@ -113,7 +113,7 @@ const routes: Array<RouteRecordRaw> = [
           auth: false
         }
       },
-     {
+      {
         path: '/startpage',
         name: 'startpage',
         component: () => import('@/views/account/creatwallet/newwallet/startpage.vue'),
@@ -254,7 +254,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/sendOpenExchangeTransaction',
-        name:"sendOpenExchangeTransaction",
+        name: "sendOpenExchangeTransaction",
         component: () => import('@/views/sendOpenExchangeTransaction/index.vue'),
         meta: {
           auth: true,
@@ -385,11 +385,11 @@ router.beforeEach(async (to, form, next) => {
   const hasAccountFlag = await hasAccount()
   const authFlag = authentication()
   const query = getQuery()
-console.log('---------------------', auth, name)
-if(!auth && (name == 'termsOfUse' || name == 'privacyNotice')) {
-  next()
-  return
-}
+  console.log('---------------------', auth, name)
+  if (!auth && (name == 'termsOfUse' || name == 'privacyNotice')) {
+    next()
+    return
+  }
   if (auth) {
     if (hasAccountFlag) {
       next()

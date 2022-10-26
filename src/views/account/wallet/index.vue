@@ -195,7 +195,6 @@ import { addressMask, decimal } from "@/utils/filters";
 import { useToggleAccount } from "@/components/accountModal/hooks/toggleAccount";
 import useClipboard from "vue-clipboard3";
 import { useI18n } from "vue-i18n";
-import { getNftOwner } from "@/http/modules/nft";
 import eventBus from "@/utils/bus";
 import { useExchanges } from "@/hooks/useExchanges";
 

@@ -664,7 +664,7 @@ export default {
         staking:"质押 & 赎回",
         stakingDesc:"添加质押或赎回您的质押",
         server:"服务器",
-        serverDesc:"365 天 / 8760 小时",
+        serverDesc:"{days} 天 / {hours} 小时",
         pageTip:"这是交易所管理页面。如果你想去交易所的页面，点击“交易所”。如果你想进入交易所的控制台，点击“控制台”。如果你想添加质押量或赎回你的质押，点击在“Staking & Redemption”。如果要更改服务器的设置，请单击“Server”。",
         serveTip1:"这是您必须为服务器支付一年的费用。",
         serveTip2:"这是您离开我们服务器的使用时间。",

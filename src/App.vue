@@ -34,7 +34,6 @@ import { getWallet, NetStatus, getGasFee} from "./store/modules/account";
 import { version } from "@/enum/version";
 import { useBroadCast } from "@/utils/broadCast";
 import { guid } from "@/utils/utils";
-import { get_contract } from "./http/modules/common";
 import { provide as appProvide } from "@/provides/app";
 import localforage, { clear } from "localforage";
 
@@ -61,15 +60,15 @@ export default {
         clearTimeout(time);
       }, 10000);
     });
-    window.onload = () => {
+    window.onload = async() => {
       loading.value = false;
-      // let time = setTimeout(function () {
-      //   commit("account/UPDATE_WORMHOLES_URL", {
-      //     URL: "https://api.wormholes.com",
-      //     browser: "https://www.wormholesscan.com/#/",
-      //   });
-      //   clearTimeout(time);
-      // }, 1000);
+      let time = setTimeout(function () {
+        commit("account/UPDATE_WORMHOLES_URL", {
+          URL: "https://api.wormholes.com",
+          browser: "https://www.wormholesscan.com/#/",
+        });
+        clearTimeout(time);
+      }, 1000);
     };
     onMounted(() => {
       const { handleUpdate, broad } = useBroadCast();

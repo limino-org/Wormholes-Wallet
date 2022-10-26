@@ -372,11 +372,8 @@ import { defineComponent } from "@vue/runtime-core";
 import { computed, ref,onBeforeMount, onMounted } from "vue";
 import { useStore } from "vuex";
 import {
-  getNftOwner,
-  getOwnerSnftList,
   queryArraySnft,
   snft_com_page,
-  getAccount
 } from "@/http/modules/nft";
 import dialogWarning from "@/components/dialogWarning/message.vue";
 import NftTag from "./nftTag.vue";

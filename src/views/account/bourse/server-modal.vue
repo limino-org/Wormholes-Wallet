@@ -53,7 +53,7 @@
             </template>
           </van-popover>
         </div>
-        <div class="value lh-16">{{t('createExchange.serverDesc')}}</div>
+        <div class="value lh-16">{{t('createExchange.serverDesc',{days, hours})}}</div>
       </div>
       <div class="card">
         <div class="label lh-16 mb-2">
@@ -157,6 +157,14 @@ export default defineComponent({
       type: String,
       default: "",
     },
+    hours: {
+      type: Number,
+      default: 0
+    },
+    days: {
+      type: Number,
+      default: 0
+    }
   },
   setup(props: any, context: SetupContext) {
     const { emit } = context;
@@ -182,13 +190,14 @@ export default defineComponent({
         if (n) {
           const contract = await getContract();
           const gasPrice = await contract.provider.getGasPrice();
+          const priceStr = ethers.utils.formatUnits(gasPrice,'wei')
           const gasLimit = await contract.estimateGas.payForRenew({
             value: ethers.utils.parseEther(200 + ""),
           });
-          gasFee.value = gasFee.value = new Bignumber(
+          gasFee.value =  new Bignumber(
             ethers.utils.formatEther(gasLimit)
           )
-            .dividedBy(ethers.utils.formatEther(gasPrice))
+            .multipliedBy(priceStr)
             .toFixed(9);
    
         }

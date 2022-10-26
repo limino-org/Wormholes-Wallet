@@ -217,6 +217,7 @@ export default defineComponent({
 }
 .border-top {
   border-top: 1PX solid #E4E7E8;
+  padding-top: 9px;
 }
 .title {
   color: #000;

@@ -48,7 +48,7 @@
       <div class="card flex between" @click="handleAddModel">
         <div class="info">
           <div class="label">{{ t("createExchange.server") }}</div>
-          <div class="desc">{{ t("createExchange.serverDesc") }}</div>
+          <div class="desc">{{ t("createExchange.serverDesc",{days,hours}) }}</div>
         </div>
         <div class="flex center">
           <van-icon name="arrow" />
@@ -59,7 +59,7 @@
   <div class="flex center loading-page" v-else>
     <van-loading color="#037CD6" />
   </div>
-  <ServerModal v-model="showServerModal" :exchangeName="exchangeName"  @updateStatus="handleUpdateStatus"/>
+  <ServerModal v-model="showServerModal" :exchangeName="exchangeName" :days="days" :hours="hours"  @updateStatus="handleUpdateStatus"/>
   <div class="guide-mask" @click.stop="closeGuide" v-if="showGuideMask">
     <div class="container">
       <div class="guide-header"></div>
@@ -89,9 +89,10 @@
 <script lang="ts">
 import NavHeader from "@/components/navHeader/index.vue";
 import { encode, decode } from "js-base64";
-
+import moment from 'moment'
+window.moment = moment
 import Tip from "@/components/tip/index.vue";
-import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
+import { computed, defineComponent, onMounted, ref,Ref } from "vue";
 import { Button, Icon, Loading, Toast } from "vant";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -108,7 +109,7 @@ import { nextTick } from "process";
 import { ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
 import { useToast } from '@/plugins/toast';
-
+import {useExchanges} from '@/hooks/useExchanges'
 export default {
   name: "exchange-manage",
   components: {
@@ -122,12 +123,15 @@ export default {
   setup() {
     const router = useRouter();
     const { t } = useI18n();
+    const {} = useExchanges()
     const { state, commit, dispatch } = useStore();
     const exchangeStatus = computed(() => state.account.exchangeStatus);
     const hasExchange = computed(
       () =>
         exchangeStatus.value.exchanger_flag && exchangeStatus.value.status == 2
     );
+    const accountInfo = computed(() => state.account.accountInfo)
+    const {getContract} = useExchanges()
     const back = () => {
       router.replace({ name: "wallet" });
     };
@@ -178,7 +182,31 @@ export default {
       } finally {
         loading.value = false;
       }
+      getServerExpiDate()
     };
+    
+    const days:Ref<number> = ref(0)
+    const hours:Ref<number> = ref(0)
+    const hasEnableServe = ref(false)
+    const getServerExpiDate = async() => {
+      const contractWithSigner = await getContract()
+      const [date] = await contractWithSigner.functions.endTime(accountInfo.value.address)
+      const nowTime = new Date().getTime()
+      const a = date.toNumber() > 0 ? date.toNumber() * 1000 : 0
+      debugger
+      const b = nowTime
+      if(a === 0) {
+        return
+      }
+      hasEnableServe.value = true
+      const timestamp = moment(a)
+      const nowTimestamp = moment(b);
+      const totalHours = timestamp.diff(nowTimestamp,'hours')
+      const hour = totalHours%24
+      const day = timestamp.diff(nowTimestamp, 'days')
+      days.value = day
+      hours.value = hour
+    }
     onMounted(initData);
     eventBus.on("walletReady", async () => {
       initData();
@@ -230,13 +258,16 @@ export default {
       toConsole,
       openExchange,
       showServerModal,
+      hasEnableServe,
       loading,
       exchangeName,
       showGuide,
       showGuideMask,
       showServer,
       initData,
-      closeGuide
+      closeGuide,
+      days,
+      hours
     };
   },
 };

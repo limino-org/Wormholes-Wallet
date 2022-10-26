@@ -146,7 +146,6 @@ import NavHeader from "@/components/navHeader/index.vue";
 import AccountList from "@/views/account/components/accountList/index.vue";
 import { getWallet } from "@/store/modules/account";
 import { useRoute, useRouter } from "vue-router";
-import { nftaddress } from "@/http/modules/common";
 import { useStore } from "vuex";
 import { addressMask, decimal } from "@/utils/filters";
 import { utils, ethers } from "ethers";
