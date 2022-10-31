@@ -3,7 +3,6 @@
 
 
 // @ts-nocheck
-// import 'amfe-flexible'
 import { encode, decode } from 'js-base64';
 window.encode = encode
 window.decode = decode

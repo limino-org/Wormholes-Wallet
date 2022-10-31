@@ -109,7 +109,7 @@ import { nextTick } from "process";
 import { ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
 import { useToast } from '@/plugins/toast';
-import {useExchanges} from '@/hooks/useExchanges'
+import { useExchanges } from '@/hooks/useExchanges'
 export default {
   name: "exchange-manage",
   components: {
@@ -123,7 +123,6 @@ export default {
   setup() {
     const router = useRouter();
     const { t } = useI18n();
-    const {} = useExchanges()
     const { state, commit, dispatch } = useStore();
     const exchangeStatus = computed(() => state.account.exchangeStatus);
     const hasExchange = computed(
@@ -193,7 +192,6 @@ export default {
       const [date] = await contractWithSigner.functions.endTime(accountInfo.value.address)
       const nowTime = new Date().getTime()
       const a = date.toNumber() > 0 ? date.toNumber() * 1000 : 0
-      debugger
       const b = nowTime
       if(a === 0) {
         return

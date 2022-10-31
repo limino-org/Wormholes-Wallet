@@ -4,6 +4,7 @@ import i18n from '@/language/index'
 export const web3 = new Web3(Web3.givenProvider);
 import localforage from 'localforage';
 import { getCookies } from './jsCookie';
+import store from '@/store';
 
 export interface DecryptPrivateKeyPraams {
     json: any;
@@ -41,7 +42,8 @@ export const encryptMnemonic = (params: EncryptMnemonicParams) => {
             privateKey: web3.utils.toHex(mnemonic),
             password,
         })
-        localforage.setItem("mnemonic", mnemonicData);
+        // localforage.setItem("mnemonic", mnemonicData);
+        store.commit('mnemonic/UPDATE_MNEMONIC', mnemonicData)
         } catch (err) {
         console.error(err)
     }

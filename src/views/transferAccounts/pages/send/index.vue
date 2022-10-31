@@ -510,6 +510,7 @@ export default {
     // Send confirmation pop-up
     const showSendConfirm = ref(false);
     const handleShowSendConfirm = () => {
+      console.log('sendTx', sendTx.value)
       showSendConfirm.value = true;
     };
 

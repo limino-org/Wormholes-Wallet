@@ -296,7 +296,7 @@ async function send1(
 }
 
 async function send2(package_id: string = "", amount: string = "0") {
-  if (!package_id) {
+  if (!package_id || !Number(amount)) {
     $tradeConfirm.update({ status: "fail", failBack: () => {} });
 
     throw new Error("Parameter is invalid package_id is undefined");

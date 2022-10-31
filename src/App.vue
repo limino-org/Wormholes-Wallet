@@ -100,7 +100,7 @@ export default {
       (function () {
         let time = setTimeout(async () => {
           const mnemonic = await localforage.getItem("mnemonic");
-          if (!state.mnemonic.mnemonic && mnemonic) {
+          if (!state.mnemonic.keyStore && mnemonic) {
             commit("mnemonic/UPDATE_MNEMONIC", mnemonic);
           }
           clearTimeout(time);

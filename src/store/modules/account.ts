@@ -904,9 +904,8 @@ export default {
       params: SendTransactionParams
     ) {
       const { to, value, call, gasPrice, gasLimit } = params;
-      const gasp = gasPrice ? new BigNumber(gasPrice).dividedBy(1000000000).toFixed(12) : '0.0000000012';
+      const gasp = Number(gasPrice) ? new BigNumber(gasPrice).dividedBy(1000000000).toFixed(12) : '0.0000000012';
       const {currentNetwork} = state
-
       let tx = {
         to,
         value: utils.parseEther(value),
@@ -989,10 +988,8 @@ export default {
           contractWithSigner.estimateGas
             .transfer(to, amountWei)
             .then((gas: any) => {
-              const gasp = new BigNumber(gasPrice)
-                .dividedBy(1000000000)
-                .toFixed(12);
-              console.log("gas-->", utils.formatEther(gas));
+              const gasp = Number(gasPrice) ? new BigNumber(gasPrice).dividedBy(1000000000).toFixed(12) : '0.0000000012';
+              console.log("gas-->", utils.formatEther(gasp));
               const transferParams = {
                 gasLimit: gasLimit,
                 gasPrice: ethers.utils.parseEther(gasp),

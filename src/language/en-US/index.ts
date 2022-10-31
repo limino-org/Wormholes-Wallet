@@ -142,7 +142,7 @@ export default {
     right_and_interests:
       "You need to pledge at least 100000ERB and you will become our pledge node after selecting the pledge and downloading our node program.  In the meantime, you need to keep your node program running at all times.  After becoming an equity pledge node, you will have the opportunity to be selected to participate in our blockchain consensus, with a high probability of being selected to distribute SNFT rewards.  The higher your pledge, the more likely you are to be selected.  ",
     exchange_pledge:
-      "You need to pledge a minimum of 100ERB to open your exchange. After choosing the exchange pledge, you can choose to use your own server or we will provide the server (there will be an additional charge).  After successfully opening your exchange, you will have the opportunity to get block subsidy of blockchain. The higher your pledge amount, the higher the probability of being selected.  ",
+      "You need to pledge a minimum of 280ERB to open your exchange. After choosing the exchange pledge, you can choose to use your own server or we will provide the server (there will be an additional charge).  After successfully opening your exchange, you will have the opportunity to get block subsidy of blockchain. The higher your pledge amount, the higher the probability of being selected.  ",
     no_data: "No Data",
     mainNetwork: "Main Network",
     save: "Save",

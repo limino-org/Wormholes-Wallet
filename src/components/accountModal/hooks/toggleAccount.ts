@@ -71,8 +71,8 @@ export const useToggleAccount = () => {
   const createWalletByPath = async (callBack: Function = () => { }) => {
     const { pathIndex, path }: any = { ...store.state.account.mnemonic }
     const password: string = getCookies('password') || ''
-    const mnemonicJson = await localforage.getItem('mnemonic')
-    let phrase: string = await parseMnemonic(password,keyStore.value || mnemonicJson)
+    // const mnemonicJson = await localforage.getItem('mnemonic')
+    let phrase: string = await parseMnemonic(password, keyStore.value)
     let mnemonic: CreateWalletByMnemonicParams = { pathIndex, phrase, path }
     let wallet = await dispatch("account/createWallet", mnemonic);
     let { privateKey, address } = wallet
