@@ -41,7 +41,8 @@
               visibility: isError ? 'visible' : 'hidden',
             }"
           >
-            {{ errorMsg }}
+            <div v-if="errAddress" @click="toCopy" class="hover">{{errAddress}}</div>
+            <div>{{ errorMsg }}</div>
           </div>
           <!--  -->
         <div class="btn-groups">
@@ -71,6 +72,7 @@ import { ref, SetupContext, Ref, inject } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useBroadCast } from "@/utils/broadCast";
 import NavHeader from "@/components/navHeader/index.vue";
+import useClipboard from "vue-clipboard3";
 
 import { Icon, Search, Form, Field, CellGroup, Button, Dialog, Toast } from "vant";
 import { ethers } from "ethers";
@@ -107,6 +109,7 @@ export default {
     const isWarning = ref(false);
     const isError = ref(false)
     const appProvide = inject('appProvide')
+    const errAddress = ref('')
     // back
     const gohome = () => {
       const { backUrl }: any = route.query;
@@ -117,6 +120,7 @@ export default {
 
     // Import Account
     const onSubmit = (values: string) => {
+      errAddress.value = ''
       isError.value = false
       importAction.value = true
       console.log('submit', values)
@@ -147,20 +151,32 @@ export default {
           handleUpdate()
           router.push({name:"wallet"})
         })
-        .catch(({ reason }) => {
+        .catch(({ reason, address }) => {
           isError.value = true
           // Login failed status
           importAction.value = false
           privatekey.value = ''
           console.log('$dialog',$dialog)
           errorMsg.value = reason || t('importerror.cannotenter')
+          errAddress.value = address || ''
           // $toast.warn(t(errorMsg.value))
         })
     }
     const handleIpt = (v: any) => {
       isError.value = false
     }
+    const { toClipboard } = useClipboard();
+
+    const toCopy = async () => {
+      try {
+        await toClipboard(`${errAddress.value}`);
+        $toast.success(t("common.copyAddr"));
+      } catch (e) {
+        console.error(e);
+      }
+    };
     return {
+      toCopy,
       t,
       errorMsg,
       privatekey,
@@ -169,6 +185,7 @@ export default {
       onSubmit,
       isWarning,
       appProvide,
+      errAddress,
       isError,
       handleIpt
     };

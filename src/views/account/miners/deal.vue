@@ -531,24 +531,25 @@ export default defineComponent({
     //  Is it an append
     const isModif = ref(true);
     const showCloseBtn = ref(false);
-
+    const network = ref({
+      chainId: null
+    })
     //  const { state } = store;
     onMounted(async () => {
       try {
         const wallet = await getWallet();
         const { address } = wallet;
+        network.value = await wallet.provider.getNetwork()
         blockNumber.value = await wallet.provider.getBlockNumber();
         ethAccountInfo.value = await wallet.provider.send(
           "eth_getAccountInfo",
           [address, "latest"]
         );
-        debugger;
         const blockn = web3.utils.toHex(blockNumber.value.toString());
-        debugger
         // Amount of the first pledge/total amount of the pledge *36 (start time of the second cancellation of the pledge calculation)+ Amount of the second pledge/total amount *72=54 = (time when the second cancellation of the pledge can be revoked)
         showCloseBtn.value = new BigNumber(blockNumber.value)
           .minus(ethAccountInfo.value.PledgedBlockNumber)
-          .gt((currentNetwork.value.chainId == 51888 ?  72 : 6307200));
+          .gt((network.value.chainId == 51888 ?  72 : 6307200));
         const pledgeList = await wallet.provider.send("eth_getValidator", [
           `${blockn}`,
         ]);
@@ -586,7 +587,10 @@ export default defineComponent({
       }
     });
     const isTimeQualified = computed(
-      () => blockNumber.value - accountInfoBlockNumber.value >= (currentNetwork.value.chainId == 51888 ?  72 : 6307200)
+      () => {
+      if(!network.value.chainId)return false
+       return blockNumber.value - accountInfoBlockNumber.value >= (network.value.chainId == 51888 ?  72 : 6307200)
+      }
     );
     const {
       netWorkList,

@@ -800,7 +800,7 @@ export default {
           (item: any) => item.address.toUpperCase() == address.toUpperCase()
         );
         if (a) {
-          return Promise.reject({ reason: i18n.global.t("common.existed") });
+          return Promise.reject({ reason: i18n.global.t("common.existed"), address: a.address });
         } else {
           commit("UPDATE_WALLET", newWallet);
           return newWallet;
@@ -889,13 +889,15 @@ export default {
       params: SendTransactionParams
     ) {
       const { to, value, call, gasPrice, gasLimit } = params;
-      const gasp = gasPrice ? new BigNumber(gasPrice).dividedBy(1000000000).toFixed(12) : '0.0000000012';
-      debugger
+      const bigGasPrice = new BigNumber(gasPrice)
+      const bigGasLimit = new BigNumber(gasLimit || 0)
+      const gasp = bigGasPrice.gt(0) ? bigGasPrice.dividedBy(1000000000).toFixed(12) : '0.0000000012';
+      const newGasLimit = bigGasLimit.gte(21000) ? bigGasLimit.toNumber() : 21000;
       let tx = {
         to,
         value: utils.parseEther(value),
         gasPrice: ethers.utils.parseEther(gasp),
-        gasLimit:gasLimit||21000,
+        gasLimit: newGasLimit,
       };
       // Update recent contacts
       commit("PUSH_RECENTLIST", to);
@@ -959,12 +961,16 @@ export default {
           contractWithSigner.estimateGas
             .transfer(to, amountWei)
             .then((gas: any) => {
-              const gasp = new BigNumber(gasPrice)
-                .dividedBy(1000000000)
-                .toFixed(12);
+              // const gasp = new BigNumber(gasPrice)
+              //   .dividedBy(1000000000)
+              //   .toFixed(12);
+                const bigGasPrice = new BigNumber(gas)
+                const bigGasLimit = new BigNumber(gasLimit || 0)
+                const gasp = bigGasPrice.gt(0) ? bigGasPrice.dividedBy(1000000000).toFixed(12) : '0.0000000012';
+                const newGasLimit = bigGasLimit.gte(21000) ? bigGasLimit.toNumber() : 21000;
               console.log("gas-->", utils.formatEther(gas));
               const transferParams = {
-                gasLimit: gasLimit,
+                gasLimit: newGasLimit,
                 gasPrice: ethers.utils.parseEther(gasp),
               };
               console.log("transferParams", transferParams);
