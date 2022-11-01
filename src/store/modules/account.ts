@@ -1427,11 +1427,11 @@ export default {
                 if(MergeLevel === 0) {
                   convertAmount = new BigNumber(MergeNumber).multipliedBy(0.095).toNumber()
                 }else if(MergeLevel === 1) {
-                  convertAmount = new BigNumber(MergeNumber).multipliedBy(16).multipliedBy(0.143).toNumber()
+                  convertAmount = new BigNumber(MergeNumber).multipliedBy(0.143).toNumber()
                 } else if(MergeLevel === 2) {
-                  convertAmount = new BigNumber(MergeNumber).multipliedBy(256).multipliedBy(0.271).toNumber()
+                  convertAmount = new BigNumber(MergeNumber).multipliedBy(0.271).toNumber()
                 } else if(MergeLevel === 3) {
-                  convertAmount = new BigNumber(MergeNumber).multipliedBy(4096).multipliedBy(0.65).toNumber()
+                  convertAmount = new BigNumber(MergeNumber).multipliedBy(0.65).toNumber()
                 }
                 
               }
