@@ -1059,98 +1059,19 @@ export default {
         }
       });
     },
-    // async tokenTransaction(
-    //   { state, commit, dispatch }: any,
-    //   params: SendTokenParams
-    // ) {
-    //   const { address: tokenAddress, amount, to, gasPrice, gasLimit, call } = params;
-    //   // Update recent contacts
-    //   commit("PUSH_RECENTLIST", to);
-    //   return new Promise(async (resolve, reject) => {
-    //     try {
-    //       // Get contract token instance object
-    //       const { contractWithSigner, contract } = await dispatch("connectConstract", tokenAddress);
-    //       console.log(" contract.estimate", contract, contractWithSigner);
-    //       const amountWei = web3.utils.toWei((amount || 0) + '','ether')
-    //       console.log('amountWei---2', amountWei)
-    //       const gas = await contractWithSigner.estimateGas.transfer(to, amountWei )
-    //       const gasp = new BigNumber(gasPrice)
-    //         .dividedBy(1000000000)
-    //         .toFixed(12);
-    //       console.log("gas-->", utils.formatEther(gas));
-    //       const transferParams = {
-    //         gasLimit: gasLimit,
-    //         gasPrice: ethers.utils.parseEther(gasp),
-    //       };
-          
-    //       const token = state.currentNetwork.tokens[wallet.address.toUpperCase()].find((item: any) => item.tokenContractAddress.toUpperCase() == tokenAddress.toUpperCase())
-    //       const symbol = token.symbol
-    //       const data = await contractWithSigner.transfer(to, amountWei, transferParams)
-    //       // const { from, gasLimit: gasLi, gasPrice: gasp2, hash, nonce,  type, value } = data;
-    //       // commit("PUSH_TXQUEUE", {
-    //       //   date: new Date(),
-    //       //   hash,
-    //       //   from,
-    //       //   gasLimit: gasLi,
-    //       //   gasPrice: gasp2,
-    //       //   nonce,
-    //       //   to,
-    //       //   type,
-    //       //   value,
-    //       //   network: clone({...state.currentNetwork, currencySymbol: symbol}),
-    //       //   txType: TransactionTypes.default
-    //       // });
-    //       // const penddingRep = handleGetPenddingTranactionReceipt(TransactionTypes.contract,data, symbol)
-    //       // commit("PUSH_TRANSACTION", {...penddingRep,tokenAddress: address});
-    //       // Add to transaction queue
-          
-
-
-
-          
-    //       commit("ADD_TRANACTIONLIST", JSON.parse(JSON.stringify(data)));
-    //       sessionStorage.setItem("token tx", JSON.stringify(data));
-    //       resolve(data);
-    //       // Monitor on chain confirmation
-    //       const receipt = await wallet.provider.waitForTransaction(data.hash)
-    //       // Rewrite balance consistent with ordinary transaction bigNumber
-    //       data.value = utils.parseEther(amount);
-    //       sessionStorage.setItem(
-    //         "token receipt",
-    //         JSON.stringify(receipt)
-    //       );
-    //       const {currentNetwork} = state
-    //       const rep: TransactionReceipt =
-    //         handleGetTranactionReceipt(
-    //           TransactionTypes.default,
-    //           receipt,
-    //           data,
-    //           {...currentNetwork, currencySymbol: symbol},
-    //         );
-    //       // Update transaction queue
-    //       commit("UPDATE_TRANACTIONLIST", rep);
-    //       call ? call(rep) : "";
-    //       // Update account balance
-    //       dispatch("updateTokensBalances");
-    //       // Add to transaction
-    //       commit("PUSH_TRANSACTION", { ...rep, tokenAddress });
-    //     } catch (err) {
-    //       reject(err);
-    //     }
-    //   });
-    // },
     // send data
     async sendTransaction({ commit, dispatch, state }: any, tx: any) {
-      const { to, from, data, callBack } = tx
+      const { to, from, data, callBack, value: sendVal } = tx
       commit("PUSH_RECENTLIST", to);
       try {
-              // @ts-ignore
+      // @ts-ignore
       const network = clone(store.state.account.currentNetwork)
         const wallet = await getWallet();
-        const res = await wallet.sendTransaction({
+        const res: any = await wallet.sendTransaction({
           to,
           from,
-          data
+          data,
+          value: sendVal
         })
         const { gasLimit, gasPrice, hash, nonce, type, value } = res;
         store.commit("account/PUSH_TXQUEUE", {
@@ -1166,7 +1087,6 @@ export default {
           network
         });
         commit("ADD_TRANACTIONLIST", JSON.parse(JSON.stringify(res)));
-        callBack ? callBack() : ''
         const receipt = await wallet.provider.waitForTransaction(res.hash);
         const rep: TransactionReceipt = handleGetTranactionReceipt(
           TransactionTypes.default,

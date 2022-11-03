@@ -100,7 +100,7 @@ export default {
     const currentNetwork = computed(() => store.state.account.currentNetwork);
     const route = useRoute();
     const { query } = route;
-    const { from, to, data }: any = query.tx
+    const { from, to, data, value }: any = query.tx
       ? JSON.parse(query.tx.toString())
       : {};
     const { backUrl }: any = query;
@@ -123,6 +123,7 @@ export default {
         data,
         to,
         from,
+        value,
         callBack: () => {
           $tradeConfirm.update({
             status: "approve",
