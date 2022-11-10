@@ -129,7 +129,7 @@
 
 <script lang="ts">
 import { Button, Overlay, Field, Toast, Icon } from "vant";
-import { ref, SetupContext, computed, nextTick, watch } from "vue";
+import { ref, SetupContext, computed, nextTick, watch, Ref } from "vue";
 import { ethers, utils } from "ethers";
 import { formatEther, toUsd, transactionStatus } from "@/utils/filters";
 import { useI18n } from "vue-i18n";
@@ -141,6 +141,7 @@ import {
   getWallet,
   handleGetTranactionReceipt,
   TransactionTypes,
+  getGasFee,
   clone
 } from "@/store/modules/account";
 import { BigNumber } from "bignumber.js";
@@ -248,7 +249,7 @@ export default {
     const gasPrice = ref("");
     const gasLimit = ref("");
     const accountInfo = computed(() => store.state.account.accountInfo);
-    const gasFee = ref("");
+    const gasFee: Ref<any> = ref("");
     watch(
       () => props.show,
       async (n) => {
@@ -260,16 +261,7 @@ export default {
             data: `0x${data3}`,
           };
           try {
-            const wallet = await getWallet();
-            gasPrice.value = await wallet.provider.getGasPrice();
-            const priceStr = ethers.utils.formatUnits(gasPrice,'wei')
-            gasLimit.value = await wallet.estimateGas(tx1);
-            // @ts-ignore
-            gasFee.value = new BigNumber(
-              ethers.utils.formatEther(gasLimit.value)
-            )
-              .multipliedBy(priceStr)
-              .toFixed(9);
+            gasFee.value = await getGasFee(tx1)
           } catch (err: any) {
             console.error(err);
           }

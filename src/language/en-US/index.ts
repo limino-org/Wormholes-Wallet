@@ -1059,8 +1059,10 @@ export default {
     swap: "Swap",
     other: "Other",
     confirmed: 'confirmed',
-    failed: 'failed',
+    failed: 'Failed',
     contract: 'Contract',
+    successly:"Success",
+    pendding:"Waitting"
 
   },
 
@@ -1150,6 +1152,7 @@ export default {
     tipincome:"This is the estimated annual profit you will receive after redemption.",
     tipadd:"This is the additional amount of ERB you want to stake.",
     closeTip:"Sorry, you need to wait 365 days to close your marketplace and redeem your stake.",
+    sendProxyExchange:"Send proxy exchange trading",
 
   },
   guidePopup: {

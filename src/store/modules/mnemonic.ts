@@ -15,10 +15,6 @@ export default {
     mutations: {
         UPDATE_MNEMONIC(state: State, keyStore: any) {
             state.keyStore = keyStore
-            // let time = setTimeout(async() => {
-            //    await localforage.removeItem('mnemonic')
-            //    clearTimeout(time)
-            // })
         }
     },
     actions: {

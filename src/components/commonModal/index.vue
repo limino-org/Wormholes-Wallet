@@ -13,10 +13,6 @@
       <div class="text-center">
           <slot></slot>
       </div>
-      <div class="flex center pb-20 pt-20">
-          <van-button type="default" @click="cancel">{{t('bootstrapwindow.okay')}}</van-button>
-      </div>
-     
     </van-dialog>
   </div>
 </template>
@@ -72,22 +68,19 @@ export default defineComponent({
         }
       }
     );
-    const cancel = () => {
-        showModal.value = false
-    }
     return {
       t,
       showModal,
-        cancel
     };
   },
 });
 </script>
 <style lang="scss" scoped>
 .title {
-  color: #b3b3b3;
+  color: #000;
   line-height: 62px;
   background: #f8fcff;
+  font-weight: bold;
 }
 .savebtn {
   width: 220px;

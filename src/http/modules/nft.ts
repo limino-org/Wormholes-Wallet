@@ -26,3 +26,8 @@ export const getOwnerSnftList = (params = {}) => {
 export const getAccount = (address: string) => {
   return httpGet(`${contractApi}/account/${address}`)
 }
+
+export const tokenIdByNftaddr = (address: string) => {
+  return httpPost(`${isProduct ?'': service}${exchantest}/v2/queryTokenIdByNftaddr`, {nft_addr: address })
+}
+

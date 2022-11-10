@@ -1120,8 +1120,8 @@ export default {
         vainode: "节点有误",
         placeamount: "请输入追加金额",
         dialogTitle: "信息确认",
-        marketName: "市场名称",
-        marketCom: "市场委员会",
+        marketName: "交易所名称",
+        marketCom: "交易所费率",
         tip1: "为您的市场选择名称。",
         tip2: "这是%的费用，你的市场将收取谁在你的市场交易的卖家。",
         stakingFee: "质押费",
@@ -1181,6 +1181,7 @@ export default {
         tipincome:"这是您在赎回后将获得的估计年度利润。",
         tipadd:"这是您想要质押的额外 ERB 数量。",
         closeTip:"抱歉，交易所预计关闭时间为 1 年。",
+        sendProxyExchange:"发送代理交易所交易",
 
 
 

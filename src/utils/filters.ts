@@ -161,13 +161,19 @@ export const toUsdSymbol = (v: string | number, keepDotLength = 6) => {
   }
 
   // Return to transaction status
-export function transactionStatus(status: number){
-    if(status == 1){
+export function transactionStatus(txData: any){
+  const {receipt,sendStatus} = txData
+  if(sendStatus === 'pendding'){
+    return  i18n.global.t('transationHistory.pendding')
+  }
+  if(sendStatus === 'success') {
+    const {status} = receipt
+    if(status === 1) {
       return i18n.global.t('transationHistory.confirmed')
-    }
-    if(status == 0){
+    } else {
       return i18n.global.t('transationHistory.failed')
     }
+  }
   }
   // Return to form of transaction
   export function transactiontxType(status: string){
@@ -177,14 +183,4 @@ export function transactionStatus(status: number){
     if(status=='contract'){
       return i18n.global.t('transationHistory.contract')
     }
-    // if(status == 'swap'){
-    //   return i18n.global.t('transationHistory.swap')
-    // }
-    // if(status=='other'){
-    //   return i18n.global.t('transationHistory.other')
-    // }
-    // if(status == 'recive'){
-    //   return i18n.global.t('transationHistory.recive')
-    // }
-   
   }

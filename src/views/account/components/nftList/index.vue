@@ -374,6 +374,7 @@ import { useStore } from "vuex";
 import {
   queryArraySnft,
   snft_com_page,
+  tokenIdByNftaddr
 } from "@/http/modules/nft";
 import dialogWarning from "@/components/dialogWarning/message.vue";
 import NftTag from "./nftTag.vue";
@@ -925,21 +926,36 @@ export default defineComponent({
     const showTip6 = ref(false);
 
 
-    const toNftExchange = (item: any) => {
-      const { tag, snft_address } = item
+    const toNftExchange = async(item: any) => {
+      debugger
+      const { tag, nft_address } = item
+      let tokenidmm = ''
+      switch(nft_address.length){
+        case 42:
+          tokenidmm = nft_address
+          break;
+        case 41:
+        tokenidmm = `${nft_address}m`
+          break;
+        case 40:
+        tokenidmm = `${nft_address}mm`
+          break;
+        case 39:
+        tokenidmm = `${nft_address}mmm`
+          break;
+      }
+      const {data: nft_token_id} = await tokenIdByNftaddr(tokenidmm)
       // :http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#/   51888
       // 51891:https://snft.wormholestest.com
-      const {source_url, metaData} = item
-      const {collection_creator_addr, collections:collection_name,nft_contract_addr,nft_token_id } = metaData
-
-      const domain = network.value && network.value.chainId === 51888 ? 'http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#/' : 'https://snft.wormholestest.com/#/'
-      let str = ''
-      if(tag == 'P') {
-        str = `account?user=${accountInfo.value.address}`
-      }else if(tag == 'C'){
-        str = `collections?collection_name=${collection_name}&collection_creator_addr=${collection_creator_addr}`
-      }else if(tag == 'N' || tag == 'F') {
-        str = `assets/detail?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}&source_url=${source_url}`
+      const { source_url, metaData } = item
+      const { nft_contract_addr } = metaData
+      debugger
+      const domain = network.value && network.value.chainId === 51888 ? 'http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#' : 'https://snft.wormholestest.com/#'
+      let str = '/assets/detail'
+      if(tag == 'P' || tag == 'C' || tag == 'N') {
+        str += `?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}`
+      } else if(tag == 'F') {
+        str += `?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}&source_url=${source_url}`
       }
       const newUrl = `${domain}${str}`
       window.open(newUrl)

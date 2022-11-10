@@ -13,7 +13,7 @@
           <div class="text-center sign-bg-icon">
             <van-icon name="records" />
           </div>
-          <div class="text-center sign-bg-tit">发送代理交易所交易</div>
+          <div class="text-center sign-bg-tit">{{t('bourse.sendProxyExchange')}}</div>
           <div class="text-center sign-bg-tit1">
             {{ t("sign.confirmsignaturedata") }}
           </div>
@@ -27,8 +27,7 @@
           {{ txs }}
         </div>
       </div>
-      <h2 class="text-center">余额：{{ nowAccount.amount }}</h2>
-
+      <h2 class="text-center">{{t('bootstrapwindow.balance')}}：{{ nowAccount.amount }}</h2>
       <div class="flex between btn-box">
         <van-button
           type="default"
@@ -69,7 +68,6 @@ import { createWalletByJson } from "@/utils/ether";
 import {
   ExchangeStatus,
   getWallet,
-  TransactionReceipt,
   handleGetTranactionReceipt,
   TransactionTypes,
   clone,
@@ -91,6 +89,7 @@ import { Actions } from "@/views/connectWallet/index.vue";
 import { useSign } from "@/views/sign/hooks/sign";
 import { handleConnectBackUrl } from "../connectWallet/index.vue";
 import { debug } from "util";
+import { TransactionReceipt } from "@ethersproject/abstract-provider";
 const { $tradeConfirm } = useTradeConfirm();
 const newErbAbi = require("@/assets/json/packagePay.json");
 
@@ -103,12 +102,14 @@ const { $toast } = useToast();
 const { state, commit, dispatch } = useStore();
 const { toSign } = useSign();
 const { backUrl, action, address, txs }: any = query;
-const [tx2, tx1] = txs ? JSON.parse(txs) : [];
+const txList = txs ? JSON.parse(txs) : [];
+const tx1 = txList.find((item: any) => item.type === 'pledge')
+const tx2 = txList.find((item: any) => item.type === 'package')
 const accountList = computed(() => state.account.accountList);
 const currentNetwork = computed(() => state.account.currentNetwork);
 const sendLoading = ref(false);
 const nowAccount = computed(() => state.account.accountInfo);
-
+let data1,data2,receipt1:TransactionReceipt,receipt2:TransactionReceipt,rep1, rep2;
 const router = useRouter();
 function clickLeft() {
   router.replace({ name: "wallet" });
@@ -123,16 +124,18 @@ async function getContract(wallet: any) {
   }
   let provider = ethers.getDefaultProvider(currentNetwork.value.URL);
   const contract = new ethers.Contract(contractAddress, abi, provider);
-  debugger
   const contractWithSigner = contract.connect(wallet);
-  debugger
   return contractWithSigner;
 }
 const callBack = () => {
   const data = resData.value;
   const url = handleConnectBackUrl({
     action: Actions.sendOpenExchangeTransaction,
-    data,
+    data: {
+      auth: data,
+      status1: receipt1 ? receipt1.status: '',
+      status2: receipt2 ? receipt2.status : ''
+    },
     backUrl,
   });
   location.href = url;
@@ -141,11 +144,10 @@ const callBack = () => {
 const resData: any = ref({});
 
 async function toSend() {
-  if (!tx2 || !tx1) {
+  if (!tx2 && !tx1) {
     $toast.warn(t("error.500"));
     return;
   }
-
   $tradeConfirm.open({
     approveMessage: t("createExchange.create_approve"),
     successMessage: t("createExchange.create_waiting"),
@@ -156,57 +158,56 @@ async function toSend() {
   });
   try {
     const network = clone(state.account.currentNetwork);
-    const { pledge, fee_rate, name } = tx1;
-    const { package_id, amount } = tx2;
     // sendLoading.value = true
     const wallet = await getWallet();
-    const data1 = await send1(name, fee_rate, pledge);
-    debugger
-    const data2 = await send2(package_id, amount);
-    debugger
-    $tradeConfirm.update({ status: "approve" });
-    const { hash: hash1 } = data1;
-    const { hash: hash2 } = data2;
-    const receipt1 = await wallet.provider.waitForTransaction(hash1);
-    debugger
-    const receipt2 = await data2.wait();
-    debugger
-    const rep1: TransactionReceipt = handleGetTranactionReceipt(
+    if(tx1){
+      const { pledge, fee_rate, name } = tx1;
+      data1 = await send1(name, fee_rate, pledge);
+      receipt1 = await wallet.provider.waitForTransaction(data1.hash);
+      rep1 = handleGetTranactionReceipt(
       TransactionTypes.default,
       receipt1,
       data1,
       network
     );
-    const rep2: TransactionReceipt = handleGetTranactionReceipt(
+    commit("account/PUSH_TRANSACTION", rep1);
+    const { status: status1 } = receipt1;
+    if(!status1) {
+      $tradeConfirm.update({ status: "fail" })
+      return
+    }
+    }
+    if(tx2){
+      const { package_id, amount } = tx2;
+      data2 = await send2(package_id, amount);
+      receipt2 = await data2.wait();
+      rep2 = handleGetTranactionReceipt(
       TransactionTypes.contract,
       receipt2,
       data2,
       network
     );
-    commit("account/PUSH_TRANSACTION", rep1);
     commit("account/PUSH_TRANSACTION", rep2);
-    // commit("account/PUSH_TRANSACTION", rep3);
-    const { status: status1 } = receipt1;
     const { status: status2 } = receipt2;
-    // const { status: status3 } = receipt3;
-    if (!status1 || !status2) {
-      let time = setTimeout(() => {
-        $tradeConfirm.update({ status: "fail" });
-        clearTimeout(time);
-      }, 2000);
-      return;
+    if(!status2) {
+      $tradeConfirm.update({ status: "fail" }) 
+      return
+    }
+    }
+    $tradeConfirm.update({ status: "approve" });
+    let name = ''
+    if(!tx1){
+      const {ExchangerName} = await wallet.provider.send("eth_getAccountInfo", [address,"latest"]);
+      name = decode(ExchangerName)
+    } else {
+      name = tx1.name
     }
     resData.value = await generateSign(name);
-    let time = setTimeout(() => {
-      $tradeConfirm.update({ status: "success" });
-      clearTimeout(time);
-    }, 2000);
+    $tradeConfirm.update({ status: "success" });
+
   } catch (err) {
     console.error(err);
-    let time = setTimeout(() => {
-      $tradeConfirm.update({ status: "fail" });
-      clearTimeout(time);
-    }, 2000);
+    $tradeConfirm.update({ status: "fail" });
   }
 }
 
@@ -259,10 +260,7 @@ async function send1(
   const wallet = await getWallet();
   const { address } = wallet;
   const baseName = encode(name);
-  const rate_str: number = fee_rate
-    ? new BigNumber(fee_rate).multipliedBy(10).toNumber()
-    : 100;
-  const str = `wormholes:{"version": "0","type": 11,"fee_rate": ${rate_str},"name":"${baseName}","url":""}`;
+  const str = `wormholes:{"version": "0","type": 11,"fee_rate": ${fee_rate},"name":"${baseName}","url":""}`;
   // const str = `wormholes:{"type":"9", "proxy_address":"0x591813F0D13CE48f0E29081200a96565f466B212", "version":"0.0.1"}`
   const data3 = toHex(str);
   const tx1 = {

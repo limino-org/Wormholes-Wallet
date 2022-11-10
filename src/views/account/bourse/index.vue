@@ -131,7 +131,7 @@
         </el-tooltip>
       </div>
       <div class="t3" v-if="!isExchanger_flag">
-        280ERB <span>(≈${{ toUsd(280, 2) }})</span>
+        700ERB <span>(≈${{ toUsd(700, 2) }})</span>
       </div>
 
       <div class="bourse-container-meaning bt mt-14" v-if="isExchanger_flag">
@@ -377,7 +377,7 @@
     <ModifPledgeModal
       v-model="showPledgeModal"
       :max="parseInt(exchangerBalance)"
-      :defaultValue="280"
+      :defaultValue="700"
       @confirm="handleConfirmMinus"
     />
   </div>
@@ -596,7 +596,7 @@ export default defineComponent({
     const name = ref("");
     const store = useStore();
     const { dispatch } = store;
-    const amount = ref(280);
+    const amount = ref(700);
     const accountInfo = computed(() => store.state.account.accountInfo);
     const exchangeStatus: ComputedRef<ExchangeStatus> = computed(
       () => store.state.account.exchangeStatus
@@ -694,7 +694,7 @@ export default defineComponent({
           });
           await sendTo(
             name.value,
-            280,
+            700,
             serverIndex.value == 0 ? false : true,
             fee_rate
           );
@@ -767,7 +767,7 @@ export default defineComponent({
     const handleAddAmount = () => {
       const am = new BigNumber(accountInfo.value.amount);
       const addnum = new BigNumber(addAmount.value);
-      if (addnum.lt(280)) {
+      if (addnum.lt(700)) {
         isCloseDialog.value = true;
         return;
       }

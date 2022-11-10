@@ -250,7 +250,6 @@ import SendConfirm from "@/views/transferAccounts/components/sendComfirm.vue";
 import { web3 } from "@/utils/web3";
 import { ethers } from "ethers";
 import eventBus from "@/utils/bus";
-import CommonModal from "@/components/commonModal/index.vue";
 import { useToast } from "@/plugins/toast";
 
 export default {
@@ -269,7 +268,6 @@ export default {
     AccountList,
     AccountModal,
     SendConfirm,
-    CommonModal,
   },
   setup(props: any, context: SetupContext) {
     const router = useRouter();

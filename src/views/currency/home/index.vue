@@ -8,10 +8,12 @@
     <div :class="`amount text-center ${decimal(pageData.data.balance).length > 30 ? 'small' : 'big'}`">{{ decimal(pageData.data.balance) }} {{ pageData.data.symbol }}</div>
     <div class="text-center lh-16 f-12 mb-20 amount2">≈ $ {{toUsd(pageData.data.balance, 2)}}</div>
     <div class="flex center">
-      <div class="actions-list flex between">
+      <div class="actions-list flex evenly">
         <div class="actions-list-card">
-          <div class="actions-list-card-icon flex center" @click.stop="toogleAcceptCode">
+          <div class="flex center">
+            <div class="actions-list-card-icon flex center" @click.stop="toogleAcceptCode">
             <i class="iconfont icon-bottom"></i>
+          </div>
           </div>
           <div class="actions-list-card-label text-center">{{ t("wallet.takeover") }}</div>
           <!-- <van-popup v-model:show="showAcceptCode" class="receive-sheet-popup" teleport="#page-box"  position="bottom" round>
@@ -19,15 +21,17 @@
           </van-popup> -->
         </div>
         <div class="actions-list-card" @click="toSend">
-          <div class="actions-list-card-icon flex center">
+          <div class="flex center">
+            <div class="actions-list-card-icon flex center">
             <i class="iconfont icon-jiantou_youshang"></i>
+          </div>
           </div>
           <div class="actions-list-card-label text-center">{{ t("wallet.send") }}</div>
         </div>
       </div>
     </div>
     <div class="swap-list">
-      <CollectionCard @handleClick="handleView(item)" v-for="item in txList" :key="item.address" :data="item" />
+      <CollectionCard @handleClick="handleView(item)" @handleSend="handleSend" @handleCancel="handleCancel" v-for="item in txList" :key="item.address" :data="item" />
       <NoData v-if="!transactionList.length" :message="$t('wallet.no')" />
       <i18n-t tag="div" keypath="wallet.toBrowser" class="flex center scan-link pb-30">
         <template v-slot:link>
@@ -39,10 +43,21 @@
       </van-dialog>
     </div>
   </div>
+  <CommonModal v-model="showSpeedModal" title="发送替换交易">
+    <div class="pt-20">
+      <div>nonce {{sendTx.nonce}}</div>
+      <div>gasLimit {{ethers.utils.formatEther(sendTx.sendData.gasLimit) }}</div>
+      <div>gasPrice {{sendTx.sendData.gasPrice ? ethers.utils.formatEther(sendTx.sendData.gasPrice) : 0}}</div>
+      <div>value {{ethers.utils.formatEther(sendTx.sendData.value)}}</div>
+    </div>
+    <div class="sendBtnBox pb-20 mt-20">
+      <van-button type="primary" @click="reSendTx" :loading="reloading">重新提交</van-button>
+    </div>
+  </CommonModal>
 </template>
 <script lang="ts">
 import { ref, Ref, reactive, onMounted, computed, toRefs, onBeforeMount } from 'vue'
-import { Icon, Popup, Empty, Dialog } from 'vant'
+import { Icon, Popup, Empty, Dialog, Button } from 'vant'
 import CollectionCard from '@/views/account/components/collectionCard/index.vue'
 import { addressMask, decimal, toUsd } from '@/utils/filters'
 import AcceptCode from '@/views/account/components/acceptCode/index.vue'
@@ -51,21 +66,28 @@ import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { hexValue } from '@ethersproject/bytes'
 import { useI18n } from 'vue-i18n'
+import CommonModal from '@/components/commonModal/index.vue'
 import NoData from '@/components/noData/index.vue'
 import {VUE_APP_SCAN_URL} from '@/enum/env'
 import localforage from 'localforage'
+import { ethers } from 'ethers'
+import BigNumber from 'bignumber.js'
+import { getWallet } from '@/store/modules/account'
 export default {
   components: {
     [Icon.name]: Icon,
     [Popup.name]: Popup,
     [Empty.name]: Empty,
+    [Button.name]: Button,
     [Dialog.Component.name]: Dialog.Component,
     CollectionCard,
     AcceptCode,
     TransactionDetail,
-    NoData
+    NoData,
+    CommonModal
   },
   setup() {
+    
     const { t } = useI18n()
     const router = useRouter()
     const store = useStore()
@@ -76,11 +98,12 @@ export default {
     const transactionList = ref([])
     const pageData = reactive({ data: {} })
     pageData.data = query
-    const txList = computed(() => {
-      return transactionList.value.sort((a: any,b:any) =>  new Date(b.date).getTime() - new Date(a.date).getTime())
-    })
+    // const txList = computed(() => {
+    //   return transactionList.value.sort((a: any,b:any) =>  new Date(b.date).getTime() - new Date(a.date).getTime())
+    // })
+    const txList = ref([]);
     const toogleAcceptCode = () => {
-          const params = {
+      const params = {
         type: "receive",
         data: {
           address: accountInfo.value.address,
@@ -99,20 +122,25 @@ export default {
     }
 
     onMounted(async() => {
-      const txList: any = await localforage.getItem(`txlist-${currentNetwork.value.id}`) || {}
-      console.log('txList', txList)
-      try {
-      Object.keys(txList).forEach(add => {
-        const badd = add.toUpperCase()
-        if(badd == accountInfo.value.address.toUpperCase()) {
-          const list: never[] = Array.isArray(txList[badd]) ? txList[badd] : []
-          transactionList.value.push(...list)
+      // const wallet = await getWallet()
+      // const data = await wallet.provider.waitForTransaction("0x2f175dda5f06ef17afa057e3b7475f716c9abad87dcaee094856c9e5fe57ba98")
+      // debugger
+      const id = currentNetwork.value.id;
+      const targetAddress = accountInfo.value.address.toUpperCase();
+      const tx: any = await localforage.getItem(`txlist-${id}`);
+      if (tx && tx[targetAddress]) {
+        const list = tx[targetAddress] || [];
+        if (tokenContractAddress) {
+          txList.value = list.filter(
+            (item: any) =>
+              item.tokenAddress &&
+              item.tokenAddress.toUpperCase() ==
+                tokenContractAddress.toString().toUpperCase()
+          );
+        } else {
+          txList.value = list.filter((item: any) => !item.tokenAddress);
         }
-
-      })
-    } catch (err) {
-      transactionList.value = []
-    }
+      }
     })
     const toSend = () => {
       router.push({ name: 'send', query })
@@ -128,8 +156,56 @@ export default {
     const handleClose = () => {
       showTransactionModal.value = false
     }
+    const showSpeedModal = ref(false)
+    const sendTx = ref({})
+    const handleSend = (data: any) => {
+      sendTx.value = data
+      showSpeedModal.value = true
+    }
+    const reloading = ref(false)
+    const reSendTx = async() => {
+      reloading.value = true
+      try {
+        const wallet = await getWallet()
+      const network = await wallet.provider.getNetwork()
+      const { gasPrice, gasLimit, value, nonce, to, network: localNet, sendData, txType }: any = sendTx.value
+      const gasp =  Number(gasPrice) ? new BigNumber(gasPrice).dividedBy(1000000000).toFixed(12) : '0.0000000012';
+      const bigGas = ethers.utils.parseEther(gasp)
+      const tx = {
+        to,
+        // @ts-ignore
+        value: ethers.utils.parseEther(ethers.utils.formatEther(sendTx.value.sendData.value)),
+        nonce,
+        gasPrice: bigGas,
+        gasLimit,
+        chainId: network.chainId
+      }
+      debugger
+      // const newTx = await wallet.signTransaction(tx)
+      const data = await wallet.sendTransaction(tx)
+      debugger
+      const receipt = await wallet.provider.waitForTransaction(data.hash)
+      store.commit('account/UPDATE_TRANSACTION', {...sendTx.value,receipt,network:localNet, sendData: data, gasPrice: bigGas, gasLimit })
+      setTimeout(() => {
+        location.reload()
+      },1000)
+      }catch(err){
+        console.error(err)
+      }finally{
+        reloading.value = false
+      }
+    }
+    const handleCancel = () => {
+      console.warn('cancel...')
+    }
     return {
+      showSpeedModal,
+      handleSend,
+      sendTx,
+      reSendTx,
+      handleCancel,
       t,
+      ethers,
       accountInfo,
       toogleAcceptCode,
       toSend,
@@ -137,6 +213,7 @@ export default {
       handleView,
       handleClose,
       showTransactionModal,
+      reloading,
       transactionData,
       decimal,
       currentNetwork,
@@ -197,11 +274,12 @@ export default {
     color: #848484;
   }
   .actions-list {
+    width: 50%;
     &-card {
-      width: 32px;
-      margin: 0 10px;
+      width: 60px;
       &-icon {
         height: 32px;
+        width: 32px;
         background: rgba(3, 125, 214, 1);
         border-radius: 32px;
         transition: ease 0.3s;
