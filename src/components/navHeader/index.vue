@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <van-sticky offset-top="0">
+    <van-sticky offset-top="0" class="header-van-sticky--fixed">
       <div
         :class="`nav-header flex center van-hairline--bottom ${
           paddingTop ? 'paddingTop' : ''

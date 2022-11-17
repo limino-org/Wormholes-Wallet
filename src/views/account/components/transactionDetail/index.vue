@@ -4,9 +4,15 @@
     <div class="tran-form  mt-20">
       <div class="form-box ml-14 mr-14">
         <div class="card flex between card-border">
-          <div class="label">{{t('transactionDetails.status')}}</div>
-          <div :class="`value flex right center-v status${data.status}`">
-            <span>{{ transactionStatus(data.status) }}</span>
+          <div class="label flex between label-full">
+            <span>{{t('transactionDetails.status')}}</span>
+            <div class="speed-box" v-if="data.sendStatus == 'pendding'">
+              <span @click="handleSpeed">{{t('common.speedUp')}}</span>
+              <span @click="handleCancel">{{t('common.cancel')}}</span>
+            </div>
+          </div>
+          <div :class="`value flex right center-v status ${transactionStatusClass(data)}`">
+            <span>{{ transactionStatus(data) }}</span>
           </div>
         </div>
         <div class="card flex between card-border">
@@ -31,7 +37,7 @@
         </div>
         <div class="card flex between card-sml pt-10">
           <div class="label">{{data.transitionType == '6' ? t('common.convertAmount') : t('transactionDetails.transferAmount')}}</div>
-          <div class="value">{{ data.transitionType == '6' ? '+' + data.convertAmount : '-' + utils.formatEther(data.value) }} {{currentNetwork.currencySymbol}}</div>
+          <div class="value">{{ transferAmountText(data) }}</div>
         </div>
         <div class="card flex between card-sml">
           <div class="label">{{t('transactionDetails.gasfee')}}
@@ -62,16 +68,31 @@ import { SetupContext, Ref, ref, reactive, onMounted, defineComponent, computed 
 import { Icon, Toast, Button,Popover } from 'vant'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { transactionTarget, formatDate, addressMask, formatEther, transactionStatus, parseEther } from '@/utils/filters'
 import { utils } from 'ethers'
 import { copy } from '@/utils/utils'
 import { useI18n } from 'vue-i18n'
 import BigNumber from 'bignumber.js'
 import { useToast } from '@/plugins/toast'
 import {VUE_APP_SCAN_URL} from '@/enum/env'
+import {
+  transactionTarget,
+  formatDate,
+  addressMask,
+  toUsdSymbol,
+  transactionStatus,
+  formatEther,
+  parseEther,
+  transactiontxType,
+  transferAmountText,
+  handleSendStatus,
+  txTypeToIcon,
+  handleTxType,
+  transactionStatusClass,
+  
+} from "@/utils/filters";
 export default defineComponent({
   name: 'transactionDetail',
-  emits: ['handleClose'],
+  emits: ['handleClose','handleSpeed','handleCancel'],
   components: {
     [Icon.name]: Icon,
     [Button.name]: Button,
@@ -104,15 +125,32 @@ export default defineComponent({
     const showPopover = ref(false)
     // aggregate amount
     const totalAmount = computed(() => {
-      const am = gasFee.value.plus(utils.formatEther(props.data.value)).toString()
+      const {amount, value, tokenAddress} = props.data
+      if(!tokenAddress) {
+        const am = gasFee.value.plus(utils.formatEther(value)).toString()
       return am
+      } else {
+        return gasFee.value.plus(amount)
+      }
+
     })
 
     // gas= gasLimit * gasPrice
     const gasFee = computed(() => {
-      const price = new BigNumber(utils.formatEther(props.data.effectiveGasPrice)).multipliedBy(1000000000)
-      const gasuse = new BigNumber(utils.formatEther(props.data.gasUsed)).multipliedBy(1000000000)
+      console.warn('props.data--------', props.data)
+      const {sendStatus,receipt, sendData} = props.data
+      if(sendStatus === 'pendding') {
+        return new BigNumber('0')
+      }
+      const {effectiveGasPrice, gasUsed} = receipt
+      if(effectiveGasPrice && gasUsed) {
+        const price = new BigNumber(utils.formatEther(effectiveGasPrice)).multipliedBy(1000000000)
+      const gasuse = new BigNumber(utils.formatEther(gasUsed)).multipliedBy(1000000000)
       return gasuse.multipliedBy(price)
+      } else {
+        return new BigNumber('0')
+      }
+
     })
     const view = () => {
       window.open(`${VUE_APP_SCAN_URL}TradeDetail/${props.data.hash}`)
@@ -120,7 +158,16 @@ export default defineComponent({
     const cancel = () => {
       emit('handleClose')
     }
+
+    const handleSpeed = () => {
+      emit('handleSpeed', props.data)
+    }
+    const handleCancel = () => {
+      emit('handleCancel', props.data)
+    }
     return {
+      handleSpeed,
+      handleCancel,
       t,
       cancel,
       view,
@@ -138,7 +185,13 @@ export default defineComponent({
       tolink,
       totalAmount,
       transactionStatus,
-      gasFee
+      gasFee,
+      transactiontxType,
+  transferAmountText,
+  handleSendStatus,
+  txTypeToIcon,
+  handleTxType,
+  transactionStatusClass,
     }
   }
 })

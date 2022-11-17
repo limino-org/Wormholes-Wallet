@@ -198,7 +198,7 @@ export default {
       wallet
         .sendTransaction(tx1)
         .then(({ hash }: any) => {
-          wallet.provider.waitForTransaction(hash).then((receipt: any) => {
+          wallet.provider.waitForTransaction(hash, null, 60000).then((receipt: any) => {
             const { status } = receipt;
             if (status == 0) {
               Toast(t("sendNft.transferfailed"));

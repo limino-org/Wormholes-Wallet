@@ -230,7 +230,16 @@ export default {
         guideBtnTip:"您的数字钱包数据仅保存在您浏览器的本地存储中；请务必创建备份以避免潜在的永久性损失。卸载浏览器和/或清除浏览器数据也可能导致永久性损失",
         asyncData:"数据同步中，请稍后",
         convertAmount:"转换金额",
-        loadingWait:"加载中，请稍后!"
+        loadingWait:"加载中，请稍后!",
+        noMoney:"你的账户缺少资产。请确保钱包里有足够的钱",
+        recovery:"恢复",
+        gasSpeedUp:"汽油加速",
+        sendTipPendding:"当前交易队列存在未完成交易，请完成后重试！",
+        speedUp:"加速",
+        toggleAddress:"请先切换钱包账户到该地址！",
+        snftColorTip:"S-NFT等级从高到低分别为期（Period）、合集（Collection）、S-NFT、碎片（Fragment）。您可以合成更高等级以获取更高收益。红色数字表示期的编号，即第几期。黄色数字表示合集的编号，即某一期中合集的编号。绿色数字表示S-NFT的编号，即某个合集中S-NFT的位置编号。蓝色数字表示碎片的编号，即某个S-NFT中碎片的位置编号。"
+
+
 
 
     },
@@ -703,6 +712,13 @@ export default {
     },
     // 矿工质押
     minerspledge: {
+        smileTip:"你的信誉很好，{value}，请保留它，获得更多的收入 {btn}",
+        sadTip:"您的信誉度低于{value}，请单击右侧的按钮恢复 {btn}",
+        neutralTip:"您的信誉度低于{value}，请单击右侧的按钮恢复 {btn}",
+        resetBtnTip:"有了这个按钮，你可以恢复你的信誉到7.1信誉将花费1 ERB。ERB成本将被虫洞区块链烧毁。",
+        gotIt:"知道了>",
+        credibility:"权重",
+        upCredibility:"权重提高",
         invalidChainId:"无效的链Id {chainid}",
         invalidNode:"无效的节点",
         nodeErr:"节点格式有误",
@@ -1092,6 +1108,11 @@ export default {
         confirmed: '确认的',
         failed: '失败的',
         contract: '合约',
+        successly:"成功",
+        pendding:"等待",
+        cancelTx:"确定取消nonce为#{nonce}的交易吗?",
+        cancelDealTit:"取消交易",
+
     },
 
     // transactionDetails

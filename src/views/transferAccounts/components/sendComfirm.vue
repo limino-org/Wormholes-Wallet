@@ -59,6 +59,8 @@ import { useRouter } from 'vue-router'
 import { useCountDown } from '@vant/use';
 import { useTradeConfirm } from '@/plugins/tradeConfirmationsModal'
 import {clone} from '@/store/modules/account'
+import { TradeStatus } from '@/plugins/tradeConfirmationsModal/tradeConfirm'
+import { useToast } from '@/plugins/toast'
 
 export default defineComponent({
   name: 'send-confirm-modal',
@@ -92,6 +94,7 @@ export default defineComponent({
     const accountInfo = computed(() => store.state.account.accountInfo)
     const currentNetwork = computed(() => store.state.account.currentNetwork)
     const showModal: Ref<boolean> = ref(false)
+    const {$toast} = useToast()
     const gasFee = ref('0')
     const showPopover = ref(false)
     watch(
@@ -141,40 +144,38 @@ export default defineComponent({
     const nextLoading = ref(false)
 
     
-    const handleComfirm = () => {
+    const handleComfirm = async() => {
       showModal.value = false
       const { value } = props.data
       // !value ? token Transaction: ordinary transaction
       const callBack = () => {
-            router.replace({name:'wallet'})
-          }
-                // @ts-ignore
-     const network = clone(store.state.account.currentNetwork)
+        router.replace({name:'wallet'})
+      }
       const params = {
         ...props.data,
-        call(data: any){
-
-          const {status} = data
-          if(status == 1) {
-            $tradeConfirm.update({status:"success",callBack})
-          } else {
-            $tradeConfirm.update({status:"fail",callBack})
-          }
-        }
       }
       nextLoading.value = true
-      
-      $tradeConfirm.open()
-      store
+      $tradeConfirm.open({
+        disabled: [TradeStatus.pendding],
+        callBack
+      })
+      try {
+        const txData = await store
         .dispatch(value ? 'account/transaction' : 'account/tokenTransaction', params)
-        .then(() => {
-           $tradeConfirm.update({status:"approve"})
-        })
-        .catch((err: any) => {
-          $tradeConfirm.update({status:"fail",callBack})
-          Toast(err.reason)
-        })
-        .finally(() => (nextLoading.value = false))
+        $tradeConfirm.update({status:"approve",callBack})
+        await store.dispatch('account/waitTxQueueResponse')
+        $tradeConfirm.update({status:"success",callBack})
+      }catch(err: any){
+        console.warn('err', err)
+          $tradeConfirm.update({status:"fail",failMessage: err.reason,callBack})
+          // $tradeConfirm.hide()
+          // $toast.warn(err.reason)
+      }finally{
+        nextLoading.value = false
+      }
+
+      
+     
     }
     const totalAmount = computed(() => {
       const { amount, value, gasPrice } = props.data

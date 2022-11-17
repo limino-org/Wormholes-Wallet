@@ -41,7 +41,7 @@
     </div>
   </div>
   <div class="speed-box" v-show="transactionStatusClass(data) === 'waitting'">
-    <van-button type="primary" class="mr-10" plain @click.stop="handleSpeedSend">Speed Up</van-button>
+    <van-button type="primary" class="mr-10" plain @click.stop="handleSpeedSend">{{t('common.speedUp')}}</van-button>
     <van-button type="default" plain @click.stop="handleSpeedCancel">{{t('common.cancel')}}</van-button>
   </div>
   </div>
@@ -66,11 +66,17 @@ import {
   toUsdSymbol,
   transactionStatus,
   transactiontxType,
+  transferAmountText,
+  handleSendStatus,
+  txTypeToIcon,
+  handleTxType,
+  transactionStatusClass,
 } from "@/utils/filters";
 import { useStore } from "vuex";
 import { AccountInfo } from "@/store/modules/account";
 import { useI18n } from "vue-i18n";
 import { utils } from "ethers";
+import { useToast } from "@/plugins/toast";
 
 export default defineComponent({
   name: "collectionCard",
@@ -95,10 +101,15 @@ export default defineComponent({
     const { emit } = context;
     const accountInfo = computed(() => store.state.account.accountInfo);
     const currentNetwork = computed(() => store.state.account.currentNetwork);
+    const {$toast} = useToast()
     const viewDetail = () => {
       emit("handleClick",props.data);
     };
     const handleSpeedSend = () => {
+      if(accountInfo.value.address.toUpperCase() !== props.data.from.toUpperCase()){
+        $toast.warn(t('common.toggleAddress'))
+        return 
+      }
       emit('handleSend',props.data)
     }
     const handleSpeedCancel = () => {
@@ -110,74 +121,7 @@ export default defineComponent({
     const fromAddress = computed(() => {
       return addressMask(props.data.from);
     });
-    const txTypeToIcon = (data: any) => {
-      const {txType,transitionType} = data
-      let s = ''
-      if(transitionType == '6') {
-        return 'icon-caozuo-xunhuan1'
-      }
-      switch(txType.trim()){
-        case 'send':
-        case 'other':
-          s = 'icon-jiantou_youshang'
-          break;
-        case 'contract':
-          s = 'icon-icon-'
-          break;
-      }
-      return s
-    }
-    const handleTxType = (item: any) => {
-      const {transitionType,txType} = item
-      console.warn('transitionType', transitionType)
-     if(transitionType && transitionType == '6') {
-        return t('common.conver')
-     } else {
-      return transactiontxType(txType)
-     }
-    }
 
-    const transactionStatusClass = (data: any) => {
-      const {sendStatus,receipt} = data
-      if(sendStatus === 'pendding'){
-        return 'waitting'
-      }
-      if(sendStatus === 'success' && receipt){
-        const {status} = receipt
-        return status ? 'success' : 'failed'
-      }
-
-    }
-
-    const transferAmountText = (data: any) => {
-      const {transitionType,convertAmount,value, sendStatus,receipt, network} = data
-      const {currencySymbol} = network
-      const val = utils.formatEther(value)
-      if(sendStatus === 'pendding')return val +' '+ currencySymbol
-      if(receipt){
-        const {status} = receipt
-        if(status) {
-          if(transitionType === '6')return `+${convertAmount} ${currencySymbol}`
-          return `-${val} ${currencySymbol}`
-        } else {
-          return `${val} ${currencySymbol}`
-        }
-      }
-
-
-    }
-    const handleSendStatus = (data: any) => {
-      const {sendStatus , receipt} = data
-      if(sendStatus === 'pendding' && !receipt){
-        return sendStatus
-      }
-      if(receipt) {
-        const {status} = receipt
-      if(status)return 'success'
-      if(!status)return 'fail'
-      }
-      return 'fail'
-    }
     return {
       transferAmountText,
       handleSendStatus,
@@ -208,8 +152,8 @@ export default defineComponent({
   min-height: 62px;
   padding-left: 15px;
   padding-right: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   transition: ease 0.3s;
   border-bottom: 1px solid #E4E7E8;
   cursor: pointer;

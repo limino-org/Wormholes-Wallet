@@ -54,6 +54,27 @@
 
         .card {
             padding: 9px 0;
+            .label-full {
+                width: 100%;
+                .speed-box {
+                    span {
+                        line-height: 16px;
+                        padding: 0 5px;
+                        border-radius: 11px;
+                        margin-right: 10px;
+                        vertical-align: top;
+                        cursor: pointer;
+                    }
+                    span:nth-of-type(1){
+                        border: 1px solid #037dd6;
+                        color: #037dd6;
+                    }
+                    span:nth-of-type(2){
+                        border: 1px solid #000;
+                        color: #000;
+                    }
+                }
+            }
             &.smallpad {
                 padding-top: 11px;
                 line-height: 16px;
@@ -107,5 +128,24 @@
         & button:nth-of-type(1){
             margin-right: 40px;
         }
+    }
+}
+.status {
+    display: inline-block;
+    line-height: 14px;
+    padding: 0 5px;
+    border-radius: 7px;
+    height: 14px;
+    &.success{
+    color: rgba(58, 174, 85, 1);
+    background: #e5ffeb;
+    }
+    &.failed {
+        color: rgb(214, 25, 25);
+        background: #ffe8e5;
+    }
+    &.waitting {
+        color: #F7BF03;
+        background: #FEFCDA;
     }
 }

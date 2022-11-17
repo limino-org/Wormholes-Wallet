@@ -185,35 +185,9 @@ export default {
           data: `0x${data3}`,
         };
         console.log(tx1);
-        // @ts-ignore
-        const network = clone(store.state.account.currentNetwork)
-        const wallet = await getWallet();
-        const receipt: any = await wallet.sendTransaction(tx1);
-
-        const { from, gasLimit, gasPrice, hash, nonce, to, type, value } =
-          receipt;
-        store.commit("account/PUSH_TXQUEUE", {
-          hash,
-          from,
-          gasLimit,
-          gasPrice,
-          nonce,
-          to,
-          type,
-          value,
-          txType: TransactionTypes.other,
-          transitionType: '10',
-          network,
-        });
-
-        const receipt2 = await wallet.provider.waitForTransaction(receipt.hash);
-        const rep: TransactionReceipt = handleGetTranactionReceipt(
-          TransactionTypes.other,
-          receipt2,
-          receipt,
-          network
-        );
-        store.commit("account/PUSH_TRANSACTION", rep);
+        const receipt: any = await store.dispatch('account/transaction', tx1)
+        const receipt2 = await receipt.wallet.provider.waitForTransaction(receipt.hash, null, 60000);
+        store.dispatch("account/waitTxQueueResponse");
         const { status } = receipt2;
         if (status == 0) {
           $tradeConfirm.update({ status: "fail" });

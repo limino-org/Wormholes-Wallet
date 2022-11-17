@@ -36,6 +36,7 @@ import { useBroadCast } from "@/utils/broadCast";
 import { guid } from "@/utils/utils";
 import { provide as appProvide } from "@/provides/app";
 import localforage, { clear } from "localforage";
+import eventBus from "./utils/bus";
 
 export default {
   components: {
@@ -44,30 +45,40 @@ export default {
   },
 
   setup() {
+    
     const { commit, dispatch, state } = useStore();
     const { t } = useI18n();
     const router = useRouter();
-
+    let time: any = null
     provide("appProvide", appProvide());
     const loading = ref(true);
+
+    const waittxlist = () => {
+      time = setTimeout(async () => {
+        await dispatch("account/waitTxQueueResponse");
+        clearTimeout(time);
+      }, 10000);
+    }
+    eventBus.on('changeAccount', () => {
+      if(time){
+        
+      }
+    })
     onBeforeMount(async () => {
       commit("system/UPDATE_TRANSFERUSDRATE", 0.5);
       commit("account/UPDATE_NETSTATUS", NetStatus.pendding);
       commit("system/UPDATA_CONVERSATIONID", guid());
+      waittxlist()
 
-      let time = setTimeout(async () => {
-        await dispatch("account/waitTxQueueResponse");
-        clearTimeout(time);
-      }, 10000);
     });
     window.onload = async() => {
       loading.value = false;
-      let time = setTimeout(function () {
+      let time2 = setTimeout(function () {
         commit("account/UPDATE_WORMHOLES_URL", {
           URL: "https://api.wormholes.com",
           browser: "https://www.wormholesscan.com/#/",
         });
-        clearTimeout(time);
+        clearTimeout(time2);
       }, 1000);
     };
     onMounted(() => {

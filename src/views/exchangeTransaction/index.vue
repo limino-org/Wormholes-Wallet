@@ -131,23 +131,8 @@ export default {
         },
       };
       try {
-        // @ts-ignore
-        const network = clone(store.state.account.currentNetwork)
-        const receipt = await dispatch("account/sendTransaction", tx1);
-        const { from, gasLimit, gasPrice, hash, nonce, to, type, value,error } = receipt;
-        store.commit("account/PUSH_TXQUEUE", {
-          hash,
-          from,
-          gasLimit,
-          gasPrice,
-          nonce,
-          to,
-          type,
-          value,
-          txType: TransactionTypes.default,
-          transitionType: null,
-          network
-        });
+        const data: any = await store.dispatch('account/transaction', tx1)
+        const receipt = await data.wallet.provider.waitForTransaction(data.hash, null, 60000)
         const back = decode(backUrl)
         const newBack =`${back}${back.indexOf('?') > -1 ? '&' : '?'}` 
         $tradeConfirm.update({

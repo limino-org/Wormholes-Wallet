@@ -23,7 +23,8 @@
     </van-sticky> -->
     <div class="all" v-show="chooseTabdata.value == 1">
       <div v-if="transactionList.length">
-        <CollectionCard @handleClick="handleView(item)" v-for="item in transactionList" :key="item.to" :data="item" />
+        <CollectionCard @handleClick="handleView(item)" v-for="item in transactionList" :key="item.to" :data="item"         @handleSend="handleSend"
+        @handleCancel="handleCancel" />
       </div>
       <no-data v-else />
     </div>
@@ -78,8 +79,62 @@
     <TransactionDetail
       @handleClose="handleClose"
       :data="transactionData.data"
+      @handleSpeed="handleSend"
+      @handleCancel="handleCancel"
     />
   </van-dialog>
+
+  <CommonModal
+    v-model="showSpeedModal"
+    :title="t('common.gasSpeedUp')"
+    className="transactionDetailsModal"
+  >
+    <div class="m-14 pl-14 pr-14 border-round detail-modal">
+      <div class="flex between lh-16 pt-12 pb-8">
+        <span>{{ t("transactionDetails.nonce") }}</span>
+        <span>{{ transactionData.data.nonce }}</span>
+      </div>
+      <div class="flex between lh-16 pt-8 pb-8 border-bottom">
+        <span>{{ t("sendto.gasLimit") }}</span>
+        <span>{{
+          ethers.utils.formatUnits(transactionData.data.sendData.gasLimit, "wei")
+        }}</span>
+      </div>
+      <div class="flex between lh-16 pt-8 pb-8">
+        <span>{{ t("converSnft.amount") }}</span>
+        <span>{{!transactionData.data.tokenAddress ? ethers.utils.formatEther(transactionData.data.sendData.value) : transactionData.data.amount }}</span>
+      </div>
+      <div class="flex between lh-16 pt-8 pb-8">
+        <span>{{ t("transactionDetails.gasfee") }}</span>
+        <span>{{
+          transactionData.data.sendData.gasPrice
+            ? ethers.utils.formatEther(transactionData.data.sendData.gasPrice)
+            : 0
+        }}</span>
+      </div>
+      <div class="flex between lh-16 pt-8 pb-12">
+        <span>{{ t("transactionDetails.totalAmount") }}</span>
+        <span>≈ {{!transactionData.data.tokenAddress ? ethers.utils.formatEther(transactionData.data.sendData.value) : transactionData.data.amount}} {{currentNetwork.currencySymbol}}</span>
+      </div>
+    </div>
+    <ModifGasFee
+      :show="showSpeedModal"
+      :to="transactionData.data.to"
+      :gasPrice="transactionData.data.gasPrice"
+      :gasLimit="transactionData.data.gasLimit"
+      :amount="ethers.utils.formatEther(transactionData.data.sendData.value)"
+      :tokenContractAddress="''"
+      @change="handleGasChange"
+    />
+    <div class="sendBtnBox pb-20 mt-20">
+      <van-button @click="showSpeedModal = false" class="mr-26">{{
+        t("common.cancel")
+      }}</van-button>
+      <van-button type="primary" @click="reSendTx" :loading="reloading">{{
+        t("common.confirm")
+      }}</van-button>
+    </div>
+  </CommonModal>
 </template>
 <script lang="tsx">
 import {
@@ -91,6 +146,7 @@ import {
   onMounted,
   reactive,
   inject,
+  Transition,
 } from "vue";
 import {
   Icon,
@@ -110,6 +166,8 @@ import {
 } from "vant";
 import TokenCard from "@/views/account/components/tokenCard/index.vue";
 import TransactionDetail from "@/views/account/components/transactionDetail/index.vue";
+import ModifGasFee from "@/views/currency/components/modifGasFee.vue";
+import CommonModal from "@/components/commonModal/index.vue";
 
 import NavHeader from "@/components/navHeader/index.vue";
 import { useStore } from "vuex";
@@ -118,9 +176,15 @@ import { useRouter } from "vue-router";
 import { getRandomIcon } from "@/utils";
 import { ElTableV2 } from "element-plus";
 import CollectionCard from "@/views/account/components/collectionCard/index.vue";
-import { TransactionTypes } from "@/store/modules/account";
+import { clone, TransactionSendStatus, TransactionTypes } from "@/store/modules/account";
 import localforage from "localforage";
 import { Column } from "element-plus/lib/components";
+import { ethers } from 'ethers';
+import BigNumber from "bignumber.js";
+import {getWallet} from '@/store/modules/account'
+import { useDialog } from "@/plugins/dialog";
+import { web3 } from '@/utils/web3';
+import eventBus from '@/utils/bus';
 export default {
   name: "transaction-history",
   components: {
@@ -138,12 +202,16 @@ export default {
     TransactionDetail,
     NavHeader,
     ElTableV2,
+    ModifGasFee,
+    CommonModal
   },
   setup() {
     const appProvide = inject("appProvide");
     const { t } = useI18n();
     const store = useStore();
     console.log("-=============================");
+    const currentNetwork = computed(() => store.state.account.currentNetwork)
+    const {$dialog} = useDialog()
 
     const tabs = reactive({
       list: [
@@ -174,37 +242,45 @@ export default {
     const back = () => {
       router.go(-1);
     };
-    const { accountInfo, currentNetwork } = store.state.account;
+    const { accountInfo, } = store.state.account;
 
     // Current account transaction list
     let tlist: any = ref([]);
     onMounted(async () => {
-      console.log("----------------------------------------", currentNetwork);
-      const txList: any =
-        (await localforage.getItem(`txlist-${currentNetwork.id}`)) || {};
-      try {
-        Object.keys(txList).forEach((key) => {
-          txList[key].forEach((item: any) => {
-            tlist.value.push(item);
-          });
-        });
-      } catch (err) {
-        tlist.value = [];
-      }
-      // for (let i = 0; i < 6000; i++) {
-      //   tlist.value.push(tlist.value[0]);
-      // }
-      console.log("tlist", tlist.value);
+      getPageList()
     });
-    // try {
-    //   Object.keys(store.state.account.currentNetwork.transactionList).forEach(key => {
-    //     store.state.account.currentNetwork.transactionList[key].forEach((item: any) => {
-    //       tlist.value.push(item)
-    //     })
-    //   })
-    // } catch (err) {
-    //   tlist.value = []
-    // }
+
+    eventBus.on('txChange', () => {
+      getPageList()
+    })
+
+    const getPageList = async () => {
+      Toast.loading({ duration: 0 });
+      let time = setTimeout(async() => {
+        try {
+        tlist.value = [];
+        const id = currentNetwork.value.id;
+        store.state.account.accountList.forEach(async(item: any) => {
+          const {address} = item
+          const key = `txlist-${id}-${address.toUpperCase()}`
+          console.log('key', key)
+          const tx: any = await localforage.getItem(key);
+          console.warn('tx', tx)
+        if (tx && tx.length) {
+          tlist.value.push(...tx)
+        }
+        })
+
+      }catch(err){
+        console.error(err)
+      } finally {
+        Toast.clear();
+      }
+      clearTimeout(time)
+      }, 50)
+
+    };
+
 
     // All transactions
     const transactionList = computed(() => {
@@ -241,6 +317,8 @@ export default {
     // Transaction details data
     let transactionData: any = reactive({ data: {} });
     const showTransactionModal: Ref<boolean> = ref(false);
+    // 1 speed up  2 cancel
+    const sendTxType = ref(1)
     // View transaction details event
     const handleView = (e: any) => {
       transactionData.data = e;
@@ -257,9 +335,187 @@ export default {
         width: "100%",
       }
     ]);
+
+    const showSpeedModal = ref(false)
+    const gasLimit = ref("0");
+    const gasPrice = ref("0");
+    const handleGasChange = (gasData: any) => {
+      const { gasLimit: limit, gasPrice: gprice } = gasData;
+      gasLimit.value = limit;
+      gasPrice.value = gprice;
+    };
+    const reloading = ref(false);
+    const reSendTx = async () => {
+      reloading.value = true;
+      if(sendTxType.value === 1){
+        resend()
+      }
+      if(sendTxType.value === 2){
+        cancelSend()
+      }
+    };
+
+    const cancelSend = async() =>{
+      try {
+        const wallet = await getWallet();
+        const network = await wallet.provider.getNetwork();
+        const { nonce, to, network: localNet, value, tokenAddress, amount, transitionType, txType, data: newData, sendData }: any = transactionData.data;
+        const gasp = Number(gasPrice.value)
+          ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
+          : "0.0000000012";
+        const bigGas = ethers.utils.parseEther(gasp);
+        const tx = {
+          to: wallet.address,
+          nonce,
+          gasPrice: bigGas,
+          gasLimit: gasLimit.value,
+          chainId: network.chainId,
+          value: ethers.utils.parseEther('0')
+        };
+        let data = await wallet.sendTransaction(tx);
+        const {hash,from,type, value: newVal} = data
+        data.date = new Date()
+        store.commit("account/UPDATE_TRANSACTION", {
+          ...transactionData.data,
+          receipt: {
+            from,
+            to,
+            status: 0
+          },
+          gasPrice: bigGas,
+          gasLimit,
+          isCancel: true
+        });
+        store.commit("account/PUSH_TXQUEUE", {
+        hash,
+        from,
+        gasLimit: gasLimit.value,
+        gasPrice: bigGas,
+        nonce,
+        to,
+        type,
+        value: newVal,
+        transitionType: transitionType || null,
+        txType,
+        network: clone(localNet),
+        data: clone(newData),
+        sendStatus: TransactionSendStatus.pendding,
+        sendData:  clone(data),
+        tokenAddress,
+        amount: '0'
+      });
+        sessionStorage.setItem("new tx", JSON.stringify(data));
+        const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
+        await store.dispatch('account/waitTxQueueResponse')
+        showSpeedModal.value = false;
+      } catch (err) {
+        console.error(err);
+        Toast(err.reason)
+      } finally {
+        reloading.value = false;
+      }
+    }
+    const resend = async() => {
+      try {
+        const wallet = await getWallet();
+        const network = await wallet.provider.getNetwork();
+        const { nonce, to, network: localNet, value, tokenAddress, amount, transitionType, txType, data: newData, sendData,toAddress }: any = transactionData.data;
+        const gasp = Number(gasPrice.value)
+          ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
+          : "0.0000000012";
+        const bigGas = ethers.utils.parseEther(gasp);
+        const tx: any = {
+          to,
+          nonce,
+          gasPrice: bigGas,
+          gasLimit: gasLimit.value,
+          chainId: network.chainId,
+        };
+        let data = null
+        if(tokenAddress) {
+          const { contractWithSigner, contract } = await store.dispatch("account/connectConstract", tokenAddress);
+          const amountWei = web3.utils.toWei((amount || 0) + '','ether')
+          console.log('amountWei', amountWei)
+          console.log('gasp', gasp)
+          console.log(' gasLimit.value',  gasLimit.value)
+          const transferParams = {
+            nonce,
+            gasPrice: bigGas,
+            gasLimit: gasLimit.value,
+          }
+          data = await contractWithSigner.transfer(toAddress, amountWei, transferParams)
+        } else {
+          tx.value = value
+          data = await wallet.sendTransaction(tx);
+        }
+        data.date = new Date()
+        const {hash,from,type, value: newVal} = data
+        store.commit("account/UPDATE_TRANSACTION", {
+          ...transactionData.data,
+          receipt: {
+            from,
+            to,
+            status: 0
+          },
+          gasPrice: bigGas,
+          gasLimit,
+        });
+        store.commit("account/PUSH_TXQUEUE", {
+        hash,
+        from,
+        gasLimit: gasLimit.value,
+        gasPrice: bigGas,
+        nonce,
+        to,
+        type,
+        value: newVal,
+        transitionType: transitionType || null,
+        txType,
+        network: clone(localNet),
+        data: clone(newData),
+        sendStatus: TransactionSendStatus.pendding,
+        sendData:  clone(data),
+        tokenAddress,
+        amount
+      });
+        sessionStorage.setItem("new tx", JSON.stringify(data));
+        const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
+        await store.dispatch('account/waitTxQueueResponse')
+        showSpeedModal.value = false;
+      } catch (err) {
+        console.error(err);
+        Toast(err.reason)
+      } finally {
+        reloading.value = false;
+      }
+    }
+      
+    const handleSend = (data: any) => {
+      handleClose()
+      sendTxType.value = 1
+      transactionData.data = data;
+      showSpeedModal.value = true;
+    };
+
+    const handleCancel = (data: any) => {
+      handleClose()
+      sendTxType.value = 2
+      console.warn("cancel...");
+      transactionData.data = data;
+      showSpeedModal.value = true;
+    };
+
     return {
+      handleSend,
+      handleCancel,
       tabs,
+      handleGasChange,
+      reloading,
+      reSendTx,
+      ethers,
       columns,
+      showSpeedModal,
+      currentNetwork,
       changeTab,
       t,
       chooseTabdata,

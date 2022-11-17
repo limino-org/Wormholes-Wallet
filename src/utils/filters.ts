@@ -162,6 +162,7 @@ export const toUsdSymbol = (v: string | number, keepDotLength = 6) => {
 
   // Return to transaction status
 export function transactionStatus(txData: any){
+  console.log('txData', txData)
   const {receipt,sendStatus} = txData
   if(sendStatus === 'pendding'){
     return  i18n.global.t('transationHistory.pendding')
@@ -169,7 +170,7 @@ export function transactionStatus(txData: any){
   if(sendStatus === 'success') {
     const {status} = receipt
     if(status === 1) {
-      return i18n.global.t('transationHistory.confirmed')
+      return i18n.global.t('transationHistory.successly')
     } else {
       return i18n.global.t('transationHistory.failed')
     }
@@ -182,5 +183,87 @@ export function transactionStatus(txData: any){
     }
     if(status=='contract'){
       return i18n.global.t('transationHistory.contract')
+    }
+  }
+
+  export const handleSendStatus = (data: any) => {
+    const {sendStatus , receipt} = data
+    if(sendStatus === 'pendding' && !receipt){
+      return sendStatus
+    }
+    if(receipt) {
+      const {status} = receipt
+    if(status)return 'success'
+    if(!status)return 'fail'
+    }
+    return 'fail'
+  }
+
+  export const txTypeToIcon = (data: any) => {
+    const {txType,transitionType} = data
+    let s = ''
+    if(transitionType == '6') {
+      return 'icon-caozuo-xunhuan1'
+    }
+    switch(txType.trim()){
+      case 'send':
+      case 'other':
+        s = 'icon-jiantou_youshang'
+        break;
+      case 'contract':
+        s = 'icon-icon-'
+        break;
+    }
+    return s
+  }
+  export const handleTxType = (item: any) => {
+    const {transitionType,txType} = item
+    console.warn('transitionType', transitionType)
+   if(transitionType && transitionType == '6') {
+      return i18n.global.t('common.conver')
+   } else {
+    return transactiontxType(txType)
+   }
+  }
+
+  export const transactionStatusClass = (data: any) => {
+    const {sendStatus,receipt} = data
+    if(sendStatus === 'pendding'){
+      return 'waitting'
+    }
+    if(sendStatus === 'success' && receipt){
+      const {status} = receipt
+      return status ? 'success' : 'failed'
+    }
+
+  }
+
+  export const transferAmountText = (data: any) => {
+    const {transitionType,value, sendStatus,receipt, network, tokenAddress,amount , sendData} = data
+    const {convertAmount} = sendData
+    const {currencySymbol} = network
+    const val = utils.formatEther(value)
+    if(!tokenAddress) {
+      if(sendStatus === 'pendding')return val +' '+ currencySymbol
+    } else {
+      if(sendStatus === 'pendding')return amount +' '+ currencySymbol
+    }
+    if(receipt){
+      const {status} = receipt
+      if(status) {
+        if(!tokenAddress){
+          if(transitionType === '6')return `+${convertAmount} ${currencySymbol}`
+          return `-${val} ${currencySymbol}`
+        } else {
+          return `-${amount} ${currencySymbol}`
+        }
+      } else {
+        if(!tokenAddress){
+          return `${val} ${currencySymbol}`
+        }else {
+          return `${amount} ${currencySymbol}`
+        }
+        
+      }
     }
   }

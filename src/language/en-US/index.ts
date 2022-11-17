@@ -90,7 +90,7 @@ export default {
     displaymethod: "Graphic and list switching display mode",
     unboot: 'Are you sure you want to cancel the Bootstrap Action Flow?',
     done: "Done",
-    watting: "Waitting",
+    watting: "Waiting",
     approve: "Approval"
 
   },
@@ -170,10 +170,10 @@ export default {
     next: "Next",
     ispoor: "Your account has insufficient assets. Please make sure there are sufficient assets available for transfer",
     gasFee: "This is the estimated gas fee for this transaction.",
-    nftP: "PERIOD",
-    nftC: "COLLECTION",
-    nftN: "SNFT",
-    nftF: "DEBRIS",
+    nftP: "Period",
+    nftC: "Collection",
+    nftN: "S-NFT",
+    nftF: "Fragment",
     moveDataTit: "Hint",
     moveTip: "The wallet data needs to be manually restored due to the version update. Are you sure to restore the wallet data of the old version to this wallet?",
     moveTip2: "Migrating data, please wait!",
@@ -187,9 +187,14 @@ export default {
     guideBtnTip:"Your digital wallet data is only saved on your browser's local storage; be sure to create a backup to avoid potential permanent losses. Uninstalling your browser and/or clearing your browser data will also potentially result in permanent losses!",
     asyncData:"Data synchronization, please wait.",
     convertAmount:"Convert amount",
-    loadingWait:"Loading, please wait!"
-
-
+    loadingWait:"Loading, please wait!",
+    noMoney:"Your account is short of assets. Please make sure you have enough money in your wallet",
+    recovery:"Recovery",
+    gasSpeedUp:"Gas Speed Up",
+    sendTipPendding:"There is an uncompleted transaction in the current transaction queue, please try again after completion!",
+    speedUp:"Speed Up",
+    toggleAddress:"Please switch your wallet account to this address first!",
+    snftColorTip:"The S-NFT level ranges from high to low for a Period, Collection, S-NFT, and Fragment. You can synthesize higher levels for higher revenue. The red number indicates the number of the period, that is, the period. The yellow number indicates the collection number, that is, the number of the collection in a period. The green number indicates the S-NFT number, which is the position number of the S-NFT in a collection. The blue number indicates the fragment number, the location number of the fragment in a S-NFT."
   },
   sidebar: {
     imported: 'Imported',
@@ -709,6 +714,13 @@ export default {
     accessCMS: 'Access CMS',
   },
   minerspledge: {
+    smileTip:"Your credibility is good, {value}, please keep it and get more income. {btn}",
+    sadTip:"Your credibility is lower than {value}, click the button on the right to recovery it. {btn}",
+    neutralTip:"Your credibility is lower than {value}, click the button on the right to recovery it. {btn}",
+    gotIt:"Got it >",
+    resetBtnTip:"With this button，you can recover your credibility to 7.1 credibility will cost 1 ERB. The ERB cost will be burnt by Wormholes block chain.",
+    credibility:"Credibility",
+    upCredibility:"Credibility will be increased",
     invalidChainId:"Invalid chainId {chainid}",
     invalidNode:"Invalid node",
     nodeErr:"Node format incorrect",
@@ -1062,7 +1074,9 @@ export default {
     failed: 'Failed',
     contract: 'Contract',
     successly:"Success",
-    pendding:"Waitting"
+    pendding:"Waiting",
+    cancelTx:"Are you sure to cancel the transaction with #{nonce}?",
+    cancelDealTit:"Cancel transaction",
 
   },
 

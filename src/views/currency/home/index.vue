@@ -2,20 +2,37 @@
   <div class="currency">
     <div class="flex center">
       <div class="flex center currency-icon">
-        <img class="currency-symbol" :src="require(`@/assets/token/icon_black.svg`)" alt="'" />
+        <img
+          class="currency-symbol"
+          :src="require(`@/assets/token/icon_black.svg`)"
+          alt="'"
+        />
       </div>
     </div>
-    <div :class="`amount text-center ${decimal(pageData.data.balance).length > 30 ? 'small' : 'big'}`">{{ decimal(pageData.data.balance) }} {{ pageData.data.symbol }}</div>
-    <div class="text-center lh-16 f-12 mb-20 amount2">≈ $ {{toUsd(pageData.data.balance, 2)}}</div>
+    <div
+      :class="`amount text-center ${
+        decimal(pageData.data.balance).length > 30 ? 'small' : 'big'
+      }`"
+    >
+      {{ decimal(pageData.data.balance) }} {{ pageData.data.symbol }}
+    </div>
+    <div class="text-center lh-16 f-12 mb-20 amount2">
+      ≈ $ {{ toUsd(pageData.data.balance, 2) }}
+    </div>
     <div class="flex center">
       <div class="actions-list flex evenly">
         <div class="actions-list-card">
           <div class="flex center">
-            <div class="actions-list-card-icon flex center" @click.stop="toogleAcceptCode">
-            <i class="iconfont icon-bottom"></i>
+            <div
+              class="actions-list-card-icon flex center"
+              @click.stop="toogleAcceptCode"
+            >
+              <i class="iconfont icon-bottom"></i>
+            </div>
           </div>
+          <div class="actions-list-card-label text-center">
+            {{ t("wallet.takeover") }}
           </div>
-          <div class="actions-list-card-label text-center">{{ t("wallet.takeover") }}</div>
           <!-- <van-popup v-model:show="showAcceptCode" class="receive-sheet-popup" teleport="#page-box"  position="bottom" round>
             <AcceptCode />
           </van-popup> -->
@@ -23,56 +40,139 @@
         <div class="actions-list-card" @click="toSend">
           <div class="flex center">
             <div class="actions-list-card-icon flex center">
-            <i class="iconfont icon-jiantou_youshang"></i>
+              <i class="iconfont icon-jiantou_youshang"></i>
+            </div>
           </div>
+          <div class="actions-list-card-label text-center">
+            {{ t("wallet.send") }}
           </div>
-          <div class="actions-list-card-label text-center">{{ t("wallet.send") }}</div>
         </div>
       </div>
     </div>
     <div class="swap-list">
-      <CollectionCard @handleClick="handleView(item)" @handleSend="handleSend" @handleCancel="handleCancel" v-for="item in txList" :key="item.address" :data="item" />
-      <NoData v-if="!transactionList.length" :message="$t('wallet.no')" />
-      <i18n-t tag="div" keypath="wallet.toBrowser" class="flex center scan-link pb-30">
+      <CollectionCard
+        @handleClick="handleView(item)"
+        @handleSend="handleSend"
+        @handleCancel="handleCancel"
+        v-for="item in txList"
+        :key="item.address"
+        :data="item"
+      />
+      <NoData v-if="!txList.length" :message="$t('wallet.no')" />
+      <i18n-t
+        tag="div"
+        keypath="wallet.toBrowser"
+        class="flex center scan-link pb-30"
+      >
         <template v-slot:link>
-          <a :href="VUE_APP_SCAN_URL" target="_blank" rel="noopener noreferrer">{{t('wallet.scanLink')}}</a>
+          <a
+            :href="VUE_APP_SCAN_URL"
+            target="_blank"
+            rel="noopener noreferrer"
+            >{{ t("wallet.scanLink") }}</a
+          >
         </template>
       </i18n-t>
-      <van-dialog v-model:show="showTransactionModal" title :showCancelButton="false" :showConfirmButton="false" closeOnClickOverlay>
-        <TransactionDetail @handleClose="handleClose" :data="transactionData.data" />
+      <van-dialog
+        v-model:show="showTransactionModal"
+        title
+        :showCancelButton="false"
+        :showConfirmButton="false"
+        closeOnClickOverlay
+      >
+        <TransactionDetail
+          @handleClose="handleClose"
+          @handleSpeed="handleSend"
+          @handleCancel="handleCancel"
+          :data="transactionData.data"
+        />
       </van-dialog>
     </div>
   </div>
-  <CommonModal v-model="showSpeedModal" title="发送替换交易">
-    <div class="pt-20">
-      <div>nonce {{sendTx.nonce}}</div>
-      <div>gasLimit {{ethers.utils.formatEther(sendTx.sendData.gasLimit) }}</div>
-      <div>gasPrice {{sendTx.sendData.gasPrice ? ethers.utils.formatEther(sendTx.sendData.gasPrice) : 0}}</div>
-      <div>value {{ethers.utils.formatEther(sendTx.sendData.value)}}</div>
+  <CommonModal
+    v-model="showSpeedModal"
+    :title="sendTxType == 1 ? t('common.gasSpeedUp') : t('transationHistory.cancelDealTit')"
+    className="transactionDetailsModal"
+  >
+    <div class="m-14 pl-14 pr-14 border-round detail-modal">
+      <div class="flex between lh-16 pt-12 pb-8">
+        <span>{{ t("transactionDetails.nonce") }}</span>
+        <span>#{{ sendTx.nonce }}</span>
+      </div>
+      <div class="flex between lh-16 pt-8 pb-8 border-bottom">
+        <span>{{ t("sendto.gasLimit") }}</span>
+        <span>{{
+          ethers.utils.formatUnits(sendTx.sendData.gasLimit, "wei")
+        }}</span>
+      </div>
+      <div class="flex between lh-16 pt-8 pb-8">
+        <span>{{ t("converSnft.amount") }}</span>
+        <span>{{!sendTx.tokenAddress ? ethers.utils.formatEther(sendTx.sendData.value) : sendTx.amount }}</span>
+      </div>
+      <div class="flex between lh-16 pt-8 pb-8">
+        <span>{{ t("transactionDetails.gasfee") }}</span>
+        <span>{{
+          sendTx.sendData.gasPrice
+            ? ethers.utils.formatEther(sendTx.sendData.gasPrice)
+            : 0
+        }}</span>
+      </div>
+      <div class="flex between lh-16 pt-8 pb-12">
+        <span>{{ t("transactionDetails.totalAmount") }}</span>
+        <span>≈ {{!sendTx.tokenAddress ? ethers.utils.formatEther(sendTx.sendData.value) : sendTx.amount}} {{currentNetwork.currencySymbol}}</span>
+      </div>
     </div>
+    <ModifGasFee
+      :show="showSpeedModal"
+      :to="sendTx.to"
+      :gasPrice="sendTx.gasPrice"
+      :gasLimit="sendTx.gasLimit"
+      :amount="ethers.utils.formatEther(sendTx.sendData.value)"
+      @change="handleGasChange"
+    />
     <div class="sendBtnBox pb-20 mt-20">
-      <van-button type="primary" @click="reSendTx" :loading="reloading">重新提交</van-button>
+      <van-button @click="showSpeedModal = false" class="mr-26">{{
+        t("common.cancel")
+      }}</van-button>
+      <van-button type="primary" @click="reSendTx" :loading="reloading">{{
+        t("common.confirm")
+      }}</van-button>
     </div>
   </CommonModal>
 </template>
 <script lang="ts">
-import { ref, Ref, reactive, onMounted, computed, toRefs, onBeforeMount } from 'vue'
-import { Icon, Popup, Empty, Dialog, Button } from 'vant'
-import CollectionCard from '@/views/account/components/collectionCard/index.vue'
-import { addressMask, decimal, toUsd } from '@/utils/filters'
-import AcceptCode from '@/views/account/components/acceptCode/index.vue'
-import TransactionDetail from '@/views/account/components/transactionDetail/index.vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-import { hexValue } from '@ethersproject/bytes'
-import { useI18n } from 'vue-i18n'
-import CommonModal from '@/components/commonModal/index.vue'
-import NoData from '@/components/noData/index.vue'
-import {VUE_APP_SCAN_URL} from '@/enum/env'
-import localforage from 'localforage'
-import { ethers } from 'ethers'
-import BigNumber from 'bignumber.js'
-import { getWallet } from '@/store/modules/account'
+import {
+  ref,
+  Ref,
+  reactive,
+  onMounted,
+  computed,
+  toRefs,
+  onBeforeMount,
+  nextTick,
+} from "vue";
+import { Icon, Popup, Empty, Dialog, Button, Toast } from "vant";
+import CollectionCard from "@/views/account/components/collectionCard/index.vue";
+import { addressMask, decimal, toUsd } from "@/utils/filters";
+import AcceptCode from "@/views/account/components/acceptCode/index.vue";
+import TransactionDetail from "@/views/account/components/transactionDetail/index.vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { hexValue } from "@ethersproject/bytes";
+import { useI18n } from "vue-i18n";
+import CommonModal from "@/components/commonModal/index.vue";
+import NoData from "@/components/noData/index.vue";
+import { VUE_APP_SCAN_URL } from "@/enum/env";
+import localforage from "localforage";
+import { ethers } from "ethers";
+import BigNumber from "bignumber.js";
+import { clone, getWallet, TransactionSendStatus } from "@/store/modules/account";
+import ModifGasFee from "../components/modifGasFee.vue";
+import { utils } from 'ethers';
+import { web3 } from "@/utils/web3";
+import { useDialog } from '@/plugins/dialog';
+import eventBus from "@/utils/bus";
+
 export default {
   components: {
     [Icon.name]: Icon,
@@ -84,20 +184,21 @@ export default {
     AcceptCode,
     TransactionDetail,
     NoData,
-    CommonModal
+    CommonModal,
+    ModifGasFee,
   },
   setup() {
-    
-    const { t } = useI18n()
-    const router = useRouter()
-    const store = useStore()
-    const { query } = useRoute()
-    const { tokenContractAddress } = query
-    const accountInfo = computed(() => store.state.account.accountInfo)
-    const currentNetwork = computed(() => store.state.account.currentNetwork)
-    const transactionList = ref([])
-    const pageData = reactive({ data: {} })
-    pageData.data = query
+    const { t } = useI18n();
+    const router = useRouter();
+    const store = useStore();
+    const { query } = useRoute();
+    const { tokenContractAddress } = query;
+    const accountInfo = computed(() => store.state.account.accountInfo);
+    const currentNetwork = computed(() => store.state.account.currentNetwork);
+    const transactionList = ref([]);
+    const pageData = reactive({ data: {} });
+    const {$dialog} = useDialog()
+    pageData.data = query;
     // const txList = computed(() => {
     //   return transactionList.value.sort((a: any,b:any) =>  new Date(b.date).getTime() - new Date(a.date).getTime())
     // })
@@ -119,87 +220,245 @@ export default {
           code: JSON.stringify(params),
         },
       });
+    };
+
+    const getPageList = async () => {
+      Toast.loading({ duration: 0 });
+      let time = setTimeout(async() => {
+        try {
+        txList.value = [];
+        const id = currentNetwork.value.id;
+        const targetAddress = accountInfo.value.address.toUpperCase();
+        const tx: any = await localforage.getItem(`txlist-${id}-${targetAddress}`);
+        if (tx && tx.length) {
+          const list = tx || [];
+          if (tokenContractAddress) {
+            txList.value = list.filter(
+              (item: any) =>
+                item.tokenAddress &&
+                item.tokenAddress.toUpperCase() ==
+                  tokenContractAddress.toString().toUpperCase()
+            );
+          } else {
+            txList.value = list.filter((item: any) => !item.tokenAddress);
+          }
+          console.log('txList.value', txList.value)
+        }
+      } finally {
+        Toast.clear();
+      }
+      clearTimeout(time)
+      },50)
+    };
+
+    onMounted(async () => {
+      getPageList();
+    });
+    const toSend = () => {
+      router.push({ name: "send", query });
+    };
+    const toSwap = () => {};
+    let transactionData: any = reactive({ data: {} });
+    const showTransactionModal: Ref<boolean> = ref(false);
+    const handleView = (e: any) => {
+      transactionData.data = e;
+      showTransactionModal.value = true;
+    };
+    const handleClose = () => {
+      showTransactionModal.value = false;
+    };
+    const showSpeedModal = ref(false);
+    const sendTx = ref({});
+    // 1 speed up  2 cancel
+    const sendTxType = ref(1)
+    const handleSend = (data: any) => {
+      console.log('handleSend...')
+      handleClose()
+      sendTxType.value = 1
+      sendTx.value = data;
+      showSpeedModal.value = true;
+    };
+
+    const handleCancel = (data: any) => {
+      handleClose()
+      sendTxType.value = 2
+      console.warn("cancel...", data);
+      sendTx.value = data;
+      showSpeedModal.value = true;
+    };
+
+    const gasLimit = ref("0");
+    const gasPrice = ref("0");
+    const handleGasChange = (gasData: any) => {
+      const { gasLimit: limit, gasPrice: gprice } = gasData;
+      console.warn('limit', limit)
+      console.warn('gprice', gprice)
+      gasLimit.value = limit;
+      gasPrice.value = gprice;
+    };
+    const reloading = ref(false);
+    const reSendTx = async () => {
+      reloading.value = true;
+      if(sendTxType.value === 1){
+        resend()
+      }
+      if(sendTxType.value === 2){
+        cancelSend()
+      }
+    };
+    eventBus.on('txPush', (data: any) => {
+      // @ts-ignore
+      txList.value.push(data)
+    })
+    eventBus.on('txUpdate', (data: any) => {
+      // @ts-ignore
+      txList.value.forEach(item => {
+        // @ts-ignore
+        if(item.sendData.txId === item.sendData.txId) {
+          // @ts-ignore
+          item = data
+        }
+      })
+    })
+    const cancelSend = async() =>{
+      try {
+        const wallet = await getWallet();
+        const network = await wallet.provider.getNetwork();
+        const { nonce, to, network: localNet, value, tokenAddress, amount, transitionType, txType, data: newData, sendData }: any = sendTx.value;
+        const gasp = Number(gasPrice.value)
+          ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
+          : "0.0000000012";
+        const bigGas = ethers.utils.parseEther(gasp);
+        const tx = {
+          to: wallet.address,
+          nonce,
+          gasPrice: bigGas,
+          gasLimit: gasLimit.value,
+          chainId: network.chainId,
+          value: ethers.utils.parseEther('0')
+        };
+        let data = await wallet.sendTransaction(tx);
+        const {hash,from,type, value: newVal} = data
+        store.commit("account/UPDATE_TRANSACTION", {
+          ...sendTx.value,
+          receipt: {
+            from,
+            to,
+            status: 0
+          },
+          gasPrice: bigGas,
+          gasLimit,
+          isCancel: true
+        });
+        data.date = new Date()
+        store.commit("account/PUSH_TXQUEUE", {
+        hash,
+        from,
+        gasLimit: gasLimit.value,
+        gasPrice: bigGas,
+        nonce,
+        to,
+        type,
+        value: newVal,
+        transitionType: transitionType || null,
+        txType,
+        network: clone(localNet),
+        data: clone(newData),
+        sendStatus: TransactionSendStatus.pendding,
+        sendData:  clone(data),
+        tokenAddress,
+        amount: '0'
+      });
+        sessionStorage.setItem("new tx", JSON.stringify(data));
+        const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
+        await store.dispatch('account/waitTxQueueResponse')
+        showSpeedModal.value = false;
+      } catch (err) {
+        console.error(err);
+        Toast(err.reason)
+      } finally {
+        reloading.value = false;
+      }
     }
 
-    onMounted(async() => {
-      // const wallet = await getWallet()
-      // const data = await wallet.provider.waitForTransaction("0x2f175dda5f06ef17afa057e3b7475f716c9abad87dcaee094856c9e5fe57ba98")
-      // debugger
-      const id = currentNetwork.value.id;
-      const targetAddress = accountInfo.value.address.toUpperCase();
-      const tx: any = await localforage.getItem(`txlist-${id}`);
-      if (tx && tx[targetAddress]) {
-        const list = tx[targetAddress] || [];
-        if (tokenContractAddress) {
-          txList.value = list.filter(
-            (item: any) =>
-              item.tokenAddress &&
-              item.tokenAddress.toUpperCase() ==
-                tokenContractAddress.toString().toUpperCase()
-          );
-        } else {
-          txList.value = list.filter((item: any) => !item.tokenAddress);
-        }
-      }
-    })
-    const toSend = () => {
-      router.push({ name: 'send', query })
-    }
-    const toSwap = () => {
-    }
-    let transactionData: any = reactive({ data: {} })
-    const showTransactionModal: Ref<boolean> = ref(false)
-    const handleView = (e: any) => {
-      transactionData.data = e
-      showTransactionModal.value = true
-    }
-    const handleClose = () => {
-      showTransactionModal.value = false
-    }
-    const showSpeedModal = ref(false)
-    const sendTx = ref({})
-    const handleSend = (data: any) => {
-      sendTx.value = data
-      showSpeedModal.value = true
-    }
-    const reloading = ref(false)
-    const reSendTx = async() => {
-      reloading.value = true
+    const resend = async() => {
       try {
-        const wallet = await getWallet()
-      const network = await wallet.provider.getNetwork()
-      const { gasPrice, gasLimit, value, nonce, to, network: localNet, sendData, txType }: any = sendTx.value
-      const gasp =  Number(gasPrice) ? new BigNumber(gasPrice).dividedBy(1000000000).toFixed(12) : '0.0000000012';
-      const bigGas = ethers.utils.parseEther(gasp)
-      const tx = {
-        to,
-        // @ts-ignore
-        value: ethers.utils.parseEther(ethers.utils.formatEther(sendTx.value.sendData.value)),
-        nonce,
+        const wallet = await getWallet();
+        const network = await wallet.provider.getNetwork();
+        const { nonce, to, network: localNet, value, tokenAddress, amount, transitionType, txType, data: newData, sendData,toAddress }: any = sendTx.value;
+        const gasp = Number(gasPrice.value)
+          ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
+          : "0.0000000012";
+        const bigGas = ethers.utils.parseEther(gasp);
+        const tx: any = {
+          to,
+          nonce,
+          gasPrice: bigGas,
+          gasLimit: gasLimit.value,
+          chainId: network.chainId,
+        };
+        let data = null
+        if(tokenAddress) {
+          const { contractWithSigner, contract } = await store.dispatch("account/connectConstract", tokenAddress);
+          const amountWei = web3.utils.toWei((amount || 0) + '','ether')
+          console.log('amountWei', amountWei)
+          console.log('gasp', gasp)
+          console.log(' gasLimit.value',  gasLimit.value)
+          const transferParams = {
+            nonce,
+            gasPrice: bigGas,
+            gasLimit: gasLimit.value,
+          }
+          data = await contractWithSigner.transfer(toAddress, amountWei, transferParams)
+        } else {
+          tx.value = value
+          data = await wallet.sendTransaction(tx);
+        }
+        const {hash,from,type, value: newVal} = data
+        store.commit("account/UPDATE_TRANSACTION", {
+          ...sendTx.value,
+          receipt: {
+            from,
+            to,
+            status: 0
+          },
+          gasPrice: bigGas,
+          gasLimit,
+        });
+
+        store.commit("account/PUSH_TXQUEUE", {
+        hash,
+        from,
+        gasLimit: gasLimit.value,
         gasPrice: bigGas,
-        gasLimit,
-        chainId: network.chainId
+        nonce,
+        to,
+        type,
+        value: newVal,
+        transitionType: transitionType || null,
+        txType,
+        network: clone(localNet),
+        data: clone(newData),
+        sendStatus: TransactionSendStatus.pendding,
+        sendData:  clone(data),
+        tokenAddress,
+        amount
+      });
+        sessionStorage.setItem("new tx", JSON.stringify(data));
+        const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
+        await store.dispatch('account/waitTxQueueResponse')
+        showSpeedModal.value = false;
+      } catch (err) {
+        console.error(err);
+        Toast(err.reason)
+      } finally {
+        reloading.value = false;
       }
-      debugger
-      // const newTx = await wallet.signTransaction(tx)
-      const data = await wallet.sendTransaction(tx)
-      debugger
-      const receipt = await wallet.provider.waitForTransaction(data.hash)
-      store.commit('account/UPDATE_TRANSACTION', {...sendTx.value,receipt,network:localNet, sendData: data, gasPrice: bigGas, gasLimit })
-      setTimeout(() => {
-        location.reload()
-      },1000)
-      }catch(err){
-        console.error(err)
-      }finally{
-        reloading.value = false
-      }
-    }
-    const handleCancel = () => {
-      console.warn('cancel...')
     }
     return {
       showSpeedModal,
+      sendTxType,
+      handleGasChange,
       handleSend,
       sendTx,
       reSendTx,
@@ -221,28 +480,38 @@ export default {
       pageData,
       toUsd,
       VUE_APP_SCAN_URL,
-      txList
+      txList,
+    };
+  },
+};
+</script>
+<style lang="scss" scoped>
+.detail-modal {
+  & > div {
+    span:nth-of-type(1) {
+      color: #8f8f8f;
     }
   }
 }
-</script>
-<style lang="scss" scoped>
-:deep(){
+:deep() {
   .van-dialog__footer {
     display: none;
   }
+}
+.detail-modal {
+  border-radius: 5px;
 }
 .currency {
   .scan-link {
     color: #848484;
     margin-top: 40px;
-     a {
+    a {
       margin-left: 3px;
-      color: #037CD6;
+      color: #037cd6;
       &:hover {
         text-decoration: underline;
       }
-     }
+    }
   }
   .currency-icon {
     width: 40px;
@@ -302,7 +571,7 @@ export default {
 
   .swap-list {
     margin-top: 20px;
-    border-top: 1px solid #E4E7E8;
+    border-top: 1px solid #e4e7e8;
   }
 }
 .iconfont {

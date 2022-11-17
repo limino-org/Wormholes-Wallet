@@ -163,7 +163,7 @@ async function toSend() {
     if(tx1){
       const { pledge, fee_rate, name } = tx1;
       data1 = await send1(name, fee_rate, pledge);
-      receipt1 = await wallet.provider.waitForTransaction(data1.hash);
+      receipt1 = await wallet.provider.waitForTransaction(data1.hash, null, 60000);
       rep1 = handleGetTranactionReceipt(
       TransactionTypes.default,
       receipt1,
@@ -198,7 +198,7 @@ async function toSend() {
     let name = ''
     if(!tx1){
       const {ExchangerName} = await wallet.provider.send("eth_getAccountInfo", [address,"latest"]);
-      name = decode(ExchangerName)
+      name = web3.utils.fromUtf8(ExchangerName)
     } else {
       name = tx1.name
     }
@@ -268,24 +268,10 @@ async function send1(
     to: address,
     value: ethers.utils.parseEther(amount + ""),
     data: `0x${data3}`,
+    transitionType: "11",
   };
   try {
-    const network = clone(state.account.currentNetwork);
-    const data = await wallet.sendTransaction(tx1);
-    const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = data;
-    commit("account/PUSH_TXQUEUE", {
-      hash,
-      from,
-      gasLimit,
-      gasPrice,
-      nonce,
-      to,
-      type,
-      value,
-      txType: TransactionTypes.default,
-      transitionType: "11",
-      network,
-    });
+    const data: any = await dispatch('account/transaction', tx1)
     return Promise.resolve(data);
   } catch (err) {
     $tradeConfirm.update({ status: "fail" });

@@ -1,6 +1,7 @@
 <template>
   <div class="common-modal">
     <van-dialog
+      :class="className"
       v-model:show="showModal"
       :showConfirmButton="false"
       :showCancelButton="false"
@@ -44,6 +45,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    className:{
+      type: String,
+      default:''
+    }
     
   },
   setup(props: any, context: SetupContext) {

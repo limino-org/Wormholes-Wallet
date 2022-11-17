@@ -188,51 +188,28 @@ export default {
       });
       try {
         const amount = props.minusNumber;
-        const wallet = await getWallet();
-        const { address } = wallet;
+
+        const { address } = accountInfo.value;
         const data = toHex(str);
         const tx1 = {
           from: address,
           to: address,
-          value: ethers.utils.parseEther(amount + ""),
+          value: amount + '',
           data: `0x${data}`,
+          transitionType: '10'
         };
-        // @ts-ignore
-        const network = clone(store.state.account.currentNetwork)
-
-        const data1 = await wallet.sendTransaction(tx1);
-        const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = data1;
-        store.commit("account/PUSH_TXQUEUE", {
-          hash,
-          from,
-          gasLimit,
-          gasPrice,
-          nonce,
-          to,
-          type,
-          value,
-          txType: TransactionTypes.other,
-          transitionType: '10',
-          network
-        });
-
+        const data1: any = await store.dispatch('account/transaction', tx1)
         $tradeConfirm.update({ status: "approve" });
-        const receipt1 = await wallet.provider.waitForTransaction(data1.hash);
+        const receipt1 = await data1.wallet.provider.waitForTransaction(data1.hash, null, 60000);
+        dispatch("account/waitTxQueueResponse");
         if (receipt1.status == 1) {
           $tradeConfirm.update({ status: "success" });
         } else {
           $tradeConfirm.update({ status: "fail" });
         }
-
-        const rep = handleGetTranactionReceipt(
-          TransactionTypes.other,
-          receipt1,
-          data1,
-          network
-        );
         dispatch("account/updateAllBalance");
-        commit("account/PUSH_TRANSACTION", rep);
       } catch (err) {
+        console.error('err', err)
         $tradeConfirm.update({ status: "fail" });
       }
     };

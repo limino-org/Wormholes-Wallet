@@ -136,7 +136,7 @@ import { ElTooltip } from "element-plus";
 import store from "@/store";
 import { useStore } from "vuex";
 import { toHex } from "@/utils/utils";
-import { getWallet } from "@/store/modules/account";
+import { getGasFee, getWallet } from "@/store/modules/account";
 import { BigNumber } from "bignumber.js";
 import { web3 } from "@/utils/web3";
 import { getAccount } from "@/http/modules/nft";
@@ -178,7 +178,7 @@ export default {
     const gasPrice = ref("");
     const gasLimit = ref("");
     const accountInfo = computed(() => store.state.account.accountInfo);
-    const gasFee = ref("");
+    const gasFee: any = ref("");
 
     watch(
       () => props.show,
@@ -193,16 +193,7 @@ export default {
             data: `0x${data3}`,
           };
           try {
-            const wallet = await getWallet();
-            gasPrice.value = await wallet.provider.getGasPrice();
-            const priceStr = ethers.utils.formatUnits(gasPrice,'wei')
-            gasLimit.value = await wallet.estimateGas(tx1);
-            // @ts-ignore
-            gasFee.value = new BigNumber(
-              ethers.utils.formatEther(gasLimit.value)
-            )
-              .multipliedBy(priceStr)
-              .toFixed(9);
+              gasFee.value = await getGasFee(tx1)
           } catch (err: any) {
             console.error(err);
           }

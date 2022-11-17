@@ -20,14 +20,14 @@
         <van-switch
           v-model="value"
           @change="handleChangeSwitch"
-          size="0.4rem"
+          size="18px"
         ></van-switch>
       </div>
     </div>
   </van-sticky>
   <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
     <div class="snft-list-box">
-      <div :class="`snftcontainer hover ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" :title="item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : t('wallet.snftUnfree')" v-for="(item, i) in list" :key="i" @click.stop="toNftExchange(item)">
+      <div :class="`snftcontainer ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" :title="item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : t('wallet.snftUnfree')" v-for="(item, i) in list" :key="i" @mouseover="item.renderPop = true" @mouseleave="item.renderPop = false">
         <div class="snftcontainer_left">
           <div :class="`checkbox_img flex center ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" v-if="isSelectComputed">
             <i
@@ -42,20 +42,35 @@
             ></i>
           </div>
           <div class="snftcontainer_left_container">
-            <div class="img-p">
+            <div class="img-p" @click.stop="toNftExchange(item)">
               <van-image
                 :src="`https://www.wormholestest.com${item.source_url}`"
                 fit="cover"
                 alt=""
                 class="snftimg"
               />
-              <div class="number" :style="{ background: item.color }">
+              <!-- <div class="number" :style="{ background: item.color }">
                 {{ item.number }}
-              </div>
+              </div> -->
             </div>
-            <div class="snftmiddle flex column between">
+            <div class="snftmiddle flex column between" >
               <div class="flex between center-v snftName">
-                <span class="f-12 lh-12">{{ item.collections }} <span v-show="item.tag === 'F'">/#{{item.snftPosition}}</span></span
+                <span class="f-12 lh-12 hover"  @click.stop="toNftExchange(item)">
+                  {{ item.collections }}-<span class="nft-p">#{{item.pidx}}</span>
+                  <span class="nft-c" v-if="item.cidx !== undefined">/{{item.cidx}}</span>
+                  <span class="nft-n"  v-if="item.nidx !== undefined">/{{item.nidx}}</span>
+                  <span class="nft-f" v-if="item.fidx !== undefined">/{{item.fidx}}</span>
+                  <span v-if="item.renderPop">
+                    <van-popover v-model:show="item.showPop"              theme="dark"
+                placement="right" >
+            <div class="lh-16 text-left p-8">{{t(`common.snftColorTip`)}}</div>
+            <template #reference>
+              <van-icon name="question" @mouseover.stop="item.showPop = true" @mouseout.stop="item.showPop = false" />
+            </template></van-popover>
+                  </span>
+
+                  
+                  </span
                 ><NftTag :tag="item.tag" />
               </div>
               <div class="snftleftcolleaddre flex center-v">
@@ -118,6 +133,7 @@
     v-model:show="show"
     :show-cancel-button="false"
     :show-confirm-button="false"
+    class="transfer-modal"
   >
     <div class="dialog-warning-dark-c">
       <div v-if="show" class="dialog-warning-dark-c-container">
@@ -394,7 +410,7 @@ import {
 } from "vant";
 import eventBus from "@/utils/bus";
 import { useI18n } from "vue-i18n";
-import { clone, getGasFee, getWallet } from "@/store/modules/account";
+import { clone, getGasFee, getWallet, TransactionSendStatus } from "@/store/modules/account";
 import { useToast } from "@/plugins/toast";
 import BigNumber from "bignumber.js";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
@@ -586,45 +602,51 @@ export default defineComponent({
         const { data: nftInfoList } = await queryArraySnft({
           array: `${JSON.stringify(nftAddList)}`,
         });
-
+        console.warn(web3.utils)
         nfts.forEach((item: any) => {
           if(tabIndex.value == '1' && item.pledge_number !== null) {
             item.hasUnfreeze = (blockNumber - Number(item.pledge_number)) > (network && network.chainId === 51888 ? 73 : 6307201)
           }
+          
           const reallen = item.address.length;
           let str = item.address;
+          const hexp = `0x${str.substr(37,2)}`
+          const hexc = `0x${str.substr(39,1)}`
+          const hexn = `0x${str.substr(40,1)}`
+          const hexf = `0x${str.substr(41,1)}`
           switch (reallen) {
             case 39:
-              str = str + "000";
-              break;
-            case 40:
-              str = str + "00";
-              break;
-            case 41:
-              str = str + "0";
-              break;
-            case 42:
-              break;
-          }
-          item.realAddr = str;
-          item.flag = false;
-          item.nft_address = item.address;
-          item.color = getRandomColor();
-          const len = item.nft_address.length;
-          switch (len) {
-            case 39:
               item.tag = "P";
+              str = str + "000";
+              item.pidx = web3.utils.hexToNumber(hexp)
               break;
             case 40:
               item.tag = "C";
+              str = str + "00";
+              item.pidx = web3.utils.hexToNumber(hexp)
+              item.cidx = web3.utils.hexToNumber(hexc) + 1
               break;
             case 41:
               item.tag = "N";
+              str = str + "0";
+              item.pidx = web3.utils.hexToNumber(hexp)
+              item.cidx = web3.utils.hexToNumber(hexc) + 1
+              item.nidx = web3.utils.hexToNumber(hexn) + 1
               break;
             case 42:
               item.tag = "F";
+              item.pidx = web3.utils.hexToNumber(hexp)
+              item.cidx = web3.utils.hexToNumber(hexc) + 1
+              item.nidx = web3.utils.hexToNumber(hexn) + 1
+              item.fidx = web3.utils.hexToNumber(hexf) + 1
               break;
           }
+          item.showPop = false
+          item.renderPop = false
+          item.realAddr = str;
+          item.flag = false;
+          item.nft_address = item.address;
+
           const str1 = item.nft_address.substr(item.nft_address.length - 2);
           // The last 2 digits of the position in SNFT are converted to hexadecimal +1
           item.position = hex2int(str1) + 1;
@@ -632,6 +654,7 @@ export default defineComponent({
           // convert
           const str2 = item.nft_address.substr(item.nft_address.length - 4);
           // The last four digits of the position in the period turn to hexadecimal +1
+          console.warn('str2', str2)
           item.number = hex2int(str2) + 1;
 
           nftInfoList.forEach((child: any) => {
@@ -806,29 +829,13 @@ export default defineComponent({
               from: accountInfo.value.address,
               to: accountInfo.value.address,
               data: `0x${data3}`,
-     
+              transitionType,
+              nft_address,
+              checkTxQueue: false
             };
-              // @ts-ignore
-              const network = clone(store.state.account.currentNetwork)
-
-            const receipt: any = await wallet.sendTransaction(tx1);
+            const receipt: any = await store.dispatch('account/transaction', tx1)
             txQueue.push(receipt);
             console.log('receipt', receipt)
-            const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = receipt;
-            store.commit("account/PUSH_TXQUEUE", {
-              hash,
-              from,
-              gasLimit,
-              gasPrice,
-              nonce,
-              to,
-              type,
-              value,
-              transitionType,
-              txType: TransactionTypes.other,
-              nft_address,
-              network
-            });
           }
           $tradeConfirm.update({
             status: "approve",
@@ -839,6 +846,7 @@ export default defineComponent({
           });
           emit("success");
         } catch (err) {
+          console.error(err)
           $tradeConfirm.update({
             status: "fail",
           });
@@ -1026,6 +1034,18 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+.nft-p {
+color: rgb(215, 58, 73);
+}
+.nft-c{
+  color: rgb(247, 191, 3);
+}
+.nft-n{
+  color: rgb(58, 174, 85);
+}
+.nft-f{
+  color: rgb(3, 124, 214);
+}
 .snft-list-box {
   padding-bottom: 40px;
 }
@@ -1228,7 +1248,7 @@ export default defineComponent({
   height: 65px;
   width: 100%;
   max-width: 750px;
-  z-index: 110;
+  z-index: 1;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   display: flex;

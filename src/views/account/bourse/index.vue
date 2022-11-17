@@ -551,7 +551,7 @@ export default defineComponent({
           } else {
             formatValue = utils.formatEther(ExchangerBalance + "");
           }
-          name.value = changeexchangerName(ExchangerName);
+          name.value =ExchangerName;
           isOne.value = false;
         }
       } catch (err) {
@@ -705,9 +705,7 @@ export default defineComponent({
       showCreateExchange.value = false;
     };
 
-    let changeexchangerName = (value: any) => {
-      return decode(value);
-    };
+
     const ethAccountInfo = ref({ ExchangerBalance: 0 });
     const exchangerBalance = computed(() =>
       new Bignumber(
@@ -746,7 +744,7 @@ export default defineComponent({
       const { exchanger_flag, status } = store.state.account.exchangeStatus;
       const am = new BigNumber(accountInfo.value.amount);
       if (!exchanger_flag && status != 2) {
-        if (am.lt(281)) {
+        if (am.lt(701)) {
           $toast.warn(t("createExchange.ispoor"));
           return;
         }

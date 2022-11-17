@@ -166,25 +166,10 @@ export default {
           data: `0x${data3}`,
         };
         console.log(tx1);
-        // @ts-ignore
-        const network = clone(store.state.account.currentNetwork)
-        const wallet = await getWallet();
-        const receipt: any = await wallet.sendTransaction(tx1);
-        const { from, gasLimit, gasPrice, hash, nonce, to, type, value,error } = receipt;
-        store.commit("account/PUSH_TXQUEUE", {
-          hash,
-          from,
-          gasLimit,
-          gasPrice,
-          nonce,
-          to,
-          type,
-          value,
-          transitionType: '25',
-          txType: TransactionTypes.other,
-          network
-        });
-        const res = await wallet.provider.waitForTransaction(receipt.hash)
+
+        const receipt: any = await store.dispatch('account/transaction', tx1)
+        const res = await receipt.wallet.provider.waitForTransaction(receipt.hash, null, 60000)
+        store.dispatch("account/waitTxQueueResponse");
         console.log(receipt);
         console.log("receiptreceiptreceiptreceiptreceipt");
         isLoading.value = false;

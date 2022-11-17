@@ -25,49 +25,10 @@ body {
   min-height: 100vh;
 }
 
-.text {
-  &-center {
-    text-align: center;
-  }
 
-  &-left {
-    text-align: left;
-  }
-
-  &-right {
-    text-align: right;
-  }
-
-  &-ellipsis {
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  // Text is forced to wrap
-  &-wrap {
-    word-wrap: break-word;
-  }
-
-  // Enforce no line breaks
-  &-nowrap {
-    word-wrap: keep-all;
-    white-space: nowrap;
-  }
-
-  // Financial font
-  &-oswald {
-    font-family: Oswald;
-  }
-
-  // capital
-  &-up {
-    text-transform: uppercase;
-  }
+.gasFee {
+  color: #3AAE55;
 }
-
 *::-webkit-scrollbar {
   width: 0 !important;
   display: none;
@@ -237,7 +198,9 @@ body {
   z-index: 1000;
 }
 
-
+.smilebox {
+  max-width: 140px;
+}
 .appendto1,.appendto2 {
   &.van-popover {
     max-width: 343px;
@@ -297,11 +260,6 @@ body {
     box-shadow: none;
   }
 }
-// .van-popover__wrapper {
-//   .van-icon-question {
-//     margin-left: 0 !important;
-//   }
-// }
 
 .popover-blue {
   .van-popover__content {
@@ -311,6 +269,12 @@ body {
   .van-popover__arrow {
     color: #037CD6;
   }
+}
+.transactionDetailsModal {
+  height: 600px;
+}
+.transfer-modal {
+  min-height: 368px;
 }
 
 @media screen and (min-width: 750px) {

@@ -32,6 +32,7 @@ export const useToggleAccount = () => {
     if (createLoading.value) {
       return
     }
+    eventBus.emit('beforeChangeAccount')
     accountLoading.value = true
     clickAccountIdx.value = idx
     const { currentNetwork } = store.state.account

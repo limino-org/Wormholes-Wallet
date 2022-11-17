@@ -1,5 +1,46 @@
 @import "./var.scss";
+.text {
+  &-center {
+    text-align: center;
+  }
 
+  &-left {
+    text-align: left;
+  }
+
+  &-right {
+    text-align: right;
+  }
+
+  &-ellipsis {
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  // Text is forced to wrap
+  &-wrap {
+    word-wrap: break-word;
+  }
+
+  // Enforce no line breaks
+  &-nowrap {
+    word-wrap: keep-all;
+    white-space: nowrap;
+  }
+
+  // Financial font
+  &-oswald {
+    font-family: Oswald;
+  }
+
+  // capital
+  &-up {
+    text-transform: uppercase;
+  }
+}
 .flex {
   display: flex;
 
@@ -198,3 +239,21 @@
   }
 }
 
+  // border
+  .border {
+    &-round {
+      border: 1px solid var(--van-border-color);
+    }
+    &-left{
+      border-left: 1px solid var(--van-border-color);
+    }
+    &-right{
+      border-right: 1px solid var(--van-border-color);
+    }
+    &-bottom{
+      border-bottom: 1px solid var(--van-border-color);
+    }
+    &-top{
+      border-top: 1px solid var(--van-border-color);
+    }
+  }

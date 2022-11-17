@@ -67,6 +67,9 @@ export default {
     const accountList = computed(() => state.account.accountList);
     const accountInfo = computed(() => state.account.accountInfo);
     const currentNetwork = computed(() => state.account.currentNetwork);
+    if(!password) {
+      router.replace({name:'withpassword'})
+    }
     const nowAccount = computed(() => {
       if (address) {
         return accountList.value.find(
@@ -173,7 +176,7 @@ export default {
       });
     }
     async function login() {
-      const wallet = await getWallet();
+        const wallet = await getWallet();
       const accountInfo = computed(() => state.account.accountInfo);
       const { address } = accountInfo.value;
       const netWork = await wallet.provider.getNetwork();
