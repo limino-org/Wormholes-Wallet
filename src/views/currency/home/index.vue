@@ -321,16 +321,18 @@ export default {
     };
     eventBus.on('txPush', (data: any) => {
       // @ts-ignore
-      txList.value.push(data)
+      txList.value.unshift(data)
     })
     eventBus.on('txUpdate', (data: any) => {
       console.warn('txupdate', data)
-      // getPageList();
-      txList.value.forEach((item: any) => {
-        if(item.txId === data.txId) {
-          item = data
+      for(let i = 0;i<txList.value.length;i++){
+        let item = txList.value[i]
+        const {txId} = item
+        if(txId == data.txId) {
+          // @ts-ignore
+          txList.value[i] = data
         }
-      })
+      }
     })
     onUnmounted(() => {
       // console.warn('waitTime.value', waitTime.value)

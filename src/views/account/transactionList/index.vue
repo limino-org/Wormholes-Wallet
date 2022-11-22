@@ -374,12 +374,17 @@ export default {
     };
 
     eventBus.on('txPush', (data: any) => {
-      // @ts-ignore
-      txList.value.push(data)
+      tlist.value.unshift(data)
     })
     eventBus.on('txUpdate', (data: any) => {
       console.warn('txupdate', data)
-      getPageList();
+      for(let i = 0;i<tlist.value.length;i++){
+        let item = tlist.value[i]
+        const {txId} = item
+        if(txId == data.txId) {
+          tlist.value[i] = data
+        }
+      }
     })
     
     onUnmounted(() => {
