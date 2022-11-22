@@ -147,6 +147,7 @@ import {
   reactive,
   inject,
   Transition,
+  onUnmounted,
 } from "vue";
 import {
   Icon,
@@ -246,30 +247,47 @@ export default {
 
     // Current account transaction list
     let tlist: any = ref([]);
+    const waitTime: any = ref(null)
     onMounted(async () => {
       getPageList()
+      store.dispatch("account/waitTxQueueResponse", {time: null, callback(e: any){
+        console.warn('e', e)
+        waitTime.value = e
+      }}).then(res => {
+        if(res !== true){
+          eventBus.off('txPush')
+      eventBus.off('txupdate')
+        getPageList()
+        }
+      });
     });
 
-    eventBus.on('txChange', () => {
-      getPageList()
-    })
+
 
     const getPageList = async () => {
+      tlist.value = [];
       Toast.loading({ duration: 0 });
       let time = setTimeout(async() => {
         try {
-        tlist.value = [];
         const id = currentNetwork.value.id;
-        store.state.account.accountList.forEach(async(item: any) => {
-          const {address} = item
-          const key = `txlist-${id}-${address.toUpperCase()}`
+        const address = accountInfo.address.toUpperCase()
+        const key = `txlist-${id}-${address}`
           console.log('key', key)
           const tx: any = await localforage.getItem(key);
           console.warn('tx', tx)
         if (tx && tx.length) {
           tlist.value.push(...tx)
         }
-        })
+        // store.state.account.accountList.forEach(async(item: any) => {
+        //   const {address} = item
+        //   const key = `txlist-${id}-${address.toUpperCase()}`
+        //   console.log('key', key)
+        //   const tx: any = await localforage.getItem(key);
+        //   console.warn('tx', tx)
+        // if (tx && tx.length) {
+        //   tlist.value.push(...tx)
+        // }
+        // })
 
       }catch(err){
         console.error(err)
@@ -355,11 +373,27 @@ export default {
       }
     };
 
+    eventBus.on('txPush', (data: any) => {
+      // @ts-ignore
+      txList.value.push(data)
+    })
+    eventBus.on('txUpdate', (data: any) => {
+      console.warn('txupdate', data)
+      getPageList();
+    })
+    
+    onUnmounted(() => {
+      if(waitTime.value) {
+        clearInterval(waitTime.value)
+      }
+      eventBus.off('txPush')
+      eventBus.off('txupdate')
+    })
     const cancelSend = async() =>{
       try {
         const wallet = await getWallet();
         const network = await wallet.provider.getNetwork();
-        const { nonce, to, network: localNet, value, tokenAddress, amount, transitionType, txType, data: newData, sendData }: any = transactionData.data;
+        const { nonce, to, network: localNet, value, tokenAddress, amount, transitionType, txType, data: newData, sendData, txId }: any = transactionData.data;
         const gasp = Number(gasPrice.value)
           ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
           : "0.0000000012";
@@ -374,7 +408,6 @@ export default {
         };
         let data = await wallet.sendTransaction(tx);
         const {hash,from,type, value: newVal} = data
-        data.date = new Date()
         store.commit("account/UPDATE_TRANSACTION", {
           ...transactionData.data,
           receipt: {
@@ -384,13 +417,15 @@ export default {
           },
           gasPrice: bigGas,
           gasLimit,
+          txId,
           isCancel: true
         });
+        data.date = new Date()
         store.commit("account/PUSH_TXQUEUE", {
         hash,
         from,
         gasLimit: gasLimit.value,
-        gasPrice: bigGas,
+        gasPrice: gasPrice.value,
         nonce,
         to,
         type,
@@ -407,14 +442,17 @@ export default {
         sessionStorage.setItem("new tx", JSON.stringify(data));
         const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
         await store.dispatch('account/waitTxQueueResponse')
-        showSpeedModal.value = false;
       } catch (err) {
         console.error(err);
+        showSpeedModal.value = false
         Toast(err.reason)
+        console.error(err)
       } finally {
+        showSpeedModal.value = false;
         reloading.value = false;
       }
     }
+
     const resend = async() => {
       try {
         const wallet = await getWallet();
@@ -431,6 +469,7 @@ export default {
           gasLimit: gasLimit.value,
           chainId: network.chainId,
         };
+        console.warn('tx', tx)
         let data = null
         if(tokenAddress) {
           const { contractWithSigner, contract } = await store.dispatch("account/connectConstract", tokenAddress);
@@ -448,7 +487,6 @@ export default {
           tx.value = value
           data = await wallet.sendTransaction(tx);
         }
-        data.date = new Date()
         const {hash,from,type, value: newVal} = data
         store.commit("account/UPDATE_TRANSACTION", {
           ...transactionData.data,
@@ -457,14 +495,15 @@ export default {
             to,
             status: 0
           },
-          gasPrice: bigGas,
+          gasPrice: gasPrice.value,
           gasLimit,
         });
+
         store.commit("account/PUSH_TXQUEUE", {
         hash,
         from,
         gasLimit: gasLimit.value,
-        gasPrice: bigGas,
+        gasPrice: gasPrice.value,
         nonce,
         to,
         type,
@@ -480,12 +519,13 @@ export default {
       });
         sessionStorage.setItem("new tx", JSON.stringify(data));
         const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
-        await store.dispatch('account/waitTxQueueResponse')
         showSpeedModal.value = false;
+        await store.dispatch('account/waitTxQueueResponse')
       } catch (err) {
-        console.error(err);
+        console.error(err)
         Toast(err.reason)
       } finally {
+        showSpeedModal.value = false
         reloading.value = false;
       }
     }
@@ -534,6 +574,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.sendBtnBox {
+  button {
+    min-width: 80px;
+  }
+}
 .transaction-history {
   height: calc(100vh - 48px - 16px);
   overflow-y: scroll;

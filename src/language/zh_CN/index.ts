@@ -434,7 +434,8 @@ export default {
         cancel: "取消",
         confirm: "确认",
         wrongaddressformat: '地址格式有误',
-        lessthan: '不能小于21000'
+        lessthan: '不能小于21000',
+        lessthanPrev:"不能小于{value}"
     },
     //异常页面
     abnormal: {

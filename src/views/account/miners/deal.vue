@@ -1239,9 +1239,9 @@ export default defineComponent({
       try {
         const data = await dispatch('account/transaction', tx)
         $tradeConfirm.update({status:"approve",callBack})
-      const receipt = await data.wallet.provider.waitForTransaction(data.hash)
-      $tradeConfirm.update({status:"success",callBack})
-      dispatch('account/waitTxQueueResponse')
+        const receipt = await data.wallet.provider.waitForTransaction(data.hash)
+        $tradeConfirm.update({status:"success",callBack})
+        dispatch('account/waitTxQueueResponse')
       }catch(err){
         console.error(err)
       }

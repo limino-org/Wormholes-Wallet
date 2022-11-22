@@ -150,6 +150,7 @@ import {
   toRefs,
   onBeforeMount,
   nextTick,
+  onUnmounted,
 } from "vue";
 import { Icon, Popup, Empty, Dialog, Button, Toast } from "vant";
 import CollectionCard from "@/views/account/components/collectionCard/index.vue";
@@ -251,8 +252,19 @@ export default {
       },50)
     };
 
+    let waitTime: any = ref(null)
     onMounted(async () => {
-      getPageList();
+      getPageList()
+      store.dispatch("account/waitTxQueueResponse", {time: null, callback(e: any){
+        console.warn('e', e)
+        waitTime.value = e
+      }}).then(res => {
+        if(res !== true){
+          eventBus.off('txPush')
+      eventBus.off('txupdate')
+        getPageList()
+        }
+      });
     });
     const toSend = () => {
       router.push({ name: "send", query });
@@ -277,6 +289,7 @@ export default {
       sendTxType.value = 1
       sendTx.value = data;
       showSpeedModal.value = true;
+      console.log('sendTx---', sendTx.value)
     };
 
     const handleCancel = (data: any) => {
@@ -311,20 +324,28 @@ export default {
       txList.value.push(data)
     })
     eventBus.on('txUpdate', (data: any) => {
-      // @ts-ignore
-      txList.value.forEach(item => {
-        // @ts-ignore
-        if(item.sendData.txId === item.sendData.txId) {
-          // @ts-ignore
+      console.warn('txupdate', data)
+      // getPageList();
+      txList.value.forEach((item: any) => {
+        if(item.txId === data.txId) {
           item = data
         }
       })
+    })
+    onUnmounted(() => {
+      // console.warn('waitTime.value', waitTime.value)
+
+      if(waitTime.value) {
+        clearInterval(waitTime.value)
+      }
+      eventBus.off('txPush')
+      eventBus.off('txupdate')
     })
     const cancelSend = async() =>{
       try {
         const wallet = await getWallet();
         const network = await wallet.provider.getNetwork();
-        const { nonce, to, network: localNet, value, tokenAddress, amount, transitionType, txType, data: newData, sendData }: any = sendTx.value;
+        const { nonce, to, network: localNet, value, tokenAddress, amount, transitionType, txType, data: newData, sendData, txId }: any = sendTx.value;
         const gasp = Number(gasPrice.value)
           ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
           : "0.0000000012";
@@ -348,6 +369,7 @@ export default {
           },
           gasPrice: bigGas,
           gasLimit,
+          txId,
           isCancel: true
         });
         data.date = new Date()
@@ -355,7 +377,7 @@ export default {
         hash,
         from,
         gasLimit: gasLimit.value,
-        gasPrice: bigGas,
+        gasPrice: gasPrice.value,
         nonce,
         to,
         type,
@@ -372,11 +394,11 @@ export default {
         sessionStorage.setItem("new tx", JSON.stringify(data));
         const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
         await store.dispatch('account/waitTxQueueResponse')
-        showSpeedModal.value = false;
       } catch (err) {
         console.error(err);
         Toast(err.reason)
       } finally {
+        showSpeedModal.value = false;
         reloading.value = false;
       }
     }
@@ -397,6 +419,7 @@ export default {
           gasLimit: gasLimit.value,
           chainId: network.chainId,
         };
+        console.warn('tx', tx)
         let data = null
         if(tokenAddress) {
           const { contractWithSigner, contract } = await store.dispatch("account/connectConstract", tokenAddress);
@@ -422,7 +445,7 @@ export default {
             to,
             status: 0
           },
-          gasPrice: bigGas,
+          gasPrice: gasPrice.value,
           gasLimit,
         });
 
@@ -430,7 +453,7 @@ export default {
         hash,
         from,
         gasLimit: gasLimit.value,
-        gasPrice: bigGas,
+        gasPrice: gasPrice.value,
         nonce,
         to,
         type,
@@ -447,11 +470,11 @@ export default {
         sessionStorage.setItem("new tx", JSON.stringify(data));
         const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
         await store.dispatch('account/waitTxQueueResponse')
-        showSpeedModal.value = false;
       } catch (err) {
         console.error(err);
         Toast(err.reason)
       } finally {
+        showSpeedModal.value = false;
         reloading.value = false;
       }
     }
@@ -486,6 +509,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.sendBtnBox {
+  button {
+    min-width: 80px;
+  }
+}
 .detail-modal {
   & > div {
     span:nth-of-type(1) {

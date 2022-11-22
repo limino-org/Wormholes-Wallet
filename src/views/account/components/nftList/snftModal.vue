@@ -4,6 +4,7 @@
     v-model:show="show"
     show-cancel-button
     teleport="#page-box"
+    class="toggle-snft-modal"
     :showConfirmButton="false"
     :showCancelButton="false"
     closeOnClickOverlay

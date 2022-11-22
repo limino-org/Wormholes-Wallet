@@ -398,6 +398,7 @@ export default {
     // A list of transactions pushed to the current account
     // Transaction list pushed to current account
     async PUSH_TRANSACTION(state: State, value: any) {
+      console.warn('push', value)
       const { to, from, tokenAddress, network } = value;
       const txNetwork: NetWorkData = {...network};
       const { id, currencySymbol } = txNetwork
@@ -445,7 +446,8 @@ export default {
         receipt: clone(receipt),
         tokenAddress,
         amount,
-        isCancel: isCancel || null
+        isCancel: isCancel || null,
+        txId
       })
       const formAdd = from.toUpperCase();
       const txListKey = `txlist-${id}-${formAdd}`
@@ -960,8 +962,8 @@ export default {
       commit("PUSH_TXQUEUE", {
         hash,
         from,
-        gasLimit: newLimit,
-        gasPrice: newPrice,
+        gasLimit,
+        gasPrice,
         nonce,
         to: toAddr,
         type,
@@ -1014,8 +1016,8 @@ export default {
       store.commit("account/PUSH_TXQUEUE", {
         hash,
         from,
-        gasLimit: newLimit,
-        gasPrice: newPrice,
+        gasLimit,
+        gasPrice,
         nonce,
         to: toAddr,
         type,
@@ -1241,72 +1243,85 @@ export default {
       }
     },
     // The result of polling the transaction queue
-    async waitTxQueueResponse({ commit, state }: any) {
+    async waitTxQueueResponse({ commit, state }: any, opt?: Object) {
+      console.warn('waitTxQueueResponse---')
+      const _opt = {
+        time: 60000,
+        callback:(e: any) =>{},
+        ...opt
+      }
       const {id} = state.currentNetwork
       const from = state.accountInfo.address
       const queuekey = `txQueue-${id}-${from.toUpperCase()}`
-      return new Promise((resolve, reject) => {
-        let time = setTimeout(async() => {
-          const list: any = await localforage.getItem(queuekey)
-          const txQueue = list && list.length ? list : []
-          const newWallet = await getWallet()
-          if (!txQueue.length) {
-            resolve(true)
-          }
-          try {
-            for await (const iterator of txQueue) {
-              let {hash, transitionType, nft_address, blockNumber, network, txType, txId, amount, isCancel} = iterator
-              const data1 = await newWallet.provider.waitForTransaction(hash, null, 60000);
-              let convertAmount: any = ''
-              if(transitionType && transitionType == '6') {
-                const len = nft_address.length
-                switch(len) {
-                  case 42:
-                    break;
-                  case 41:
-                    nft_address += '0'
-                    break;
-                  case 40:
-                    nft_address += '00'
-                    break;
-                  case 39:
-                    nft_address += '000'
-                    break;
-                }
-                const nftAccountInfo = await newWallet.provider.send(
-                  "eth_getAccountInfo",
-                  [nft_address,  web3.utils.toHex((data1.blockNumber - 1).toString())]
-                );
-                const {MergeLevel, MergeNumber} = nftAccountInfo
-                if(MergeLevel === 0) {
-                  convertAmount = new BigNumber(MergeNumber).multipliedBy(0.095).toNumber()
-                }else if(MergeLevel === 1) {
-                  convertAmount = new BigNumber(MergeNumber).multipliedBy(0.143).toNumber()
-                } else if(MergeLevel === 2) {
-                  convertAmount = new BigNumber(MergeNumber).multipliedBy(0.271).toNumber()
-                } else if(MergeLevel === 3) {
-                  convertAmount = new BigNumber(MergeNumber).multipliedBy(0.65).toNumber()
-                }
-              }
-              const rep: TransactionReceipt = handleGetTranactionReceipt(
-                txType || TransactionTypes.other,
-                data1,
-                {...iterator,convertAmount,transitionType},
-                network
-              );
-              commit("DEL_TXQUEUE", { ...iterator,txId,txType });
-              commit("UPDATE_TRANSACTION", { ...rep,txId, txType, isCancel: isCancel || null});
-            }
-            resolve(true)
-          } catch (err) {
-            console.error(err)
-            reject(err)
-          }finally{
-            clearTimeout(time)
-          }
-        }, 1000)
-      })
-
+      let t: any = null;
+      const rep = new Promise((resolve, reject) => {
+        t = setTimeout(async() => {
+         const list: any = await localforage.getItem(queuekey)
+         const txQueue = list && list.length ? list : []
+         const newWallet = await getWallet()
+         if (!txQueue.length) {
+           resolve(true)
+         }
+         try {
+           for await (const iterator of txQueue) {
+             let {hash, transitionType, nft_address, blockNumber, network, txType, txId, amount, isCancel} = iterator
+             let data1 = null
+             if(_opt.time != null) {
+              data1 = await newWallet.provider.waitForTransaction(hash, null, _opt.time);
+             } else {
+               data1 = await newWallet.provider.waitForTransaction(hash);
+             }
+             let convertAmount: any = ''
+             if(transitionType && transitionType == '6') {
+               const len = nft_address.length
+               switch(len) {
+                 case 42:
+                   break;
+                 case 41:
+                   nft_address += '0'
+                   break;
+                 case 40:
+                   nft_address += '00'
+                   break;
+                 case 39:
+                   nft_address += '000'
+                   break;
+               }
+               const nftAccountInfo = await newWallet.provider.send(
+                 "eth_getAccountInfo",
+                 [nft_address,  web3.utils.toHex((data1.blockNumber - 1).toString())]
+               );
+               const {MergeLevel, MergeNumber} = nftAccountInfo
+               if(MergeLevel === 0) {
+                 convertAmount = new BigNumber(MergeNumber).multipliedBy(0.095).toNumber()
+               }else if(MergeLevel === 1) {
+                 convertAmount = new BigNumber(MergeNumber).multipliedBy(0.143).toNumber()
+               } else if(MergeLevel === 2) {
+                 convertAmount = new BigNumber(MergeNumber).multipliedBy(0.271).toNumber()
+               } else if(MergeLevel === 3) {
+                 convertAmount = new BigNumber(MergeNumber).multipliedBy(0.65).toNumber()
+               }
+             }
+             const rep: TransactionReceipt = handleGetTranactionReceipt(
+               txType || TransactionTypes.other,
+               data1,
+               {...iterator,convertAmount,transitionType},
+               network
+             );
+             commit("DEL_TXQUEUE", { ...iterator,txId,txType });
+             commit("UPDATE_TRANSACTION", { ...rep,txId, txType, isCancel: isCancel || null, amount});
+           }
+           resolve(true)
+         } catch (err) {
+           console.error(err)
+           reject(err)
+         }finally{
+           clearTimeout(t)
+         }
+       }, 1000)
+       _opt.callback(t)
+     })
+      return rep
     },
     // get ethAccountInfo
     async getEthAccountInfo({commit, state}: any) {

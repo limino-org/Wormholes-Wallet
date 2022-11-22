@@ -690,6 +690,11 @@ export default defineComponent({
     const isSelectAllChange = () => {
       isSelectAll.value = !isSelectAll.value;
       list.value.forEach((f: any) => {
+        console.warn('f:', f)
+        const { hasUnfreeze, tag } = f
+        if(f != 'F' && !hasUnfreeze && tabIndex.value === '1') {
+          return
+        }
         f.flag = isSelectAll.value;
       });
     };

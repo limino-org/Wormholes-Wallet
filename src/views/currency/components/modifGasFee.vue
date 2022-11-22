@@ -185,6 +185,7 @@ export default defineComponent({
     const gasFee = ref(0);
     const toAddress = ref(to);
     const accountInfo = computed(() => state.account.accountInfo);
+
     // Estimated transaction sending time
     const second = computed(() => {
       let secondTime = 0;
@@ -205,29 +206,32 @@ export default defineComponent({
     // Get the three highest, lowest and average gas fees
     const gasData: any = ref([]);
     const initGas = async () => {
+      console.log('000', props)
+      console.log('111111111111',props.gasLimit)
+      console.log('222222',props.gasPrice)
       try {
-        gasLimit.value = utils.formatUnits(props.gasLimit, "wei")
+        gasLimit.value = props.gasLimit || 21000
         console.warn('gasLimit.value', gasLimit.value)
         let gas = props.gasPrice || "0";
         if (!Number(gas)) {
+          // debugger
           const wallet = await getWallet();
           gas = await wallet.provider.getGasPrice();
         }
-        console.log("gasPrice", utils.formatUnits(gas, "wei"));
-        const bigGas = new BigNumber(
-          utils.formatUnits(gas || "0.0000000012", "wei")
-        );
-        const bigGasDiv = bigGas.multipliedBy(0.5);
-        const bigGasDiv2 = bigGas.multipliedBy(0.4);
-        const bigGasDiv3 = bigGas.multipliedBy(0.3);
-        const max = bigGas.plus(bigGasDiv).dividedBy(1000000000).toString();
-        const min = bigGas.plus(bigGasDiv3).dividedBy(1000000000).toString();
+        console.log("gasPrice", gas, gasLimit.value);
+        // console.log('utils.formatUnits(gas, "wei")', utils.formatUnits(utils.parseEther(gas), "wei"))
+        const bigGas =  new BigNumber(utils.formatUnits(utils.parseEther(gas), "wei"));
+        const bigGasDiv = bigGas.multipliedBy(0.3);
+        const bigGasDiv2 = bigGas.multipliedBy(0.2);
+        const bigGasDiv3 = bigGas.multipliedBy(0.1);
+        const max = bigGas.plus(bigGasDiv).dividedBy(1000000000000000000).toString();
+        const min = bigGas.plus(bigGasDiv3).dividedBy(1000000000000000000).toString();
         const average = bigGas
           .plus(bigGasDiv2)
-          .dividedBy(1000000000)
+          .dividedBy(1000000000000000000)
           .toString();
         gasData.value = [min, average, max];
-
+        console.log('gasData.value',gasData.value)
         context.emit("change", {
           gasLimit: gasLimit.value,
           gasPrice: gasData.value[gasFee.value],
@@ -264,7 +268,6 @@ export default defineComponent({
         if (n) {
           loading.value = true;
           initGas();
-
         }
       },
       {
@@ -286,7 +289,7 @@ export default defineComponent({
     // Minus button disabled
     const minusDisabled = computed(() => {
       const biglimit = new BigNumber(gasLimit.value);
-      return biglimit.lte(21000);
+      return biglimit.lte(props.gasLimit);
     });
     // gas limit Out of focus event
     const limitBlur = () => {
@@ -300,14 +303,18 @@ export default defineComponent({
       const bigLimit = new BigNumber(gasLimit.value);
       if (v == -1) {
         // minus
-        // Not less than 1000
-        if (bigLimit.lt(21000)) {
+        if(bigLimit.lt(21000)) {
           Toast(t("sendto.lessthan"));
+          return
+        }
+        // Not less than 1000
+        if (bigLimit.lte(props.gasLimit)) {
+          Toast(t("sendto.lessthanPrev",{value:props.gasLimit}));
           return;
         }
         // If minus 1000 is less than 21000, rewrite it directly as 21000
-        if (bigLimit.minus(1000).lt(21000)) {
-          gasLimit.value = 21000;
+        if (bigLimit.minus(1000).lt(props.gasLimit)) {
+          gasLimit.value = Number(props.gasLimit);
         } else {
           gasLimit.value = bigLimit.minus(1000).toNumber();
         }
@@ -337,6 +344,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+
 .userinfo-box {
   height: 248px;
 }
@@ -377,6 +385,11 @@ export default defineComponent({
 }
 .gas-fee-page {
   font-size: 12px;
+  :deep(){
+.van-cell .van-field__body {
+    border: none;
+  }
+}
   .text-bold {
     color: #000;
   }

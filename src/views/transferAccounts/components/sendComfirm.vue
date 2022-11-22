@@ -48,7 +48,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref, watch, SetupContext, reactive, computed } from 'vue'
+import { defineComponent, ref, Ref, watch, SetupContext, reactive, computed, onUnmounted } from 'vue'
 import { Dialog, Button, Field, NumberKeyboard, Toast, Icon, Popover } from 'vant'
 import { addressMask, decimal } from '@//utils/filters'
 import { ethers, utils } from 'ethers'
@@ -143,7 +143,7 @@ export default defineComponent({
     const router = useRouter()
     const nextLoading = ref(false)
 
-    
+    let waitTime: any = ref(null)
     const handleComfirm = async() => {
       showModal.value = false
       const { value } = props.data
@@ -163,7 +163,10 @@ export default defineComponent({
         const txData = await store
         .dispatch(value ? 'account/transaction' : 'account/tokenTransaction', params)
         $tradeConfirm.update({status:"approve",callBack})
-        await store.dispatch('account/waitTxQueueResponse')
+
+        await store.dispatch('account/waitTxQueueResponse',{callback(e: any){
+          waitTime.value = e
+        }})
         $tradeConfirm.update({status:"success",callBack})
       }catch(err: any){
         console.warn('err', err)
@@ -177,6 +180,12 @@ export default defineComponent({
       
      
     }
+    onUnmounted(() => {
+      console.warn('组件卸载')
+      if(waitTime.value) {
+        clearInterval(waitTime.value)
+      }
+    })
     const totalAmount = computed(() => {
       const { amount, value, gasPrice } = props.data
       const am = amount ? amount : value

@@ -176,10 +176,18 @@ export default {
       });
     }
     async function login() {
-        const wallet = await getWallet();
+   
       const accountInfo = computed(() => state.account.accountInfo);
       const { address } = accountInfo.value;
-      const netWork = await wallet.provider.getNetwork();
+      let netWork: any = {
+        chainId: 51888
+      }
+      try {
+        const wallet = await getWallet();
+        netWork = await wallet.provider.getNetwork();
+      }catch(err){
+        console.error(err)
+      }
       const data = {
         address,
         chainId: netWork.chainId,

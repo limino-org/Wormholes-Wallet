@@ -5,6 +5,7 @@ body {
   -webkit-touch-callout: none;
   user-select: none;
   background-color: #f7f7f7;
+  font-family:"Euclid Circular B", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .loading-box {
@@ -275,6 +276,9 @@ body {
 }
 .transfer-modal {
   min-height: 368px;
+}
+.toggle-snft-modal {
+  height: 248px;
 }
 
 @media screen and (min-width: 750px) {

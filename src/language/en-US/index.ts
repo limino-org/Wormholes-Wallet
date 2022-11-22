@@ -381,7 +381,8 @@ export default {
     cancel: "Cancel",
     confirm: "Confirm",
     wrongaddressformat: 'Wrong address format',
-    lessthan: "Can't be less than 21000"
+    lessthan: "Can't be less than 21000",
+    lessthanPrev:"Can't be less than {value}"
 
   },
   // receive page
