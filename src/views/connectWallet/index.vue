@@ -78,7 +78,7 @@ export default {
       }
       return null;
     });
-
+    
     const handleInitData = () => {
       const handleList = [
         "getAddress",
@@ -88,7 +88,8 @@ export default {
         "getBlockNumber",
         "getBalance",
         "sendTransaction",
-        "sendOpenExchangeTransaction"
+        "sendOpenExchangeTransaction",
+        "sendContractTransaction"
       ];
       if (!backUrl || !action) {
         $toast.warn("Parameter error");
@@ -98,6 +99,7 @@ export default {
         $toast.warn("Unsupported method");
         return;
       }
+
       switch (action) {
         case "getAddress":
           getAddress();
@@ -119,10 +121,26 @@ export default {
           sigMessage();
           break;
         case "sendTransaction":
+        if (!nowAccount.value) {
+        $toast.warn("common.addressnotfound");
+        return;
+      }
           sendTransaction();
           break;
         case "sendOpenExchangeTransaction":
+        if (!nowAccount.value) {
+        $toast.warn("common.addressnotfound");
+        return;
+      }
           sendOpenExchangeTransaction()
+          break;
+        case "sendContractTransaction":
+        if (!nowAccount.value) {
+        $toast.warn("common.addressnotfound");
+        return;
+      }
+
+          sendContractTransaction()
           break;
       }
       Toast.clear();
@@ -130,8 +148,20 @@ export default {
 
     handleInitData();
 
+    async function sendContractTransaction (){
+      const wallet = await getWallet2();
+      router.replace({
+        name: "sendContractTransaction",
+        query: {
+          tx: JSON.stringify(queryData),
+          backUrl,
+          address,
+        },
+      });
+    }
 
-    function sendOpenExchangeTransaction() {
+    async function sendOpenExchangeTransaction() {
+      const wallet = await getWallet2();
       router.replace({
         name: "sendOpenExchangeTransaction",
         query: {
@@ -142,7 +172,8 @@ export default {
       });
     }
 
-    function sendTransaction() {
+    async function sendTransaction() {
+      const wallet = await getWallet2();
       router.replace({
         name: "sendTransaction",
         query: {
@@ -152,7 +183,9 @@ export default {
         },
       });
     }
-    function sigMessage() {
+    async function sigMessage() {
+      const wallet = await getWallet2();
+
       const { sig } = queryData;
       router.replace({
         name: "exchangeSign",
@@ -250,6 +283,7 @@ export default {
     async function getWallet2() {
       if (!nowAccount.value) {
         $toast.warn("common.addressnotfound");
+        router.replace({name:'import'})
         return null;
       }
       if (nowAccount.value.address.toUpperCase() != accountInfo.value.address.toUpperCase()) {

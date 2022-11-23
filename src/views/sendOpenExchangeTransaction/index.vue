@@ -163,7 +163,7 @@ async function toSend() {
     if(tx1){
       const { pledge, fee_rate, name } = tx1;
       data1 = await send1(name, fee_rate, pledge);
-      receipt1 = await wallet.provider.waitForTransaction(data1.hash, null, 60000);
+      receipt1 = await wallet.provider.waitForTransaction(data1.hash);
       rep1 = handleGetTranactionReceipt(
       TransactionTypes.default,
       receipt1,

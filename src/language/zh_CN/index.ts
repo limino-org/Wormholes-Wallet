@@ -237,7 +237,10 @@ export default {
         sendTipPendding:"当前交易队列存在未完成交易，请完成后重试！",
         speedUp:"加速",
         toggleAddress:"请先切换钱包账户到该地址！",
-        snftColorTip:"S-NFT等级从高到低分别为期（Period）、合集（Collection）、S-NFT、碎片（Fragment）。您可以合成更高等级以获取更高收益。红色数字表示期的编号，即第几期。黄色数字表示合集的编号，即某一期中合集的编号。绿色数字表示S-NFT的编号，即某个合集中S-NFT的位置编号。蓝色数字表示碎片的编号，即某个S-NFT中碎片的位置编号。"
+        snftColorTip:"S-NFT等级从低到高分别为L0、L1、L2、L3。您可以合成更高等级以获取更高收益，合成规则如下：16个特定S-NFT L0可合成一个唯一S-NFT L1，16个特定S-NFT L1可合成一个唯一S-NFT L2，16个特定S-NFT L2可合成一个唯一S-NFT L3。蓝色数字表示在某一个S-NFT L1中，S-NFT L0的位置编号。绿色数字表示在某一个S-NFT L2中，S-NFT L1的位置编号。黄色数字表示在某一个S-NFT L3中，S-NFT L2的位置编号。红色数字表示S-NFT L3的位置编号。",
+        contrctTx:"合约交易",
+        contractAddr:"合约地址"
+
 
 
 
@@ -786,7 +789,7 @@ export default {
         closeTip: "如果你做赎回。你的收入会减少。",
         addzhiya: "追加质押",
         stackFee: "质押金额",
-        tip7:"阈值是指您仍然可以作为验证者的情况下可以赎回的最大 VERB 数量。如果您输入的金额大于此数量，您将赎回您的所有 ERB。",
+        tip7:"阈值是指您仍然可以作为验证者的情况下可以赎回的最大ERB 数量。如果您输入的金额大于此数量，您将赎回您的所有 ERB。",
         redemingAmount:"赎回金额",
         redemingAmountTip:"赎回金额",
         minus_approve: "我们正在批准您的股份赎回请求。您可能需要等待几秒钟。您也可以在交易记录中找到详细信息。",

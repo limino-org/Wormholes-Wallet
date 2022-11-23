@@ -164,6 +164,14 @@ const routes: Array<RouteRecordRaw> = [
 
       },
       {
+        name:'sendContractTransaction',
+        path:'/sendContractTransaction',
+        component: () => import('@/views/sendContractTransaction/index.vue'),
+        meta: {
+          auth: true
+        }
+      },
+      {
         path: '/currency',
         name: 'currency',
         redirect: {

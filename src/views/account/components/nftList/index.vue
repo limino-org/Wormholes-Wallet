@@ -54,18 +54,18 @@
               </div> -->
             </div>
             <div class="snftmiddle flex column between" >
-              <div class="flex between center-v snftName">
-                <span class="f-12 lh-12 hover"  @click.stop="toNftExchange(item)">
-                  {{ item.collections }}-<span class="nft-p">#{{item.pidx}}</span>
-                  <span class="nft-c" v-if="item.cidx !== undefined">/{{item.cidx}}</span>
-                  <span class="nft-n"  v-if="item.nidx !== undefined">/{{item.nidx}}</span>
-                  <span class="nft-f" v-if="item.fidx !== undefined">/{{item.fidx}}</span>
+              <div class="flex between center-v snftName h-14 text-weight">
+                <span class="f-14 lh-12 hover flex center-v"  @click.stop="toNftExchange(item)">
+                  {{ item.collections }}-<span class="red">#</span><span class="nft-p">{{item.pidx}}</span>
+                  <span class="nft-c" v-if="item.cidx !== undefined">{{item.cidx}}</span>
+                  <span class="nft-n"  v-if="item.nidx !== undefined">{{item.nidx}}</span>
+                  <span class="nft-f" v-if="item.fidx !== undefined">{{item.fidx}}</span>
                   <span v-if="item.renderPop">
                     <van-popover v-model:show="item.showPop"              theme="dark"
                 placement="right" >
             <div class="lh-16 text-left p-8">{{t(`common.snftColorTip`)}}</div>
             <template #reference>
-              <van-icon name="question" @mouseover.stop="item.showPop = true" @mouseout.stop="item.showPop = false" />
+              <van-icon name="question" @mouseover.stop="item.showPop = true" size="15" @mouseout.stop="item.showPop = false" />
             </template></van-popover>
                   </span>
 
@@ -1039,17 +1039,30 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+.red {
+  color: rgb(215, 58, 73);
+}
+.nft-c,.nft-f,.nft-n,.nft-p{
+  color: #fff;
+padding: 0 5px;
+font-size: 18px;
+margin-right: 3px;
+border-radius: 3px;
+font-family: KenneyPixel;
+text-align: center;
+}
 .nft-p {
-color: rgb(215, 58, 73);
+background: rgb(215, 58, 73);
+
 }
 .nft-c{
-  color: rgb(247, 191, 3);
+  background: rgb(247, 191, 3);
 }
 .nft-n{
-  color: rgb(58, 174, 85);
+  background: rgb(58, 174, 85);
 }
 .nft-f{
-  color: rgb(3, 124, 214);
+  background: rgb(3, 124, 214);
 }
 .snft-list-box {
   padding-bottom: 40px;
@@ -1205,6 +1218,12 @@ color: rgb(215, 58, 73);
     }
     .snftName {
       font-weight: bold;
+      &>span {
+        span {
+          display: inline;
+          vertical-align: top;
+        }
+      }
     }
   }
   .snftcontainright {
