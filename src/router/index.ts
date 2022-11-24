@@ -17,6 +17,7 @@ import connectWallet from '@/views/connectWallet/route'
 import { pwdKey } from '@/utils/jsCookie';
 import doc from '@/views/doc/index'
 import mnemonic from '@/views/mnemonic/route'
+import { debug } from 'console';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -327,6 +328,12 @@ router.beforeEach(async (to, form, next) => {
     next()
     return
   }
+  
+  // if(!auth && name == 'connectWallet' && !authFlag) {
+  //   // @ts-ignore
+  //   router.replace({name:"withpassword",query: {backUrl:'connectWallet',loginParams: {...query}}})
+  //   return
+  // }
   if (auth) {
     if (hasAccountFlag && authFlag) {
       next()

@@ -124,15 +124,15 @@ export default {
         to,
         from,
         value,
-        callBack: () => {
-          $tradeConfirm.update({
+      };
+      debugger
+      try {
+        const sendData: any = await store.dispatch('account/transaction', tx1)
+        $tradeConfirm.update({
             status: "approve",
           });
-        },
-      };
-      try {
-        const data: any = await store.dispatch('account/transaction', tx1)
-        const receipt = await data.wallet.provider.waitForTransaction(data.hash, null, 60000)
+        const receipt = await sendData.wallet.provider.waitForTransaction(sendData.hash)
+        store.dispatch('account/waitTxQueueResponse')
         const back = decode(backUrl)
         const newBack =`${back}${back.indexOf('?') > -1 ? '&' : '?'}` 
         $tradeConfirm.update({

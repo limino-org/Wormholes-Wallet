@@ -68,7 +68,8 @@ export default {
     const accountInfo = computed(() => state.account.accountInfo);
     const currentNetwork = computed(() => state.account.currentNetwork);
     if(!password) {
-      router.replace({name:'withpassword'})
+        // @ts-ignore
+        router.replace({name:"withpassword",query: {backUrl:'connectWallet',loginParams: {...query}}})
     }
     const nowAccount = computed(() => {
       if (address) {
@@ -80,6 +81,7 @@ export default {
     });
     
     const handleInitData = () => {
+
       const handleList = [
         "getAddress",
         "getAccount",

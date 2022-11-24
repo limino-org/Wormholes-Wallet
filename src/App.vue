@@ -59,11 +59,6 @@ export default {
         clearTimeout(time);
       }, 10000);
     }
-    eventBus.on('changeAccount', () => {
-      if(time){
-        
-      }
-    })
     onBeforeMount(async () => {
       commit("system/UPDATE_TRANSFERUSDRATE", 0.5);
       commit("account/UPDATE_NETSTATUS", NetStatus.pendding);

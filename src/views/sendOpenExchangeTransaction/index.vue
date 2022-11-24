@@ -203,7 +203,10 @@ async function toSend() {
       name = tx1.name
     }
     resData.value = await generateSign(name);
-    $tradeConfirm.update({ status: "success" });
+    let time = setTimeout(() => {
+      $tradeConfirm.update({ status: "success" });
+      clearTimeout(time)
+    }, 30000)
 
   } catch (err) {
     console.error(err);
@@ -259,21 +262,21 @@ async function send1(
   }
   const wallet = await getWallet();
   const { address } = wallet;
-  const baseName = encode(name);
-  const str = `wormholes:{"version": "0","type": 11,"fee_rate": ${fee_rate},"name":"${baseName}","url":""}`;
-  // const str = `wormholes:{"type":"9", "proxy_address":"0x591813F0D13CE48f0E29081200a96565f466B212", "version":"0.0.1"}`
-  const data3 = toHex(str);
+  const baseName = web3.utils.fromUtf8(name)
+  const str = `wormholes:{"version": "0","type": 11,"fee_rate": ${fee_rate},"name":"${name}","url":""}`;
+  const data3 = web3.utils.fromUtf8(str);
   const tx1 = {
     from: address,
     to: address,
-    value: ethers.utils.parseEther(amount + ""),
-    data: `0x${data3}`,
+    value: amount,
+    data: data3,
     transitionType: "11",
   };
   try {
     const data: any = await dispatch('account/transaction', tx1)
     return Promise.resolve(data);
   } catch (err) {
+    console.error('err: 1', err)
     $tradeConfirm.update({ status: "fail" });
     return Promise.reject(err);
   }
@@ -286,6 +289,7 @@ async function send2(package_id: string = "", amount: string = "0") {
     throw new Error("Parameter is invalid package_id is undefined");
   }
   try {
+    debugger
     const network = clone(state.account.currentNetwork);
     const wallet = await getWallet();
     const contractWithSigner = await getContract(wallet);
@@ -320,6 +324,7 @@ async function send2(package_id: string = "", amount: string = "0") {
     localStorage.setItem("contact 1", JSON.stringify(data));
     return Promise.resolve(data);
   } catch (err) {
+    console.error('err: 2', err)
     $tradeConfirm.update({ status: "fail" });
     return Promise.reject();
   }

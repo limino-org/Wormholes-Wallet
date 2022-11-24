@@ -181,7 +181,7 @@ export default {
 
         const tx1 = {
           to: "0x7fBC8ad616177c6519228FCa4a7D9EC7d1804900",
-          value: ethers.utils.parseEther(props.formatValueNumber + ""),
+          value: props.formatValueNumber + "",
           data: `0x${data3}`,
         };
         console.log(tx1);

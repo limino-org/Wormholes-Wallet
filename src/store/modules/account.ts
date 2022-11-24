@@ -938,9 +938,8 @@ export default {
       const {currentNetwork} = state
       let tx: any = {
         to,
-        value: utils.parseEther(value && Number(value) ? value.toString() : '0'),
+        value: utils.parseEther(value && Number(value) ? value.toString() : '0')
       };
-
       if(Number(gasPrice)){
         const bigPrice = new BigNumber(gasPrice)
         console.warn('bigPrice', bigPrice.toNumber())
@@ -953,6 +952,7 @@ export default {
       if(newData) {
         tx.data = newData
       }
+      sessionStorage.setItem('tx------', JSON.stringify(tx))
       // Update recent contacts
       commit("PUSH_RECENTLIST", to);
       const newwallet = await getWallet();
@@ -1038,7 +1038,45 @@ export default {
       return Promise.reject(err)
      }
     },
-
+// send data
+async sendTransaction({ commit, dispatch, state }: any, tx: any) {
+  const { to, from, data, callBack, value: sendVal } = tx
+  commit("PUSH_RECENTLIST", to);
+  sessionStorage.setItem('tx-----2', JSON.stringify(tx))
+  try {
+  // @ts-ignore
+  const network = clone(store.state.account.currentNetwork)
+    const wallet = await getWallet();
+    const res: any = await wallet.sendTransaction({
+      to,
+      data,
+      value: sendVal
+    })
+    const { from, gasLimit: newLimit, gasPrice: newPrice, hash, nonce, to: toAddr, type, value: newVal } = res;
+    commit("PUSH_TXQUEUE", {
+      hash,
+      from,
+      gasLimit: null,
+      gasPrice: null,
+      nonce,
+      to: toAddr,
+      type,
+      value: newVal,
+      transitionType:  null,
+      txType: TransactionTypes.other,
+      network: clone(network),
+      data: data,
+      sendStatus: TransactionSendStatus.pendding,
+      sendData: clone(res),
+      nft_address:''
+    });
+    console.log("i18n", i18n);
+    res.wallet = wallet
+    return res
+  } catch (err) {
+    return Promise.reject(err)
+  }
+},
   //Load the wallet by address and password
     async connectWalletByPwdAddress(
       { state, commit, dispatch }: any,
