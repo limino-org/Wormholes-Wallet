@@ -105,7 +105,7 @@ export default {
     const currentNetwork = computed(() => store.state.account.currentNetwork);
     const route = useRoute();
     const { query } = route;
-    const { from, to, value, contractMethod, package_time,price,name,desc,package_id, status }: any = query.tx
+    const { from, to, value, contractMethod, package_time,price,name,desc,package_id, status, ownaddr }: any = query.tx
       ? JSON.parse(query.tx.toString())
       : {};
     const amount = ethers.utils.formatEther(value ? value : 0 || {_hex:"0x00",_isBigNumber: true})
@@ -139,6 +139,7 @@ export default {
         const wallet = await getWallet()
         const contractWithSigner = await getContract(wallet)
         let tx = null
+        debugger
         switch(contractMethod){
             case 'addPackage':
             tx = await contractWithSigner.functions[contractMethod](package_time,price,name,desc)
@@ -152,12 +153,19 @@ export default {
             case 'deletePackage':
             tx = await contractWithSigner.functions[contractMethod](package_id)
                 break;
+            case 'payForPackageByAdmin':
+              debugger
+            tx = await contractWithSigner.functions[contractMethod](package_id, ownaddr)
+              break;
+
         }
+        debugger
         $tradeConfirm.update({
             status: "approve",
           });
         const receipt = await wallet.provider.waitForTransaction(tx.hash)
         const network = clone(store.state.account.currentNetwork);
+        debugger
         const rep = handleGetTranactionReceipt(
             TransactionTypes.contract,
             receipt,
