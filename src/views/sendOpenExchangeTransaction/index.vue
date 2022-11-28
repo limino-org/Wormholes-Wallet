@@ -206,7 +206,7 @@ async function toSend() {
     let time = setTimeout(() => {
       $tradeConfirm.update({ status: "success" });
       clearTimeout(time)
-    }, 30000)
+    }, 60000)
 
   } catch (err) {
     console.error(err);

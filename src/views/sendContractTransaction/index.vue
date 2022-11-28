@@ -164,6 +164,7 @@ export default {
             status: "approve",
           });
         const receipt = await wallet.provider.waitForTransaction(tx.hash)
+        await dispatch('account/waitTxQueueResponse')
         const network = clone(store.state.account.currentNetwork);
         debugger
         const rep = handleGetTranactionReceipt(
@@ -179,9 +180,7 @@ export default {
           status: "success",
           callBack: () => {
             location.href = `${newBack}action=sendContractTransaction&contractMethod=${contractMethod}&data=${encodeURIComponent(
-              JSON.stringify({
-                receipt,
-              })
+              JSON.stringify(receipt)
             )}`;
           },
         });

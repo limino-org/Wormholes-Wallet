@@ -139,7 +139,7 @@ export default {
     const store = useStore();
     const route = useRoute();
     const { query } = route;
-    const { sig, clearCache, backUrl, loginParams } = query;
+    const { sig, clearCache, backUrl, loginParams, action } = query;
     const { dispatch, commit, state } = store;
     const onClickLeft = () => {
       router.go(-1);
@@ -190,8 +190,12 @@ export default {
           router.replace({ name: "sign", query });
         } else {
           if(backUrl){
-            // @ts-ignore
-            router.replace({ name: backUrl.toString(), query: loginParams || {} });
+            if(action){
+              router.replace({ name: "connect-wallet", query });
+            } else {
+              // @ts-ignore
+              router.replace({ name: backUrl.toString(), query: loginParams || {} });
+            }
           } else {
             router.replace({ name: "wallet" });
           }

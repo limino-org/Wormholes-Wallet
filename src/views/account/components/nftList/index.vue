@@ -1,7 +1,7 @@
 <template>
-  <van-sticky :offset-top="95">
+<van-sticky :offset-top="95">
     <div class="flex center tab-box">
-      <div class="flex between tab-list">
+      <!-- <div class="flex between tab-list">
         <div
           :class="`tab-card flex center hover ${item.select ? 'active' : ''}`"
           @click.stop="handleTab(item.value, idx)"
@@ -15,7 +15,7 @@
             :class="`iconfont ${tabModal ? 'icon-shangla' : 'icon-xiala'} `"
           ></i>
         </div>
-      </div>
+      </div> -->
       <div class="switch-box" v-show="list.length">
         <van-switch
           v-model="value"
@@ -379,8 +379,7 @@ name="question hover"
       </div>
     </div>
   </van-dialog>
-
-  <SnftModal v-model="tabModal" @change="handleChange" />
+  <!-- <SnftModal v-model="tabModal" @change="handleChange" /> -->
 </template>
 
 <script lang="ts">
@@ -576,7 +575,8 @@ export default defineComponent({
         }
         console.log('wallet.value', wallet)
         
-        const { nfts } = await snft_com_page(params2);
+        let { nfts } = await snft_com_page(params2);
+        nfts = nfts && nfts.length ? nfts : [];
         const nftAddList = nfts.map((item: any) => {
           const len = item.address.length;
           let str = item.address;
@@ -594,7 +594,7 @@ export default defineComponent({
               break;
           }
           return str;
-        });
+        }) ;
         if (!nfts || !nfts.length) {
           finished.value = true;
           loading.value = false;
@@ -726,10 +726,10 @@ export default defineComponent({
       onLoad();
     });
     const tabList = ref([
-      { label: t("createExchange.redemption"), value: "3", select: true },
-      { label: t("createExchange.convert"), value: "2", select: false },
+      // { label: t("createExchange.redemption"), value: "3", select: true },
+      { label: t("createExchange.convert"), value: "2", select: true },
     ]);
-    const tabIndex = ref("3");
+    const tabIndex = ref("2");
     const handleTab = (v: string, i: number) => {
       if(loading.value){
         Toast(t('common.loadingWait'))

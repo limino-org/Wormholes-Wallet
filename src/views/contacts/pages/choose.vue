@@ -189,6 +189,7 @@ export default {
     const { dispatch, state } = store;
     // 1 ascending 2 descending
     const sortType = ref("1");
+    const active = '1'
     const name = ref("");
     const accountInfo = computed(() => state.account.accountInfo);
     // recent contacts
@@ -201,9 +202,9 @@ export default {
       );
       list.sort((a: any, b: any) => {
         if (sortType2.value == "1") {
-          return (a.name + "").localeCompare(b.name + "");
+          return a.name.split(' ')[1] - b.name.split(' ')[1]
         } else {
-          return (b.name + "").localeCompare(a.name + "");
+          return b.name.split(' ')[1] - a.name.split(' ')[1]
         }
       });
 
@@ -248,10 +249,13 @@ export default {
           item.address.toUpperCase() != accountInfo.value.address.toUpperCase()
       );
       list.sort((a: any, b: any) => {
+        const [str1, idx] = a.name.split(' ')
+          const [str2, idx2]  = b.name.split(' ')
+          console.warn('idx, idx2', idx, idx2)
         if (sortType3.value == "1") {
-          return (a.name + "").localeCompare(b.name + "");
+          return a.name.split(' ')[1] - b.name.split(' ')[1]
         } else {
-          return (b.name + "").localeCompare(a.name + "");
+          return b.name.split(' ')[1] - a.name.split(' ')[1]
         }
       });
 

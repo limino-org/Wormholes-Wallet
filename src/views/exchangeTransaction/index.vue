@@ -132,7 +132,7 @@ export default {
             status: "approve",
           });
         const receipt = await sendData.wallet.provider.waitForTransaction(sendData.hash)
-        store.dispatch('account/waitTxQueueResponse')
+        await store.dispatch('account/waitTxQueueResponse')
         const back = decode(backUrl)
         const newBack =`${back}${back.indexOf('?') > -1 ? '&' : '?'}` 
         $tradeConfirm.update({
