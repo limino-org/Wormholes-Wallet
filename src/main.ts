@@ -3,7 +3,6 @@
 
 
 // @ts-nocheck
-import 'amfe-flexible'
 import { encode, decode } from 'js-base64';
 window.encode = encode
 window.decode = decode
@@ -26,7 +25,7 @@ import Toast from '@/plugins/toast/toast'
 import Dialog from './plugins/dialog/dialog'
 import CancelBtn from '@/components/cancelBtn/index.vue'
 import VueCookies from 'vue-cookies'
-
+import '@/assets/font/KenneyPixel.css'
 const app = createApp(App)
 app.component('no-data',NoData)
 app.component('cancel-btn',CancelBtn)

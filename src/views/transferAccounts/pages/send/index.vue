@@ -250,7 +250,6 @@ import SendConfirm from "@/views/transferAccounts/components/sendComfirm.vue";
 import { web3 } from "@/utils/web3";
 import { ethers } from "ethers";
 import eventBus from "@/utils/bus";
-import CommonModal from "@/components/commonModal/index.vue";
 import { useToast } from "@/plugins/toast";
 
 export default {
@@ -269,7 +268,6 @@ export default {
     AccountList,
     AccountModal,
     SendConfirm,
-    CommonModal,
   },
   setup(props: any, context: SetupContext) {
     const router = useRouter();
@@ -510,6 +508,7 @@ export default {
     // Send confirmation pop-up
     const showSendConfirm = ref(false);
     const handleShowSendConfirm = () => {
+      console.log('sendTx', sendTx.value)
       showSendConfirm.value = true;
     };
 
@@ -589,26 +588,30 @@ export default {
       const { tokenContractAddress } = chooseToken.value;
       // Token transfer dynamic estimation gaslimit
       if (tokenContractAddress) {
-        debugger
         // Get contract token instance object
         const { contractWithSigner, contract } = await dispatch(
           "account/connectConstract",
           tokenContractAddress
         );
-        const am = (amount.value || 0) + ''
+        const am = (amount.value || 1) + ''
         console.log('am---1', am)
         const amountWei = web3.utils.toWei(am,'ether')
-        const gas = await contractWithSigner.estimateGas
+        console.log('amountWei---1', amountWei)
+
+        contractWithSigner.estimateGas
           .transfer(
-            toAddress.value || '0xE2012DdE16A246b5D935f2f96F88bDc1012C2e07',
+            toAddress.value || accountInfo.value.address,
             amountWei
           )
-          console.warn(
+          .then((gas: any) => {
+            console.warn(
               "gas----------------==",
               utils.formatUnits(gas, "wei")
             );
-            gasLimit.value = utils.formatUnits(gas, "wei");
-            console.warn('gasLimit.value',gasLimit.value)
+            const limitWei = utils.formatUnits(gas, "wei")
+          gasLimit.value = parseFloat(new BigNumber(limitWei).plus(new BigNumber(limitWei).multipliedBy(0.2)).toFixed(0));
+          console.log('gasLimit.value', gasLimit.value,limitWei)
+          })
       } else {
         gasLimit.value = 21000;
       }
@@ -618,7 +621,7 @@ export default {
     const amountErr = ref(false);
     const handleAmountBlur = async () => {
       await calcGasLimit()
-      if (isPoor.value) {
+      if (!Number(amount.value)) {
         amountErr.value = true;
       } else {
         amountErr.value = false;

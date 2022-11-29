@@ -173,6 +173,8 @@ import {
   ref,
   SetupContext,
 } from "@vue/runtime-core";
+import { getAccountAddr } from '@/http/modules/common';
+
 import { watch } from "vue";
 import { Dialog, Icon, Button, Popover } from "vant";
 import { useI18n } from "vue-i18n";
@@ -260,7 +262,9 @@ export default defineComponent({
     const calcProfit = async () => {
       const wallet = await getWallet();
       const blockNumber = await wallet.provider.getBlockNumber();
-
+      const addressInfo = await getAccountAddr(wallet.address)
+      const {rewardSNFTCount} = addressInfo
+      historyProfit.value = new BigNumber(rewardSNFTCount).multipliedBy(0.095).toString()
       const blockn = web3.utils.toHex(blockNumber.toString());
       const data = await wallet.provider.send("eth_getValidator", [blockn]);
       // const data2 = await getAccount(accountInfo.value.address)
@@ -280,13 +284,7 @@ export default defineComponent({
           totalPledge.div(new BigNumber(totalStr).div(7).multipliedBy(4))
         )
         .toFixed(6);
-      historyProfit.value = new BigNumber(totalprofit)
-        .multipliedBy(
-          new BigNumber(props.fee).div(
-            new BigNumber(totalStr).div(7).multipliedBy(4)
-          )
-        )
-        .toFixed(6);
+
     };
     const showTip1 = ref(false);
     const showTip2 = ref(false);

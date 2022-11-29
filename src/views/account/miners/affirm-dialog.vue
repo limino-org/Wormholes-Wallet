@@ -62,7 +62,7 @@
               </el-tooltip>
               <div class="exchange exchange-z">
                 <span >≈ </span>
-                <span class="c2"> 0.000021000 ERB(≈$1)</span>
+                <span class="c2"> {{gasFee}} ERB(≈${{toUsd(gasFee, 6)}})</span>
               </div>
             </div>
           </div>
@@ -79,13 +79,16 @@
 
 <script lang="ts">
 import { Button, Overlay, Field, Toast, Icon } from 'vant'
-import { ref, SetupContext, computed, nextTick } from 'vue'
+import { ref, SetupContext, computed, nextTick,watch } from 'vue'
 import { ethers, utils } from "ethers";
 import {formatEther,toUsd} from "@/utils/filters";
 import { useI18n } from 'vue-i18n'
-import { ElTooltip } from 'element-plus'
+import { ElTooltip, valueEquals } from 'element-plus'
 import store from '@/store';
 import { useStore } from 'vuex';
+import { getGasFee } from '@/store/modules/account';
+import { useSign } from "@/views/sign/hooks/sign";
+import { toHex } from '@/utils/utils';
 
 export default {
   components: {
@@ -100,6 +103,7 @@ export default {
     const { t } = useI18n()
     const store = useStore()
     const currentNetwork = computed(() => store.state.account.currentNetwork)
+    const {toSign} = useSign()
     const { emit }: any = context
     let amount = ref(props.minersMoney)
     let dislogShow = computed({
@@ -117,6 +121,26 @@ export default {
     let screentNumber = () => {
       return Number(utils.formatEther(amount.value + '')).toFixed(2)
     }
+    const gasFee = ref('0')
+    watch(() => props.show, async() => {
+      const {address} = store.state.account.accountInfo
+
+        // Agent pledge
+        const str = `wormholes:{"type":9,"proxy_address":"","proxy_sign":"","version":"v0.0.1"}`
+            const data3 = toHex(str);
+            debugger
+      const tx1 = {
+        to: address,
+        value:  ethers.utils.parseEther(props.amount + ""),
+        data: `0x${data3}`,
+      };
+      gasFee.value = await getGasFee(tx1) || '0'
+
+
+    },{
+      deep: true,
+      immediate: true
+    })
     let Time = ref(3)
     nextTick(() => {
       let setIntervalValue = setInterval(() => {
@@ -136,6 +160,7 @@ export default {
       screentNumber,
       currentNetwork,
       toUsd,
+      gasFee,
       ...props
     }
   }
@@ -344,6 +369,9 @@ export default {
 }
 .exchange-z {
   border: none;
+  span {
+    color: #3aae55;
+  }
 }
 .c2 {
   color: #3aae55;

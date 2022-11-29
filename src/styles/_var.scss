@@ -17,16 +17,16 @@
     // Button rounded default button font color
     --van-button-primary-background-color:rgba(3, 125, 214, 1);
     // The border color
-    --van-border-color:rgba(236, 237, 239, 1);
+    --van-border-color:#E4E7E8;
     // Button default height
     --van-button-default-height: 44px;
     // Mask Mask color
     --van-overlay-background-color: rgba(0, 0, 0, .7);
-    --van-border-color:rgba(209, 212, 215, 1);
     --van-button-default-border-color: #000;
     --van-button-danger-background-color:#D73A49;
     --van-button-danger-border-color:#D73A49;
     --van-border-width-base:1px;
+    --van-sticky-z-index: 1;
 }
 
 .color-error {

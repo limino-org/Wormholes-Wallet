@@ -38,11 +38,13 @@ export default {
     cmsandExchange: 'CMS & Exchange',
     back: 'Back',
     toBrowser: "View full history on {link}",
-    scanLink: "WormholesScan",
+    scanLink: "Wormholesscan",
     convertComplete: "For complete",
     selectSNFT: "You have not selected any S-NFTs",
     buySnft: "Do you have S-NFT? {link}",
-    findMore: "Find More"
+    findMore: "Find More",
+    snftUnfree:"The SNFT of this pledge has not been unfrozen!"
+
 
 
 
@@ -88,7 +90,7 @@ export default {
     displaymethod: "Graphic and list switching display mode",
     unboot: 'Are you sure you want to cancel the Bootstrap Action Flow?',
     done: "Done",
-    watting: "Waitting",
+    watting: "Waiting",
     approve: "Approval"
 
   },
@@ -122,6 +124,7 @@ export default {
     periodTip:"During this period,you will not be allowed redeeming your S-NFT back"
   },
   common: {
+    days:"days",
     commingsoon: "Coming Soon!",
     setting: 'Setting',
     failedtoload: 'Failed to load wallet',
@@ -139,7 +142,7 @@ export default {
     right_and_interests:
       "You need to pledge at least 100000ERB and you will become our pledge node after selecting the pledge and downloading our node program.  In the meantime, you need to keep your node program running at all times.  After becoming an equity pledge node, you will have the opportunity to be selected to participate in our blockchain consensus, with a high probability of being selected to distribute SNFT rewards.  The higher your pledge, the more likely you are to be selected.  ",
     exchange_pledge:
-      "You need to pledge a minimum of 100ERB to open your exchange. After choosing the exchange pledge, you can choose to use your own server or we will provide the server (there will be an additional charge).  After successfully opening your exchange, you will have the opportunity to get block subsidy of blockchain. The higher your pledge amount, the higher the probability of being selected.  ",
+      "You need to pledge a minimum of 280ERB to open your exchange. After choosing the exchange pledge, you can choose to use your own server or we will provide the server (there will be an additional charge).  After successfully opening your exchange, you will have the opportunity to get block subsidy of blockchain. The higher your pledge amount, the higher the probability of being selected.  ",
     no_data: "No Data",
     mainNetwork: "Main Network",
     save: "Save",
@@ -167,10 +170,10 @@ export default {
     next: "Next",
     ispoor: "Your account has insufficient assets. Please make sure there are sufficient assets available for transfer",
     gasFee: "This is the estimated gas fee for this transaction.",
-    nftP: "PERIOD",
-    nftC: "COLLECTION",
-    nftN: "SNFT",
-    nftF: "DEBRIS",
+    nftP: "Period",
+    nftC: "Collection",
+    nftN: "S-NFT",
+    nftF: "Fragment",
     moveDataTit: "Hint",
     moveTip: "The wallet data needs to be manually restored due to the version update. Are you sure to restore the wallet data of the old version to this wallet?",
     moveTip2: "Migrating data, please wait!",
@@ -178,14 +181,22 @@ export default {
     switchNet: "Switch Network",
     helpCenter: "Help Center",
     all: "All",
-    conver: "Conver",
+    conver: "Convert",
     copyAddr: "Address Hash Copied",
     confirmExit:"Confirm Exit",
     guideBtnTip:"Your digital wallet data is only saved on your browser's local storage; be sure to create a backup to avoid potential permanent losses. Uninstalling your browser and/or clearing your browser data will also potentially result in permanent losses!",
-    asyncData:"Data synchronization, please wait."
-
-
-
+    asyncData:"Data synchronization, please wait.",
+    convertAmount:"Convert amount",
+    loadingWait:"Loading, please wait!",
+    noMoney:"Your account is short of assets. Please make sure you have enough money in your wallet",
+    recovery:"Recovery",
+    gasSpeedUp:"Gas Speed Up",
+    sendTipPendding:"There is an uncompleted transaction in the current transaction queue, please try again after completion!",
+    speedUp:"Speed Up",
+    toggleAddress:"Please switch your wallet account to this address first!",
+    snftColorTip:"S-NFT grades are L0, L1, L2, and L3 from the lowest to the highest. You can synthesize it to higher levels for higher revenue. The rules are as below: 16 specific S-NFT L0 synthesizes a unique S-NFT L1, 16 specific S-NFT L1 synthesizes a unique S-NFT L2, and 16 specific S-NFT L2 synthesizes a unique S-NFT L3. The blue number indicates the S-NFT L0 position number in an S-NFT L1.  The green number indicates the position number of S-NFT L1 in an S-NFT L2.  The yellow number indicates the S-NFT L2 position number in an S-NFT L3, and the red number refers to the position number of an S-NFT L3.",
+    contrctTx:"Transaction of contract",
+    contractAddr:"Address of contract"
   },
   sidebar: {
     imported: 'Imported',
@@ -279,7 +290,7 @@ export default {
     approveMessage: "You can also view the details of the request through the transaction history.",
     successMessage: "Your transaction has been successfully sent, please view the details on the transaction history page",
     wattingMessage: "Transfer is in progress. This process may take more than ten seconds",
-    failMessage: "I'm very sorry that the operation failed due to some accidents. You can check the specific information of the transaction in the transaction history.",
+    failMessage: "I'm very sorry that the operation failed due to some accidents. You can check the specific information of the transaction in the transaction history",
   },
   transactiondetails: {
     status: 'Status',
@@ -372,7 +383,8 @@ export default {
     cancel: "Cancel",
     confirm: "Confirm",
     wrongaddressformat: 'Wrong address format',
-    lessthan: "Can't be less than 21000"
+    lessthan: "Can't be less than 21000",
+    lessthanPrev:"Can't be less than {value}"
 
   },
   // receive page
@@ -598,9 +610,9 @@ export default {
     create_success: "Your marketplace has been successfully opened!",
     create_wrong: "I'm very sorry, because of some accident, the operation failed, you can go to the transaction history to check the specific information of the transaction",
     tradeTit: "Confirm Information",
-    close_approve: "The request is being unfrozen. You can also view the details of the request through the transaction history.",
+    close_approve: "The request is being unfrozen. You can also view the details of the request through the transaction history",
     close_waiting: "Unfreezing the pledge for you. This process may take a few seconds",
-    close_success: "The pledge has been successfully unfrozen for you, the pledged amount has been returned to your account, you can also view the details of the transaction through the transaction history.",
+    close_success: "The pledge has been successfully unfrozen for you, the pledged amount has been returned to your account, you can also view the details of the transaction through the transaction history",
     close_wrong: "I'm very sorry, because of some accident, the operation failed, you can go to the transaction history to check the specific information of the transaction",
     formCharge: "Commission Charge",
     commission: "This is the % fee your marketplace will charge sellers who transact on your marketplace.",
@@ -620,7 +632,7 @@ export default {
     staking:"Staking & Redemption",
     stakingDesc:"Add stake or redeem your stake",
     server:"Server",
-    serverDesc:"365 Days / 0 Hours",
+    serverDesc:"{days} Days / {hours} Hours",
     pageTip:"This is the exchange management page.If you want to go to Exchange's page ,click on \"Exchange\".If you want to he exchange's console,click on \"console\".If you want to add the stake amount or redeem your staking,click on \"Staking & Redemption\".If you want to change the setting of server,Click on \"Server\".",
     serveTip1:"This is the fee you have to pay for the server for one year.",
     serveTip2:"This is the using time of our server you left.",
@@ -705,6 +717,13 @@ export default {
     accessCMS: 'Access CMS',
   },
   minerspledge: {
+    smileTip:"Your credibility is good, {value}, please keep it and get more income. {btn}",
+    sadTip:"Your credibility is lower than {value}, click the button on the right to recovery it. {btn}",
+    neutralTip:"Your credibility is lower than {value}, click the button on the right to recovery it. {btn}",
+    gotIt:"Got it >",
+    resetBtnTip:"With this button，you can recover your credibility to 7.1 credibility will cost 1 ERB. The ERB cost will be burnt by Wormholes block chain.",
+    credibility:"Credibility",
+    upCredibility:"Credibility will be increased",
     invalidChainId:"Invalid chainId {chainid}",
     invalidNode:"Invalid node",
     nodeErr:"Node format incorrect",
@@ -725,14 +744,14 @@ export default {
     confirm: 'Confirm',
     message: 'Please fill in nft username',
     moneryText: 'Your balance is less than 10W ERB！',
-    create_approve: "In a pledge request, you can also view the details of the request through the transaction history.",
+    create_approve: "In a pledge request, you can also view the details of the request through the transaction history",
     create_waiting: "The pledge is being made for you. This process may take more than ten seconds",
-    create_success: "The pledge has been successfully made for you. You can also view the details of the transaction through the transaction history.",
+    create_success: "The pledge has been successfully made for you. You can also view the details of the transaction through the transaction history",
     create_wrong: "I'm very sorry, because of some accident, the operation failed, you can go to the transaction history to check the specific information of the transaction",
     warn: "If you do not enter the node you will not get the pledge income",
-    close_approve: "The request is being unfrozen. You can also view the details of the request through the transaction history.",
+    close_approve: "The request is being unfrozen. You can also view the details of the request through the transaction history",
     close_waiting: "Unfreezing the pledge for you. This process may take a few seconds",
-    close_success: "The pledge has been successfully unfrozen for you, the pledged amount has been returned to your account, you can also view the details of the transaction through the transaction history.",
+    close_success: "The pledge has been successfully unfrozen for you, the pledged amount has been returned to your account, you can also view the details of the transaction through the transaction history",
     close_wrong: "I'm very sorry, because of some accident, the operation failed, you can go to the transaction history to check the specific information of the transaction",
     toggleSuccess: "Switch success",
     node: "Node (Not mandatory)",
@@ -744,6 +763,7 @@ export default {
     addTip: "This is the additional amount pledged",
     proxyAccountTip: "Tips: The pledge period is one year. Please check the terms and regulations for details.",
 
+    closeTip2:"Sorry, the pledge is redeemable after 1 year.",
 
     beValidator: "Be a Validator",
     modifValidator:"Validator Management",
@@ -1054,8 +1074,12 @@ export default {
     swap: "Swap",
     other: "Other",
     confirmed: 'confirmed',
-    failed: 'failed',
+    failed: 'Failed',
     contract: 'Contract',
+    successly:"Success",
+    pendding:"Waiting",
+    cancelTx:"Are you sure to cancel the transaction with #{nonce}?",
+    cancelDealTit:"Cancel transaction",
 
   },
 
@@ -1080,7 +1104,7 @@ export default {
   bourse: {
     placename: "Please enter the name of your NFT Marketplace",
     vainame: "The name cannot be empty",
-    vainame2: "It is 4-12 in length and supports Chinese and English and numbers    ",
+    vainame2: "It is 4-20 in length and supports Chinese and English and numbers    ",
     placenode: "Please enter node",
     vainode: "Node is wrong",
     placeamount: "Please enter the additional amount",
@@ -1145,6 +1169,7 @@ export default {
     tipincome:"This is the estimated annual profit you will receive after redemption.",
     tipadd:"This is the additional amount of ERB you want to stake.",
     closeTip:"Sorry, you need to wait 365 days to close your marketplace and redeem your stake.",
+    sendProxyExchange:"Send proxy exchange trading",
 
   },
   guidePopup: {
@@ -1158,4 +1183,7 @@ export default {
     exceededmaximumamount: "Exceeded maximum amount",
     amountcannotbelessthan: 'Amount cannot be less than{props}'
   },
+  error:{
+    500:"Parameter is invalid."
+}
 }

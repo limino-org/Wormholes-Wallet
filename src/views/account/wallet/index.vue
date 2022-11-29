@@ -8,11 +8,65 @@
   <div class="wallet">
     <div v-if="!loading" class="container page-container">
       <div class="circle flex center">
-        <div class="account-icon">
-          <AccountIcon :data="accountInfo.icon" />
-          <AccountModal v-model:show="showModal" @close="closeModal" />
-        </div>
+      <div            v-show="ethAccountInfo.PledgedBalance">
+        <van-popover
+
+v-model:show="showExpresion"
+theme="dark"
+:close-on-click-outside="false"
+z-index="1"
+placement="right"
+trigger="manual"
+:class="`popover-btn-tip ${expresionClass}bg`"
+>
+<div :class="`${expresionClass}box popover-expresion p-10 hover`">
+  <i18n-t tag="div" v-if="expresionClass == 'smile'" keypath="minerspledge.smileTip">
+    <template v-slot:value>{{Coefficient}}</template>
+    <template v-slot:btn>
+      <span class="gotIt"  @click="showExpresion = false">{{t('minerspledge.gotIt')}}</span>
+    </template>
+  </i18n-t>
+  <i18n-t tag="div" v-if="expresionClass == 'sad'" keypath="minerspledge.sadTip">
+    <template v-slot:value>{{Coefficient}}</template>
+    <template v-slot:btn>
+      <span class="gotIt"  @click="showExpresion = false">{{t('minerspledge.gotIt')}}</span>
+    </template>
+  </i18n-t>
+  <i18n-t tag="div" v-if="expresionClass == 'neutral'" keypath="minerspledge.neutralTip">
+    <template v-slot:value>{{Coefficient}}</template>
+    <template v-slot:btn>
+      <span class="gotIt" @click="showExpresion = false">{{t('minerspledge.gotIt')}}</span>
+    </template>
+  </i18n-t>
+  
+  <!-- <div v-if="expresionClass == 'smile'">
+    {{ t("minerspledge.smileTip", { value: Coefficient }) }}
+  </div>
+  <div v-if="expresionClass == 'sad'">
+    {{ t("minerspledge.sadTip", { value: Coefficient }) }}
+  </div>
+  <div v-if="expresionClass == 'neutral'">
+    {{ t("minerspledge.neutralTip", { value: Coefficient }) }}
+  </div> -->
+</div>
+<template #reference>
+  <div
+    class="hover pl-4 pr-4"
+  >
+  <div class="account-icon">
+<AccountIcon :data="accountInfo.icon" />
+</div>
+  </div>
+</template>
+</van-popover>
+
       </div>
+      <div class="account-icon"  v-show="!ethAccountInfo.PledgedBalance" >
+      <AccountIcon :data="accountInfo.icon" />
+      </div>
+      </div>
+      <AccountModal v-model:show="showModal" @close="closeModal" />
+
       <div class="account-name text-center hover" @click="showaccount">
         <span>{{ accountInfo.name }}</span>
         <div>
@@ -179,6 +233,7 @@ import {
   onUnmounted,
   onDeactivated,
 } from "vue";
+
 import BackUpBottom from '@/views/guidance/backupBottom.vue'
 
 import NavHeader from "@/components/navHeader/index.vue";
@@ -195,7 +250,6 @@ import { addressMask, decimal } from "@/utils/filters";
 import { useToggleAccount } from "@/components/accountModal/hooks/toggleAccount";
 import useClipboard from "vue-clipboard3";
 import { useI18n } from "vue-i18n";
-import { getNftOwner } from "@/http/modules/nft";
 import eventBus from "@/utils/bus";
 import { useExchanges } from "@/hooks/useExchanges";
 
@@ -210,6 +264,7 @@ import actionSheet from "./action-sheet.vue";
 import dialogWarning from "@/components/dialogWarning/message.vue";
 import { useToast } from "@/plugins/toast";
 import { useWallet } from "@/hooks/useWallet";
+import { getWallet } from '@/store/modules/account';
 
 export default {
   name: "wallet",
@@ -391,6 +446,10 @@ export default {
     const nftErr: Ref<boolean> = ref(false);
     const autoexchange = ref(0);
     const autostat = ref(false);
+    eventBus.on('changeAccount', async() => {
+     dispatch('account/getEthAccountInfo')
+
+    })
 
     let time: any = null;
     onMounted(() => {
@@ -447,8 +506,35 @@ export default {
     const handleShowSwitch = (v:any) => {
       isSelect.value = v
     }
+    const showExpresion = ref(false)
+    eventBus.on('beforeChangeAccount', async() => {
+      showExpresion.value = false
+    })
+    const ethAccountInfo = computed(() => store.state.account.ethAccountInfo)
+    watch(() => ethAccountInfo.value, (n) => {
+      if(n.PledgedBalance) {
+        showExpresion.value = true
+      } else {
+        showExpresion.value = false
+      }
+    },{
+      deep: true,
+      immediate: true
+    })
+    const Coefficient = computed(() => {
+      return ethAccountInfo.value.Coefficient / 10;
+    });
+    const expresionClass = computed(() => {
+      if (Coefficient.value < 4) return "sad";
+      if (Coefficient.value == 4 || Coefficient.value == 5) return "neutral";
+      if (Coefficient.value > 5) return "smile";
+    });
     return {
       handleShowSwitch,
+      ethAccountInfo,
+      expresionClass,
+      Coefficient,
+      showExpresion,
       handleLength,
       toHelp,
       t,

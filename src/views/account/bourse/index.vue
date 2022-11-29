@@ -78,7 +78,7 @@
       </div>
       <div v-if="isExchanger_flag" class="f-14 text-bold mt-8">
         {{ exchangerBalance }} ERB
-        <span>≈{{ toUsd(exchangerBalance, 2) }}</span>
+        <span>≈${{ toUsd(exchangerBalance, 2) }}</span>
       </div>
 
       <div class="bourse-container-meaning bt mt-14" v-if="!isExchanger_flag">
@@ -131,7 +131,7 @@
         </el-tooltip>
       </div>
       <div class="t3" v-if="!isExchanger_flag">
-        280ERB <span>(≈${{ toUsd(280, 2) }})</span>
+        700ERB <span>(≈${{ toUsd(700, 2) }})</span>
       </div>
 
       <div class="bourse-container-meaning bt mt-14" v-if="isExchanger_flag">
@@ -377,7 +377,7 @@
     <ModifPledgeModal
       v-model="showPledgeModal"
       :max="parseInt(exchangerBalance)"
-      :defaultValue="280"
+      :defaultValue="700"
       @confirm="handleConfirmMinus"
     />
   </div>
@@ -551,7 +551,7 @@ export default defineComponent({
           } else {
             formatValue = utils.formatEther(ExchangerBalance + "");
           }
-          name.value = changeexchangerName(ExchangerName);
+          name.value =ExchangerName;
           isOne.value = false;
         }
       } catch (err) {
@@ -596,7 +596,7 @@ export default defineComponent({
     const name = ref("");
     const store = useStore();
     const { dispatch } = store;
-    const amount = ref(280);
+    const amount = ref(700);
     const accountInfo = computed(() => store.state.account.accountInfo);
     const exchangeStatus: ComputedRef<ExchangeStatus> = computed(
       () => store.state.account.exchangeStatus
@@ -694,7 +694,7 @@ export default defineComponent({
           });
           await sendTo(
             name.value,
-            280,
+            700,
             serverIndex.value == 0 ? false : true,
             fee_rate
           );
@@ -705,9 +705,7 @@ export default defineComponent({
       showCreateExchange.value = false;
     };
 
-    let changeexchangerName = (value: any) => {
-      return decode(value);
-    };
+
     const ethAccountInfo = ref({ ExchangerBalance: 0 });
     const exchangerBalance = computed(() =>
       new Bignumber(
@@ -746,7 +744,7 @@ export default defineComponent({
       const { exchanger_flag, status } = store.state.account.exchangeStatus;
       const am = new BigNumber(accountInfo.value.amount);
       if (!exchanger_flag && status != 2) {
-        if (am.lt(281)) {
+        if (am.lt(701)) {
           $toast.warn(t("createExchange.ispoor"));
           return;
         }
@@ -767,7 +765,7 @@ export default defineComponent({
     const handleAddAmount = () => {
       const am = new BigNumber(accountInfo.value.amount);
       const addnum = new BigNumber(addAmount.value);
-      if (addnum.lt(280)) {
+      if (addnum.lt(700)) {
         isCloseDialog.value = true;
         return;
       }

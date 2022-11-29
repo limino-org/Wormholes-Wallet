@@ -99,7 +99,7 @@ import {
   onMounted,
   watch,
 } from "vue";
-import { getWallet } from "@/store/modules/account";
+import { getWallet,clone ,TransactionTypes} from "@/store/modules/account";
 import { useStore } from "vuex";
 import { useI18n } from 'vue-i18n';
 
@@ -167,9 +167,9 @@ export default {
         };
         console.log(tx1);
 
-        const wallet = await getWallet();
-        const receipt: any = await wallet.sendTransaction(tx1);
-        const res = await wallet.provider.waitForTransaction(receipt.hash)
+        const receipt: any = await store.dispatch('account/transaction', tx1)
+        const res = await receipt.wallet.provider.waitForTransaction(receipt.hash, null, 60000)
+        store.dispatch("account/waitTxQueueResponse");
         console.log(receipt);
         console.log("receiptreceiptreceiptreceiptreceipt");
         isLoading.value = false;

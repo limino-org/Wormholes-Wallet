@@ -72,7 +72,6 @@ import {
 } from "vue";
 import NavHeader from "@/components/navHeader/index.vue";
 import { useRoute, useRouter } from "vue-router";
-import { nftaddress } from "@/http/modules/common";
 import { useI18n } from "vue-i18n";
 import { addressMask, decimal } from "@/utils/filters";
 
@@ -101,12 +100,7 @@ export default {
         }
       })
     }
-    // onMounted(async () => {
-    //   const data = await nftaddress(address);
-    //   pageData.data = data;
-    //   console.log(pageData.data);
-      
-    // });
+
     return {
       t,
       handleLeft,

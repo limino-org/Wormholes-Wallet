@@ -342,7 +342,47 @@
 
   }
 }
+.reset-tip,
+.reset-tooltip {
+  background: #85e19b !important;
+  border-color: #85e19b !important;
+}
+.reset-tooltip .el-popper__arrow::before {
+  background: #85e19b !important;
+  border-color: #85e19b !important;
+}
 
+.smile {
+  color: #3aae55;
+}
+.smilebox {
+  background: #3aae55;
+}
+.sad {
+  color: #d73a49;
+}
+.sadbox {
+  background: #d73a49;
+}
+.sadbg .van-popover__arrow {
+  color: #d73a49;
+}
+.smilebg .van-popover__arrow {
+  color: #3aae55;
+}
+.neutral {
+  color: #f7bf03;
+}
+.neutralbox {
+  background: #f7bf03;
+}
+.neutralbg .van-popover__arrow {
+  color: #f7bf03;
+}
+.gotIt {
+  text-decoration: underline;
+  font-weight: bold;
+}
 
 .slider-enter-active {
   animation: slider-in .4s forwards;

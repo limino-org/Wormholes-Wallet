@@ -137,10 +137,10 @@ export default {
     const keyStore = computed(() => store.state.mnemonic.keyStore)
 
     onMounted(async () => {
-      const mnemonicJson = await localforage.getItem('mnemonic')
+      // const mnemonicJson = await localforage.getItem('mnemonic')
       // Get the decrypted mnemonic
       const password = getCookies("password");
-      const realmm = await parseMnemonic(password, keyStore.value || mnemonicJson);
+      const realmm = await parseMnemonic(password, keyStore.value);
       // Correct sorting
       const nlist = realmm
         .split(" ")

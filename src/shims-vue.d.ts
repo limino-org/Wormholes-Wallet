@@ -12,3 +12,4 @@ declare module 'js-cookie'
 
 declare module 'crypto-js'
 declare module 'web3modal'
+declare module 'vue3-infinite-list'

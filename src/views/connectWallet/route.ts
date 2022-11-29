@@ -3,6 +3,6 @@ export default {
     name: "connect-wallet",
     component: () => import("@/views/connectWallet/index.vue"),
     meta: {
-        auth: true
+        auth: false
     }
   }

@@ -9,7 +9,6 @@
       </div>
       <router-view v-else />
     </div>
-
     <div class="van-safe-area-bottom"></div>
   </div>
 </template>
@@ -31,13 +30,13 @@ import { utils } from "ethers";
 
 import { useExchanges } from "@/hooks/useExchanges";
 import { useI18n } from "vue-i18n";
-import { getWallet, NetStatus } from "./store/modules/account";
+import { getWallet, NetStatus, getGasFee} from "./store/modules/account";
 import { version } from "@/enum/version";
 import { useBroadCast } from "@/utils/broadCast";
 import { guid } from "@/utils/utils";
-import { get_contract } from "./http/modules/common";
 import { provide as appProvide } from "@/provides/app";
 import localforage, { clear } from "localforage";
+import eventBus from "./utils/bus";
 
 export default {
   components: {
@@ -46,34 +45,36 @@ export default {
   },
 
   setup() {
+    
     const { commit, dispatch, state } = useStore();
-
     const { t } = useI18n();
     const router = useRouter();
-
+    let time: any = null
     provide("appProvide", appProvide());
     const loading = ref(true);
-    onBeforeMount(async () => {
-      commit("system/UPDATE_TRANSFERUSDRATE", 0.5);
 
-      commit("account/UPDATE_NETSTATUS", NetStatus.pendding);
-      commit("system/UPDATA_CONVERSATIONID", guid());
-
-
-      let time = setTimeout(async () => {
+    const waittxlist = () => {
+      time = setTimeout(async () => {
         await dispatch("account/waitTxQueueResponse");
         clearTimeout(time);
       }, 10000);
+    }
+    onBeforeMount(async () => {
+      commit("system/UPDATE_TRANSFERUSDRATE", 0.5);
+      commit("account/UPDATE_NETSTATUS", NetStatus.pendding);
+      commit("system/UPDATA_CONVERSATIONID", guid());
+      waittxlist()
+
     });
-    window.onload = () => {
+    window.onload = async() => {
       loading.value = false;
-      // let time = setTimeout(function () {
-      //   commit("account/UPDATE_WORMHOLES_URL", {
-      //     URL: "https://api.wormholes.com",
-      //     browser: "https://www.wormholesscan.com/#/",
-      //   });
-      //   clearTimeout(time);
-      // }, 1000);
+      let time2 = setTimeout(function () {
+        commit("account/UPDATE_WORMHOLES_URL", {
+          URL: "https://api.wormholes.com",
+          browser: "https://www.wormholesscan.com/#/",
+        });
+        clearTimeout(time2);
+      }, 1000);
     };
     onMounted(() => {
       const { handleUpdate, broad } = useBroadCast();
@@ -105,17 +106,14 @@ export default {
       (function () {
         let time = setTimeout(async () => {
           const mnemonic = await localforage.getItem("mnemonic");
-          if (!state.mnemonic.mnemonic && mnemonic) {
+          if (!state.mnemonic.keyStore && mnemonic) {
             commit("mnemonic/UPDATE_MNEMONIC", mnemonic);
           }
           clearTimeout(time);
         }, 5000);
       })();
 
-      let time = setTimeout(async () => {
-        await dispatch("account/waitTxQueueResponse");
-        clearTimeout(time);
-      }, 10000);
+
     });
     return {
       loading,

@@ -2,7 +2,7 @@
   <NavHeader>
     <template v-slot:left>
       <span class="back hover" @click="back">{{
-        t("createAccountpage.back")
+      t("createAccountpage.back")
       }}</span>
     </template>
   </NavHeader>
@@ -18,7 +18,7 @@ import { getWallet } from "@/store/modules/account";
 import { JsonObject } from "type-fest";
 import { getCookies } from "@/utils/jsCookie";
 import NavHeader from "@/components/navHeader/index.vue";
-
+import { useToggleAccount } from '@/components/accountModal/hooks/toggleAccount'
 import {
   createWalletByMnemonic,
   createWalletByJson,
@@ -30,7 +30,7 @@ import {
 import { ethers } from "ethers";
 import { useI18n } from "vue-i18n";
 import { decode } from "js-base64";
-enum Actions {
+export enum Actions {
   getAddress = "getAddress",
   login = "login",
   getBlockNumber = "getBlockNumber",
@@ -38,16 +38,19 @@ enum Actions {
   getAccount = "getAccount",
   sigMessage = "sigMessage",
   sendTransaction = "sendTransaction",
+  sendOpenExchangeTransaction = 'sendOpenExchangeTransaction'
 }
 type URLParams = {
   action: Actions;
   data: any;
+  backUrl: string
 };
 export default {
   components: {
     NavHeader,
   },
   setup() {
+    const { handleAccount } = useToggleAccount()
     const route = useRoute();
     const { state } = useStore();
     const router = useRouter();
@@ -62,7 +65,12 @@ export default {
     });
     const password = getCookies();
     const accountList = computed(() => state.account.accountList);
+    const accountInfo = computed(() => state.account.accountInfo);
     const currentNetwork = computed(() => state.account.currentNetwork);
+    if(!password) {
+        // @ts-ignore
+        router.replace({name:"withpassword",query: {backUrl:'connectWallet',loginParams: {...query}}})
+    }
     const nowAccount = computed(() => {
       if (address) {
         return accountList.value.find(
@@ -71,8 +79,9 @@ export default {
       }
       return null;
     });
-
+    
     const handleInitData = () => {
+
       const handleList = [
         "getAddress",
         "getAccount",
@@ -81,6 +90,8 @@ export default {
         "getBlockNumber",
         "getBalance",
         "sendTransaction",
+        "sendOpenExchangeTransaction",
+        "sendContractTransaction"
       ];
       if (!backUrl || !action) {
         $toast.warn("Parameter error");
@@ -90,6 +101,7 @@ export default {
         $toast.warn("Unsupported method");
         return;
       }
+
       switch (action) {
         case "getAddress":
           getAddress();
@@ -111,13 +123,59 @@ export default {
           sigMessage();
           break;
         case "sendTransaction":
+        if (!nowAccount.value) {
+        $toast.warn("common.addressnotfound");
+        return;
+      }
           sendTransaction();
+          break;
+        case "sendOpenExchangeTransaction":
+        if (!nowAccount.value) {
+        $toast.warn("common.addressnotfound");
+        return;
+      }
+          sendOpenExchangeTransaction()
+          break;
+        case "sendContractTransaction":
+        if (!nowAccount.value) {
+        $toast.warn("common.addressnotfound");
+        return;
+      }
+
+          sendContractTransaction()
           break;
       }
       Toast.clear();
     };
+
     handleInitData();
-    function sendTransaction() {
+
+    async function sendContractTransaction (){
+      const wallet = await getWallet2();
+      router.replace({
+        name: "sendContractTransaction",
+        query: {
+          tx: JSON.stringify(queryData),
+          backUrl,
+          address,
+        },
+      });
+    }
+
+    async function sendOpenExchangeTransaction() {
+      const wallet = await getWallet2();
+      router.replace({
+        name: "sendOpenExchangeTransaction",
+        query: {
+          txs: JSON.stringify(queryData),
+          backUrl,
+          address,
+        },
+      });
+    }
+
+    async function sendTransaction() {
+      const wallet = await getWallet2();
       router.replace({
         name: "sendTransaction",
         query: {
@@ -127,7 +185,9 @@ export default {
         },
       });
     }
-    function sigMessage() {
+    async function sigMessage() {
+      const wallet = await getWallet2();
+
       const { sig } = queryData;
       router.replace({
         name: "exchangeSign",
@@ -147,13 +207,22 @@ export default {
       location.href = handleConnectBackUrl({
         action: Actions.getAddress,
         data,
+        backUrl
       });
     }
     async function login() {
-      const wallet = await getWallet();
+   
       const accountInfo = computed(() => state.account.accountInfo);
       const { address } = accountInfo.value;
-      const netWork = await wallet.provider.getNetwork();
+      let netWork: any = {
+        chainId: 51888
+      }
+      try {
+        const wallet = await getWallet();
+        netWork = await wallet.provider.getNetwork();
+      }catch(err){
+        console.error(err)
+      }
       const data = {
         address,
         chainId: netWork.chainId,
@@ -161,6 +230,8 @@ export default {
       location.href = handleConnectBackUrl({
         action: Actions.login,
         data,
+        backUrl
+
       });
     }
     async function getBlockNumber() {
@@ -172,6 +243,8 @@ export default {
       location.href = handleConnectBackUrl({
         action: Actions.getBlockNumber,
         data,
+        backUrl
+
       });
     }
     async function getBalance() {
@@ -183,6 +256,8 @@ export default {
       location.href = handleConnectBackUrl({
         action: Actions.getBalance,
         data,
+        backUrl
+
       });
     }
 
@@ -197,16 +272,11 @@ export default {
       location.href = handleConnectBackUrl({
         action: Actions.getAccount,
         data,
+        backUrl
+
       });
     }
 
-    function handleConnectBackUrl(params: URLParams) {
-      const { action, data } = params;
-      const back = decode(backUrl);
-      return `${back}${
-        back.indexOf("?") > -1 ? "&" : "?"
-      }action=${action}&data=${encodeURIComponent(JSON.stringify(data))}`;
-    }
 
     const back = () => {
       router.replace({ name: "wallet" });
@@ -215,23 +285,15 @@ export default {
     async function getWallet2() {
       if (!nowAccount.value) {
         $toast.warn("common.addressnotfound");
-        return;
+        router.replace({name:'import'})
+        return null;
       }
-      try {
-        const wa = await createWalletByJson({
-          password,
-          json: nowAccount.value.keyStore,
-        });
-        const { URL } = currentNetwork.value;
-        const provider = ethers.getDefaultProvider(URL);
-        // @ts-ignore
-        const wallet = wa.connect(provider);
-        return Promise.resolve(wallet);
-      } catch (err) {
-        console.error(err);
-        Toast.clear();
-        $toast.warn("common.failedtoload");
+      if (nowAccount.value.address.toUpperCase() != accountInfo.value.address.toUpperCase()) {
+        return await handleAccount(nowAccount.value, 0)
+      } else {
+        return await getWallet()
       }
+
     }
 
     onBeforeRouteLeave(() => {
@@ -243,12 +305,20 @@ export default {
     };
   },
 };
+
+
+export function handleConnectBackUrl(params: URLParams) {
+  const { action, data, backUrl } = params;
+  const back = decode(backUrl);
+  return `${back}${back.indexOf("?") > -1 ? "&" : "?"
+    }action=${action}&data=${encodeURIComponent(JSON.stringify(data))}`;
+}
 </script>
 <style lang="scss" scoped>
 .back {
   color: #037cd6;
   font-size: 12px;
 }
-.connect-wallet {
-}
+
+.connect-wallet {}
 </style>

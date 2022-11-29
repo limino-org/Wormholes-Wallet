@@ -129,7 +129,7 @@
 
 <script lang="ts">
 import { Button, Overlay, Field, Toast, Icon } from "vant";
-import { ref, SetupContext, computed, nextTick, watch } from "vue";
+import { ref, SetupContext, computed, nextTick, watch, Ref } from "vue";
 import { ethers, utils } from "ethers";
 import { formatEther, toUsd, transactionStatus } from "@/utils/filters";
 import { useI18n } from "vue-i18n";
@@ -141,6 +141,8 @@ import {
   getWallet,
   handleGetTranactionReceipt,
   TransactionTypes,
+  getGasFee,
+  clone
 } from "@/store/modules/account";
 import { BigNumber } from "bignumber.js";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
@@ -186,35 +188,28 @@ export default {
       });
       try {
         const amount = props.minusNumber;
-        const wallet = await getWallet();
-        const { address } = wallet;
+
+        const { address } = accountInfo.value;
         const data = toHex(str);
         const tx1 = {
           from: address,
           to: address,
-          value: ethers.utils.parseEther(amount + ""),
+          value: amount + '',
           data: `0x${data}`,
+          transitionType: '10'
         };
-
-        const data1 = await wallet.sendTransaction(tx1);
+        const data1: any = await store.dispatch('account/transaction', tx1)
         $tradeConfirm.update({ status: "approve" });
-        const receipt1 = await wallet.provider.waitForTransaction(data1.hash);
+        const receipt1 = await data1.wallet.provider.waitForTransaction(data1.hash, null, 60000);
+        dispatch("account/waitTxQueueResponse");
         if (receipt1.status == 1) {
           $tradeConfirm.update({ status: "success" });
         } else {
           $tradeConfirm.update({ status: "fail" });
         }
-        const symbol = state.account.currentNetwork.currencySymbol;
-
-        const rep = handleGetTranactionReceipt(
-          TransactionTypes.default,
-          receipt1,
-          data1,
-          symbol
-        );
         dispatch("account/updateAllBalance");
-        commit("account/PUSH_TRANSACTION", rep);
       } catch (err) {
+        console.error('err', err)
         $tradeConfirm.update({ status: "fail" });
       }
     };
@@ -231,7 +226,7 @@ export default {
     const gasPrice = ref("");
     const gasLimit = ref("");
     const accountInfo = computed(() => store.state.account.accountInfo);
-    const gasFee = ref("");
+    const gasFee: Ref<any> = ref("");
     watch(
       () => props.show,
       async (n) => {
@@ -243,15 +238,7 @@ export default {
             data: `0x${data3}`,
           };
           try {
-            const wallet = await getWallet();
-            gasPrice.value = await wallet.provider.getGasPrice();
-            gasLimit.value = await wallet.estimateGas(tx1);
-            // @ts-ignore
-            gasFee.value = new BigNumber(
-              ethers.utils.formatEther(gasLimit.value)
-            )
-              .dividedBy(ethers.utils.formatEther(gasPrice.value))
-              .toFixed(9);
+            gasFee.value = await getGasFee(tx1)
           } catch (err: any) {
             console.error(err);
           }
@@ -505,6 +492,9 @@ export default {
 }
 .exchange-z {
   border: none;
+  span {
+    color: #3aae55;
+  }
 }
 .c2 {
   color: #3aae55;

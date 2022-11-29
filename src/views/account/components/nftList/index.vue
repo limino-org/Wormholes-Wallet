@@ -1,7 +1,7 @@
 <template>
-  <van-sticky :offset-top="95">
+<van-sticky :offset-top="95">
     <div class="flex center tab-box">
-      <div class="flex between tab-list">
+      <!-- <div class="flex between tab-list">
         <div
           :class="`tab-card flex center hover ${item.select ? 'active' : ''}`"
           @click.stop="handleTab(item.value, idx)"
@@ -15,47 +15,62 @@
             :class="`iconfont ${tabModal ? 'icon-shangla' : 'icon-xiala'} `"
           ></i>
         </div>
-      </div>
+      </div> -->
       <div class="switch-box" v-show="list.length">
         <van-switch
           v-model="value"
           @change="handleChangeSwitch"
-          size="0.4rem"
+          size="18px"
         ></van-switch>
       </div>
     </div>
   </van-sticky>
   <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
-    <div>
-      <div class="snftcontainer" v-for="(item, i) in list" :key="i">
+    <div class="snft-list-box">
+      <div :class="`snftcontainer ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" :title="item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : t('wallet.snftUnfree')" v-for="(item, i) in list" :key="i" @mouseover="item.renderPop = true" @mouseleave="item.renderPop = false">
         <div class="snftcontainer_left">
-          <div class="checkbox_img flex center" v-if="isSelectComputed">
+          <div :class="`checkbox_img flex center ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" v-if="isSelectComputed">
             <i
               v-if="item.flag"
-              @click="item.flag = !item.flag"
+              @click.stop="handleSelect(item)"
               class="iconfont icon-xuanzhong2"
             ></i>
             <i
               v-else
-              @click="item.flag = !item.flag"
+              @click.stop="handleSelect(item)"
               class="iconfont icon-xuanzhong"
             ></i>
           </div>
           <div class="snftcontainer_left_container">
-            <div class="img-p">
+            <div class="img-p" @click.stop="toNftExchange(item)">
               <van-image
                 :src="`https://www.wormholestest.com${item.source_url}`"
                 fit="cover"
                 alt=""
                 class="snftimg"
               />
-              <div class="number" :style="{ background: item.color }">
+              <!-- <div class="number" :style="{ background: item.color }">
                 {{ item.number }}
-              </div>
+              </div> -->
             </div>
-            <div class="snftmiddle flex column between">
-              <div class="flex between center-v snftName">
-                <span class="f-12 lh-12">{{ item.collections }}</span
+            <div class="snftmiddle flex column between" >
+              <div class="flex between center-v snftName h-14 text-weight">
+                <span class="f-14 lh-12 hover flex center-v"  @click.stop="toNftExchange(item)">
+                  {{ item.collections }}-<span class="red">#</span><span class="nft-p">{{item.pidx}}</span>
+                  <span class="nft-c" v-if="item.cidx !== undefined">{{item.cidx}}</span>
+                  <span class="nft-n"  v-if="item.nidx !== undefined">{{item.nidx}}</span>
+                  <span class="nft-f" v-if="item.fidx !== undefined">{{item.fidx}}</span>
+                  <span v-if="item.renderPop">
+                    <van-popover v-model:show="item.showPop"              theme="dark"
+                placement="right" >
+            <div class="lh-16 text-left p-8">{{t(`common.snftColorTip`)}}</div>
+            <template #reference>
+              <van-icon name="question" @mouseover.stop="item.showPop = true" size="15" @mouseout.stop="item.showPop = false" />
+            </template></van-popover>
+                  </span>
+
+                  
+                  </span
                 ><NftTag :tag="item.tag" />
               </div>
               <div class="snftleftcolleaddre flex center-v">
@@ -103,7 +118,7 @@
           <div class="total">
             {{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)
           </div>
-          <div class="usd">{{ sumAll }}ERB <span>( ≈$0)</span></div>
+          <div class="usd">{{ sumAll }}ERB <span>( ≈${{toUsd( sumAll,4)}})</span></div>
         </div>
       </div>
       <div class="snft_bottom-right hover" @click="showTime">
@@ -118,6 +133,7 @@
     v-model:show="show"
     :show-cancel-button="false"
     :show-confirm-button="false"
+    class="transfer-modal"
   >
     <div class="dialog-warning-dark-c">
       <div v-if="show" class="dialog-warning-dark-c-container">
@@ -160,7 +176,7 @@
                 </template>
               </van-popover>
             </div>
-            <div class="card-value gasfee">≈{{gasFee}} ERB(≈${{toUsd(gasFee,5)}})</div>
+            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
           </div>
         </div>
         <i18n-t
@@ -171,7 +187,7 @@
         >
           <template v-slot:link>
             <a
-              :href="VUE_APP_SNFTSEXCHANGE_URL"
+              :href="VUE_APP_EXCHANGES_URL"
               target="_blank"
               rel="noopener noreferrer"
               >{{ t("converSnft.buy") }}</a
@@ -255,7 +271,7 @@ name="question hover"
                 </template>
               </van-popover>
             </div>
-            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ 1)</div>
+            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
           </div>
         </div>
 
@@ -312,7 +328,7 @@ name="question hover"
                 </template>
               </van-popover>
             </div>
-            <div class="card-value">1 year</div>
+            <div class="card-value">1 {{t('createExchange.year')}}</div>
           </div>
           <div class="card">
             <div class="card-label gasfee">
@@ -335,7 +351,7 @@ name="question hover"
                 </template>
               </van-popover>
             </div>
-            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ 1)</div>
+            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
           </div>
         </div>
 
@@ -363,20 +379,17 @@ name="question hover"
       </div>
     </div>
   </van-dialog>
-
-  <SnftModal v-model="tabModal" @change="handleChange" />
+  <!-- <SnftModal v-model="tabModal" @change="handleChange" /> -->
 </template>
 
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core";
-import { computed, ref } from "vue";
+import { computed, ref,onBeforeMount, onMounted } from "vue";
 import { useStore } from "vuex";
 import {
-  getNftOwner,
-  getOwnerSnftList,
   queryArraySnft,
   snft_com_page,
-  getAccount
+  tokenIdByNftaddr
 } from "@/http/modules/nft";
 import dialogWarning from "@/components/dialogWarning/message.vue";
 import NftTag from "./nftTag.vue";
@@ -396,17 +409,18 @@ import {
 } from "vant";
 import eventBus from "@/utils/bus";
 import { useI18n } from "vue-i18n";
-import { getGasFee, getWallet } from "@/store/modules/account";
+import { clone, getGasFee, getWallet, TransactionSendStatus } from "@/store/modules/account";
 import { useToast } from "@/plugins/toast";
 import BigNumber from "bignumber.js";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
-import { VUE_APP_EXCHANGES_URL, VUE_APP_SNFTSEXCHANGE_URL } from "@/enum/env";
+import { VUE_APP_EXCHANGES_URL } from "@/enum/env";
 import SnftModal from "./snftModal.vue";
 import { getRandomColor } from "@/utils";
 import { web3 } from "@/utils/web3";
 import { toUsd } from "@/utils/filters";
 import { ethers } from "ethers";
+import { TransactionTypes } from "@/store/modules/account";
 export default defineComponent({
   name: "nft-list",
   props: {
@@ -440,6 +454,9 @@ export default defineComponent({
     const store = useStore();
     const { t } = useI18n();
     const nftErr = ref(false);
+    const network = ref({
+      chainId: 51891
+    })
     const layoutType = computed(() => store.state.system.layoutType);
     const list: any = ref([]);
     const accountInfo = computed(() => store.state.account.accountInfo);
@@ -453,6 +470,14 @@ export default defineComponent({
       },
     });
 
+    onMounted(async() => {
+      // const wallet = await getWallet()
+      // const nftAccountInfo = await wallet.provider.send(
+      //         "eth_getAccountInfo",
+      //         ['0x8000000000000000000000000000000000015a94', "latest"]
+      //       );
+      //       debugger
+    })
     const show = ref(false);
     
     const hex2int = (hex: any) => {
@@ -468,12 +493,18 @@ export default defineComponent({
         }
         a[i] = code;
       }
-
+      console.log('a', a)
       return a.reduce(function (acc, c) {
         acc = 16 * acc + c;
         return acc;
       }, 0);
     };
+
+    const snftPosition = (nft_address: string) =>{
+      const str = nft_address.substr(41)
+      console.log('last str', str)
+      return Number(`0x${str || 0}`) + 1
+    }
     const sumP = computed(() => {
       return list.value.filter((l: any) => l.flag && l.tag == "P").length;
     });
@@ -527,11 +558,25 @@ export default defineComponent({
       page_size: "30",
       status: "3",
     };
+   
+
     const onLoad = async () => {
+      let wallet = null
+      let blockNumber = 0
+      let network: any = null
       params2.status = tabIndex.value;
       loading.value = true;
       try {
-        const { nfts } = await snft_com_page(params2);
+        if(!wallet&& tabIndex.value == '1'){
+          wallet = await getWallet()
+          blockNumber = await wallet.provider.getBlockNumber();
+          network = await wallet.provider.getNetwork()
+          console.log('wallet.value--', wallet)
+        }
+        console.log('wallet.value', wallet)
+        
+        let { nfts } = await snft_com_page(params2);
+        nfts = nfts && nfts.length ? nfts : [];
         const nftAddList = nfts.map((item: any) => {
           const len = item.address.length;
           let str = item.address;
@@ -549,7 +594,7 @@ export default defineComponent({
               break;
           }
           return str;
-        });
+        }) ;
         if (!nfts || !nfts.length) {
           finished.value = true;
           loading.value = false;
@@ -557,49 +602,61 @@ export default defineComponent({
         const { data: nftInfoList } = await queryArraySnft({
           array: `${JSON.stringify(nftAddList)}`,
         });
-
+        console.warn(web3.utils)
         nfts.forEach((item: any) => {
+          if(tabIndex.value == '1' && item.pledge_number !== null) {
+            item.hasUnfreeze = (blockNumber - Number(item.pledge_number)) > (network && network.chainId === 51888 ? 73 : 6307201)
+          }
+          
           const reallen = item.address.length;
           let str = item.address;
+          const hexp = `0x${str.substr(37,2)}`
+          const hexc = `0x${str.substr(39,1)}`
+          const hexn = `0x${str.substr(40,1)}`
+          const hexf = `0x${str.substr(41,1)}`
           switch (reallen) {
             case 39:
-              str = str + "000";
-              break;
-            case 40:
-              str = str + "00";
-              break;
-            case 41:
-              str = str + "0";
-              break;
-            case 42:
-              break;
-          }
-          item.realAddr = str;
-          item.flag = false;
-          item.nft_address = item.address;
-          item.color = getRandomColor();
-          const len = item.nft_address.length;
-          switch (len) {
-            case 39:
               item.tag = "P";
+              str = str + "000";
+              item.pidx = web3.utils.hexToNumber(hexp)
               break;
             case 40:
               item.tag = "C";
+              str = str + "00";
+              item.pidx = web3.utils.hexToNumber(hexp)
+              item.cidx = web3.utils.hexToNumber(hexc) + 1
               break;
             case 41:
               item.tag = "N";
+              str = str + "0";
+              item.pidx = web3.utils.hexToNumber(hexp)
+              item.cidx = web3.utils.hexToNumber(hexc) + 1
+              item.nidx = web3.utils.hexToNumber(hexn) + 1
               break;
             case 42:
               item.tag = "F";
+              item.pidx = web3.utils.hexToNumber(hexp)
+              item.cidx = web3.utils.hexToNumber(hexc) + 1
+              item.nidx = web3.utils.hexToNumber(hexn) + 1
+              item.fidx = web3.utils.hexToNumber(hexf) + 1
               break;
           }
+          item.showPop = false
+          item.renderPop = false
+          item.realAddr = str;
+          item.flag = false;
+          item.nft_address = item.address;
+
           const str1 = item.nft_address.substr(item.nft_address.length - 2);
           // The last 2 digits of the position in SNFT are converted to hexadecimal +1
           item.position = hex2int(str1) + 1;
+          item.snftPosition = snftPosition(item.nft_address)
           // convert
           const str2 = item.nft_address.substr(item.nft_address.length - 4);
           // The last four digits of the position in the period turn to hexadecimal +1
+          console.warn('str2', str2)
           item.number = hex2int(str2) + 1;
+
           nftInfoList.forEach((child: any) => {
             if (
               item.realAddr.toUpperCase() == child.nft_address.toUpperCase()
@@ -624,10 +681,20 @@ export default defineComponent({
         loading.value = false;
       }
     };
+
+    onBeforeMount(async() => {
+      const wallet = await getWallet()
+      network.value = await wallet.provider.getNetwork()
+    })
     const isSelectAll = ref(false);
     const isSelectAllChange = () => {
       isSelectAll.value = !isSelectAll.value;
       list.value.forEach((f: any) => {
+        console.warn('f:', f)
+        const { hasUnfreeze, tag } = f
+        if(f != 'F' && !hasUnfreeze && tabIndex.value === '1') {
+          return
+        }
         f.flag = isSelectAll.value;
       });
     };
@@ -659,11 +726,15 @@ export default defineComponent({
       onLoad();
     });
     const tabList = ref([
-      { label: t("createExchange.redemption"), value: "3", select: true },
-      { label: t("createExchange.convert"), value: "2", select: false },
+      // { label: t("createExchange.redemption"), value: "3", select: true },
+      { label: t("createExchange.convert"), value: "2", select: true },
     ]);
-    const tabIndex = ref("3");
+    const tabIndex = ref("2");
     const handleTab = (v: string, i: number) => {
+      if(loading.value){
+        Toast(t('common.loadingWait'))
+        return
+      }
       tabIndex.value = v;
       tabList.value.forEach((item, idx) => {
         if (idx == i) {
@@ -680,6 +751,10 @@ export default defineComponent({
     const value = ref(false);
     const showConvert = ref(false);
     const handleTabModal = () => {
+      if(loading.value){
+        Toast(t('common.loadingWait'))
+        return
+      }
       tabModal.value = !tabModal.value;
     };
 
@@ -713,7 +788,6 @@ export default defineComponent({
     });
 
     const handleSubmit = async () => {
-      debugger
       const wallet = await getWallet();
       const data: any = list.value.filter((f: any) => f.flag);
       if (data.length) {
@@ -735,19 +809,23 @@ export default defineComponent({
             onLoad();
           },
         });
-
+        let transitionType = ''
         try {
           for await (const iterator of data) {
+            const {nft_address} = iterator
             let str = "";
             switch (tabIndex.value) {
               case "2":
-                str = `wormholes:{"type":6,"nft_address":"${iterator.nft_address}","version":"v0.0.1"}`;
+              transitionType = '6'
+                str = `wormholes:{"type":6,"nft_address":"${nft_address}","version":"v0.0.1"}`;
                 break;
               case "3":
-                str = `wormholes:{"type":7,"nft_address":"${iterator.nft_address}","version":"0.0.1"}`;
+              transitionType = '7'
+                str = `wormholes:{"type":7,"nft_address":"${nft_address}","version":"0.0.1"}`;
                 break;
               case "1":
-                str = `wormholes:{"type":8,"nft_address":"${iterator.nft_address}","version":"0.0.1"}`;
+              transitionType = '8'
+                str = `wormholes:{"type":8,"nft_address":"${nft_address}","version":"0.0.1"}`;
                 break;
             }
 
@@ -756,22 +834,13 @@ export default defineComponent({
               from: accountInfo.value.address,
               to: accountInfo.value.address,
               data: `0x${data3}`,
-     
+              transitionType,
+              nft_address,
+              checkTxQueue: false
             };
-
-            const receipt: any = await wallet.sendTransaction(tx1);
+            const receipt: any = await store.dispatch('account/transaction', tx1)
             txQueue.push(receipt);
-            const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = receipt;
-            store.commit("account/PUSH_TXQUEUE", {
-              hash,
-              from,
-              gasLimit,
-              gasPrice,
-              nonce,
-              to,
-              type,
-              value,
-            });
+            console.log('receipt', receipt)
           }
           $tradeConfirm.update({
             status: "approve",
@@ -782,6 +851,7 @@ export default defineComponent({
           });
           emit("success");
         } catch (err) {
+          console.error(err)
           $tradeConfirm.update({
             status: "fail",
           });
@@ -849,16 +919,13 @@ export default defineComponent({
             value: ethers.utils.parseEther(0 + ""),
             data: `0x${data3}`,
           };
+          const gas: any = await getGasFee(tx1)
           try {
-            const wallet = await getWallet();
-            const gasPrice = await wallet.provider.getGasPrice();
-            const gasLimit = await wallet.estimateGas(tx1);
             const totalNum = sumP.value + sumN.value + sumF.value + sumC.value
             // @ts-ignore
             gasFee.value = new BigNumber(
-              ethers.utils.formatEther(gasLimit)
-            )
-              .dividedBy(ethers.utils.formatEther(gasPrice)).multipliedBy(totalNum)
+              gas
+            ).multipliedBy(totalNum)
               .toFixed(9);
           } catch (err: any) {
             console.error(err);
@@ -870,7 +937,58 @@ export default defineComponent({
     const showTip4 = ref(false);
     const showTip5 = ref(false);
     const showTip6 = ref(false);
+
+
+    const toNftExchange = async(item: any) => {
+      debugger
+      const { tag, nft_address } = item
+      let tokenidmm = ''
+      switch(nft_address.length){
+        case 42:
+          tokenidmm = nft_address
+          break;
+        case 41:
+        tokenidmm = `${nft_address}m`
+          break;
+        case 40:
+        tokenidmm = `${nft_address}mm`
+          break;
+        case 39:
+        tokenidmm = `${nft_address}mmm`
+          break;
+      }
+      const {data: nft_token_id} = await tokenIdByNftaddr(tokenidmm)
+      // :http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#/   51888
+      // 51891:https://snft.wormholestest.com
+      const { source_url, metaData } = item
+      const { nft_contract_addr } = metaData
+      debugger
+      const domain = network.value && network.value.chainId === 51888 ? 'http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#' : 'https://snft.wormholestest.com/#'
+      let str = '/assets/detail'
+      if(tag == 'P' || tag == 'C' || tag == 'N') {
+        str += `?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}`
+      } else if(tag == 'F') {
+        str += `?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}&source_url=${source_url}`
+      }
+      const newUrl = `${domain}${str}`
+      window.open(newUrl)
+    }
+
+
+    const handleSelect = (item: any) => {
+      if(tabIndex.value !== '1') {
+        item.flag = !item.flag
+        return
+      }
+      if(tabIndex.value === '1' && item.hasUnfreeze) {
+        item.flag = !item.flag
+        return
+      }
+      Toast(t('wallet.snftUnfree'))
+    }
     return {
+      handleSelect,
+      toNftExchange,
       myprofit,
       historyProfit,
       showTip1,
@@ -891,7 +1009,6 @@ export default defineComponent({
       show,
       layoutType,
       isSelectAll,
-      VUE_APP_SNFTSEXCHANGE_URL,
       sumN,
       toUsd,
       t,
@@ -922,6 +1039,34 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+.red {
+  color: rgb(215, 58, 73);
+}
+.nft-c,.nft-f,.nft-n,.nft-p{
+  color: #fff;
+padding: 0 5px;
+font-size: 18px;
+margin-right: 3px;
+border-radius: 3px;
+font-family: KenneyPixel;
+text-align: center;
+}
+.nft-p {
+background: rgb(215, 58, 73);
+
+}
+.nft-c{
+  background: rgb(247, 191, 3);
+}
+.nft-n{
+  background: rgb(58, 174, 85);
+}
+.nft-f{
+  background: rgb(3, 124, 214);
+}
+.snft-list-box {
+  padding-bottom: 40px;
+}
 .tab-box {
   position: relative;
   background: #fff;
@@ -988,7 +1133,25 @@ export default defineComponent({
   border-bottom: 1px solid #dbd9da;
   display: flex;
   align-items: center;
+  &.disabled {
+    cursor:default;
+    .img-p .van-image {
+      filter: grayscale(100%);
+    }
+    .number {
+      background: #ccc !important;
+    }
+    .snftmiddle-text,.snftName {
+      color: #ccc !important;
+    }
+    .iconfont {
+      color: #ccc;
+    }
+  }
   .checkbox_img {
+    &.disabled {
+      cursor: not-allowed;
+    }
     cursor: pointer;
     // background-color: red;
     i {
@@ -1002,7 +1165,7 @@ export default defineComponent({
         font-size: 20px;
       }
     }
-    margin-right: 7px;
+    padding:7px 7px 7px 0;
   }
   .img-p {
     position: relative;
@@ -1055,6 +1218,12 @@ export default defineComponent({
     }
     .snftName {
       font-weight: bold;
+      &>span {
+        span {
+          display: inline;
+          vertical-align: top;
+        }
+      }
     }
   }
   .snftcontainright {
@@ -1093,7 +1262,6 @@ export default defineComponent({
       font-size: 20px;
     }
   }
-  margin-right: 5px;
 }
 </style>
 
@@ -1104,7 +1272,7 @@ export default defineComponent({
   height: 65px;
   width: 100%;
   max-width: 750px;
-  z-index: 110;
+  z-index: 1;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   display: flex;
@@ -1284,7 +1452,8 @@ export default defineComponent({
       color: #8f8f8f;
       :deep(){
         .van-popover__wrapper {
-          margin-left: 4px;
+          width: 10px;
+          height: 10px;
         }
       }
     }

@@ -56,11 +56,11 @@ export default {
         continue: "继续",
         back: '返回',
         next: '下一步',
-        serviceandPrivacyNotice: '请查看 Limino ERB 钱包服务条款和隐私声明',
+        serviceandPrivacyNotice: '请查看 Wormholes ERB 钱包服务条款和隐私声明',
         memErr: "助记词格式有误，请确认后重新提交",
         isServiceandPrivacyNotice: "请务必检查服务条款和隐私政策 ",
         isServiceandPrivacyNotices: "请务必勾选用户协议 ",
-        pwdTip: "通过继续，您同意 Limino 的 {br} {link1}&{link2}",
+        pwdTip: "通过继续，您同意 Wormholes 的 {br} {link1}&{link2}",
         link1: "Terms of Use",
         link2: "Privacy Notice"
 
@@ -150,7 +150,8 @@ export default {
         convertComplete: "转换完成",
         selectSNFT: "您还未选择任何SNFT",
         buySnft: "你有 S-NFT 吗？ {link}",
-        findMore: "寻找更多"
+        findMore: "寻找更多",
+        snftUnfree:"该质押的SNFT还未解冻！"
 
     },
     converSnft: {
@@ -167,6 +168,7 @@ export default {
 
     },
     common: {
+        days:"天",
         commingsoon: "即将来临",
         setting: '设置',
         failedtoload: '加载钱包失败',
@@ -184,7 +186,7 @@ export default {
         right_and_interests:
             "权益质押:您需要至少质押100000ERB,在选择权益质押并下载我们的节点程序后,您将成为我们的权益质押节点。在此期间,您需要保持您的节点程序始终运行。成为权益质押节点后,您将有机会被选择参与到我们区块链的共识当中,有很大的概率被选择分配SNFT的奖励。您的质押金额越高,被选择的概率也越高。",
         exchange_pledge:
-            "您需要质押至少100ERB来开启您的交易所,在选择交易所质押后您可以选择使用自己的服务器或者由我们来提供服务器（将收取额外费用）。在成功开启您的交易所后，您将有机会获得区块链的出块补贴，您的质押金额越高，被选中的概率也越高。",
+            "您需要质押至少280ERB来开启您的交易所,在选择交易所质押后您可以选择使用自己的服务器或者由我们来提供服务器（将收取额外费用）。在成功开启您的交易所后，您将有机会获得区块链的出块补贴，您的质押金额越高，被选中的概率也越高。",
         no_data: "无数据",
         mainNetwork: "主网",
         save: "保存",
@@ -202,6 +204,8 @@ export default {
         suretocancel: '你确定要取消吗？',
         breakGuide: "确定取消引导操作流程吗?",
         connect: "连接到 Wormholes",
+        connect2: "使用Wormholes连接",
+        connect3: "已成功连接到Wormholes",
         connectTxt: "连接",
         installMetaMask: "你未安装钱包，请先安装MetaMask",
         back: "返回",
@@ -224,7 +228,22 @@ export default {
         copyAddr: "地址哈希复制",
         confirmExit:"确认退出",
         guideBtnTip:"您的数字钱包数据仅保存在您浏览器的本地存储中；请务必创建备份以避免潜在的永久性损失。卸载浏览器和/或清除浏览器数据也可能导致永久性损失",
-        asyncData:"数据同步中，请稍后"
+        asyncData:"数据同步中，请稍后",
+        convertAmount:"转换金额",
+        loadingWait:"加载中，请稍后!",
+        noMoney:"你的账户缺少资产。请确保钱包里有足够的钱",
+        recovery:"恢复",
+        gasSpeedUp:"汽油加速",
+        sendTipPendding:"当前交易队列存在未完成交易，请完成后重试！",
+        speedUp:"加速",
+        toggleAddress:"请先切换钱包账户到该地址！",
+        snftColorTip:"S-NFT等级从低到高分别为L0、L1、L2、L3。您可以合成更高等级以获取更高收益，合成规则如下：16个特定S-NFT L0可合成一个唯一S-NFT L1，16个特定S-NFT L1可合成一个唯一S-NFT L2，16个特定S-NFT L2可合成一个唯一S-NFT L3。蓝色数字表示在某一个S-NFT L1中，S-NFT L0的位置编号。绿色数字表示在某一个S-NFT L2中，S-NFT L1的位置编号。黄色数字表示在某一个S-NFT L3中，S-NFT L2的位置编号。红色数字表示S-NFT L3的位置编号。",
+        contrctTx:"合约交易",
+        contractAddr:"合约地址"
+
+
+
+
 
     },
     //侧边栏 
@@ -418,7 +437,8 @@ export default {
         cancel: "取消",
         confirm: "确认",
         wrongaddressformat: '地址格式有误',
-        lessthan: '不能小于21000'
+        lessthan: '不能小于21000',
+        lessthanPrev:"不能小于{value}"
     },
     //异常页面
     abnormal: {
@@ -657,7 +677,7 @@ export default {
         staking:"质押 & 赎回",
         stakingDesc:"添加质押或赎回您的质押",
         server:"服务器",
-        serverDesc:"365 Days / 0 Hours",
+        serverDesc:"{days} 天 / {hours} 小时",
         pageTip:"这是交易所管理页面。如果你想去交易所的页面，点击“交易所”。如果你想进入交易所的控制台，点击“控制台”。如果你想添加质押量或赎回你的质押，点击在“Staking & Redemption”。如果要更改服务器的设置，请单击“Server”。",
         serveTip1:"这是您必须为服务器支付一年的费用。",
         serveTip2:"这是您离开我们服务器的使用时间。",
@@ -696,6 +716,13 @@ export default {
     },
     // 矿工质押
     minerspledge: {
+        smileTip:"你的信誉很好，{value}，请保留它，获得更多的收入 {btn}",
+        sadTip:"您的信誉度低于{value}，请单击右侧的按钮恢复 {btn}",
+        neutralTip:"您的信誉度低于{value}，请单击右侧的按钮恢复 {btn}",
+        resetBtnTip:"有了这个按钮，你可以恢复你的信誉到7.1信誉将花费1 ERB。ERB成本将被虫洞区块链烧毁。",
+        gotIt:"知道了>",
+        credibility:"权重",
+        upCredibility:"权重提高",
         invalidChainId:"无效的链Id {chainid}",
         invalidNode:"无效的节点",
         nodeErr:"节点格式有误",
@@ -734,9 +761,7 @@ export default {
         addTit: "追加的质押金额",
         addTip: "这是追加的质押金额",
         proxyAccountTip: "提示：质押期为一年。详情请参阅条款和规定。",
-
-
-
+        closeTip2:"抱歉，质押时间超过1年才可赎回。",
 
         beValidator: "成为矿工",
         modifValidator:"矿工管理",
@@ -764,7 +789,7 @@ export default {
         closeTip: "如果你做赎回。你的收入会减少。",
         addzhiya: "追加质押",
         stackFee: "质押金额",
-        tip7:"阈值是指您仍然可以作为验证者的情况下可以赎回的最大 VERB 数量。如果您输入的金额大于此数量，您将赎回您的所有 ERB。",
+        tip7:"阈值是指您仍然可以作为验证者的情况下可以赎回的最大ERB 数量。如果您输入的金额大于此数量，您将赎回您的所有 ERB。",
         redemingAmount:"赎回金额",
         redemingAmountTip:"赎回金额",
         minus_approve: "我们正在批准您的股份赎回请求。您可能需要等待几秒钟。您也可以在交易记录中找到详细信息。",
@@ -801,8 +826,8 @@ export default {
         confirm: '确认',
         balance: '余额:',
         congratulations: '恭喜，修改成功，恭喜，节点正确。',
-        addStake: "挖矿收益",
-        addStakeTip: "这是将要添加的质押金额"
+        addStake: "追加金额",
+        addStakeTip: "这是追加质押的金额。"
 
 
     },
@@ -1087,6 +1112,11 @@ export default {
         confirmed: '确认的',
         failed: '失败的',
         contract: '合约',
+        successly:"成功",
+        pendding:"等待",
+        cancelTx:"确定取消nonce为#{nonce}的交易吗?",
+        cancelDealTit:"取消交易",
+
     },
 
     // transactionDetails
@@ -1110,13 +1140,13 @@ export default {
     bourse: {
         placename: "请输入名称",
         vainame: "名称不能为空",
-        vainame2: "4-12个长度,支持中英文、数字",
+        vainame2: "4-20个长度,支持中英文、数字",
         placenode: "请输入节点",
         vainode: "节点有误",
         placeamount: "请输入追加金额",
         dialogTitle: "信息确认",
-        marketName: "市场名称",
-        marketCom: "市场委员会",
+        marketName: "交易所名称",
+        marketCom: "交易所费率",
         tip1: "为您的市场选择名称。",
         tip2: "这是%的费用，你的市场将收取谁在你的市场交易的卖家。",
         stakingFee: "质押费",
@@ -1176,6 +1206,7 @@ export default {
         tipincome:"这是您在赎回后将获得的估计年度利润。",
         tipadd:"这是您想要质押的额外 ERB 数量。",
         closeTip:"抱歉，交易所预计关闭时间为 1 年。",
+        sendProxyExchange:"发送代理交易所交易",
 
 
 
@@ -1193,4 +1224,7 @@ export default {
         amountcannotbelessthan: '金额不能小于{props}',
     },
 
+    error:{
+        500:"参数有误"
+    }
 }

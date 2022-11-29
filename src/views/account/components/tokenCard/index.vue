@@ -16,7 +16,7 @@
         <div class="token-name">{{data.name}}</div>
         <div>
           <div class="name">{{ decimal(data.balance) }} {{ data.symbol }}</div>
-          <div class="amount text-right">${{ "0.0" }}</div>
+          <div class="amount text-right">${{ toUsd(data.balance, 6) }}</div>
         </div>
       </div>
     </div>
@@ -37,8 +37,9 @@ import {
 } from "vue";
 import { Icon,Image } from "vant";
 import { useRouter } from "vue-router";
-import { decimal } from "@/utils/filters";
+import { decimal, toUsd } from "@/utils/filters";
 import { useStore } from "vuex";
+
 export default defineComponent({
   name: "tokenCard",
   components: {
@@ -80,7 +81,8 @@ export default defineComponent({
       toTokenHome,
       decimal,
       currentNetwork,
-      hover
+      hover,
+      toUsd
     };
   },
 });

@@ -1,13 +1,13 @@
 <template>
-  <van-overlay :show="dislogShow"  class="custom-overlay">
+  <van-overlay :show="dislogShow" class="custom-overlay">
     <div class="miners">
       <div class="miners-header">
-        <span style="color: #000">{{t('minerspledge.stackinglabel')}}</span>
+        <span style="color: #000">{{ t("minerspledge.stackinglabel") }}</span>
       </div>
       <div class="miners-container flex column between">
         <div class="miners-container-item">
           <div class="bourse-container-meaning bt">
-            <span class="c1">{{t('minerspledge.address')}} </span>
+            <span class="c1">{{ t("minerspledge.address") }} </span>
             <el-tooltip
               popper-class="tooltip2"
               class="box-item"
@@ -21,8 +21,7 @@
             <div class="exchange">{{ address }}</div>
           </div>
           <div class="bourse-container-meaning bt">
-
-            <span class="c1">{{t('minerspledge.stackTit')}}</span>
+            <span class="c1">{{ t("minerspledge.stackTit") }}</span>
             <el-tooltip
               popper-class="tooltip2"
               class="box-item"
@@ -36,7 +35,7 @@
             <div class="exchange">{{ formatValueNumber }}ERB</div>
           </div>
           <div class="bourse-container-meaning bt">
-            <span class="c1">{{t('bourse.hsitoryReturn')}} </span>
+            <span class="c1">{{ t("bourse.hsitoryReturn") }} </span>
             <el-tooltip
               popper-class="tooltip2"
               class="box-item"
@@ -50,7 +49,7 @@
             <div class="exchange">100,000 ERB(≈$500.000)</div>
           </div>
           <div class="bourse-container-meaning bt">
-            <span class="c1">{{t('bourse.income')}} </span>
+            <span class="c1">{{ t("bourse.income") }} </span>
             <el-tooltip
               popper-class="tooltip2"
               class="box-item"
@@ -64,7 +63,7 @@
             <div class="exchange">≈ 0.000000001 ERB(≈$1)</div>
           </div>
           <div class="">
-            <span class="c1">{{t('bourse.gasFee')}} </span>
+            <span class="c1">{{ t("bourse.gasFee") }} </span>
             <el-tooltip
               popper-class="tooltip2"
               class="box-item"
@@ -82,7 +81,7 @@
           </div>
         </div>
         <div class="tips">
-          {{t('bourse.tip19')}}
+          {{ t("bourse.tip19") }}
         </div>
         <div class="container-btn flex center column">
           <div>
@@ -91,7 +90,7 @@
               class="btn"
               plain
               @click="dislogShow = false"
-              >{{t('common.cancel')}}</van-button
+              >{{ t("common.cancel") }}</van-button
             >
             <van-button
               danger
@@ -100,7 +99,7 @@
               class="btn"
               round
               @click="submit"
-              >{{t('common.confirm')}}</van-button
+              >{{ t("common.confirm") }}</van-button
             >
           </div>
         </div>
@@ -119,7 +118,14 @@ import { ElTooltip } from "element-plus";
 import { useStore } from "vuex";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { useRouter } from "vue-router";
-import { ExchangeStatus, getWallet, TransactionReceipt,handleGetTranactionReceipt,TransactionTypes } from "@/store/modules/account";
+import {
+  ExchangeStatus,
+  getWallet,
+  TransactionReceipt,
+  handleGetTranactionReceipt,
+  TransactionTypes,
+  clone,
+} from "@/store/modules/account";
 
 export default {
   components: {
@@ -172,26 +178,16 @@ export default {
         const data3 = toHex(str);
         console.log("data3", data3);
         console.log("str", str);
- 
+
         const tx1 = {
           to: "0x7fBC8ad616177c6519228FCa4a7D9EC7d1804900",
-          value: ethers.utils.parseEther(props.formatValueNumber + ""),
+          value: props.formatValueNumber + "",
           data: `0x${data3}`,
-
         };
         console.log(tx1);
-
-        const wallet = await getWallet();
-        const receipt: any = await wallet.sendTransaction(tx1);
-        const receipt2 = await wallet.provider.waitForTransaction(receipt.hash);
-        const symbol = store.state.account.currentNetwork.currencySymbol
-        const rep: TransactionReceipt = handleGetTranactionReceipt(
-          TransactionTypes.other,
-          receipt2,
-          receipt,
-          symbol
-        );
-        store.commit("account/PUSH_TRANSACTION", rep);
+        const receipt: any = await store.dispatch('account/transaction', tx1)
+        const receipt2 = await receipt.wallet.provider.waitForTransaction(receipt.hash, null, 60000);
+        store.dispatch("account/waitTxQueueResponse");
         const { status } = receipt2;
         if (status == 0) {
           $tradeConfirm.update({ status: "fail" });
@@ -438,6 +434,9 @@ export default {
 }
 .exchange-z {
   border: none;
+  span {
+    color: #3aae55;
+  }
 }
 .c2 {
   color: #3aae55;

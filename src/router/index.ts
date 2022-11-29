@@ -17,12 +17,12 @@ import connectWallet from '@/views/connectWallet/route'
 import { pwdKey } from '@/utils/jsCookie';
 import doc from '@/views/doc/index'
 import mnemonic from '@/views/mnemonic/route'
+import { debug } from 'console';
 
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
     component: Home,
     redirect: { name: 'wallet' },
     children: [
@@ -67,14 +67,6 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: '/createAccount',
-        name: 'createAccount',
-        component: () => import('@/views/account/create/index.vue'),
-        meta: {
-          auth: false
-        }
-      },
-      {
         path: '/import',
         name: 'import',
         component: () => import('@/views/account/import/index.vue'),
@@ -82,14 +74,7 @@ const routes: Array<RouteRecordRaw> = [
           auth: true
         }
       },
-      {
-        path: '/importsuccess',
-        name: 'importsuccess',
-        component: () => import('@/views/account/importsuccess/index.vue'),
-        meta: {
-          auth: true
-        }
-      },
+
       {
         path: "/export-mnemonic",
         name: "export-mnemonic",
@@ -114,7 +99,7 @@ const routes: Array<RouteRecordRaw> = [
           auth: false
         }
       },
-     {
+      {
         path: '/startpage',
         name: 'startpage',
         component: () => import('@/views/account/creatwallet/newwallet/startpage.vue'),
@@ -155,27 +140,11 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: '/currencyList',
-        name: 'currencyList',
-        component: () => import('@/views/account/currencyList/index.vue'),
-        meta: {
-          auth: true
-        }
-      },
-      {
-        path: '/addCurrency',
-        name: 'addCurrency',
-        component: () => import('@/views/account/addCurrency/index.vue'),
-        meta: {
-          auth: true
-        }
-      },
-      {
         path: '/inputpage',
         name: 'inputpage',
         component: () => import('@/views/account/privatekeyexport/inputpage.vue'),
         meta: {
-          auth: true
+          auth: false
         }
       },
       {
@@ -196,36 +165,12 @@ const routes: Array<RouteRecordRaw> = [
 
       },
       {
-        path: '/payment',
-        name: 'payment',
-        component: () => import('@/views/payment/index.vue'),
-        redirect: { name: 'step1' },
-        children: [
-          {
-            path: '/payment/step1',
-            name: 'step1',
-            component: () => import('@/views/payment/step1/index.vue'),
-            meta: {
-              auth: true
-            }
-          },
-          {
-            path: '/payment/step2',
-            name: 'step2',
-            component: () => import('@/views/payment/step2/index.vue'),
-            meta: {
-              auth: true
-            }
-          },
-          {
-            path: '/payment/sendLink',
-            name: 'sendLink',
-            component: () => import('@/views/payment/sendLink/index.vue'),
-            meta: {
-              auth: true
-            }
-          }
-        ]
+        name:'sendContractTransaction',
+        path:'/sendContractTransaction',
+        component: () => import('@/views/sendContractTransaction/index.vue'),
+        meta: {
+          auth: true
+        }
       },
       {
         path: '/currency',
@@ -242,7 +187,7 @@ const routes: Array<RouteRecordRaw> = [
             meta: {
               auth: true
             }
-          }
+          },
         ]
       },
       {
@@ -251,6 +196,14 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/sign/index.vue'),
         meta: {
           auth: true
+        }
+      },
+      {
+        path: '/sendOpenExchangeTransaction',
+        name: "sendOpenExchangeTransaction",
+        component: () => import('@/views/sendOpenExchangeTransaction/index.vue'),
+        meta: {
+          auth: true,
         }
       },
       {
@@ -329,14 +282,6 @@ const routes: Array<RouteRecordRaw> = [
           auth: true
         }
       },
-      {
-        path: '/transaction',
-        name: 'transaction',
-        component: () => import('@/views/transaction/index.vue'),
-        meta: {
-          auth: true
-        }
-      },
       transferAccount,
       receive,
       tokens,
@@ -378,13 +323,19 @@ router.beforeEach(async (to, form, next) => {
   const hasAccountFlag = await hasAccount()
   const authFlag = authentication()
   const query = getQuery()
-console.log('---------------------', auth, name)
-if(!auth && (name == 'termsOfUse' || name == 'privacyNotice')) {
-  next()
-  return
-}
+  console.log('---------------------', auth, name, query)
+  if (!auth && (name == 'termsOfUse' || name == 'privacyNotice' || name == 'inputpage')) {
+    next()
+    return
+  }
+  
+  // if(!auth && name == 'connectWallet' && !authFlag) {
+  //   // @ts-ignore
+  //   router.replace({name:"withpassword",query: {backUrl:'connectWallet',loginParams: {...query}}})
+  //   return
+  // }
   if (auth) {
-    if (hasAccountFlag) {
+    if (hasAccountFlag && authFlag) {
       next()
       return
     } else {

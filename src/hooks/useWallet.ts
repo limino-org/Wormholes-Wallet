@@ -13,9 +13,7 @@ import localforage from 'localforage';
 // init wallet
 export const useWallet = () => {
     const query = getQuery()
-    
     const initWallet = async () => {
-       
         console.log('initWallet------------',store)
         const { dispatch } = store
         const { hasAccount } = useLogin()
@@ -24,6 +22,7 @@ export const useWallet = () => {
         try {
             let newwallet = await getWallet()
             dispatch('account/updateAllBalance')
+            dispatch('account/getEthAccountInfo')
             eventBus.emit('walletReady', newwallet)
         } catch (err) {
             console.error('err', err)

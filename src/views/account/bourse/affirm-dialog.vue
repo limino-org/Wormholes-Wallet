@@ -48,7 +48,7 @@
               <van-icon name="question" color="#9A9A9A" />
             </el-tooltip>
             <!-- <div class="exchange">{{money * 10}} ERB(≈$20)</div> -->
-            <div class="exchange">280 ERB(≈${{ toUsd(280, 2) }})</div>
+            <div class="exchange">700 ERB(≈${{ toUsd(700, 2) }})</div>
           </div>
           <div class="bourse-container-meaning bt">
             <span class="c1">{{ t("bourse.marketServer") }} </span>
@@ -84,8 +84,8 @@
               <van-icon name="question" color="#9A9A9A" />
             </el-tooltip>
             <div class="exchange">
-              {{ serverIndex == 0 ? 280 : 480 }} ERB(≈${{
-                toUsd(serverIndex == 0 ? 280 : 480, 0)
+              {{ serverIndex == 0 ? 700 : 900 }} ERB(≈${{
+                toUsd(serverIndex == 0 ? 700 : 900, 0)
               }})
             </div>
           </div>
@@ -194,7 +194,7 @@ export default {
           const tx1 = {
             from: address,
             to: address,
-            value: ethers.utils.parseEther(280 + ""),
+            value: ethers.utils.parseEther(700 + ""),
             data: `0x${data3}`,
           };
 

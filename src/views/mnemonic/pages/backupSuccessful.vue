@@ -84,8 +84,8 @@ export default {
     onMounted(async () => {
       // Get the decrypted mnemonic
       const password = getCookies("password");
-      const mnemonicJson = await localforage.getItem('mnemonic')
-      data.value = await parseMnemonic(password,keyStore.value || mnemonicJson);
+      // const mnemonicJson = await localforage.getItem('mnemonic')
+      data.value = await parseMnemonic(password,keyStore.value);
       commit("system/UPDATE_HASBACKUPMNEMONIC", true);
     });
 

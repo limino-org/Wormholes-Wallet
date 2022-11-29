@@ -89,8 +89,8 @@ export default {
     onMounted(async () => {
       // Get the decrypted mnemonic
       const password = getCookies("password");
-      const mnemonicJson = await localforage.getItem('mnemonic')
-      const realmm = await parseMnemonic(password,keyStore.value || mnemonicJson);
+      // const mnemonicJson = await localforage.getItem('mnemonic')
+      const realmm = await parseMnemonic(password,keyStore.value);
       const nlist = realmm
         .split(" ")
         .map((key: string) => ({ name: key, status: false }));

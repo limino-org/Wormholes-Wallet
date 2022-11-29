@@ -1,5 +1,4 @@
 <template>
-  <van-sticky>
     <NavHeader :hasRight="false">
       <template v-slot:left>
         <div class="flex center cancel" @click="clickLeft">
@@ -7,7 +6,6 @@
         </div>
       </template>
     </NavHeader>
-  </van-sticky>
   <div class="page-container">
     <div class="userinfo">
       <div class="from mb-10 mt-20">
@@ -75,7 +73,7 @@ import TransactionConfirm from "@/views/account/components/transactionConfirm/in
 import { addressMask, getestimateGas, decimal } from "@/utils/filters";
 import { ethers, utils } from "ethers";
 import { web3 } from "@/utils/web3";
-import { getWallet } from "@/store/modules/account";
+import { getWallet,clone, TransactionTypes } from "@/store/modules/account";
 import { useI18n } from "vue-i18n";
 import { getRandomIcon } from "@/utils/index";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
@@ -102,7 +100,7 @@ export default {
     const currentNetwork = computed(() => store.state.account.currentNetwork);
     const route = useRoute();
     const { query } = route;
-    const { from, to, data }: any = query.tx
+    const { from, to, data, value }: any = query.tx
       ? JSON.parse(query.tx.toString())
       : {};
     const { backUrl }: any = query;
@@ -125,14 +123,16 @@ export default {
         data,
         to,
         from,
-        callBack: () => {
-          $tradeConfirm.update({
+        value,
+      };
+      debugger
+      try {
+        const sendData: any = await store.dispatch('account/transaction', tx1)
+        $tradeConfirm.update({
             status: "approve",
           });
-        },
-      };
-      try {
-        const receipt = await dispatch("account/sendTransaction", tx1);
+        const receipt = await sendData.wallet.provider.waitForTransaction(sendData.hash)
+        await store.dispatch('account/waitTxQueueResponse')
         const back = decode(backUrl)
         const newBack =`${back}${back.indexOf('?') > -1 ? '&' : '?'}` 
         $tradeConfirm.update({

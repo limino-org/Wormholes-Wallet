@@ -23,7 +23,7 @@ defineProps({
     tag: {
         type: String,
         default: 'F'
-    }
+    },
 })
 
 

@@ -235,6 +235,9 @@ defineExpose({
         font-size: 26px;
         color: #9a9a9a;
       }
+      .icon .van-icon-clear {
+        font-size: 29px;
+      }
     }
     .approve {
       font-size: 15px;

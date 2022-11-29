@@ -146,7 +146,6 @@ import NavHeader from "@/components/navHeader/index.vue";
 import AccountList from "@/views/account/components/accountList/index.vue";
 import { getWallet } from "@/store/modules/account";
 import { useRoute, useRouter } from "vue-router";
-import { nftaddress } from "@/http/modules/common";
 import { useStore } from "vuex";
 import { addressMask, decimal } from "@/utils/filters";
 import { utils, ethers } from "ethers";
@@ -199,7 +198,7 @@ export default {
       wallet
         .sendTransaction(tx1)
         .then(({ hash }: any) => {
-          wallet.provider.waitForTransaction(hash).then((receipt: any) => {
+          wallet.provider.waitForTransaction(hash, null, 60000).then((receipt: any) => {
             const { status } = receipt;
             if (status == 0) {
               Toast(t("sendNft.transferfailed"));

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SetupContext, Ref, ref, reactive, defineComponent, computed, toRaw, nextTick } from "vue";
 import { CreateWalletByJsonParams, CreateWalletByMnemonicParams } from '@/utils/ether'
 import { useStore } from "vuex";
@@ -8,14 +9,13 @@ import { encryptPrivateKey, EncryptPrivateKeyParams } from '@/utils/web3'
 import eventBus from "@/utils/bus";
 import { useBroadCast } from '@/utils/broadCast'
 import i18n from "@/language/index";
-
+import store from '@/store/index'
 import { Toast } from "vant";
 import router from "@/router";
 import { Mnemonic } from "ethers/lib/utils";
 import { useExchanges } from "@/hooks/useExchanges";
 import localforage from "localforage";
 export const useToggleAccount = () => {
-  const store = useStore()
   const { commit, dispatch, state } = store
   const { handleUpdate } = useBroadCast()
   const createLoading: Ref<boolean> = ref(false)
@@ -32,6 +32,7 @@ export const useToggleAccount = () => {
     if (createLoading.value) {
       return
     }
+    eventBus.emit('beforeChangeAccount')
     accountLoading.value = true
     clickAccountIdx.value = idx
     const { currentNetwork } = store.state.account
@@ -52,7 +53,9 @@ export const useToggleAccount = () => {
           initExchangeData()
         }
       })
+
       handleUpdate()
+      return wall
     } catch (err) {
       const errstr = String(err)
       if (errstr.indexOf('password') > -1) {
@@ -69,8 +72,8 @@ export const useToggleAccount = () => {
   const createWalletByPath = async (callBack: Function = () => { }) => {
     const { pathIndex, path }: any = { ...store.state.account.mnemonic }
     const password: string = getCookies('password') || ''
-    const mnemonicJson = await localforage.getItem('mnemonic')
-    let phrase: string = await parseMnemonic(password,keyStore.value || mnemonicJson)
+    // const mnemonicJson = await localforage.getItem('mnemonic')
+    let phrase: string = await parseMnemonic(password, keyStore.value)
     let mnemonic: CreateWalletByMnemonicParams = { pathIndex, phrase, path }
     let wallet = await dispatch("account/createWallet", mnemonic);
     let { privateKey, address } = wallet
