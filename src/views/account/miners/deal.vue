@@ -634,7 +634,6 @@ export default defineComponent({
         const { address } = wallet;
         network.value = await wallet.provider.getNetwork()
         blockNumber.value = await wallet.provider.getBlockNumber();
-        const network = await wallet.provider.getNetwork()
         ethAccountInfo.value = await wallet.provider.send(
           "eth_getAccountInfo",
           [address, "latest"]
@@ -644,7 +643,7 @@ export default defineComponent({
         // Amount of the first pledge/total amount of the pledge *36 (start time of the second cancellation of the pledge calculation)+ Amount of the second pledge/total amount *72=54 = (time when the second cancellation of the pledge can be revoked)
         showCloseBtn.value = new BigNumber(blockNumber.value)
           .minus(ethAccountInfo.value.PledgedBlockNumber)
-          .gt(network.chainId == 51888 ? 72 : 6307200);
+          .gt(network.value.chainId == 51888 ? 72 : 6307200);
         const pledgeList = await wallet.provider.send("eth_getValidator", [
           `${blockn}`,
         ]);
