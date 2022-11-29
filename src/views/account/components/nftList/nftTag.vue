@@ -1,7 +1,7 @@
 <template>
     <div class="nft-tag">
         <van-popover v-model:show="showPopover" placement="top-end" class="nft-tag-popover">
-            <div class="lh-16 text-center ">{{t(`common.nft${tag}`)}}</div>
+            <div class="lh-16 text-center ">{{text}}</div>
             <template #reference>
         <div class="flex between center-v" @mouseover="showPopover = true" @mouseout="showPopover = false">
             <div :class="`tag-circle ${tag == 'P' ? 'active' : 'disabled'}`"></div>
@@ -14,18 +14,31 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {defineProps, ref} from 'vue'
+import {computed, defineProps, ref} from 'vue'
 import {Popover as vanPopover} from 'vant'
 import { useI18n } from 'vue-i18n'
 const {t} = useI18n()
 // P C N F
-defineProps({
+const props = defineProps({
     tag: {
         type: String,
         default: 'F'
     },
 })
 
+// S-NFT L0 、S-NFT L1、L2、L3
+const text = computed(() => {
+    switch(props.tag){
+        case 'F':
+            return 'S-NFT L0'
+        case 'N':
+            return 'S-NFT L1'
+        case 'C':
+            return 'S-NFT L2'
+        case 'P':
+            return 'S-NFT L3'
+    }
+})
 
 const showPopover = ref(false)
 </script>

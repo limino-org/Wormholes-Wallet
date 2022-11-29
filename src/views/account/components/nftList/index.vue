@@ -1,6 +1,6 @@
 <template>
 <van-sticky :offset-top="95">
-    <div class="flex center tab-box">
+    <div class="flex right tab-box">
       <!-- <div class="flex between tab-list">
         <div
           :class="`tab-card flex center hover ${item.select ? 'active' : ''}`"
@@ -16,7 +16,7 @@
           ></i>
         </div>
       </div> -->
-      <div class="switch-box" v-show="list.length">
+      <div class="switch-box pr-14 pl-14 flex right" v-show="list.length">
         <van-switch
           v-model="value"
           @change="handleChangeSwitch"
@@ -962,8 +962,7 @@ export default defineComponent({
       // 51891:https://snft.wormholestest.com
       const { source_url, metaData } = item
       const { nft_contract_addr } = metaData
-      debugger
-      const domain = network.value && network.value.chainId === 51888 ? 'http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#' : 'https://snft.wormholestest.com/#'
+      const domain = network.value && network.value.chainId === 51888 ? 'http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#' : 'https://hub.wormholes.com/c0x97807fd98c40e0237aa1f13cf3e7cedc5f37f23b/#'
       let str = '/assets/detail'
       if(tag == 'P' || tag == 'C' || tag == 'N') {
         str += `?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}`
@@ -1070,7 +1069,7 @@ background: rgb(215, 58, 73);
 .tab-box {
   position: relative;
   background: #fff;
-  padding: 15px 0;
+  padding: 8px 0;
 }
 
 :deep() {
@@ -1081,9 +1080,6 @@ background: rgb(215, 58, 73);
 
 }
 .switch-box {
-  position: absolute;
-  right: 15px;
-  top: 20px;
 }
 .tab-list {
   width: 200px;

@@ -209,19 +209,22 @@ export default {
       const blockNumber = await wallet.provider.getBlockNumber();
       const addressInfo = await getAccountAddr(wallet.address)
       const {rewardCoinCount} = addressInfo
+      debugger
       historyProfit.value = new BigNumber(rewardCoinCount).multipliedBy(0.11).toString()
       const blockn = web3.utils.toHex(blockNumber.toString());
       const data = await wallet.provider.send("eth_getValidator", [blockn]);
       // const data2 = await getAccount(accountInfo.value.address)
       let total = new BigNumber(0);
-      data.Validators.forEach((item: any) => {
+      if(data.Validators){
+        data.Validators.forEach((item: any) => {
         total = total.plus(item.Balance);
       });
+      }
       const totalStr = total.div(1000000000000000000).toFixed(6);
       const totalprofit = store.state.account.minerTotalProfit;
-      const totalPledge = new BigNumber(props.addNumber).plus(props.amount);
+      const totalPledge = new BigNumber(props.addNumber);
       myprofit.value = new BigNumber(totalprofit)
-        .multipliedBy(totalPledge.div(totalStr))
+        .multipliedBy(totalPledge.div(totalStr)).plus(historyProfit.value)
         .toFixed(6);
       // historyProfit.value = new BigNumber(totalprofit)
       //   .multipliedBy(new BigNumber(props.amount).div(totalStr))

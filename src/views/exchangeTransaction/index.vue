@@ -139,9 +139,7 @@ export default {
           status: "success",
           callBack: () => {
             location.href = `${newBack}action=sendTransaction&data=${encodeURIComponent(
-              JSON.stringify({
-                receipt,
-              })
+              JSON.stringify(receipt)
             )}`;
           },
         });

@@ -66,9 +66,9 @@
             >
               <van-icon name="question" color="#9A9A9A" />
             </el-tooltip>
-            <div class="exchange">≈{{ historyProfit }} ERB(≈ $ 500)</div>
+            <div class="exchange">≈{{ historyProfit }} ERB(≈ $ {{toUsd(historyProfit,5)}})</div>
           </div>
-          <div class="bourse-container-meaning bt">
+          <!-- <div class="bourse-container-meaning bt">
             <span class="c1">{{ t("minerspledge.stackingIncome") }} </span>
             <el-tooltip
               popper-class="tooltip2"
@@ -81,7 +81,7 @@
               <van-icon name="question" color="#9A9A9A" />
             </el-tooltip>
             <div class="exchange">≈{{ myprofit }} ERB</div>
-          </div>
+          </div> -->
 
           <div class="">
             <span class="c1">{{ t("transactionDetails.gasfee") }} </span>
@@ -148,6 +148,7 @@ import { BigNumber } from "bignumber.js";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { useRouter } from "vue-router";
 import { web3 } from "@/utils/web3";
+import { getAccountAddr } from '@/http/modules/common';
 
 export default {
   name: "minus-stack-dialog",
@@ -158,7 +159,7 @@ export default {
     ElTooltip,
     [Icon.name]: Icon,
   },
-  props: ["show", "minusNumber", "amount"],
+  props: ["show", "minusNumber"],
   setup(props: any, context: SetupContext) {
     const { t } = useI18n();
     const store = useStore();
@@ -257,17 +258,19 @@ export default {
       const data = await wallet.provider.send("eth_getValidator", [blockn]);
       // const data2 = await getAccount(accountInfo.value.address)
       let total = new BigNumber(0);
-      data.Validators.forEach((item: any) => {
+      if(data.Validators) {
+        data.Validators.forEach((item: any) => {
         total = total.plus(item.Balance);
       });
+      }
       const totalStr = total.div(1000000000000000000).toFixed(6);
       const totalprofit = store.state.account.minerTotalProfit;
+      const addressInfo = await getAccountAddr(wallet.address)
+      const {rewardCoinCount} = addressInfo
+      historyProfit.value = new BigNumber(rewardCoinCount).multipliedBy(0.11).toString()
       const totalPledge = new BigNumber(props.minusNumber);
       myprofit.value = new BigNumber(totalprofit)
         .multipliedBy(totalPledge.div(totalStr))
-        .toFixed(6);
-      historyProfit.value = new BigNumber(totalprofit)
-        .multipliedBy(new BigNumber(props.amount).div(totalStr))
         .toFixed(6);
     };
     return {

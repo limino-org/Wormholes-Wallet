@@ -444,7 +444,7 @@
       <!-- Adjust the amount of pledge -->
       <ModifPledgeModal
         v-model="closeDialogTime"
-        :max="formatValueNumber || PledgedAmount"
+        :max="Number(PledgedBalance)"
         @confirm="handleMinusConfirm"
       />
 

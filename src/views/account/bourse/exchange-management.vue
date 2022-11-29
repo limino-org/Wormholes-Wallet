@@ -190,6 +190,7 @@ export default {
     const getServerExpiDate = async() => {
       const contractWithSigner = await getContract()
       const [date] = await contractWithSigner.functions.endTime(accountInfo.value.address)
+      debugger
       const nowTime = new Date().getTime()
       const a = date.toNumber() > 0 ? date.toNumber() * 1000 : 0
       const b = nowTime

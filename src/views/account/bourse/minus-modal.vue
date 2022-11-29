@@ -105,7 +105,7 @@
         </div>
         <div class="value lh-16">≈{{ historyProfit }} ERB</div>
       </div>
-      <div class="card">
+      <!-- <div class="card">
         <div class="label lh-16 mb-2">
           {{ t("bourse.income") }}
 
@@ -128,7 +128,7 @@
           </van-popover>
         </div>
         <div class="value lh-16">≈{{ myprofit }} ERB</div>
-      </div>
+      </div> -->
       <div class="card">
         <div class="label lh-16 mb-2">
           {{ t("bourse.gasFee") }}
