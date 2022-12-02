@@ -1,5 +1,5 @@
 
-const isProduct = process.env.NODE_ENV == 'production' || process.env.NODE_ENV == '235' ? true : false
+const isProduct = process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'test' ? true : false
 const webpack = require('webpack')
 module.exports = {
   productionSourceMap: !isProduct,
@@ -78,7 +78,13 @@ module.exports = {
 
   configureWebpack: config => {
     if (isProduct) {
-      config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
+      config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
+      config.optimization.minimizer[0].options.terserOptions.compress.warnings = false;
+      config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = true;
+      config.optimization.minimizer[0].options.terserOptions.compress.pure_funcs = [
+        "console.log"
+      ];
+
     }
     config.optimization.splitChunks = {
       chunks: 'all',

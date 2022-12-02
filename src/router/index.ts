@@ -7,7 +7,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw, createWebHistory } 
 import Home from '../views/account/home.vue'
 import { useLogin } from '@/components/navHeader/hooks/login';
 import { getQuery } from '@/utils/utils'
-const isProduct = process.env.NODE_ENV == 'production'
+
 import transferAccount from '@/views/transferAccounts/route'
 import receive from '@/views/receive/route'
 import tokens from '@/views/tokens/route'

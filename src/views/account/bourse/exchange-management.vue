@@ -88,7 +88,6 @@
 </template>
 <script lang="ts">
 import NavHeader from "@/components/navHeader/index.vue";
-import { encode, decode } from "js-base64";
 import moment from 'moment'
 window.moment = moment
 import Tip from "@/components/tip/index.vue";
@@ -177,7 +176,7 @@ export default {
           "latest",
         ]);
         console.warn(accountInfo)
-        exchangeName.value = decode(accountInfo.ExchangerName);
+        exchangeName.value = accountInfo.ExchangerName;
       } finally {
         loading.value = false;
       }

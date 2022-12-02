@@ -7,7 +7,6 @@ import { ExchangeStatus, getWallet, TransactionReceipt, handleGetTranactionRecei
 import { hashMessage } from "@/utils/ether";
 import { useSign } from "@/views/sign/hooks/sign";
 import { web3 } from "@/utils/web3";
-import { encode, decode } from 'js-base64';
 
 import {
   createExchange,
@@ -493,7 +492,7 @@ export const useExchanges = () => {
     console.warn('wallet', wallet)
     const res = await wallet.provider.send('eth_getAccountInfo', [address, "latest"])
     const { ExchangerName, BlockNumber } = res
-    let exchange_name = decode(ExchangerName);
+    let exchange_name = ExchangerName;
     try {
       // If the exchange is not successfully deployed, redeploy it
       const installData = await is_install(address)
@@ -634,7 +633,8 @@ export const useExchanges = () => {
     miunsExchangeBalance,
     send2,
     sendTx2,
-    getContract
+    getContract,
+    authExchange
   };
 };
 

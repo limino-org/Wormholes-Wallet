@@ -446,7 +446,6 @@ import affirmDialog from "./affirm-dialog.vue";
 import closeDialog from "./close-dialog.vue";
 import closeAffirmDialog from "./close-affirm-dialog.vue";
 import closeHome from "./close-home.vue";
-import { encode, decode } from "js-base64";
 import eventBus from "@/utils/bus";
 import CustomExchangeModal from "./customExchangeModal.vue";
 import { useToast } from "@/plugins/toast";

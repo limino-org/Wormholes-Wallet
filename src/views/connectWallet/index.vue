@@ -57,7 +57,8 @@ export default {
     const { t } = useI18n();
     const { query } = route;
     const { backUrl, action, address, params }: any = query;
-    const queryData = params ? JSON.parse(params) : {};
+    debugger
+    const queryData = params ? JSON.parse(decodeURIComponent(params)) : {};
     const { $toast } = useToast();
     Toast.loading({
       message: "loading...",

@@ -84,12 +84,12 @@ import { useToast } from "@/plugins/toast";
 import { hashMessage } from "@/utils/ether";
 import BigNumber from "bignumber.js";
 import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
-import { encode, decode } from "js-base64";
 import { Actions } from "@/views/connectWallet/index.vue";
 import { useSign } from "@/views/sign/hooks/sign";
 import { handleConnectBackUrl } from "../connectWallet/index.vue";
 import { debug } from "util";
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
+
 const { $tradeConfirm } = useTradeConfirm();
 const newErbAbi = require("@/assets/json/packagePay.json");
 
@@ -114,7 +114,6 @@ const router = useRouter();
 function clickLeft() {
   router.replace({ name: "wallet" });
 }
-
 onMounted(() => {
   dispatch("account/updateAllBalance");
 });
@@ -127,14 +126,43 @@ async function getContract(wallet: any) {
   const contractWithSigner = contract.connect(wallet);
   return contractWithSigner;
 }
-const callBack = () => {
+
+async function getAuthExchange(){
+  const wallet = await getWallet();
+    const number = await wallet.provider.getBlockNumber();
+    const block_number = utils.hexlify((number) + 6307200);
+    const { address } = wallet;
+    const exchangeraddr = '0x7fbc8ad616177c6519228fca4a7d9ec7d1804900'
+    const newParams = {
+      exchanger_owner: address,
+      to: exchangeraddr,
+      block_number,
+    };
+    const str = `${address}${exchangeraddr}${block_number}`;
+    const newstr = hashMessage(str);
+    return new Promise((resolve, reject) => {
+      toSign({
+        sig: newstr,
+        address: wallet.address,
+        call: async (sigstr: string) => {
+          const params = { ...newParams, sig: sigstr }
+          resolve(params)
+        }
+      })
+    })
+
+}
+
+const callBack = async () => {
+  const exchangeAuth = await getAuthExchange()
   const data = resData.value;
   const url = handleConnectBackUrl({
     action: Actions.sendOpenExchangeTransaction,
     data: {
       auth: data,
       status1: receipt1 ? receipt1.status: '',
-      status2: receipt2 ? receipt2.status : ''
+      status2: receipt2 ? receipt2.status : '',
+      exchangeAuth
     },
     backUrl,
   });
@@ -157,20 +185,13 @@ async function toSend() {
     failBack: callBack,
   });
   try {
-    const network = clone(state.account.currentNetwork);
     // sendLoading.value = true
     const wallet = await getWallet();
     if(tx1){
       const { pledge, fee_rate, name } = tx1;
       data1 = await send1(name, fee_rate, pledge);
       receipt1 = await wallet.provider.waitForTransaction(data1.hash);
-      rep1 = handleGetTranactionReceipt(
-      TransactionTypes.default,
-      receipt1,
-      data1,
-      network
-    );
-    commit("account/PUSH_TRANSACTION", rep1);
+    await dispatch('account/waitTxQueueResponse')
     const { status: status1 } = receipt1;
     if(!status1) {
       $tradeConfirm.update({ status: "fail" })
@@ -181,13 +202,7 @@ async function toSend() {
       const { package_id, amount } = tx2;
       data2 = await send2(package_id, amount);
       receipt2 = await data2.wait();
-      rep2 = handleGetTranactionReceipt(
-      TransactionTypes.contract,
-      receipt2,
-      data2,
-      network
-    );
-    commit("account/PUSH_TRANSACTION", rep2);
+    await dispatch('account/waitTxQueueResponse')
     const { status: status2 } = receipt2;
     if(!status2) {
       $tradeConfirm.update({ status: "fail" }) 
@@ -198,7 +213,7 @@ async function toSend() {
     let name = ''
     if(!tx1){
       const {ExchangerName} = await wallet.provider.send("eth_getAccountInfo", [address,"latest"]);
-      name = web3.utils.fromUtf8(ExchangerName)
+      name = ExchangerName
     } else {
       name = tx1.name
     }

@@ -105,10 +105,11 @@ export default {
     const currentNetwork = computed(() => store.state.account.currentNetwork);
     const route = useRoute();
     const { query } = route;
-    const { from, to, value, contractMethod, package_time,price,name,desc,package_id, status, ownaddr }: any = query.tx
+    let { from, to, value, contractMethod, package_time,price,name,desc,package_id, status, ownaddr }: any = query.tx
       ? JSON.parse(query.tx.toString())
       : {};
-    const amount = ethers.utils.formatEther(value ? value : 0 || {_hex:"0x00",_isBigNumber: true})
+    const amount = value ? value + '' : '0' 
+    const newVal = ethers.utils.parseEther(amount)
     const { backUrl }: any = query;
 
    async function getContract(wallet: any) {
@@ -140,6 +141,7 @@ export default {
         const contractWithSigner = await getContract(wallet)
         let tx = null
         debugger
+        package_id = package_id + '';
         switch(contractMethod){
             case 'addPackage':
             tx = await contractWithSigner.functions[contractMethod](package_time,price,name,desc)
@@ -151,11 +153,15 @@ export default {
             tx = await contractWithSigner.functions[contractMethod](package_id,status)
                 break;
             case 'deletePackage':
-            tx = await contractWithSigner.functions[contractMethod](package_id)
+            tx = await contractWithSigner.functions[contractMethod](package_id )
                 break;
             case 'payForPackageByAdmin':
-              debugger
             tx = await contractWithSigner.functions[contractMethod](package_id, ownaddr)
+              break;
+            case 'payForPackage':
+            tx = await contractWithSigner.functions[contractMethod](package_id,{
+              value: newVal
+            })
               break;
 
         }

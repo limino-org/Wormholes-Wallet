@@ -1,7 +1,7 @@
 
 import { httpGet, httpPost } from '../request'
 
-const isProduct = process.env.NODE_ENV == 'production' ? true : false
+const isProduct = process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'test' ? true : false
 const service = '/exchans'
 
 // const exchantest = isProduct ? '/c0x5051580802283c7b053d234d124b199045ead750' : ''
