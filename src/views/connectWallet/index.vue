@@ -292,7 +292,11 @@ export default {
       if (nowAccount.value.address.toUpperCase() != accountInfo.value.address.toUpperCase()) {
         return await handleAccount(nowAccount.value, 0)
       } else {
-        return await getWallet()
+        try {
+          return await getWallet()
+        }catch(err){
+          Toast(err.toString())
+        }
       }
 
     }
