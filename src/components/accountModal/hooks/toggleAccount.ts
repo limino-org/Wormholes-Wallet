@@ -100,6 +100,8 @@ export const useToggleAccount = () => {
     }
 
     createWalletByPath(async (wallet: any, mnemonic: Mnemonic) => {
+      eventBus.emit('beforeChangeAccount')
+
       const { privateKey, address } = wallet
       const params: EncryptPrivateKeyParams = {
         privateKey,
@@ -109,6 +111,7 @@ export const useToggleAccount = () => {
       await dispatch('account/addAccount', { keyStore, mnemonic, address }).finally(() => {
         createLoading.value = false
       })
+      eventBus.emit('changeAccount', address)
       handleUpdate()
       dispatch("account/getExchangeStatus")
       createLoading.value = false

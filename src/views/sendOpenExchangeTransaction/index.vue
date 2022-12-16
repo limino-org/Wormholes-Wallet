@@ -93,7 +93,7 @@ import { TransactionReceipt } from "@ethersproject/abstract-provider";
 const { $tradeConfirm } = useTradeConfirm();
 const newErbAbi = require("@/assets/json/packagePay.json");
 
-const { abi, address: contractAddress } = newErbAbi;
+const { abi,} = newErbAbi;
 debugger
 const { t } = useI18n();
 const { sendTo } = useExchanges();
@@ -117,7 +117,7 @@ function clickLeft() {
 onMounted(() => {
   dispatch("account/updateAllBalance");
 });
-async function getContract(wallet: any) {
+async function getContract(wallet: any, contractAddress: string) {
   if (!contractAddress) {
     throw new Error("error contractAddress cant't be null");
   }
@@ -307,7 +307,7 @@ async function send2(package_id: string = "", amount: string = "0") {
     debugger
     const network = clone(state.account.currentNetwork);
     const wallet = await getWallet();
-    const contractWithSigner = await getContract(wallet);
+    const contractWithSigner = await getContract(wallet, tx2.contractAddr);
     const value = ethers.utils.parseEther(amount + '')
     const data = await contractWithSigner.functions.payForPackage(package_id +'',{
       value

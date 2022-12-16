@@ -1000,13 +1000,13 @@ export default defineComponent({
     );
 
     const Coefficient = computed(() => {
-      return ethAccountInfo.value.Coefficient / 10;
+      return ethAccountInfo.value.Coefficient;
     });
     const expresionClass = computed(() => {
       const num = Number(Coefficient.value)
-      if (num < 4) return "sad";
-      if (num >= 4 && num <= 5) return "neutral";
-      if (num > 5) return "smile";
+      if (num < 40) return "sad";
+      if (num >= 40 && num <= 50) return "neutral";
+      if (num > 50) return "smile";
     });
     console.log(isExchanger_flag);
     console.log("===============================11111111111==========");
@@ -1185,7 +1185,7 @@ export default defineComponent({
     const showReconveryModal = ref(false);
     const reconveryDetail = ref({});
     const handleShowReconveryModal = async () => {
-      const sendAmount = 7 - Coefficient.value;
+      const sendAmount = (70 - Coefficient.value)/10;
       if (
         new BigNumber(accountInfo.value.amount).minus(1).lt(sendAmount)
       ) {
