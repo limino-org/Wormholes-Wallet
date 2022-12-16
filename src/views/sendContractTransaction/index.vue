@@ -82,8 +82,7 @@ import { getRandomIcon } from "@/utils/index";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { decode } from 'js-base64';
 const newErbAbi = require("@/assets/json/packagePay.json");
-const { abi, address: contractAddress } = newErbAbi;
-const {address: defaultContractAddr} = require('@/assets/json/packagePay.json')
+const { abi } = newErbAbi;
 export default {
   name: "pageSendComfirm",
   components: {
@@ -105,9 +104,11 @@ export default {
     const currentNetwork = computed(() => store.state.account.currentNetwork);
     const route = useRoute();
     const { query } = route;
-    let { from, to, value, contractMethod, package_time,price,name,desc,package_id, status, ownaddr }: any = query.tx
+    let { from, to, value, contractMethod, package_time,price,name,desc,package_id, status, ownaddr, contractAddr: contractAddress  }: any = query.tx
       ? JSON.parse(query.tx.toString())
       : {};
+    const defaultContractAddr = ref(contractAddress)
+
     const amount = value ? value + '' : '0' 
     const newVal = ethers.utils.parseEther(amount)
     const { backUrl }: any = query;
@@ -177,9 +178,10 @@ export default {
             TransactionTypes.contract,
             receipt,
             tx,
-            network
+            network,
         )
-        store.commit("account/PUSH_TRANSACTION", rep);
+        
+        store.commit("account/PUSH_TRANSACTION", {...rep,sendStatus:'success'});
         const back = decode(backUrl)
         const newBack =`${back}${back.indexOf('?') > -1 ? '&' : '?'}` 
         $tradeConfirm.update({

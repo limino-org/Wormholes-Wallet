@@ -80,7 +80,7 @@
         {{ exchangerBalance }} ERB
         <span>≈${{ toUsd(exchangerBalance, 2) }}</span>
       </div>
-
+    
       <div class="bourse-container-meaning bt mt-14" v-if="!isExchanger_flag">
         <span>{{ t("bourse.marketCom") }}</span>
         <el-tooltip
@@ -117,6 +117,7 @@
           @change="handleMoney"
         />
       </div>
+   
       <div class="bourse-container-meaning bt mt-14" v-if="!isExchanger_flag">
         <span>{{ t("bourse.stakingFee") }}</span>
         <el-tooltip
@@ -134,33 +135,35 @@
         700ERB <span>(≈${{ toUsd(700, 2) }})</span>
       </div>
 
-      <div class="bourse-container-meaning bt mt-14" v-if="isExchanger_flag">
-        <span>{{ t("createExchange.addPl") }} </span>
-        <el-tooltip
-          popper-class="tooltip3"
-          class="box-item"
-          effect="dark"
-          :content="t('bourse.tip4')"
-          placement="right"
-          trigger="hover"
-        >
-          <van-icon name="question" class="ml-4" color="#9A9A9A" />
-        </el-tooltip>
-        <div class="add-amount f-14 text-bold mt-6 mb-14">
-          {{ addAmount || 0 }} ERB
-        </div>
-        <el-slider
-          v-model="addAmount"
-          :min="minBalance"
-          :max="maxBalance"
-          @input="changeAdd"
-          :marks="marks2"
-          :step="1"
-        />
-        <div class="mt-16">
-          <van-field type="number" v-model="addAmount" @change="handleAdd" />
-        </div>
-      </div>
+     <!--
+       // <div class="bourse-container-meaning bt mt-14" v-if="isExchanger_flag">
+      //   <span>{{ t("createExchange.addPl") }} </span>
+      //   <el-tooltip
+      //     popper-class="tooltip3"
+      //     class="box-item"
+      //     effect="dark"
+      //     :content="t('bourse.tip4')"
+      //     placement="right"
+      //     trigger="hover"
+      //   >
+      //     <van-icon name="question" class="ml-4" color="#9A9A9A" />
+      //   </el-tooltip>
+      //   <div class="add-amount f-14 text-bold mt-6 mb-14">
+      //     {{ addAmount || 0 }} ERB
+      //   </div>
+      //   <el-slider
+      //     v-model="addAmount"
+      //     :min="minBalance"
+      //     :max="maxBalance"
+      //     @input="changeAdd"
+      //     :marks="marks2"
+      //     :step="1"
+      //   />
+      //   <div class="mt-16">
+      //     <van-field type="number" v-model="addAmount" @change="handleAdd" />
+      //   </div>
+      // </div>
+      -->
       <div class="bourse-container-meaning bt mt-14" v-if="!isExchanger_flag">
         <span>{{ t("bourse.marketServer") }} </span>
         <el-tooltip
@@ -309,21 +312,22 @@
                 type="primary"
                 >{{ t("bourse.saveExchange") }}</van-button
               >
+              <!--
               <van-button
                 v-else
                 class="b1"
                 @click="addSubmit"
                 block
                 type="primary"
-                >{{ t("bourse.saveExchange") }}</van-button
-              >
+                >{{ t("bourse.saveExchange") }}</van-button>
+              -->
             </template>
           </template>
         </div>
       </div>
     </div>
     <div class="flex center loading-page" v-else>
-      <van-loading color="#037CD6" />
+    <van-loading color="#037CD6" />
     </div>
     <CustomExchangeModal
       v-model="showAcount"

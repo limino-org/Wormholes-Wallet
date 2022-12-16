@@ -228,9 +228,13 @@ export function transactionStatus(txData: any){
 
   export const transactionStatusClass = (data: any) => {
     const {sendStatus,receipt} = data
+
     if(sendStatus === 'pendding'){
       return 'waitting'
     }
+    // if(receipt){
+    //   return receipt.status ? 'success' : 'failed'
+    // }
     if(sendStatus === 'success' && receipt){
       const {status} = receipt
       return status ? 'success' : 'failed'

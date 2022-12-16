@@ -727,13 +727,16 @@
 
     }
     .btn-groups .container {
-        &>button{width: 49%;}
+        &>button{width: 100%;}
 
     }
     .btn-groups {
         :deep(){
             .van-popover__wrapper {
-                width: 49%;
+                width: 100%;
+                button {
+                    width: 100% !important;
+                }
             }
         }
     }

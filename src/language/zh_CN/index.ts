@@ -717,9 +717,10 @@ export default {
     // 矿工质押
     minerspledge: {
         smileTip:"你的信誉很好，{value}，请保留它，获得更多的收入 {btn}",
-        sadTip:"您的信誉度低于{value}，请单击右侧的按钮恢复 {btn}",
-        neutralTip:"您的信誉度低于{value}，请单击右侧的按钮恢复 {btn}",
-        resetBtnTip:"有了这个按钮，你可以恢复你的信誉到7.1信誉将花费1 ERB。ERB成本将被虫洞区块链烧毁。",
+        sadTip:"您的信誉度低于70，请单击右侧的按钮恢复 {btn}",
+        neutralTip:"您的信誉度低于70，请单击右侧的按钮恢复 {btn}",
+        resetBtnTip:"有了这个按钮，你可以恢复你的信誉到70信誉将花费1 ERB。ERB成本将被虫洞区块链烧毁。",
+        homeTip:"您的信誉度低于70，恢复你的信誉度以获得更高收入。{btn}",
         gotIt:"知道了>",
         credibility:"权重",
         upCredibility:"权重提高",

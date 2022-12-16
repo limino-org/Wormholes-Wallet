@@ -26,14 +26,14 @@ trigger="manual"
       <span class="gotIt"  @click="showExpresion = false">{{t('minerspledge.gotIt')}}</span>
     </template>
   </i18n-t>
-  <i18n-t tag="div" v-if="expresionClass == 'sad'" keypath="minerspledge.sadTip">
-    <template v-slot:value>{{Coefficient}}</template>
+  <i18n-t tag="div" v-if="expresionClass == 'sad'" keypath="minerspledge.homeTip">
+    <!-- <template v-slot:value>{{Coefficient}}</template> -->
     <template v-slot:btn>
       <span class="gotIt"  @click="showExpresion = false">{{t('minerspledge.gotIt')}}</span>
     </template>
   </i18n-t>
-  <i18n-t tag="div" v-if="expresionClass == 'neutral'" keypath="minerspledge.neutralTip">
-    <template v-slot:value>{{Coefficient}}</template>
+  <i18n-t tag="div" v-if="expresionClass == 'neutral'" keypath="minerspledge.homeTip">
+    <!-- <template v-slot:value>{{Coefficient}}</template> -->
     <template v-slot:btn>
       <span class="gotIt" @click="showExpresion = false">{{t('minerspledge.gotIt')}}</span>
     </template>
@@ -522,12 +522,12 @@ export default {
       immediate: true
     })
     const Coefficient = computed(() => {
-      return ethAccountInfo.value.Coefficient / 10;
+      return ethAccountInfo.value.Coefficient;
     });
     const expresionClass = computed(() => {
-      if (Coefficient.value < 4) return "sad";
-      if (Coefficient.value == 4 || Coefficient.value == 5) return "neutral";
-      if (Coefficient.value > 5) return "smile";
+      if (Coefficient.value < 40) return "sad";
+      if (Coefficient.value == 40 || Coefficient.value == 50) return "neutral";
+      if (Coefficient.value > 50) return "smile";
     });
     return {
       handleShowSwitch,
