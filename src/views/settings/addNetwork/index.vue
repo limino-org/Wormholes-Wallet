@@ -154,7 +154,7 @@ export default {
     }: any = data;
     const { state, commit,dispatch } = store;
     const label: Ref<string> = ref(qlabel);
-    const URL: Ref<string> = ref(qurl);
+    const URL: Ref<string> = ref(qurl || query.URL || '');
     const chainId: Ref<number> = ref(qid);
     const ID: Ref<string> = ref("");
     const currencySymbol: Ref<string> = ref(qsymbol);

@@ -19,14 +19,6 @@ import { JsonObject } from "type-fest";
 import { getCookies } from "@/utils/jsCookie";
 import NavHeader from "@/components/navHeader/index.vue";
 import { useToggleAccount } from '@/components/accountModal/hooks/toggleAccount'
-import {
-  createWalletByMnemonic,
-  createWalletByJson,
-  CreateWalletByJsonParams,
-  ImportPrivateKey,
-  CreateWalletByMnemonicParams,
-  createRandomWallet,
-} from "@/utils/ether";
 import { ethers } from "ethers";
 import { useI18n } from "vue-i18n";
 import { decode } from "js-base64";
@@ -57,7 +49,6 @@ export default {
     const { t } = useI18n();
     const { query } = route;
     const { backUrl, action, address, params }: any = query;
-    debugger
     const queryData = params ? JSON.parse(decodeURIComponent(params)) : {};
     const { $toast } = useToast();
     Toast.loading({
@@ -68,6 +59,9 @@ export default {
     const accountList = computed(() => state.account.accountList);
     const accountInfo = computed(() => state.account.accountInfo);
     const currentNetwork = computed(() => state.account.currentNetwork);
+    if(!accountList.value.length){
+      router.replace({name:"guidance"})
+    }
     if(!password) {
         // @ts-ignore
         router.replace({name:"withpassword",query: {backUrl:'connectWallet',loginParams: {...query}}})
@@ -92,7 +86,8 @@ export default {
         "getBalance",
         "sendTransaction",
         "sendOpenExchangeTransaction",
-        "sendContractTransaction"
+        "sendContractTransaction",
+        "addNetwork"
       ];
       if (!backUrl || !action) {
         $toast.warn("Parameter error");
@@ -102,7 +97,6 @@ export default {
         $toast.warn("Unsupported method");
         return;
       }
-
       switch (action) {
         case "getAddress":
           getAddress();
@@ -143,13 +137,26 @@ export default {
         return;
       }
 
-          sendContractTransaction()
-          break;
+        sendContractTransaction()
+        break;
+        case 'addNetwork':
+        addNetwork()
+        break;
       }
       Toast.clear();
     };
 
     handleInitData();
+
+    function addNetwork() {
+      router.replace({
+        name:'addNetwork',
+        query: {
+          backUrl,
+          URL: queryData.URL,
+        }
+      })
+    }
 
     async function sendContractTransaction (){
       const wallet = await getWallet2();
@@ -215,6 +222,7 @@ export default {
    
       const accountInfo = computed(() => state.account.accountInfo);
       const { address } = accountInfo.value;
+      debugger
       let netWork: any = {
         chainId: 51888
       }
