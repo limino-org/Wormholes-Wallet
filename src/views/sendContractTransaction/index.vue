@@ -109,8 +109,9 @@ export default {
       : {};
     const defaultContractAddr = ref(contractAddress)
 
-    const amount = value ? value + '' : '0' 
+    const amount = value ? value.toString() : '0' 
     const newVal = ethers.utils.parseEther(amount)
+    debugger
     const { backUrl }: any = query;
 
    async function getContract(wallet: any) {
@@ -143,12 +144,13 @@ export default {
         let tx = null
         debugger
         package_id = package_id + '';
+        const newPrice = utils.parseEther(price)
         switch(contractMethod){
             case 'addPackage':
-            tx = await contractWithSigner.functions[contractMethod](package_time,price,name,desc)
+            tx = await contractWithSigner.functions[contractMethod](package_time,newPrice,name,desc)
                 break;
             case 'modifyPackage':
-            tx = await contractWithSigner.functions[contractMethod](package_id,package_time,price,name,desc)
+            tx = await contractWithSigner.functions[contractMethod](package_id,package_time,newPrice,name,desc)
                 break;
             case 'changeStatus':
             tx = await contractWithSigner.functions[contractMethod](package_id,status)
