@@ -130,7 +130,7 @@
             </template>
           </van-popover>
         </div>
-        <div v-if="Coefficient < 7">
+        <div v-if="Coefficient < 70">
         <!-- <div> -->
           <el-tooltip
             popper-class="reset-tooltip"

@@ -274,6 +274,7 @@ export default {
     let transactionData: any = reactive({ data: {} });
     const showTransactionModal: Ref<boolean> = ref(false);
     const handleView = (e: any) => {
+      console.warn('e--', e)
       transactionData.data = e;
       showTransactionModal.value = true;
     };

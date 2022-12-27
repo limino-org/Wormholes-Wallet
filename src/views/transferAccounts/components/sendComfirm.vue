@@ -181,7 +181,6 @@ export default defineComponent({
      
     }
     onUnmounted(() => {
-      console.warn('组件卸载')
       if(waitTime.value) {
         clearInterval(waitTime.value)
       }
