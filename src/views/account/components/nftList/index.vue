@@ -521,7 +521,7 @@ export default defineComponent({
       const pnum = new BigNumber(sumP.value).multipliedBy(4096).multipliedBy(0.65);
       const cnum = new BigNumber(sumC.value).multipliedBy(256).multipliedBy(0.271);
       const nnum = new BigNumber(sumN.value).multipliedBy(16).multipliedBy(0.143);
-      const fnum = new BigNumber(sumF.value).multipliedBy(0.095);
+      const fnum = new BigNumber(sumF.value).multipliedBy(0.03);
       return pnum.plus(cnum).plus(nnum).plus(fnum).toString();
     });
     const showTime = () => {

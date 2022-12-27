@@ -264,7 +264,7 @@ export default defineComponent({
       const blockNumber = await wallet.provider.getBlockNumber();
       const addressInfo = await getAccountAddr(wallet.address)
       const {rewardSNFTCount} = addressInfo
-      historyProfit.value = new BigNumber(rewardSNFTCount).multipliedBy(0.095).toString()
+      historyProfit.value = new BigNumber(rewardSNFTCount).multipliedBy(0.03).toString()
       const blockn = web3.utils.toHex(blockNumber.toString());
       const data = await wallet.provider.send("eth_getValidator", [blockn]);
       // const data2 = await getAccount(accountInfo.value.address)

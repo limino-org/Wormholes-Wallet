@@ -144,7 +144,8 @@ export default {
         let tx = null
         debugger
         package_id = package_id + '';
-        const newPrice = utils.parseEther(price)
+        let newPrice = ''
+        price ? newPrice = utils.parseEther(price.toString()) : ''
         switch(contractMethod){
             case 'addPackage':
             tx = await contractWithSigner.functions[contractMethod](package_time,newPrice,name,desc)
