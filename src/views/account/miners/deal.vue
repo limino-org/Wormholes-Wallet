@@ -136,7 +136,7 @@
             popper-class="reset-tooltip"
             class="reset-tip"
             effect="dark"
-            :content="t('minerspledge.resetBtnTip')"
+            :content="t('minerspledge.resetBtnTip', {value: payErb})"
             placement="top-end"
             trigger="hover"
           >
@@ -1000,7 +1000,7 @@ export default defineComponent({
     );
 
     const Coefficient = computed(() => {
-      return ethAccountInfo.value.Coefficient;
+      return 22;
     });
     const expresionClass = computed(() => {
       const num = Number(Coefficient.value)
@@ -1184,10 +1184,12 @@ export default defineComponent({
 
     const showReconveryModal = ref(false);
     const reconveryDetail = ref({});
+    const payErb = ref(0)
     const handleShowReconveryModal = async () => {
       const sendAmount = (70 - Coefficient.value)/10;
+      payErb.value = sendAmount
       if (
-        new BigNumber(accountInfo.value.amount).minus(1).lt(sendAmount)
+        new BigNumber(accountInfo.value.amount).lt(sendAmount)
       ) {
         $toast.warn(t("common.noMoney"));
         return;
@@ -1255,6 +1257,7 @@ export default defineComponent({
       reconveryDetail,
       showReconveryModal,
       handleShowReconveryModal,
+      payErb,
       showClose,
       showMinusModal,
       handleMinusConfirm,

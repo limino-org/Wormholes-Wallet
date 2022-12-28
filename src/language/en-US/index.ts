@@ -722,7 +722,7 @@ export default {
     neutralTip:"Your credibility is lower than 70, click the button on the right to recovery it. {btn}",
     homeTip:"Your Credibility is lower than 70, increase your Credibility to gain higher income. {btn}",
     gotIt:"Got it >",
-    resetBtnTip:"With this button，you can recover your credibility to 70 credibility will cost 1 ERB. The ERB cost will be burnt by Wormholes block chain.",
+    resetBtnTip:"With this button，you can recover your credibility to 70 credibility will cost {value} ERB. The ERB cost will be burnt by Wormholes block chain.",
     credibility:"Credibility",
     upCredibility:"Credibility will be increased",
     invalidChainId:"Invalid chainId {chainid}",
