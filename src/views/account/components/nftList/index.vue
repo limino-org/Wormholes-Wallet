@@ -518,10 +518,12 @@ export default defineComponent({
       return list.value.filter((l: any) => l.flag && l.tag == "F").length;
     });
     const sumAll = computed(() => {
-      const pnum = new BigNumber(sumP.value).multipliedBy(4096).multipliedBy(0.65);
-      const cnum = new BigNumber(sumC.value).multipliedBy(256).multipliedBy(0.271);
-      const nnum = new BigNumber(sumN.value).multipliedBy(16).multipliedBy(0.143);
-      const fnum = new BigNumber(sumF.value).multipliedBy(0.03);
+      //  @ts-ignore
+      const {t0,t1,t2,t3} = store.state.configuration.setting.conversion
+      const pnum = new BigNumber(sumP.value).multipliedBy(4096).multipliedBy(t3);
+      const cnum = new BigNumber(sumC.value).multipliedBy(256).multipliedBy(t2);
+      const nnum = new BigNumber(sumN.value).multipliedBy(16).multipliedBy(t1);
+      const fnum = new BigNumber(sumF.value).multipliedBy(t0);
       return pnum.plus(cnum).plus(nnum).plus(fnum).toString();
     });
     const showTime = () => {
@@ -726,7 +728,7 @@ export default defineComponent({
       onLoad();
     });
     const tabList = ref([
-      // { label: t("createExchange.redemption"), value: "3", select: true },
+      // { label: t("createExchange.redemption"), value: "3", select: true },w
       { label: t("createExchange.convert"), value: "2", select: true },
     ]);
     const tabIndex = ref("2");

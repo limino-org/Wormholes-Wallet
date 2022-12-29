@@ -136,7 +136,7 @@
             popper-class="reset-tooltip"
             class="reset-tip"
             effect="dark"
-            :content="t('minerspledge.resetBtnTip')"
+            :content="t('minerspledge.resetBtnTip', {value: payErb})"
             placement="top-end"
             trigger="hover"
           >
@@ -626,6 +626,9 @@ export default defineComponent({
     const showCloseBtn = ref(false);
     const network = ref({
       chainId: null
+    })
+    const payErb = computed(() => {
+      return (70 - Coefficient.value)/10
     })
     //  const { state } = store;
     onMounted(async () => {
@@ -1185,11 +1188,11 @@ export default defineComponent({
     const showReconveryModal = ref(false);
     const reconveryDetail = ref({});
     const handleShowReconveryModal = async () => {
-      const sendAmount = (70 - Coefficient.value)/10;
+      const sendAmount = (70 - Coefficient.value)/10 ;
       if (
-        new BigNumber(accountInfo.value.amount).minus(1).lt(sendAmount)
+        new BigNumber(accountInfo.value.amount).lt(sendAmount+ 1)
       ) {
-        $toast.warn(t("common.noMoney"));
+        $toast.warn(t("minerspledge.noMoney", {value: sendAmount+ 1}));
         return;
       }
       try {
@@ -1245,6 +1248,7 @@ export default defineComponent({
         $tradeConfirm.update({status:"success",callBack})
         dispatch('account/waitTxQueueResponse')
       }catch(err){
+        $tradeConfirm.update({status:"fail",callBack})
         console.error(err)
       }
     };
@@ -1271,6 +1275,7 @@ export default defineComponent({
       selectAccount,
       formDom2,
       formatValueNumber,
+      payErb,
       closeDialogSubmit,
       closeDialogTime,
       isDelegate,

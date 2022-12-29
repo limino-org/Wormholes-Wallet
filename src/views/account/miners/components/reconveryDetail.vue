@@ -7,7 +7,7 @@
       </div>
       <div class="card border-bottom">
         <div class="card-tit">{{t('minerspledge.upCredibility')}}</div>
-        <div class="card-val">{{ data.Coefficient }} to 7</div>
+        <div class="card-val">{{ data.Coefficient }} to 70</div>
       </div>
       <div class="card border-bottom">
         <div class="card-tit">{{t('receive.amount')}}</div>
@@ -19,7 +19,7 @@
       </div>
     </div>
     <Tip
-      message="Tips：Here is the description，here is the description，here is the description，Here is the description…"
+      :message="t('minerspledge.resetSendTip')"
     />
     <div class="flex evenly btn-box">
       <van-button plain @click="handleCancel">{{

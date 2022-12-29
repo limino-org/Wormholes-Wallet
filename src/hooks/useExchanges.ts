@@ -237,8 +237,6 @@ export const useExchanges = () => {
         value: amount,
         data:data3,
       };
-      // @ts-ignore
-      const network = clone(store.state.account.currentNetwork)
       const data = await store.dispatch('account/transaction',tx1)
         localStorage.setItem('tx1', JSON.stringify(data))
         if (!isServer) {
