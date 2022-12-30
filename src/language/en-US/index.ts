@@ -142,7 +142,7 @@ export default {
     right_and_interests:
       "You need to pledge at least 100000ERB and you will become our pledge node after selecting the pledge and downloading our node program.  In the meantime, you need to keep your node program running at all times.  After becoming an equity pledge node, you will have the opportunity to be selected to participate in our blockchain consensus, with a high probability of being selected to distribute SNFT rewards.  The higher your pledge, the more likely you are to be selected.  ",
     exchange_pledge:
-      "You need to pledge a minimum of 280ERB to open your exchange. After choosing the exchange pledge, you can choose to use your own server or we will provide the server (there will be an additional charge).  After successfully opening your exchange, you will have the opportunity to get block subsidy of blockchain. The higher your pledge amount, the higher the probability of being selected.  ",
+      "You need to pledge a minimum of 700ERB to open your exchange. After choosing the exchange pledge, you can choose to use your own server or we will provide the server (there will be an additional charge).  After successfully opening your exchange, you will have the opportunity to get block subsidy of blockchain. The higher your pledge amount, the higher the probability of being selected.  ",
     no_data: "No Data",
     mainNetwork: "Main Network",
     save: "Save",
@@ -1163,7 +1163,7 @@ export default {
     period:"Server Period Remaining",
     periodAdd:"Additional Server Period",
     addServeAmount:"You can rent our server to host your marketplace for 200 ERB a year. Afer paying, your marketplace will be hosted on our server.",
-    minusStaking:"You have to stake at least 280ERB to keep your exchange open.And also,after your exchange closed,you will not have a chance to get rewards when a new block is created.",
+    minusStaking:"You have to stake at least 700ERB to keep your exchange open.And also,after your exchange closed,you will not have a chance to get rewards when a new block is created.",
 
     tipname:"This is the name of your NFT exchange.",
     tipstake:"This is the total amount of ERB you have staked.",
@@ -1187,6 +1187,8 @@ export default {
     amountcannotbelessthan: 'Amount cannot be less than{props}'
   },
   error:{
-    500:"Parameter is invalid."
+    500:"Parameter is invalid.",
+    timeout:"Network is busy at this moment.The transaction has been put into the queue,please wait for a moment and do not send same tranactions.",
+
 }
 }
