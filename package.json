@@ -19,6 +19,7 @@
     "ethers": "^5.5.3",
     "install": "^0.13.0",
     "js-base64": "^3.7.2",
+    "localStorage": "^1.0.4",
     "mitt": "^3.0.0",
     "moment": "^2.29.1",
     "postcss-px2rem": "^0.3.0",

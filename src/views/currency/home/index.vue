@@ -253,19 +253,23 @@ export default {
       },50)
     };
 
+    const handleAsyncTxList = () => {
+      return store.dispatch('txList/loopAsyncTxList', accountInfo.value.address)
+    }
     let waitTime: any = ref(null)
     onMounted(async () => {
-      getPageList()
-      store.dispatch("account/waitTxQueueResponse", {time: null, callback(e: any){
-        console.warn('e', e)
-        waitTime.value = e
-      }}).then(res => {
-        if(res !== true){
-          eventBus.off('txPush')
-      eventBus.off('txupdate')
-        getPageList()
-        }
-      });
+      handleAsyncTxList()
+      // getPageList()
+      // store.dispatch("account/waitTxQueueResponse", {time: null, callback(e: any){
+      //   console.warn('e', e)
+      //   waitTime.value = e
+      // }}).then(res => {
+      //   if(res !== true){
+      //     eventBus.off('txPush')
+      // eventBus.off('txupdate')
+      //   getPageList()
+      //   }
+      // });
     });
     const toSend = () => {
       router.push({ name: "send", query });
