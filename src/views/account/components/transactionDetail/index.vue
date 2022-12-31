@@ -18,9 +18,9 @@
         <div class="card flex between card-border">
           <div class="label">{{t('transactionDetails.date')}}</div>
           <div class="value">
-            {{ formatDate(data.date, "MM/DD") }}
+            {{ formatDate(data.timestamp * 1000, "MM/DD") }}
             {{$t('transactionDetails.at')}}
-            {{ formatDate(data.date, "HH:mm ") }}
+            {{ formatDate(data.timestamp* 1000, "HH:mm ") }}
           </div>
         </div>
         <div class="card flex between smallpad">
@@ -138,19 +138,22 @@ export default defineComponent({
     // gas= gasLimit * gasPrice
     const gasFee = computed(() => {
       console.warn('props.data--------', props.data)
-      const {sendStatus,receipt, sendData} = props.data
-      if(sendStatus === 'pendding') {
-        return new BigNumber('0')
-      }
-      const {effectiveGasPrice, gasUsed} = receipt
-      if(effectiveGasPrice && gasUsed) {
-        const price = new BigNumber(utils.formatEther(effectiveGasPrice)).multipliedBy(1000000000)
-      const gasuse = new BigNumber(utils.formatEther(gasUsed)).multipliedBy(1000000000)
-      return gasuse.multipliedBy(price)
-      } else {
-        return new BigNumber('0')
-      }
-
+      // const {sendStatus,receipt, sendData , gasPrice, gasUsed} = props.data
+      // if(sendStatus === 'pendding') {
+      //   return new BigNumber('0')
+      // }
+      // const {effectiveGasPrice, gasUsed} = receipt
+      // if(effectiveGasPrice && gasUsed) {
+      //   const price = new BigNumber(utils.formatEther(effectiveGasPrice)).multipliedBy(1000000000)
+      // const gasuse = new BigNumber(utils.formatEther(gasUsed)).multipliedBy(1000000000)
+      // return gasuse.multipliedBy(price)
+      // } else {
+      //   return new BigNumber('0')
+      // }
+      const { status, gasPrice, gasUsed} = props.data
+      const bigP = new BigNumber(gasPrice).div(1000000000)
+      const bigU = new BigNumber(gasUsed).div(1000000000)
+      return bigP.multipliedBy(bigU)
     })
     const view = () => {
       window.open(`${VUE_APP_SCAN_URL}TradeDetail/${props.data.hash}`)

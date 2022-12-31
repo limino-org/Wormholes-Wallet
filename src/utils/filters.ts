@@ -7,6 +7,7 @@ import { useI18n } from 'vue-i18n'
 import { useStore } from "vuex";
 import { computed } from "vue";
 import i18n from '@/language/index'
+import { getInput } from "@/store/modules/txList";
 
 // Mask the address
 export const addressMask = (v: string) => {
@@ -163,18 +164,20 @@ export const toUsdSymbol = (v: string | number, keepDotLength = 6) => {
   // Return to transaction status
 export function transactionStatus(txData: any){
   console.log('txData', txData)
-  const {receipt,sendStatus} = txData
-  if(sendStatus === 'pendding'){
-    return  i18n.global.t('transationHistory.pendding')
-  }
-  if(sendStatus === 'success') {
-    const {status} = receipt
-    if(status === 1) {
-      return i18n.global.t('transationHistory.successly')
-    } else {
-      return i18n.global.t('transationHistory.failed')
-    }
-  }
+  // const {receipt,sendStatus} = txData
+  // if(sendStatus === 'pendding'){
+  //   return  i18n.global.t('transationHistory.pendding')
+  // }
+  // if(sendStatus === 'success') {
+  //   const {status} = receipt
+  //   if(status === 1) {
+  //     return i18n.global.t('transationHistory.successly')
+  //   } else {
+  //     return i18n.global.t('transationHistory.failed')
+  //   }
+  // }
+  const {status} = txData
+  return status ? i18n.global.t('transationHistory.successly') : i18n.global.t('transationHistory.failed')
   }
   // Return to form of transaction
   export function transactiontxType(status: string){
@@ -187,87 +190,116 @@ export function transactionStatus(txData: any){
   }
 
   export const handleSendStatus = (data: any) => {
-    const {sendStatus , receipt} = data
-    if(sendStatus === 'pendding' && !receipt){
-      return sendStatus
-    }
-    if(receipt) {
-      const {status} = receipt
-    if(status)return 'success'
-    if(!status)return 'fail'
-    }
-    return 'fail'
+    const {status} = data
+    // if(sendStatus === 'pendding' && !receipt){
+    //   return sendStatus
+    // }
+    // if(receipt) {
+    //   const {status} = receipt
+    // if(status)return 'success'
+    // if(!status)return 'fail'
+    // }
+    return status ? 'success' : 'fail'
   }
 
   export const txTypeToIcon = (data: any) => {
-    const {txType,transitionType} = data
-    let s = ''
-    if(transitionType == '6') {
-      return 'icon-caozuo-xunhuan1'
-    }
-    switch(txType.trim()){
-      case 'send':
-      case 'other':
-        s = 'icon-jiantou_youshang'
-        break;
-      case 'contract':
-        s = 'icon-icon-'
-        break;
-    }
-    return s
+    // let {txType,transitionType} = data
+
+    // txType = txType || 'send'
+    // let s = ''
+    // if(transitionType == '6') {
+    //   return 'icon-caozuo-xunhuan1'
+    // }
+    const { to, from, contractAddress} = data
+    const bigTo = to.toUpperCase()
+    const bigFrom = from.toUpperCase()
+    if(contractAddress) return 'icon-icon-'
+    if(bigTo === bigFrom) return 'icon-bottom'
+    if(bigTo !== bigFrom && !contractAddress) return 'icon-jiantou_youshang'
+    // switch(txType.trim()){
+    //   case 'send':
+    //   case 'other':
+    //     s = 'icon-jiantou_youshang'
+    //     break;
+    //   case 'contract':
+    //     s = 'icon-icon-'
+    //     break;
+    // }
+
   }
   export const handleTxType = (item: any) => {
-    const {transitionType,txType} = item
-    console.warn('transitionType', transitionType)
-   if(transitionType && transitionType == '6') {
-      return i18n.global.t('common.conver')
-   } else {
-    return transactiontxType(txType)
-   }
+  //   const {transitionType,txType} = item
+  //   console.warn('transitionType', transitionType)
+  //  if(transitionType && transitionType == '6') {
+  //     return i18n.global.t('common.conver')
+  //  } else {
+  //   return transactiontxType(txType)
+  //  }
+  const { to, from, contractAddress} = item
+  const bigTo = to.toUpperCase()
+  const bigFrom = from.toUpperCase()
+  if(contractAddress) return i18n.global.t('transationHistory.contract')
+  if(bigTo === bigFrom) return i18n.global.t('transactiondetails.recive')
+  if(bigTo !== bigFrom) return i18n.global.t('transationHistory.send')
   }
 
   export const transactionStatusClass = (data: any) => {
-    const {sendStatus,receipt} = data
+    // const {sendStatus,receipt} = data
 
-    if(sendStatus === 'pendding'){
-      return 'waitting'
-    }
-    // if(receipt){
-    //   return receipt.status ? 'success' : 'failed'
+    // if(sendStatus === 'pendding'){
+    //   return 'waitting'
     // }
-    if(sendStatus === 'success' && receipt){
-      const {status} = receipt
-      return status ? 'success' : 'failed'
-    }
-
+    // // if(receipt){
+    // //   return receipt.status ? 'success' : 'failed'
+    // // }
+    // if(sendStatus === 'success' && receipt){
+    //   const {status} = receipt
+    //   return status ? 'success' : 'failed'
+    // }
+    const {status} = data
+    return status ? 'success' : 'failed'
   }
 
   export const transferAmountText = (data: any) => {
-    const {transitionType,value, sendStatus,receipt, network, tokenAddress,amount , sendData} = data
-    const {convertAmount} = sendData
-    const {currencySymbol} = network
-    const val = utils.formatEther(value)
-    if(!tokenAddress) {
-      if(sendStatus === 'pendding')return val +' '+ currencySymbol
-    } else {
-      if(sendStatus === 'pendding')return amount +' '+ currencySymbol
-    }
-    if(receipt){
-      const {status} = receipt
-      if(status) {
-        if(!tokenAddress){
-          if(transitionType === '6')return `+${convertAmount} ${currencySymbol}`
-          return `-${val} ${currencySymbol}`
-        } else {
-          return `-${amount} ${currencySymbol}`
-        }
-      } else {
-        if(!tokenAddress){
-          return `${val} ${currencySymbol}`
-        }else {
-          return `${amount} ${currencySymbol}`
-        }
+    // let {transitionType,value, sendStatus,receipt, network, tokenAddress,amount , sendData} = data
+    // sendData = sendData || {}
+    // network = network || {}
+    // const {convertAmount} = sendData
+    // const {currencySymbol} = network
+    // const val = utils.formatEther(value)
+    // if(!tokenAddress) {
+    //   if(sendStatus === 'pendding')return val +' '+ currencySymbol
+    // } else {
+    //   if(sendStatus === 'pendding')return amount +' '+ currencySymbol
+    // }
+    // if(receipt){
+    //   const {status} = receipt
+    //   if(status) {
+    //     if(!tokenAddress){
+    //       if(transitionType === '6')return `+${convertAmount} ${currencySymbol}`
+    //       return `-${val} ${currencySymbol}`
+    //     } else {
+    //       return `-${amount} ${currencySymbol}`
+    //     }
+    //   } else {
+    //     if(!tokenAddress){
+    //       return `${val} ${currencySymbol}`
+    //     }else {
+    //       return `${amount} ${currencySymbol}`
+    //     }
         
-      }
-    }
+    //   }
+    // }
+    const { to, from, contractAddress, value, input, convertAmount } = data
+    // console.log('input:', utils.toUtf8String(input))
+    const jsonData = getInput(input)
+    const bigTo = to.toUpperCase()
+    const bigFrom = from.toUpperCase()
+    const val = new BigNumber(value).div(1000000000000000000).toString()
+    // @ts-ignore
+    let {type,nft_address} = jsonData
+    if(type && Number(type) === 6 && nft_address) return '+' + convertAmount
+    if(bigTo === bigFrom) return '+' + val
+    if(bigTo !== bigFrom) return '-' + val
+    if(contractAddress) return val
   }

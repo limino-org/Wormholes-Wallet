@@ -25,9 +25,9 @@
             </span>
           </div>
           <div class="amount">
-            {{ formatDate(data.date, "MM/DD") }}
+            {{ formatDate(data.timestamp * 1000, "MM/DD") }}
             {{ $t("transactionDetails.at") }}
-            {{ formatDate(data.date, "HH:mm ") }}
+            {{ formatDate(data.timestamp * 1000, "HH:mm ") }}
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
     <div class="collection-card-right flex center">
       <div>
         <div class="van-ellipsis text-right val lh-18">
-          {{transferAmountText(data)}}
+          {{transferAmountText(data)}} {{currentNetwork.currencySymbol}}
         </div>
       </div>
     </div>

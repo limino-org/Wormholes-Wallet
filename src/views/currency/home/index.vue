@@ -201,9 +201,6 @@ export default {
     const pageData = reactive({ data: {} });
     const {$dialog} = useDialog()
     pageData.data = query;
-    // const txList = computed(() => {
-    //   return transactionList.value.sort((a: any,b:any) =>  new Date(b.date).getTime() - new Date(a.date).getTime())
-    // })
     const txList = ref([]);
     const toogleAcceptCode = () => {
       const params = {
@@ -231,18 +228,19 @@ export default {
         txList.value = [];
         const id = currentNetwork.value.id;
         const targetAddress = accountInfo.value.address.toUpperCase();
-        const tx: any = await localforage.getItem(`txlist-${id}-${targetAddress}`);
+        const txInfo: any = await localforage.getItem(`async-${id}-${targetAddress}`);
+        const {list: tx,page} = txInfo || {}
         if (tx && tx.length) {
           const list = tx || [];
           if (tokenContractAddress) {
             txList.value = list.filter(
               (item: any) =>
-                item.tokenAddress &&
-                item.tokenAddress.toUpperCase() ==
+                item.contractAddress &&
+                item.contractAddress.toUpperCase() ==
                   tokenContractAddress.toString().toUpperCase()
             );
           } else {
-            txList.value = list.filter((item: any) => !item.tokenAddress);
+            txList.value = list.filter((item: any) => !item.contractAddress);
           }
           console.log('txList.value', txList.value)
         }
@@ -259,6 +257,7 @@ export default {
     let waitTime: any = ref(null)
     onMounted(async () => {
       handleAsyncTxList()
+      getPageList()
       // getPageList()
       // store.dispatch("account/waitTxQueueResponse", {time: null, callback(e: any){
       //   console.warn('e', e)
@@ -325,6 +324,9 @@ export default {
         cancelSend()
       }
     };
+    eventBus.on('loopTxListUpdata', () => {
+      getPageList()
+    })
     eventBus.on('txPush', (data: any) => {
       // @ts-ignore
       txList.value.unshift(data)

@@ -4,6 +4,11 @@ import { getTransitionsPage } from '@/http/modules/account'
 import store from '../index'
 import { getWallet } from './account'
 import localforage from 'localforage'
+import eventBus from '@/utils/bus'
+import { utils } from 'ethers'
+import { web3 } from '@/utils/web3'
+console.warn('web3', web3)
+import BigNumber from 'bignumber.js'
 interface State {
     time: null | any
 }
@@ -17,7 +22,7 @@ export default {
         },
         // Update the page to which an address is synchronized
         PUSH_RECORD_PAGE(state: State, page: number) {
-            const addr = store.state.account.accountInfo.address
+            const addr = store.state.account.accountInfo.address.toUpperCase()
             const { id } = store.state.account.currentNetwork
             const asyncRecordKey = `async-${id}-${addr}`
             if(!state.asyncRecordPage[addr]) {
@@ -29,7 +34,7 @@ export default {
             }
         },
         async PUSH_RECORD_LIST(state: State, list) {
-            const addr = store.state.account.accountInfo.address
+            const addr = store.state.account.accountInfo.address.toUpperCase()
             const { id } = store.state.account.currentNetwork
             const txListKey = `async-txlist-${id}-${addr}`
             const txlist = await localforage.getItem(txListKey) || []
@@ -40,26 +45,44 @@ export default {
         }
     },
     actions: {
-        async updateRecordPage({ commit, state }: any, list) {
-            debugger
-            const addr = store.state.account.accountInfo.address
+        async updateRecordPage({ commit, state }: any, {transactions: list, total}) {
+            const wallet = await getWallet()
+            const addr = store.state.account.accountInfo.address.toUpperCase()
             const { id } = store.state.account.currentNetwork
             const asyncRecordKey = `async-${id}-${addr}`
             let txInfo = await localforage.getItem(asyncRecordKey)
+            if(list && list.length) {
+                if((txInfo && total >= txInfo.list.length) || !txInfo) {
+                    for await (const item of list) {
+                        const convertAmount = await getConverAmount(wallet, item)
+                        item['convertAmount'] = convertAmount
+                     }
+                }
+            }
             console.log('txInfo',txInfo)
             if(txInfo){
+                if(total <= txInfo.list.length){
+                    if(state.time) {
+                        clearInterval(state.time)
+                        commit('UPDATE_TIME', null)
+                    }
+                    return
+                }
                 if(list && list.length >= 10) {
                     txInfo.page = Number(txInfo.page) + 1 + ''
                 }
                 // 去重
                 txInfo.list = txInfo.list && txInfo.list.length ?  [...txInfo.list, ...list] : [...list]
+                txInfo.total = total
             } else {
                 txInfo = {
                     page: '1',
-                    list: list || []
+                    list: list || [],
+                    total
                 }
             }
-            localforage.setItem(asyncRecordKey, txInfo)
+            await localforage.setItem(asyncRecordKey, txInfo)
+            eventBus.emit('loopTxListUpdata')
             if(!list || list.length < 10) {
                 if(state.time) {
                     clearInterval(state.time)
@@ -92,7 +115,7 @@ export default {
                     page_size: '10',
                     page: txInfo && txInfo.page ? txInfo.page : '1'
                 })
-                dispatch('updateRecordPage', transactions)
+                dispatch('updateRecordPage', {transactions,total})
 
             }
         },
@@ -104,4 +127,67 @@ export default {
         }
     },
     namespaced: true,
+  }
+
+  console.warn('0xdfebd9c80000000000000000000000000000000000000000000000000000000000000003', web3.utils.toAscii('0xdfebd9c80000000000000000000000000000000000000000000000000000000000000002'))
+
+  export function getInput(input){
+    if(input){
+        try {
+            const wormStr = web3.utils.toAscii(input)
+        const [nullstr, jsonstr] = wormStr.split('wormholes:')
+        let jsonData = {}
+        if(jsonstr){
+            jsonData = JSON.parse(jsonstr)
+        }
+        return jsonData
+        }catch(err){
+            console.error('err', err)
+            return null
+        }
+    }
+    return null
+  }
+
+  async function getConverAmount(wallet, data){
+    const {input,blockNumber} = data
+    let jsonData = getInput(input)
+    const { type, nft_address} = jsonData
+    console.log('input data---',jsonData)
+    if(type && type == 6 && nft_address) {
+        const len = nft_address.length
+        switch(len) {
+          case 42:
+            break;
+          case 41:
+            nft_address += '0'
+            break;
+          case 40:
+            nft_address += '00'
+            break;
+          case 39:
+            nft_address += '000'
+            break;
+        }
+        const nftAccountInfo = await wallet.provider.send(
+          "eth_getAccountInfo",
+          [nft_address,  web3.utils.toHex((blockNumber - 1).toString())]
+        );
+        const {MergeLevel, MergeNumber} = nftAccountInfo
+       //  @ts-ignore
+        const {t0,t1,t2,t3} = store.state.configuration.setting.conversion
+
+        let convertAmount = 0
+        if(MergeLevel === 0) {
+          convertAmount = new BigNumber(MergeNumber).multipliedBy(t0).toNumber()
+        }else if(MergeLevel === 1) {
+          convertAmount = new BigNumber(MergeNumber).multipliedBy(t1).toNumber()
+        } else if(MergeLevel === 2) {
+          convertAmount = new BigNumber(MergeNumber).multipliedBy(t2).toNumber()
+        } else if(MergeLevel === 3) {
+          convertAmount = new BigNumber(MergeNumber).multipliedBy(t3).toNumber()
+        }
+        return convertAmount
+      }
+      return 0
   }
