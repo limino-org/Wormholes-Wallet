@@ -4,6 +4,7 @@ import common from './modules/common'
 import account from './modules/account'
 import price from './modules/price'
 import system from './modules/system'
+import configuration from './modules/configuration'
 import mnemonic from './modules/mnemonic'
 import { clone } from 'pouchdb-utils';
 import transfer  from './modules/transfer'
@@ -63,7 +64,8 @@ const vuexLocal = new VuexPersistence({
     },
     common,
     transfer,
-    mnemonic
+    mnemonic,
+    configuration
     } = store
 
     return clone(({
@@ -114,7 +116,8 @@ const vuexLocal = new VuexPersistence({
         movePwd,
         hasBackUpMnemonic,
         lastDelayTime,
-      }
+      },
+      configuration
     }))
   },
 });
@@ -132,7 +135,8 @@ const store = createStore({
     system,
     common,
     transfer,
-    mnemonic
+    mnemonic,
+    configuration
 
   },
   plugins: [

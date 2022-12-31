@@ -627,6 +627,9 @@ export default defineComponent({
     const network = ref({
       chainId: null
     })
+    const payErb = computed(() => {
+      return (70 - Coefficient.value)/10
+    })
     //  const { state } = store;
     onMounted(async () => {
       try {
@@ -1184,14 +1187,12 @@ export default defineComponent({
 
     const showReconveryModal = ref(false);
     const reconveryDetail = ref({});
-    const payErb = ref(0)
     const handleShowReconveryModal = async () => {
-      const sendAmount = (70 - Coefficient.value)/10;
-      payErb.value = sendAmount
+      const sendAmount = (70 - Coefficient.value)/10 ;
       if (
-        new BigNumber(accountInfo.value.amount).lt(sendAmount)
+        new BigNumber(accountInfo.value.amount).lt(sendAmount+ 1)
       ) {
-        $toast.warn(t("common.noMoney"));
+        $toast.warn(t("minerspledge.noMoney", {value: sendAmount+ 1}));
         return;
       }
       try {
@@ -1247,6 +1248,7 @@ export default defineComponent({
         $tradeConfirm.update({status:"success",callBack})
         dispatch('account/waitTxQueueResponse')
       }catch(err){
+        $tradeConfirm.update({status:"fail",callBack})
         console.error(err)
       }
     };

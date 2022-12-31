@@ -260,11 +260,14 @@ export default defineComponent({
     const myprofit = ref("");
     const historyProfit = ref("");
     const calcProfit = async () => {
+      //  @ts-ignore
+      const {t0,t1,t2,t3} = state.configuration.setting.conversion
+
       const wallet = await getWallet();
       const blockNumber = await wallet.provider.getBlockNumber();
       const addressInfo = await getAccountAddr(wallet.address)
       const {rewardSNFTCount} = addressInfo
-      historyProfit.value = new BigNumber(rewardSNFTCount).multipliedBy(0.03).toString()
+      historyProfit.value = new BigNumber(rewardSNFTCount).multipliedBy(t0).toString()
       const blockn = web3.utils.toHex(blockNumber.toString());
       const data = await wallet.provider.send("eth_getValidator", [blockn]);
       // const data2 = await getAccount(accountInfo.value.address)

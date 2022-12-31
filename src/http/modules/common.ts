@@ -60,6 +60,9 @@ export const getContractAddress = () => {
     return httpGet(`https://www.wormholesscan.com/ERBPay.json?${new Date().getTime()}`)
 }
 
+export const getConfiguration = () => {
+    return httpGet(`https://www.wormholes.com/upload/configuration.json?${new Date().getTime()}`)
+}
 
 
 // const contractApi = isProduct ? 'contractApi' : 'contractApi'

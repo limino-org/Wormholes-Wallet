@@ -63,6 +63,7 @@ export default {
       commit("system/UPDATE_TRANSFERUSDRATE", 0.5);
       commit("account/UPDATE_NETSTATUS", NetStatus.pendding);
       commit("system/UPDATA_CONVERSATIONID", guid());
+
       waittxlist()
 
     });
@@ -91,7 +92,7 @@ export default {
         }
       };
       dispatch("account/getContractAddress");
-
+      dispatch('configuration/getConfiguration');
       (async function () {
         const vuex = localStorage.getItem("vuex");
         const mnemonic = localStorage.getItem("mnemonic");

@@ -170,9 +170,11 @@ export default defineComponent({
         $tradeConfirm.update({status:"success",callBack})
       }catch(err: any){
         console.warn('err', err)
+        if(err.toString().indexOf('timeout') > -1) {
+          $tradeConfirm.update({status:"warn",failMessage: t('error.timeout'),callBack})
+        } else {
           $tradeConfirm.update({status:"fail",failMessage: err.reason,callBack})
-          // $tradeConfirm.hide()
-          // $toast.warn(err.reason)
+        }
       }finally{
         nextLoading.value = false
       }

@@ -42,13 +42,14 @@
                     v-show="defaultData.status == 'success'"
                     class="iconfont icon-duihao2 success"
                   ></i>
-                  <Icon v-show="defaultData.status == 'fail'" name="clear" class="fail" />
+                  <Icon v-show="defaultData.status == 'fail' " name="clear" :class="defaultData.status" />
+                  <Icon name="warning" v-show="defaultData.status == 'warn' " :class="defaultData.status"/>
                 </div>
                 <span
                   class="lh-30 ml-10 approve"
                   v-show="
                     defaultData.status == 'pendding' ||
-                    defaultData.status == 'approve'
+                    defaultData.status == 'approve' || defaultData.status == 'warn'
                   "
                   >{{ defaultData.wattingTitle }}</span
                 >
@@ -71,7 +72,7 @@
               class="approve-msg pl-30 ml-8 mb-10"
               v-show="
                 defaultData.status == 'pendding' ||
-                defaultData.status == 'approve'
+                defaultData.status == 'approve' 
               "
             >
               {{ defaultData.wattingMessage }}
@@ -79,7 +80,7 @@
             <div
               class="approve-msg pl-30 ml-8 mb-10"
               v-show="
-                defaultData.status == 'success' || defaultData.status == 'fail'
+                defaultData.status == 'success' || defaultData.status == 'fail' || defaultData.status == 'warn'
               "
             >
               {{
@@ -196,6 +197,9 @@ defineExpose({
 .fail {
   color: #d73a49 !important;
 }
+.warn {
+  color: #f7bf03 !important;
+}
 .trade-dialog-mask {
   position: fixed;
   left: 0;
@@ -231,11 +235,16 @@ defineExpose({
           color:#d73a49;
         }
       }
+      &.warn {
+        .approve,.approve-msg {
+          color:#f7bf03;
+        }
+      }
       .icon i {
         font-size: 26px;
         color: #9a9a9a;
       }
-      .icon .van-icon-clear {
+      .icon .van-icon-clear,.icon .van-icon-warning {
         font-size: 29px;
       }
     }

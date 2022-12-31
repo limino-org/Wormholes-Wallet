@@ -1330,14 +1330,18 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
                  [nft_address,  web3.utils.toHex((data1.blockNumber - 1).toString())]
                );
                const {MergeLevel, MergeNumber} = nftAccountInfo
+              //  @ts-ignore
+               const {t0,t1,t2,t3} = store.state.configuration.setting.conversion
+
+
                if(MergeLevel === 0) {
-                 convertAmount = new BigNumber(MergeNumber).multipliedBy(0.03).toNumber()
+                 convertAmount = new BigNumber(MergeNumber).multipliedBy(t0).toNumber()
                }else if(MergeLevel === 1) {
-                 convertAmount = new BigNumber(MergeNumber).multipliedBy(0.143).toNumber()
+                 convertAmount = new BigNumber(MergeNumber).multipliedBy(t1).toNumber()
                } else if(MergeLevel === 2) {
-                 convertAmount = new BigNumber(MergeNumber).multipliedBy(0.271).toNumber()
+                 convertAmount = new BigNumber(MergeNumber).multipliedBy(t2).toNumber()
                } else if(MergeLevel === 3) {
-                 convertAmount = new BigNumber(MergeNumber).multipliedBy(0.65).toNumber()
+                 convertAmount = new BigNumber(MergeNumber).multipliedBy(t3).toNumber()
                }
              }
              const rep: TransactionReceipt = handleGetTranactionReceipt(
