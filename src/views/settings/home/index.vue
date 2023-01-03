@@ -62,19 +62,28 @@
       </div>
       <div class="icon flex center"><van-icon name="arrow" /></div>
     </div>
+    <div class="btn-groups">
+      <div class="container flex center  pl-26 pr-26">
+        <van-button type="primary" block :loading="loading" @click="handleClearCanche">{{ t('common.clearCanche') }}</van-button>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts">
-import Vue, { inject } from "vue";
+import Vue, { inject, ref } from "vue";
 import { Icon, Toast, Button, Sticky, Field } from "vant";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import NavHeader from "@/components/navHeader/index.vue";
+import { useStore } from "vuex";
+import localforage from "localforage";
+import { useToast } from "@/plugins/toast";
 
 export default {
   name: "settings",
   components: {
     [Icon.name]: Icon,
+    [Button.name]: Button,
     NavHeader,
   },
   setup() {
@@ -82,15 +91,43 @@ export default {
     const appProvide = inject("appProvide");
     const route = useRoute();
     const router = useRouter();
+    const {state} = useStore()
     const clickLeft = () => {};
+    const {$toast} = useToast()
     const routerPush = (type: string, value: string) => {
       router.push({ [type]: value });
     };
+    const loading = ref(false)
+    const handleClearCanche = async () => {
+      loading.value = true
+      try {
+        const accountList = state.account.accountList
+      const netWorkList = state.account.netWorkList
+      debugger
+      for await (const network of netWorkList) {
+        for await (const accountInfo of accountList) {
+          const { id } = network
+          const { address } = accountInfo
+          const addrUp = address.toUpperCase()
+          const key1 = `txlist-${id}-${addrUp}`
+          const key2 = `txQueue-${id}-${addrUp}`
+          await localforage.removeItem(key1)
+          await localforage.removeItem(key2)
+          //'txQueue' 'txlist'
+        }
+      }
+      $toast.success(t('common.clearCancheSuccess'))
+      }finally{
+        loading.value = false
+      }
+    }
     return {
       t,
       clickLeft,
+      loading,
       routerPush,
       route,
+      handleClearCanche,
       appProvide,
     };
   },

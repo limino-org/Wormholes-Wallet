@@ -168,6 +168,8 @@ export default {
 
     },
     common: {
+        clearCanche:"清除缓存",
+        clearCancheSuccess:"缓存清除成功",
         days:"天",
         commingsoon: "即将来临",
         setting: '设置',
