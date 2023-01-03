@@ -166,36 +166,6 @@ export const getWallet = () => {
 const createWallet = async () => {
   const wal: any = await store.dispatch('account/getProviderWallet')
     return wal
-  // try {
-  //   const vuex: any = await localforage.getItem('vuex')
-  //   if (vuex) {
-  //     const { accountInfo } = vuex.account;
-  //     const { keyStore } = accountInfo;
-  //     const password: string = getCookies("password") || "";
-  //     if (!password) {
-  //       const query = getQuery();
-  //       router.push({ name: "withpassword", query });
-  //       return Promise.reject(i18n.global.t("common.withpassword"));
-  //     }
-  //     // Load the wallet with the password and keyStore
-  //     const wa = await createWalletByJson({ password, json: keyStore });
-  //     const { URL } = vuex.account.currentNetwork
-  //     const provider = ethers.getDefaultProvider(URL)
-  //     // @ts-ignore
-  //     const wall = wa.connect(provider)
-  //     const network = await wall.provider.getNetwork()
-  //     wallet = wall
-  //     store.commit('account/UPDATE_NETSTATUS', NetStatus.success)
-  //     return Promise.resolve(wall)
-  //   }
-  // } catch (err) {
-  //   console.error('-----------------', err)
-  //   // Toast(err?.toString())
-  //   store.commit('account/UPDATE_NETSTATUS', NetStatus.fail)
-  //   return Promise.reject(null)
-  // }
-
-
 }
 // clear wallet
 export const clearWallet = () => {
@@ -252,7 +222,9 @@ export default {
       exchanger_flag: false,
     },
     ethAccountInfo:{},
-    ethNetwork:{},
+    ethNetwork:{
+      chainId: 51888
+    },
     recentList: [],
     // network switcher
     networkType: 1,
@@ -601,8 +573,8 @@ export default {
     // New trades are pushed to the trade queue
     async PUSH_TXQUEUE(state: State, tx: any) {
       const { network: { id }, from } = tx
-      const date = new Date()
-      const queuekey = `txQueue-${id}-${from.toUpperCase()}`
+      // @ts-ignore
+      const queuekey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
       const list: any = await localforage.getItem(queuekey)
       const txQueue = list && list.length ? list : []
       tx.txId = guid()
@@ -611,17 +583,11 @@ export default {
       store.commit("account/PUSH_TRANSACTION", clone(tx));
       await localforage.setItem(queuekey, txQueue)
     },
-    async UPDATE_TXQUEUE(state: State, tx: any) {
-      const { txId } = tx
-      const { network: { id } } = tx
-      const queuekey = `txQueue-${id}`
-      const list: any = await localforage.getItem(queuekey)
-      const txQueue = list && list.length ? list : []
-    },
     // Delete data from a queue
     async DEL_TXQUEUE(state: State, tx: any) {
       const {network:{id}, txId, from} = tx
-      const queueKey = `txQueue-${id}-${from.toUpperCase()}`
+      // @ts-ignore
+      const queueKey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
       const list: any = await localforage.getItem(queueKey)
       const txQueue = list && list.length ? list : []
       const newList = txQueue.filter((item: any) => item.txId.toUpperCase() != txId.toUpperCase())
@@ -776,12 +742,14 @@ export default {
     ) {
       try {
         wallet = await createWalletByJson(params);
+        commit('UPDATE_WALLET', wallet)
         // And connect to the network
         const { currentNetwork } = state;
-        dispatch("setNetWork", currentNetwork);
+        await dispatch("setNetWork", currentNetwork);
         return wallet;
       } catch (err) {
-        return console.error(err);
+        console.error('err', err)
+        return err;
       }
     },
     // Import the account using the private key
@@ -869,15 +837,15 @@ export default {
       const { URL } = state.currentNetwork;
 
       if(!wallet || !wallet.provider || (wallet.provider.connection.url != URL)) {
-        provider = ethers.getDefaultProvider(URL)
+        provider = await ethers.getDefaultProvider(URL)
       }
       try {
         if(!wallet) {
           const { accountInfo } = state;
           const { keyStore } = accountInfo;
           const password: string = getCookies("password") || "";
-          const wall =  await dispatch("createWalletByJson", { password, json: keyStore });
-          wallet = wall.connect(provider)
+          const wall = await dispatch("createWalletByJson", { password, json: keyStore });
+          wallet = await wall.connect(provider)
           const res = await wallet.provider.getNetwork()
           commit('UPDATE_ETHNETWORK',res)
           commit('UPDATE_NETSTATUS', NetStatus.success)
@@ -887,7 +855,7 @@ export default {
         if(wallet && wallet.provider) {
           const {connection:{url}} = wallet.provider
           if(URL != url) {
-            wallet = wallet.connect(provider);
+            wallet = await wallet.connect(provider);
             const res = await wallet.provider.getNetwork()
             commit('UPDATE_NETSTATUS', NetStatus.success)
             commit("UPDATE_WALLET", wallet);
@@ -902,7 +870,7 @@ export default {
 
         }
         if(wallet && !wallet.provider) {
-          wallet = wallet.connect(provider);
+          wallet = await wallet.connect(provider);
           const res = await wallet.provider.getNetwork()
           commit('UPDATE_NETSTATUS', NetStatus.success)
           commit('UPDATE_ETHNETWORK',res)
@@ -918,7 +886,9 @@ export default {
     async hasPendingTransactions({state, commit}: any) {
       const { id } = state.currentNetwork
       const from = state.accountInfo.address
-      const txListKey = `txQueue-${id}-${from.toUpperCase()}`
+      // @ts-ignore
+      const txListKey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
+      // const txListKey = `txQueue-${id}-${from.toUpperCase()}`
       let txList: any = await localforage.getItem(txListKey)
       console.warn('txList', txList)
       return txList && txList.length ? true : false
@@ -1290,7 +1260,8 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
       }
       const {id} = state.currentNetwork
       const from = state.accountInfo.address
-      const queuekey = `txQueue-${id}-${from.toUpperCase()}`
+      // @ts-ignore
+      const queuekey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
       let t: any = null;
       const rep = new Promise((resolve, reject) => {
         t = setTimeout(async() => {

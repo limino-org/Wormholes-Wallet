@@ -224,11 +224,15 @@ export default {
     const getPageList = async () => {
       Toast.loading({ duration: 0 });
       let time = setTimeout(async() => {
+        const wallet = await getWallet()
+        const { chainId } = await wallet.provider.getNetwork()
         try {
         txList.value = [];
         const id = currentNetwork.value.id;
         const targetAddress = accountInfo.value.address.toUpperCase();
-        const txInfo: any = await localforage.getItem(`async-${id}-${targetAddress}`);
+        const txInfo: any = await localforage.getItem(`async-${id}-${chainId}-${targetAddress}`);
+        const queuekey = `txQueue-${id}-${chainId}-${targetAddress.toUpperCase()}`
+        const txQueue = await localforage.getItem(queuekey)
         const {list: tx,page} = txInfo || {}
         if (tx && tx.length) {
           const list = tx || [];
@@ -242,6 +246,8 @@ export default {
           } else {
             txList.value = list.filter((item: any) => !item.contractAddress);
           }
+          // @ts-ignore
+          Array.isArray(txQueue) ? txList.value.push(...txQueue) : ''
           console.log('txList.value', txList.value)
         }
       } finally {
