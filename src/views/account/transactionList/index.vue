@@ -447,10 +447,14 @@ export default {
         sessionStorage.setItem("new tx", JSON.stringify(data));
         const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
         await store.dispatch('account/waitTxQueueResponse')
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
         showSpeedModal.value = false
+        if(err.toString().indexOf('timeout') > -1) {
+        Toast(t('error.timeout'))
+      } else {
         Toast(err.reason)
+      }
         console.error(err)
       } finally {
         showSpeedModal.value = false;
@@ -526,9 +530,13 @@ export default {
         const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
         showSpeedModal.value = false;
         await store.dispatch('account/waitTxQueueResponse')
-      } catch (err) {
+      } catch (err: any) {
         console.error(err)
+        if(err.toString().indexOf('timeout') > -1) {
+        Toast(t('error.timeout'))
+      } else {
         Toast(err.reason)
+      }
       } finally {
         showSpeedModal.value = false
         reloading.value = false;

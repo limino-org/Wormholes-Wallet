@@ -1247,8 +1247,12 @@ export default defineComponent({
         const receipt = await data.wallet.provider.waitForTransaction(data.hash)
         $tradeConfirm.update({status:"success",callBack})
         dispatch('account/waitTxQueueResponse')
-      }catch(err){
-        $tradeConfirm.update({status:"fail",callBack})
+      }catch(err: any){
+        if(err.toString().indexOf('timeout') > -1) {
+        $tradeConfirm.update({status:"warn",failMessage: t('error.timeout'),callBack})
+      } else {
+        $tradeConfirm.update({status:"fail",failMessage: err.reason,callBack})
+      }
         console.error(err)
       }
     };

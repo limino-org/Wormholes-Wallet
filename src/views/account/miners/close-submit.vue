@@ -204,9 +204,12 @@ export default {
         isLoading.value = false;
         emit("update:show", false);
         emit("open");
-      } catch (error) {
-        $tradeConfirm.update({ status: "fail" });
-        console.error(error);
+      } catch (err: any) {
+        if(err.toString().indexOf('timeout') > -1) {
+        $tradeConfirm.update({status:"warn",failMessage: t('error.timeout')})
+      } else {
+        $tradeConfirm.update({status:"fail",failMessage: err.reason})
+      }
         isLoading.value = false;
       }
     };

@@ -84,11 +84,18 @@ export const useExchanges = () => {
       // commit("account/PUSH_TRANSACTION", rep);
       store.dispatch('account/waitTxQueueResponse')
       return Promise.resolve(receipt)
-    } catch (err) {
-      $tradeConfirm.update({ status: "fail" })
-      console.log(err)
-      console.log("==========err2=============")
-      Toast(err.toString());
+    } catch (err: any) {
+      // $tradeConfirm.update({ status: "fail" })
+      // console.warn('err', err)
+      // @ts-ignore
+      if(err.toString().indexOf('timeout') > -1) {
+        $tradeConfirm.update({status:"warn",failMessage: i18n.global.t('error.timeout'),callBack})
+      } else {
+        $tradeConfirm.update({status:"fail",failMessage: err.reason,callBack})
+      }
+      // console.log(err)
+      // console.log("==========err2=============")
+      // Toast(err.toString());
       resetData();
       return Promise.reject()
     }
@@ -263,7 +270,12 @@ export const useExchanges = () => {
             }
     } catch (err: any) {
       if (!isServer) {
-        $tradeConfirm.update({ status: "fail" })
+              // @ts-ignore
+      if(err.toString().indexOf('timeout') > -1) {
+        $tradeConfirm.update({status:"warn",failMessage: i18n.global.t('error.timeout')})
+      } else {
+        $tradeConfirm.update({status:"fail",failMessage: err.reason})
+      }
       }
     }
   };
@@ -340,9 +352,14 @@ export const useExchanges = () => {
           }
         })
       }
-    } catch (err) {
-      $tradeConfirm.update({ status: "fail" })
-      console.error(err)
+    } catch (err:any) {
+
+                    // @ts-ignore
+                    if(err.toString().indexOf('timeout') > -1) {
+                      $tradeConfirm.update({status:"warn",failMessage: i18n.global.t('error.timeout')})
+                    } else {
+                      $tradeConfirm.update({status:"fail",failMessage: err.reason})
+                    }
     }
   }
 
@@ -457,19 +474,30 @@ export const useExchanges = () => {
       value: '0',
       data: `0x${data3}`,
     };
-    const sendData = await store.dispatch('account/transaction',tx1)
-          $tradeConfirm.update({ status: "approve" })
-          localStorage.setItem("close-exchange-tx", JSON.stringify(sendData));
-          const receipt = await wallet.provider.waitForTransaction(sendData.hash, null, 60000)
-          await dispatch("account/getExchangeStatus");
-          store.dispatch('account/waitTxQueueResponse')
-          const { status } = receipt
-          if (status == 0) {
-            $tradeConfirm.update({ status: "fail" })
-          } else {
-            $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "wallet" }) } })
+
+
+          try {
+            const sendData = await store.dispatch('account/transaction',tx1)
+            $tradeConfirm.update({ status: "approve" })
+            localStorage.setItem("close-exchange-tx", JSON.stringify(sendData));
+            const receipt = await wallet.provider.waitForTransaction(sendData.hash, null, 60000)
+            await dispatch("account/getExchangeStatus");
+            store.dispatch('account/waitTxQueueResponse')
+            const { status } = receipt
+            if (status == 0) {
+              $tradeConfirm.update({ status: "fail" })
+            } else {
+              $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "wallet" }) } })
+            }
+            return receipt
+          }catch(err: any){
+                                // @ts-ignore
+                                if(err.toString().indexOf('timeout') > -1) {
+                                  $tradeConfirm.update({status:"warn",failMessage: i18n.global.t('error.timeout')})
+                                } else {
+                                  $tradeConfirm.update({status:"fail",failMessage: err.reason})
+                                }
           }
-          return receipt
     
   };
 
@@ -570,8 +598,12 @@ export const useExchanges = () => {
       store.dispatch('account/waitTxQueueResponse')
       $tradeConfirm.update({ status: TradeStatus.success })
       localStorage.setItem("tx1", JSON.stringify(receipt1));
-    } catch (err) {
-      $tradeConfirm.update({ status: TradeStatus.fail })
+    } catch (err: any) {
+      if(err.toString().indexOf('timeout') > -1) {
+        $tradeConfirm.update({status:"warn",failMessage: i18n.global.t('error.timeout')})
+      } else {
+        $tradeConfirm.update({status:"fail",failMessage: err.reason})
+      }
       return Promise.reject(err);
     }
     return Promise.resolve();
@@ -606,8 +638,12 @@ export const useExchanges = () => {
       dispatch("account/updateAllBalance");
       store.dispatch('account/waitTxQueueResponse')
       localStorage.setItem("tx1", JSON.stringify(receipt1));
-    } catch (err) {
-      $tradeConfirm.update({ status: TradeStatus.fail })
+    } catch (err: any) {
+      if(err.toString().indexOf('timeout') > -1) {
+        $tradeConfirm.update({status:"warn",failMessage: i18n.global.t('error.timeout')})
+      } else {
+        $tradeConfirm.update({status:"fail",failMessage: err.reason})
+      }
       return Promise.reject(err);
     }
   }

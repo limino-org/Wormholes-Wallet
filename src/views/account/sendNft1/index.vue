@@ -152,6 +152,7 @@ import { utils, ethers } from "ethers";
 import { toHex } from "@/utils/utils";
 import { WASI } from "wasi";
 import { useI18n } from "vue-i18n";
+import { useTradeConfirm } from '@/plugins/tradeConfirmationsModal';
 export default {
   components: {
     NavHeader,
@@ -183,6 +184,7 @@ export default {
     const handleLeft = () => {
       router.back();
     };
+    const {$tradeConfirm} = useTradeConfirm()
     const onSubmit = async () => {
       loading.value = true;
       const { address } = query;
@@ -208,10 +210,21 @@ export default {
             Toast(t("sendNft.transfersucceeded"));
             loading.value = false;
             router.replace({ name: "wallet" });
+          }).catch((err: any) => {
+            console.error('err', err)
+        if(err.toString().indexOf('timeout') > -1) {
+        $tradeConfirm.update({status:"warn",failMessage: t('error.timeout')})
+      } else {
+        $tradeConfirm.update({status:"fail",failMessage: err.reason})
+      }
           });
         })
         .catch((err: any) => {
-          Toast(err.reason);
+          if(err.toString().indexOf('timeout') > -1) {
+        $tradeConfirm.update({status:"warn",failMessage: t('error.timeout')})
+      } else {
+        $tradeConfirm.update({status:"fail",failMessage: err.reason})
+      }
           loading.value = false;
         });
     };

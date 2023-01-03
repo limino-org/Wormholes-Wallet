@@ -102,6 +102,7 @@ import {
 import { getWallet,clone ,TransactionTypes} from "@/store/modules/account";
 import { useStore } from "vuex";
 import { useI18n } from 'vue-i18n';
+import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 
 export default {
   components: {
@@ -127,7 +128,7 @@ export default {
         }
       }, 1000);
     });
-
+    const {$tradeConfirm} = useTradeConfirm()
     const select = ref(0);
     const { emit }: any = context;
     const show = computed({
@@ -174,8 +175,13 @@ export default {
         console.log("receiptreceiptreceiptreceiptreceipt");
         isLoading.value = false;
         emitWarningSuccess();
-      } catch (error) {
-        console.log(error);
+      } catch (err: any) {
+        console.log(err);
+        if(err.toString().indexOf('timeout') > -1) {
+        $tradeConfirm.update({status:"warn",failMessage: t('error.timeout')})
+      } else {
+        $tradeConfirm.update({status:"fail",failMessage: err.reason})
+      }
         isLoading.value = false;
       }
     };

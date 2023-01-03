@@ -209,9 +209,13 @@ export default {
           $tradeConfirm.update({ status: "fail" });
         }
         dispatch("account/updateAllBalance");
-      } catch (err) {
+      } catch (err: any) {
         console.error('err', err)
-        $tradeConfirm.update({ status: "fail" });
+        if(err.toString().indexOf('timeout') > -1) {
+        $tradeConfirm.update({status:"warn",failMessage: t('error.timeout')})
+      } else {
+        $tradeConfirm.update({status:"fail",failMessage: err.reason})
+      }
       }
     };
 
