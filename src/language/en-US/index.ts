@@ -124,7 +124,7 @@ export default {
     periodTip:"During this period,you will not be allowed redeeming your S-NFT back"
   },
   common: {
-    clearCanche:"Clear Canche",
+    clearCanche:"Clear Cache",
     clearCancheSuccess:"Cache cleared successfully",
     days:"days",
     commingsoon: "Coming Soon!",

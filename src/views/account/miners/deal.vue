@@ -1003,7 +1003,7 @@ export default defineComponent({
     );
 
     const Coefficient = computed(() => {
-      return 22;
+      return ethAccountInfo.value.Coefficient;
     });
     const expresionClass = computed(() => {
       const num = Number(Coefficient.value)
