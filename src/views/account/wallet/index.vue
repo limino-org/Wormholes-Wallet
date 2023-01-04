@@ -319,7 +319,7 @@ export default {
     const symbol = currentNetwork.value.currencySymbol;
     const { $toast } = useToast();
     const showHelp = ref(false);
-    const { initWallet } = useWallet();
+  
     // Display the default token of the current network
     const myToken = computed(() => {
       const symbol = currentNetwork.value.currencySymbol;
@@ -450,11 +450,14 @@ export default {
      dispatch('account/getEthAccountInfo')
 
     })
+    eventBus.on('walletReady',() => {
+      dispatch("account/updateBalance");
+    })
 
     let time: any = null;
     onMounted(() => {
       dispatch("transfer/clearTx");
-      initWallet()
+
       dispatch("account/getExchangeStatus").then((res) => {
         console.warn("getExchangeStatus", res);
         autoexchange.value = res.status;
@@ -463,7 +466,7 @@ export default {
           initExchangeData();
         }
       });
-      dispatch("account/updateBalance");
+      
       time = setInterval(() => {
         dispatch("account/updateBalance");
         dispatch("account/updateTokensBalances");

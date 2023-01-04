@@ -47,7 +47,7 @@
                 : t("transactionDetails.transferAmount")
             }}
           </div>
-          <div class="value">{{ transferAmountText(data) }}</div>
+          <div class="value">{{ transferAmountText(data) }} {{ currentNetwork.currencySymbol }}</div>
         </div>
         <div class="card flex between card-sml">
           <div class="label">

@@ -43,8 +43,14 @@ export default {
     selectSNFT: "You have not selected any S-NFTs",
     buySnft: "Do you have S-NFT? {link}",
     findMore: "Find More",
-    snftUnfree:"The SNFT of this pledge has not been unfrozen!"
+    snftUnfree:"The SNFT of this pledge has not been unfrozen!",
 
+
+
+conver_approve: "The request is approved.The convert tansaction will be started.Please wait for seconds.",
+conver_waiting: "The transaction is processing,please wait for seconds.",
+conver_success: "The transaction is sent successfully.If you want to check the transaction details ,please go to the transaction history page.",
+conver_wrong: "I'm very sorry, because of some accident, the operation failed, you can go to the transaction history to check the specific information of the transaction",
 
 
 

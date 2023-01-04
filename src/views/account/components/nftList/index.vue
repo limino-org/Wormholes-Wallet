@@ -383,7 +383,7 @@ name="question hover"
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import { defineComponent, onUnmounted } from "@vue/runtime-core";
 import { computed, ref,onBeforeMount, onMounted } from "vue";
 import { useStore } from "vuex";
 import {
@@ -727,6 +727,9 @@ export default defineComponent({
       reLoading();
       onLoad();
     });
+    onUnmounted(() => {
+      eventBus.off('changeAccount')
+    })
     const tabList = ref([
       // { label: t("createExchange.redemption"), value: "3", select: true },w
       { label: t("createExchange.convert"), value: "2", select: true },
@@ -790,17 +793,16 @@ export default defineComponent({
     });
 
     const handleSubmit = async () => {
-      const wallet = await getWallet();
       const data: any = list.value.filter((f: any) => f.flag);
       if (data.length) {
         // isLoading.value = true;
         isSelectComputed.value = false;
         show.value = false;
         $tradeConfirm.open({
-          approveMessage: t("minerspledge.create_approve"),
-          successMessage: t("minerspledge.create_waiting"),
-          wattingMessage: t("minerspledge.create_success"),
-          failMessage: t("minerspledge.create_wrong"),
+          approveMessage: t("wallet.conver_approve"),
+          successMessage: t("wallet.conver_success"),
+          wattingMessage: t("wallet.conver_waiting"),
+          failMessage: t("wallet.conver_wrong"),
           disabled: [TradeStatus.pendding],
           callBack: () => {
             reLoading();

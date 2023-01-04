@@ -274,7 +274,7 @@ export function transactionStatus(txData: any){
   }
 
   export const transferAmountText = (data: any) => {
-    const { to, from, contractAddress, value, input, convertAmount, sendStatus } = data
+    const { to, from, contractAddress, value, input, convertAmount, sendStatus, status } = data
     const myAddr = store.state.account.accountInfo.address.toUpperCase()
     if(sendStatus && sendStatus === 'pendding'){
       const val = utils.formatEther(value)
@@ -289,6 +289,7 @@ export function transactionStatus(txData: any){
     let { type, nft_address } = jsonData
     if(type && Number(type) === 6 && nft_address) return '+' + convertAmount
     }
+    if(!status)return val
     if(contractAddress) return val
     const bigTo = to.toUpperCase()
     const bigFrom = from.toUpperCase()

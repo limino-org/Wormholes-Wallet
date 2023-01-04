@@ -32,6 +32,7 @@ import { guid } from "@/utils/utils";
 import { provide as appProvide } from "@/provides/app";
 import localforage, { clear } from "localforage";
 import eventBus from "./utils/bus";
+import { useWallet } from './hooks/useWallet';
 
 export default {
   components: {
@@ -45,7 +46,7 @@ export default {
     const router = useRouter();
     let time: any = null;
     provide("appProvide", appProvide());
-
+    const { initWallet } = useWallet()
     const waittxlist = () => {
       time = setTimeout(async () => {
         await dispatch("account/waitTxQueueResponse");
@@ -76,6 +77,7 @@ export default {
       }, 600);
     };
     onMounted(() => {
+      initWallet()
       const { handleUpdate, broad } = useBroadCast();
       broad.onmessage = (e: any) => {
         const { data }: any = e;

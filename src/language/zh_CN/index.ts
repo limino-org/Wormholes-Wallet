@@ -151,7 +151,13 @@ export default {
         selectSNFT: "您还未选择任何SNFT",
         buySnft: "你有 S-NFT 吗？ {link}",
         findMore: "寻找更多",
-        snftUnfree:"该质押的SNFT还未解冻！"
+        snftUnfree:"该质押的SNFT还未解冻！",
+        conver_approve: "请求被批准了。转换事务将被启动。请稍等。",
+conver_waiting: "交易正在进行中，请稍候。",
+conver_success: "交易发送成功。如果您想查看交易详情，请进入交易历史页面。",
+conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以去交易历史查看交易的具体信息。",
+
+
 
     },
     converSnft: {

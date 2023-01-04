@@ -21,12 +21,23 @@
         </div>
       </div>
     </van-sticky> -->
-    <div class="all" v-show="chooseTabdata.value == 1">
+    <div class="all" v-show="!loading">
       <div v-if="transactionList.length">
-        <CollectionCard @handleClick="handleView(item)" v-for="item in transactionList" :key="item.to" :data="item"         @handleSend="handleSend"
-        @handleCancel="handleCancel" />
+        <CollectionCard
+          @handleClick="handleView(item)"
+          v-for="item in transactionList"
+          :key="item.to"
+          :data="item"
+          @handleSend="handleSend"
+          @handleCancel="handleCancel"
+        />
       </div>
       <no-data v-else />
+    </div>
+    <div class="loading-list-con" v-show="loading">
+      <div class="loading-list-card" v-for="item in 16" :key="item">
+        <van-skeleton avatar :row="2" />
+      </div>
     </div>
     <!-- <div class="all">
       <el-table-v2
@@ -97,12 +108,19 @@
       <div class="flex between lh-16 pt-8 pb-8 border-bottom">
         <span>{{ t("sendto.gasLimit") }}</span>
         <span>{{
-          ethers.utils.formatUnits(transactionData.data.sendData.gasLimit, "wei")
+          ethers.utils.formatUnits(
+            transactionData.data.sendData.gasLimit,
+            "wei"
+          )
         }}</span>
       </div>
       <div class="flex between lh-16 pt-8 pb-8">
         <span>{{ t("converSnft.amount") }}</span>
-        <span>{{!transactionData.data.tokenAddress ? ethers.utils.formatEther(transactionData.data.sendData.value) : transactionData.data.amount }}</span>
+        <span>{{
+          !transactionData.data.tokenAddress
+            ? ethers.utils.formatEther(transactionData.data.sendData.value)
+            : transactionData.data.amount
+        }}</span>
       </div>
       <div class="flex between lh-16 pt-8 pb-8">
         <span>{{ t("transactionDetails.gasfee") }}</span>
@@ -114,7 +132,15 @@
       </div>
       <div class="flex between lh-16 pt-8 pb-12">
         <span>{{ t("transactionDetails.totalAmount") }}</span>
-        <span>≈ {{!transactionData.data.tokenAddress ? ethers.utils.formatEther(transactionData.data.sendData.value) : transactionData.data.amount}} {{currentNetwork.currencySymbol}}</span>
+        <span
+          >≈
+          {{
+            !transactionData.data.tokenAddress
+              ? ethers.utils.formatEther(transactionData.data.sendData.value)
+              : transactionData.data.amount
+          }}
+          {{ currentNetwork.currencySymbol }}</span
+        >
       </div>
     </div>
     <ModifGasFee
@@ -164,6 +190,7 @@ import {
   Sticky,
   Toast,
   Empty,
+  Skeleton,
 } from "vant";
 import TokenCard from "@/views/account/components/tokenCard/index.vue";
 import TransactionDetail from "@/views/account/components/transactionDetail/index.vue";
@@ -177,15 +204,19 @@ import { useRouter } from "vue-router";
 import { getRandomIcon } from "@/utils";
 import { ElTableV2 } from "element-plus";
 import CollectionCard from "@/views/account/components/collectionCard/index.vue";
-import { clone, TransactionSendStatus, TransactionTypes } from "@/store/modules/account";
+import {
+  clone,
+  TransactionSendStatus,
+  TransactionTypes,
+} from "@/store/modules/account";
 import localforage from "localforage";
 import { Column } from "element-plus/lib/components";
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
-import {getWallet} from '@/store/modules/account'
+import { getWallet } from "@/store/modules/account";
 import { useDialog } from "@/plugins/dialog";
-import { web3 } from '@/utils/web3';
-import eventBus from '@/utils/bus';
+import { web3 } from "@/utils/web3";
+import eventBus from "@/utils/bus";
 export default {
   name: "transaction-history",
   components: {
@@ -198,21 +229,23 @@ export default {
     [IndexBar.name]: IndexBar,
     [IndexAnchor.name]: IndexAnchor,
     [Dialog.Component.name]: Dialog.Component,
+    [Skeleton.name]: Skeleton,
     [Empty.name]: Empty,
     CollectionCard,
     TransactionDetail,
     NavHeader,
     ElTableV2,
     ModifGasFee,
-    CommonModal
+    CommonModal,
   },
   setup() {
     const appProvide = inject("appProvide");
     const { t } = useI18n();
     const store = useStore();
     console.log("-=============================");
-    const currentNetwork = computed(() => store.state.account.currentNetwork)
-    const {$dialog} = useDialog()
+    const currentNetwork = computed(() => store.state.account.currentNetwork);
+    const accountInfo = computed(() => store.state.account.accountInfo);
+    const { $dialog } = useDialog();
 
     const tabs = reactive({
       list: [
@@ -243,62 +276,111 @@ export default {
     const back = () => {
       router.go(-1);
     };
-    const { accountInfo, } = store.state.account;
 
+    const handleAsyncTxList = () => {
+      return store.dispatch(
+        "txList/loopAsyncTxList",
+        accountInfo.value.address
+      );
+    };
     // Current account transaction list
     let tlist: any = ref([]);
-    const waitTime: any = ref(null)
+    const waitTime: any = ref(null);
     onMounted(async () => {
-      getPageList()
-      store.dispatch("account/waitTxQueueResponse", {time: null, callback(e: any){
-        console.warn('e', e)
-        waitTime.value = e
-      }}).then(res => {
-        if(res !== true){
-          eventBus.off('txPush')
-      eventBus.off('txupdate')
-        getPageList()
-        }
-      });
+      handleAsyncTxList();
+      getPageList();
+      // store
+      //   .dispatch("account/waitTxQueueResponse", {
+      //     time: null,
+      //     callback(e: any) {
+      //       console.warn("e", e);
+      //       waitTime.value = e;
+      //     },
+      //   })
+      //   .then((res) => {
+      //     if (res !== true) {
+      //       eventBus.off("txPush");
+      //       eventBus.off("txupdate");
+      //       getPageList();
+      //     }
+      //   });
     });
-
-
-
+    tlist.value = [];
+    const loading = ref(true);
     const getPageList = async () => {
-      tlist.value = [];
-      Toast.loading({ duration: 0 });
-      let time = setTimeout(async() => {
+      showSpeedModal.value = false;
+      let time = setTimeout(async () => {
+        const wallet = await getWallet();
+        const { chainId } = await wallet.provider.getNetwork();
         try {
-        const id = currentNetwork.value.id;
-        const address = accountInfo.address.toUpperCase()
-        const key = `txlist-${id}-${address}`
-          console.log('key', key)
-          const tx: any = await localforage.getItem(key);
-          console.warn('tx', tx)
-        if (tx && tx.length) {
-          tlist.value.push(...tx)
+
+          const id = currentNetwork.value.id;
+          const targetAddress = accountInfo.value.address.toUpperCase();
+          let searchKey = "";
+          if (id === "wormholes-network-1") {
+            searchKey = `async-${id}-${chainId}-${targetAddress}`;
+          } else {
+            searchKey = `txlist-${id}-${chainId}-${targetAddress}`;
+          }
+          const txInfo: any = await localforage.getItem(searchKey);
+          const queuekey = `txQueue-${id}-${chainId}-${targetAddress.toUpperCase()}`;
+          const txQueue = await localforage.getItem(queuekey);
+          let tx = [];
+          if (id === "wormholes-network-1") {
+            tx = txInfo ? txInfo.list : [];
+          } else {
+            tx = txInfo;
+          }
+
+          if (tx && tx.length) {
+            if (id === "wormholes-network-1") {
+              // @ts-ignore
+              Array.isArray(txQueue) ? tlist.value.unshift(...txQueue) : "";
+              console.log("txList.value", tlist.value);
+            }
+            tlist.value.push(...tx);
+          }
+        } finally {
+          loading.value = false;
         }
-        // store.state.account.accountList.forEach(async(item: any) => {
-        //   const {address} = item
-        //   const key = `txlist-${id}-${address.toUpperCase()}`
-        //   console.log('key', key)
-        //   const tx: any = await localforage.getItem(key);
-        //   console.warn('tx', tx)
-        // if (tx && tx.length) {
-        //   tlist.value.push(...tx)
-        // }
-        // })
-
-      }catch(err){
-        console.error(err)
-      } finally {
-        Toast.clear();
-      }
-      clearTimeout(time)
-      }, 50)
-
+        clearTimeout(time);
+      }, 50);
     };
 
+    // const getPageList = async () => {
+    //   tlist.value = [];
+    //   Toast.loading({ duration: 0 });
+    //   let time = setTimeout(async() => {
+    //     try {
+    //     const id = currentNetwork.value.id;
+    //     const address = accountInfo.address.toUpperCase()
+    //     const key = `txlist-${id}-${address}`
+    //       console.log('key', key)
+    //       const tx: any = await localforage.getItem(key);
+    //       console.warn('tx', tx)
+    //     if (tx && tx.length) {
+    //       tlist.value.push(...tx)
+    //     }
+    //     // store.state.account.accountList.forEach(async(item: any) => {
+    //     //   const {address} = item
+    //     //   const key = `txlist-${id}-${address.toUpperCase()}`
+    //     //   console.log('key', key)
+    //     //   const tx: any = await localforage.getItem(key);
+    //     //   console.warn('tx', tx)
+    //     // if (tx && tx.length) {
+    //     //   tlist.value.push(...tx)
+    //     // }
+    //     // })
+
+    //   }catch(err){
+    //     console.error(err)
+    //   } finally {
+    //     Toast.clear();
+    //   }
+    //   clearTimeout(time)
+    //   }, 50)
+
+    // };
 
     // All transactions
     const transactionList = computed(() => {
@@ -336,7 +418,7 @@ export default {
     let transactionData: any = reactive({ data: {} });
     const showTransactionModal: Ref<boolean> = ref(false);
     // 1 speed up  2 cancel
-    const sendTxType = ref(1)
+    const sendTxType = ref(1);
     // View transaction details event
     const handleView = (e: any) => {
       transactionData.data = e;
@@ -351,10 +433,10 @@ export default {
         title: "",
         dataKey: "",
         width: "100%",
-      }
+      },
     ]);
 
-    const showSpeedModal = ref(false)
+    const showSpeedModal = ref(false);
     const gasLimit = ref("0");
     const gasPrice = ref("0");
     const handleGasChange = (gasData: any) => {
@@ -365,40 +447,55 @@ export default {
     const reloading = ref(false);
     const reSendTx = async () => {
       reloading.value = true;
-      if(sendTxType.value === 1){
-        resend()
+      if (sendTxType.value === 1) {
+        resend();
       }
-      if(sendTxType.value === 2){
-        cancelSend()
+      if (sendTxType.value === 2) {
+        cancelSend();
       }
     };
-
-    eventBus.on('txPush', (data: any) => {
-      tlist.value.unshift(data)
-    })
-    eventBus.on('txUpdate', (data: any) => {
-      console.warn('txupdate', data)
-      for(let i = 0;i<tlist.value.length;i++){
-        let item = tlist.value[i]
-        const {txId} = item
-        if(txId == data.txId) {
-          tlist.value[i] = data
+    eventBus.on("loopTxListUpdata", () => {
+      getPageList();
+    });
+    eventBus.on("txPush", (data: any) => {
+      // getPageList();
+    });
+    eventBus.on("txUpdate", (data: any) => {
+      // console.warn('txupdate', data)
+      for (let i = 0; i < tlist.value.length; i++) {
+        let item = tlist.value[i];
+        const { hash } = item;
+        if (hash.toUpperCase() == data.hash.toUpperCase()) {
+          tlist.value[i] = data;
         }
       }
-    })
-    
+    });
+
     onUnmounted(() => {
-      if(waitTime.value) {
-        clearInterval(waitTime.value)
+      if (waitTime.value) {
+        clearInterval(waitTime.value);
       }
-      eventBus.off('txPush')
-      eventBus.off('txupdate')
-    })
-    const cancelSend = async() =>{
+      eventBus.off("txPush");
+      eventBus.off("txupdate");
+      eventBus.off('loopTxListUpdata')
+    });
+    const cancelSend = async () => {
       try {
         const wallet = await getWallet();
         const network = await wallet.provider.getNetwork();
-        const { nonce, to, network: localNet, value, tokenAddress, amount, transitionType, txType, data: newData, sendData, txId }: any = transactionData.data;
+        const {
+          nonce,
+          to,
+          network: localNet,
+          value,
+          tokenAddress,
+          amount,
+          transitionType,
+          txType,
+          data: newData,
+          sendData,
+          txId,
+        }: any = transactionData.data;
         const gasp = Number(gasPrice.value)
           ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
           : "0.0000000012";
@@ -409,60 +506,76 @@ export default {
           gasPrice: bigGas,
           gasLimit: gasLimit.value,
           chainId: network.chainId,
-          value: ethers.utils.parseEther('0')
+          value: ethers.utils.parseEther("0"),
         };
         let data = await wallet.sendTransaction(tx);
-        const {hash,from,type, value: newVal} = data
+        const { hash, from, type, value: newVal } = data;
         store.commit("account/UPDATE_TRANSACTION", {
           ...transactionData.data,
           receipt: {
             from,
             to,
-            status: 0
+            status: 0,
           },
           gasPrice: bigGas,
           gasLimit,
           txId,
-          isCancel: true
+          isCancel: true,
         });
-        data.date = new Date()
+        data.date = new Date();
         store.commit("account/PUSH_TXQUEUE", {
-        hash,
-        from,
-        gasLimit: gasLimit.value,
-        gasPrice: gasPrice.value,
-        nonce,
-        to,
-        type,
-        value: newVal,
-        transitionType: transitionType || null,
-        txType,
-        network: clone(localNet),
-        data: clone(newData),
-        sendStatus: TransactionSendStatus.pendding,
-        sendData:  clone(data),
-        tokenAddress,
-        amount: '0'
-      });
+          hash,
+          from,
+          gasLimit: gasLimit.value,
+          gasPrice: gasPrice.value,
+          nonce,
+          to,
+          type,
+          value: newVal,
+          transitionType: transitionType || null,
+          txType,
+          network: clone(localNet),
+          data: clone(newData),
+          sendStatus: TransactionSendStatus.pendding,
+          sendData: clone(data),
+          tokenAddress,
+          amount: "0",
+        });
         sessionStorage.setItem("new tx", JSON.stringify(data));
-        const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
-        await store.dispatch('account/waitTxQueueResponse')
+        const receipt = await wallet.provider.waitForTransaction(
+          data.hash,
+          null,
+          60000
+        );
+        await store.dispatch("account/waitTxQueueResponse");
       } catch (err) {
         console.error(err);
-        showSpeedModal.value = false
-        Toast(err.reason)
-        console.error(err)
+        showSpeedModal.value = false;
+        Toast(err.reason);
+        console.error(err);
       } finally {
         showSpeedModal.value = false;
         reloading.value = false;
       }
-    }
+    };
 
-    const resend = async() => {
+    const resend = async () => {
       try {
         const wallet = await getWallet();
         const network = await wallet.provider.getNetwork();
-        const { nonce, to, network: localNet, value, tokenAddress, amount, transitionType, txType, data: newData, sendData,toAddress }: any = transactionData.data;
+        const {
+          nonce,
+          to,
+          network: localNet,
+          value,
+          tokenAddress,
+          amount,
+          transitionType,
+          txType,
+          data: newData,
+          sendData,
+          toAddress,
+        }: any = transactionData.data;
         const gasp = Number(gasPrice.value)
           ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
           : "0.0000000012";
@@ -474,77 +587,88 @@ export default {
           gasLimit: gasLimit.value,
           chainId: network.chainId,
         };
-        console.warn('tx', tx)
-        let data = null
-        if(tokenAddress) {
-          const { contractWithSigner, contract } = await store.dispatch("account/connectConstract", tokenAddress);
-          const amountWei = web3.utils.toWei((amount || 0) + '','ether')
-          console.log('amountWei', amountWei)
-          console.log('gasp', gasp)
-          console.log(' gasLimit.value',  gasLimit.value)
+        console.warn("tx", tx);
+        let data = null;
+        if (tokenAddress) {
+          const { contractWithSigner, contract } = await store.dispatch(
+            "account/connectConstract",
+            tokenAddress
+          );
+          const amountWei = web3.utils.toWei((amount || 0) + "", "ether");
+          console.log("amountWei", amountWei);
+          console.log("gasp", gasp);
+          console.log(" gasLimit.value", gasLimit.value);
           const transferParams = {
             nonce,
             gasPrice: bigGas,
             gasLimit: gasLimit.value,
-          }
-          data = await contractWithSigner.transfer(toAddress, amountWei, transferParams)
+          };
+          data = await contractWithSigner.transfer(
+            toAddress,
+            amountWei,
+            transferParams
+          );
         } else {
-          tx.value = value
+          tx.value = value;
           data = await wallet.sendTransaction(tx);
         }
-        const {hash,from,type, value: newVal} = data
+        const { hash, from, type, value: newVal } = data;
         store.commit("account/UPDATE_TRANSACTION", {
           ...transactionData.data,
           receipt: {
             from,
             to,
-            status: 0
+            status: 0,
           },
           gasPrice: gasPrice.value,
           gasLimit,
         });
 
         store.commit("account/PUSH_TXQUEUE", {
-        hash,
-        from,
-        gasLimit: gasLimit.value,
-        gasPrice: gasPrice.value,
-        nonce,
-        to,
-        type,
-        value: newVal,
-        transitionType: transitionType || null,
-        txType,
-        network: clone(localNet),
-        data: clone(newData),
-        sendStatus: TransactionSendStatus.pendding,
-        sendData:  clone(data),
-        tokenAddress,
-        amount
-      });
+          hash,
+          from,
+          gasLimit: gasLimit.value,
+          gasPrice: gasPrice.value,
+          nonce,
+          to,
+          type,
+          value: newVal,
+          transitionType: transitionType || null,
+          txType,
+          network: clone(localNet),
+          data: clone(newData),
+          sendStatus: TransactionSendStatus.pendding,
+          sendData: clone(data),
+          tokenAddress,
+          amount,
+        });
         sessionStorage.setItem("new tx", JSON.stringify(data));
-        const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000);
+        const receipt = await wallet.provider.waitForTransaction(
+          data.hash,
+          null,
+          60000
+        );
         showSpeedModal.value = false;
-        await store.dispatch('account/waitTxQueueResponse')
+        await store.dispatch("account/waitTxQueueResponse");
       } catch (err) {
-        console.error(err)
-        Toast(err.reason)
+        console.error(err);
+        Toast(err.reason);
       } finally {
-        showSpeedModal.value = false
+        showSpeedModal.value = false;
         reloading.value = false;
       }
-    }
-      
+    };
+
     const handleSend = (data: any) => {
-      handleClose()
-      sendTxType.value = 1
+      handleClose();
+      sendTxType.value = 1;
       transactionData.data = data;
       showSpeedModal.value = true;
     };
 
     const handleCancel = (data: any) => {
-      handleClose()
-      sendTxType.value = 2
+      handleClose();
+      sendTxType.value = 2;
       console.warn("cancel...");
       transactionData.data = data;
       showSpeedModal.value = true;
@@ -557,6 +681,7 @@ export default {
       handleGasChange,
       reloading,
       reSendTx,
+      loading,
       ethers,
       columns,
       showSpeedModal,
@@ -574,11 +699,24 @@ export default {
       otherList,
       swapList,
       appProvide,
+      tlist,
     };
   },
 };
 </script>
 <style lang="scss" scoped>
+:deep() {
+  .van-skeleton__avatar--round {
+    margin-top: 12px;
+  }
+}
+.loading-list-con {
+  height: calc(100vh - 48px);
+  overflow: hidden;
+}
+.loading-list-card {
+  padding: 6px 0;
+}
 .sendBtnBox {
   button {
     min-width: 80px;
