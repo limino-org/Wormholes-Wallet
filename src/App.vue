@@ -2,12 +2,7 @@
   <div class="page-box" id="page-box">
     <div class="van-safe-area-top"></div>
     <div class="container" id="container">
-      <div v-if="loading" class="loading-box flex center">
-        <van-loading size="60" color="#037CD6" vertical>{{
-          t("common.loading")
-        }}</van-loading>
-      </div>
-      <router-view v-else />
+      <router-view />
     </div>
     <div class="van-safe-area-bottom"></div>
   </div>
@@ -30,7 +25,7 @@ import { utils } from "ethers";
 
 import { useExchanges } from "@/hooks/useExchanges";
 import { useI18n } from "vue-i18n";
-import { getWallet, NetStatus, getGasFee} from "./store/modules/account";
+import { getWallet, NetStatus, getGasFee } from "./store/modules/account";
 import { version } from "@/enum/version";
 import { useBroadCast } from "@/utils/broadCast";
 import { guid } from "@/utils/utils";
@@ -45,30 +40,26 @@ export default {
   },
 
   setup() {
-    
     const { commit, dispatch, state } = useStore();
     const { t } = useI18n();
     const router = useRouter();
-    let time: any = null
+    let time: any = null;
     provide("appProvide", appProvide());
-    const loading = ref(true);
 
     const waittxlist = () => {
       time = setTimeout(async () => {
         await dispatch("account/waitTxQueueResponse");
         clearTimeout(time);
-      }, 10000);
-    }
+      }, 5000);
+    };
     onBeforeMount(async () => {
       commit("system/UPDATE_TRANSFERUSDRATE", 0.5);
       commit("account/UPDATE_NETSTATUS", NetStatus.pendding);
       commit("system/UPDATA_CONVERSATIONID", guid());
 
-      waittxlist()
-
+      waittxlist();
     });
-    window.onload = async() => {
-      loading.value = false;
+    window.onload = async () => {
       // let time2 = setTimeout(function () {
       //   commit("account/UPDATE_WORMHOLES_URL", {
       //     URL: "https://api.wormholes.com",
@@ -76,6 +67,13 @@ export default {
       //   });
       //   clearTimeout(time2);
       // }, 1000);
+      let time = setTimeout(() => {
+        // @ts-ignore
+        document.getElementById("loading-page-box").style.display = "none";
+        // @ts-ignore
+        document.getElementById("app").style.display = "block";
+        clearTimeout(time);
+      }, 600);
     };
     onMounted(() => {
       const { handleUpdate, broad } = useBroadCast();
@@ -92,7 +90,7 @@ export default {
         }
       };
       dispatch("account/getContractAddress");
-      dispatch('configuration/getConfiguration');
+      dispatch("configuration/getConfiguration");
       (async function () {
         const vuex = localStorage.getItem("vuex");
         const mnemonic = localStorage.getItem("mnemonic");
@@ -113,11 +111,8 @@ export default {
           clearTimeout(time);
         }, 5000);
       })();
-
-
     });
     return {
-      loading,
       t,
     };
   },

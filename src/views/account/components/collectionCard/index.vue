@@ -25,9 +25,7 @@
             </span>
           </div>
           <div class="amount">
-            {{ formatDate(data.timestamp * 1000, "MM/DD") }}
-            {{ $t("transactionDetails.at") }}
-            {{ formatDate(data.timestamp * 1000, "HH:mm ") }}
+            {{ formatTxDate(data) }}
           </div>
         </div>
       </div>
@@ -71,6 +69,7 @@ import {
   txTypeToIcon,
   handleTxType,
   transactionStatusClass,
+  formatTxDate
 } from "@/utils/filters";
 import { useStore } from "vuex";
 import { AccountInfo } from "@/store/modules/account";
@@ -141,7 +140,8 @@ export default defineComponent({
       toUsdSymbol,
       transactionStatus,
       currentNetwork,
-      handleTxType
+      handleTxType,
+      formatTxDate
     };
   },
 });

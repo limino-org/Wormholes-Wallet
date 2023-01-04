@@ -8,6 +8,7 @@ import { useStore } from "vuex";
 import { computed } from "vue";
 import i18n from '@/language/index'
 import { getInput } from "@/store/modules/txList";
+import store from '@/store/index'
 
 // Mask the address
 export const addressMask = (v: string) => {
@@ -55,6 +56,18 @@ export const transactionTarget = (accountInfo: AccountInfo, item: any) => {
 export const formatDate = (time: number, format = 'MMMM-DD') => {
     return moment(time).format(format)
 }
+
+
+
+export const formatTxDate = (data: any) => {
+  const {timestamp,sendStatus,date} = data
+  if(sendStatus === 'pendding') {
+    return formatDate(date, "MM/DD")+' ' + i18n.global.t("transactionDetails.at") +' ' + formatDate(date, "HH:mm ")
+  }
+
+  return formatDate(timestamp * 1000, "MM/DD")+' ' + i18n.global.t("transactionDetails.at")+' ' + formatDate(timestamp * 1000, "HH:mm ")
+}
+
 
 // Convert BigNumber amount to ETH
 export const formatEther = (v: any) => {
@@ -176,7 +189,8 @@ export function transactionStatus(txData: any){
   //     return i18n.global.t('transationHistory.failed')
   //   }
   // }
-  const {status} = txData
+  const {status,sendStatus} = txData
+  if(sendStatus && sendStatus === 'pendding') return i18n.global.t('transationHistory.pendding')
   return status ? i18n.global.t('transationHistory.successly') : i18n.global.t('transationHistory.failed')
   }
   // Return to form of transaction
@@ -190,7 +204,7 @@ export function transactionStatus(txData: any){
   }
 
   export const handleSendStatus = (data: any) => {
-    const {status} = data
+    const {status,sendStatus} = data
     // if(sendStatus === 'pendding' && !receipt){
     //   return sendStatus
     // }
@@ -199,6 +213,7 @@ export function transactionStatus(txData: any){
     // if(status)return 'success'
     // if(!status)return 'fail'
     // }
+    if(sendStatus && sendStatus === 'pendding') return sendStatus
     return status ? 'success' : 'fail'
   }
 
@@ -210,11 +225,12 @@ export function transactionStatus(txData: any){
     // if(transitionType == '6') {
     //   return 'icon-caozuo-xunhuan1'
     // }
+    const myAddr = store.state.account.accountInfo.address.toUpperCase()
     const { to, from, contractAddress} = data
+    if(contractAddress) return 'icon-icon-'
     const bigTo = to.toUpperCase()
     const bigFrom = from.toUpperCase()
-    if(contractAddress) return 'icon-icon-'
-    if(bigTo === bigFrom) return 'icon-bottom'
+    if(bigTo === bigFrom || (myAddr === bigTo && bigFrom !== myAddr)) return 'icon-bottom'
     if(bigTo !== bigFrom && !contractAddress) return 'icon-jiantou_youshang'
     // switch(txType.trim()){
     //   case 'send':
@@ -235,71 +251,48 @@ export function transactionStatus(txData: any){
   //  } else {
   //   return transactiontxType(txType)
   //  }
-  const { to, from, contractAddress} = item
+  const { to, from, contractAddress, sendStatus , txType} = item
+  const myAddr = store.state.account.accountInfo.address.toUpperCase()
+  if(sendStatus && sendStatus === 'pendding') {
+    if(txType === 'contract') {
+      return i18n.global.t('transationHistory.contract')
+    }
+    return i18n.global.t('transationHistory.send')
+  }
+
+  if(contractAddress) return i18n.global.t('transationHistory.contract')
   const bigTo = to.toUpperCase()
   const bigFrom = from.toUpperCase()
-  if(contractAddress) return i18n.global.t('transationHistory.contract')
-  if(bigTo === bigFrom) return i18n.global.t('transactiondetails.recive')
+  if(bigTo === bigFrom || myAddr === bigTo) return i18n.global.t('transactiondetails.recive')
   if(bigTo !== bigFrom) return i18n.global.t('transationHistory.send')
   }
 
   export const transactionStatusClass = (data: any) => {
-    // const {sendStatus,receipt} = data
-
-    // if(sendStatus === 'pendding'){
-    //   return 'waitting'
-    // }
-    // // if(receipt){
-    // //   return receipt.status ? 'success' : 'failed'
-    // // }
-    // if(sendStatus === 'success' && receipt){
-    //   const {status} = receipt
-    //   return status ? 'success' : 'failed'
-    // }
-    const {status} = data
+    const {status,sendStatus} = data
+    if(sendStatus && sendStatus === 'pendding') return 'waitting'
     return status ? 'success' : 'failed'
   }
 
   export const transferAmountText = (data: any) => {
-    // let {transitionType,value, sendStatus,receipt, network, tokenAddress,amount , sendData} = data
-    // sendData = sendData || {}
-    // network = network || {}
-    // const {convertAmount} = sendData
-    // const {currencySymbol} = network
-    // const val = utils.formatEther(value)
-    // if(!tokenAddress) {
-    //   if(sendStatus === 'pendding')return val +' '+ currencySymbol
-    // } else {
-    //   if(sendStatus === 'pendding')return amount +' '+ currencySymbol
-    // }
-    // if(receipt){
-    //   const {status} = receipt
-    //   if(status) {
-    //     if(!tokenAddress){
-    //       if(transitionType === '6')return `+${convertAmount} ${currencySymbol}`
-    //       return `-${val} ${currencySymbol}`
-    //     } else {
-    //       return `-${amount} ${currencySymbol}`
-    //     }
-    //   } else {
-    //     if(!tokenAddress){
-    //       return `${val} ${currencySymbol}`
-    //     }else {
-    //       return `${amount} ${currencySymbol}`
-    //     }
-        
-    //   }
-    // }
-    const { to, from, contractAddress, value, input, convertAmount } = data
+    const { to, from, contractAddress, value, input, convertAmount, sendStatus } = data
+    const myAddr = store.state.account.accountInfo.address.toUpperCase()
+    if(sendStatus && sendStatus === 'pendding'){
+      const val = utils.formatEther(value)
+      return val
+    }
     // console.log('input:', utils.toUtf8String(input))
     const jsonData = getInput(input)
+
+    const val = new BigNumber(value).div(1000000000000000000).toString()
+    if(jsonData) {
+    // @ts-ignore
+    let { type, nft_address } = jsonData
+    if(type && Number(type) === 6 && nft_address) return '+' + convertAmount
+    }
+    if(contractAddress) return val
     const bigTo = to.toUpperCase()
     const bigFrom = from.toUpperCase()
-    const val = new BigNumber(value).div(1000000000000000000).toString()
-    // @ts-ignore
-    let {type,nft_address} = jsonData
-    if(type && Number(type) === 6 && nft_address) return '+' + convertAmount
-    if(bigTo === bigFrom) return '+' + val
+    if(bigTo === bigFrom || (myAddr == bigTo && myAddr !== bigFrom)) return '+' + val
     if(bigTo !== bigFrom) return '-' + val
-    if(contractAddress) return val
+
   }

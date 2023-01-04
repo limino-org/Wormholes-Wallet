@@ -45,7 +45,9 @@ export default {
         }
     },
     actions: {
-        async updateRecordPage({ commit, state }: any, { transactions: list, total, chainId }) {
+        async updateRecordPage({ commit, state }: any, { transactions: list, total, chainId, hasRecord }) {
+            const typerec = typeof hasRecord
+            console.warn('typeof hasRecord', typeof hasRecord, typeof typerec)
             const wallet = await getWallet()
             const addr = store.state.account.accountInfo.address.toUpperCase()
             const { id } = store.state.account.currentNetwork
@@ -67,7 +69,7 @@ export default {
             console.log('txInfo', txInfo)
             if (txInfo) {
                 if (total <= txInfo.list.length) {
-                    if (state.time) {
+                    if (state.time && typeof hasRecord == 'undefined') {
                         clearInterval(state.time)
                         commit('UPDATE_TIME', null)
                     }
@@ -90,8 +92,11 @@ export default {
                 }
             }
             await localforage.setItem(asyncRecordKey, txInfo)
-            eventBus.emit('loopTxListUpdata')
-            if (!list || list.length < 10) {
+            let time = setTimeout(() => {
+                eventBus.emit('loopTxListUpdata')
+                clearTimeout(time)
+            })
+            if (!list || list.length < 10 && typeof hasRecord == 'undefined') {
                 if (state.time) {
                     clearInterval(state.time)
                     commit('UPDATE_TIME', null)
@@ -205,7 +210,7 @@ export default {
                 } else {
                     hasRecord = false
                 }
-                await dispatch('updateRecordPage', { transactions: newList, total, chainId })
+                await dispatch('updateRecordPage', { transactions: newList, total, chainId, hasRecord })
                 return hasRecord
             }
    
@@ -217,9 +222,10 @@ export default {
                 const res = await dispatch('asyncAddrRecord')
                 const { asyncRecordKey, total } = res
                 const txInfo = await localforage.getItem(asyncRecordKey)
+                debugger
                 if(res && txInfo.list && txInfo.list.length < total) {
-                    let t = setInterval(() => {
-                        dispatch('asyncAddrRecord')
+                    let t = setInterval(async() => {
+                       await dispatch('asyncAddrRecord')
                     }, 4000)
                     commit('UPDATE_TIME', t)
                 }

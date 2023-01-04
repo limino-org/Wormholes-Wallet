@@ -49,7 +49,7 @@
         </div>
       </div>
     </div>
-    <div class="swap-list">
+    <div class="swap-list" v-show="!loading">
       <CollectionCard
         @handleClick="handleView(item)"
         @handleSend="handleSend"
@@ -88,6 +88,11 @@
           :data="transactionData.data"
         />
       </van-dialog>
+    </div>
+    <div class="loading-list-con" v-show="loading">
+      <div class="loading-list-card"  v-for="item in 10" :key="item">
+        <van-skeleton avatar :row="2" />
+      </div>
     </div>
   </div>
   <CommonModal
@@ -153,7 +158,7 @@ import {
   nextTick,
   onUnmounted,
 } from "vue";
-import { Icon, Popup, Empty, Dialog, Button, Toast } from "vant";
+import { Icon, Popup, Empty, Dialog, Button, Toast, Skeleton, } from "vant";
 import CollectionCard from "@/views/account/components/collectionCard/index.vue";
 import { addressMask, decimal, toUsd } from "@/utils/filters";
 import AcceptCode from "@/views/account/components/acceptCode/index.vue";
@@ -181,6 +186,7 @@ export default {
     [Popup.name]: Popup,
     [Empty.name]: Empty,
     [Button.name]: Button,
+    [Skeleton.name]: Skeleton,
     [Dialog.Component.name]: Dialog.Component,
     CollectionCard,
     AcceptCode,
@@ -220,9 +226,9 @@ export default {
         },
       });
     };
-
+    const loading = ref(true)
     const getPageList = async () => {
-      Toast.loading({ duration: 0 });
+      showSpeedModal.value = false
       let time = setTimeout(async() => {
         const wallet = await getWallet()
         const { chainId } = await wallet.provider.getNetwork()
@@ -247,11 +253,11 @@ export default {
             txList.value = list.filter((item: any) => !item.contractAddress);
           }
           // @ts-ignore
-          Array.isArray(txQueue) ? txList.value.push(...txQueue) : ''
+          Array.isArray(txQueue) ? txList.value.unshift(...txQueue) : ''
           console.log('txList.value', txList.value)
         }
       } finally {
-        Toast.clear();
+        loading.value = false
       }
       clearTimeout(time)
       },50)
@@ -264,7 +270,6 @@ export default {
     onMounted(async () => {
       handleAsyncTxList()
       getPageList()
-      // getPageList()
       // store.dispatch("account/waitTxQueueResponse", {time: null, callback(e: any){
       //   console.warn('e', e)
       //   waitTime.value = e
@@ -334,19 +339,21 @@ export default {
       getPageList()
     })
     eventBus.on('txPush', (data: any) => {
-      // @ts-ignore
-      txList.value.unshift(data)
+      // // @ts-ignore
+      // txList.value.unshift(data)
+      getPageList()
     })
     eventBus.on('txUpdate', (data: any) => {
-      console.warn('txupdate', data)
-      for(let i = 0;i<txList.value.length;i++){
-        let item = txList.value[i]
-        const {txId} = item
-        if(txId == data.txId) {
-          // @ts-ignore
-          txList.value[i] = data
-        }
-      }
+      getPageList()
+      // console.warn('txupdate', data)
+      // for(let i = 0;i<txList.value.length;i++){
+      //   let item = txList.value[i]
+      //   const {txId} = item
+      //   if(txId == data.txId) {
+      //     // @ts-ignore
+      //     txList.value[i] = data
+      //   }
+      // }
     })
     onUnmounted(() => {
       // console.warn('waitTime.value', waitTime.value)
@@ -516,6 +523,7 @@ export default {
       decimal,
       currentNetwork,
       transactionList,
+      loading,
       pageData,
       toUsd,
       VUE_APP_SCAN_URL,
@@ -525,6 +533,18 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+:deep(){
+  .van-skeleton__avatar--round {
+    margin-top: 12px;
+  }
+}
+.loading-list-con {
+  height: calc(100vh - 48px - 70px - 42px - 36px - 55px);
+  overflow: hidden;
+}
+.loading-list-card {
+  padding: 10px 0;
+}
 .sendBtnBox {
   button {
     min-width: 80px;

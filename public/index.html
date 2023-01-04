@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="icon" href="https://s3.bmp.ovh/imgs/2022/08/26/fed21e136127208d.png">
+  <link rel="stylesheet" href="./styles/loading.css">
   <title>Wormholes Wallet</title>
 </head>
 
@@ -17,6 +18,16 @@
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
         Please enable it to continue.</strong>
   </noscript>
+  <div class="container loading-container" id="loading-page-box">
+    <div class="out-box">
+      <div class="loading-page-box">
+        <img src="./icons/logo1.png" alt="">
+      </div>
+      <div  class="loading-page-box">
+        <img class="loading-spinner" src="./icons/loading.svg" alt="" />
+      </div>
+    </div>
+  </div>
   <div id="app"></div>
   <!-- built files will be auto injected -->
 </body>
