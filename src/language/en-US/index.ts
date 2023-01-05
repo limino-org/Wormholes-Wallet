@@ -329,7 +329,7 @@ export default {
     at: 'at',
     success: "Success",
     fail: "Fail",
-    tradeTit: "Confirm Information"
+    tradeTit: "Status Request"
 
   },
   import: {
@@ -1194,6 +1194,8 @@ export default {
     amountcannotbelessthan: 'Amount cannot be less than{props}'
   },
   error: {
-    500: "Parameter is invalid."
+    500: "Parameter is invalid.",
+    timeout:"The network is busy. The transaction has been queued, please wait, do not send the same transaction again.",
+
   }
 }

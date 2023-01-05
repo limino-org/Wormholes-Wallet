@@ -229,7 +229,7 @@ export default {
     const handleUpdateStatus = () => {
       initData()
     }
-    const {$toast} = useToast()
+    const {$wtoast} = useToast()
     const handleAddModel = async() => {
       Toast.loading({
         duration:0
@@ -238,7 +238,7 @@ export default {
       const balance = await wallet.getBalance()
       const ethBalance = ethers.utils.formatEther(balance)
       if(new BigNumber(ethBalance).lt(201)) {
-        $toast.warn(t('createExchange.nomoney'))
+        $wtoast.warn(t('createExchange.nomoney'))
         Toast.clear()
         return
       }

@@ -100,13 +100,13 @@ export default defineComponent({
     const { emit } = context;
     const accountInfo = computed(() => store.state.account.accountInfo);
     const currentNetwork = computed(() => store.state.account.currentNetwork);
-    const {$toast} = useToast()
+    const {$wtoast} = useToast()
     const viewDetail = () => {
       emit("handleClick",props.data);
     };
     const handleSpeedSend = () => {
       if(accountInfo.value.address.toUpperCase() !== props.data.from.toUpperCase()){
-        $toast.warn(t('common.toggleAddress'))
+        $wtoast.warn(t('common.toggleAddress'))
         return 
       }
       emit('handleSend',props.data)

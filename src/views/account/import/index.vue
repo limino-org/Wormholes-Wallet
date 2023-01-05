@@ -102,8 +102,8 @@ export default {
     const route = useRoute();
     const { commit, dispatch } = useStore();
     const { handleUpdate } = useBroadCast();
-    const {$dialog} = useDialog()
-    const {$toast} = useToast()
+    const {$wdialog} = useDialog()
+    const {$wtoast} = useToast()
     const importAction = ref(false);
     const errorMsg = ref("");
     const isWarning = ref(false);
@@ -147,7 +147,7 @@ export default {
             imported: true
           })
           commit('account/UPDATE_KEYSTORE', keyStore)
-          $toast.success(t('importsuccess.success'))
+          $wtoast.success(t('importsuccess.success'))
           handleUpdate()
           router.push({name:"wallet"})
         })
@@ -156,10 +156,10 @@ export default {
           // Login failed status
           importAction.value = false
           privatekey.value = ''
-          console.log('$dialog',$dialog)
+          console.log('$wdialog',$wdialog)
           errorMsg.value = reason || t('importerror.cannotenter')
           errAddress.value = address || ''
-          // $toast.warn(t(errorMsg.value))
+          // $wtoast.warn(t(errorMsg.value))
         })
     }
     const handleIpt = (v: any) => {
@@ -170,7 +170,7 @@ export default {
     const toCopy = async () => {
       try {
         await toClipboard(`${errAddress.value}`);
-        $toast.success(t("common.copyAddr"));
+        $wtoast.success(t("common.copyAddr"));
       } catch (e) {
         console.error(e);
       }

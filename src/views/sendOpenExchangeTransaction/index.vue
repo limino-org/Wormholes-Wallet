@@ -98,7 +98,7 @@ debugger
 const { t } = useI18n();
 const { sendTo } = useExchanges();
 const { query } = useRoute();
-const { $toast } = useToast();
+const { $wtoast } = useToast();
 const { state, commit, dispatch } = useStore();
 const { toSign } = useSign();
 const { backUrl, action, address, txs }: any = query;
@@ -173,7 +173,7 @@ const resData: any = ref({});
 
 async function toSend() {
   if (!tx2 && !tx1) {
-    $toast.warn(t("error.500"));
+    $wtoast.warn(t("error.500"));
     return;
   }
   $tradeConfirm.open({

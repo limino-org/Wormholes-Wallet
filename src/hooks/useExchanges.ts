@@ -72,10 +72,9 @@ export const useExchanges = () => {
       $tradeConfirm.update({ status: "approve" })
       const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000)
       localStorage.setItem('receipt2', JSON.stringify(receipt))
-      store.dispatch('account/waitTxQueueResponse')
       const { status } = receipt;
       if (status == 0) {
-        $tradeConfirm.update({ status: "fail" })
+        $tradeConfirm.update({ status: "fail", hash: receipt.transactionHash })
         resetData();
         Toast(i18n.global.t("userexchange.transactionfailed"));
         return Promise.reject()
@@ -84,8 +83,18 @@ export const useExchanges = () => {
       // commit("account/PUSH_TRANSACTION", rep);
       store.dispatch('account/waitTxQueueResponse')
       return Promise.resolve(receipt)
-    } catch (err) {
-      $tradeConfirm.update({ status: "fail" })
+    } catch (err: any) {
+      if (err.toString().indexOf("timeout") > -1) {
+        $tradeConfirm.update({
+          status: "warn",
+          failMessage: i18n.global.t("error.timeout"),
+        });
+      } else {
+        $tradeConfirm.update({
+          status: "fail",
+          failMessage: err.reason,
+        });
+      }
       console.log(err)
       console.log("==========err2=============")
       Toast(err.toString());
@@ -111,9 +120,9 @@ export const useExchanges = () => {
     const { address } = wallet
     try {
       const receipt = await sendTx2(amount)
-      const { status } = receipt;
+      const { status,transactionHash } = receipt;
       if (status == 0) {
-        $tradeConfirm.update({ status: "fail" })
+        $tradeConfirm.update({ status: "fail", hash: transactionHash })
         resetData();
         Toast(i18n.global.t("userexchange.transactionfailed"));
         return;
@@ -144,7 +153,7 @@ export const useExchanges = () => {
 
         return;
       }
-     
+
     } catch (err) {
       $tradeConfirm.update({ status: "fail" })
       resetData();
@@ -235,35 +244,45 @@ export const useExchanges = () => {
         from: address,
         to: address,
         value: amount,
-        data:data3,
+        data: data3,
       };
-      const data = await store.dispatch('account/transaction',tx1)
-        localStorage.setItem('tx1', JSON.stringify(data))
-        if (!isServer) {
-          $tradeConfirm.update({ status: "approve" })
+      const data = await store.dispatch('account/transaction', tx1)
+      localStorage.setItem('tx1', JSON.stringify(data))
+      if (!isServer) {
+        $tradeConfirm.update({ status: "approve" })
+      }
+      const receipt2 = await data.wallet.provider.waitForTransaction(data.hash, null, 60000)
+      const { status, transactionHash } = receipt2
+      localStorage.setItem('receipt1', JSON.stringify(receipt2))
+      if (!isServer) {
+        if (status == 0) {
+          $tradeConfirm.update({ status: "fail", hash: transactionHash })
+        } else {
+          $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "exchange-management" }) } })
         }
-        const receipt2 = await data.wallet.provider.waitForTransaction(data.hash, null, 60000)
-        const { status } = receipt2
-            localStorage.setItem('receipt1', JSON.stringify(receipt2))
-            if (!isServer) {
-              if (status == 0) {
-                $tradeConfirm.update({ status: "fail" })
-              } else {
-                $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "exchange-management" }) } })
-              }
-              store.dispatch('account/waitTxQueueResponse')
-            }
-            // Send the second stroke
-            if (isServer) {
-              if (!exchanger_flag && newStatus == 2) {
-                $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "exchange-management" }) } })
-                return
-              }
-              send2(200, name)
-            }
+        store.dispatch('account/waitTxQueueResponse')
+      }
+      // Send the second stroke
+      if (isServer) {
+        if (!exchanger_flag && newStatus == 2) {
+          $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "exchange-management" }) } })
+          return
+        }
+        send2(200, name)
+      }
     } catch (err: any) {
       if (!isServer) {
-        $tradeConfirm.update({ status: "fail" })
+        if (err.toString().indexOf("timeout") > -1) {
+          $tradeConfirm.update({
+            status: "warn",
+            failMessage: i18n.global.t("error.timeout"),
+          });
+        } else {
+          $tradeConfirm.update({
+            status: "fail",
+            failMessage: err.reason,
+          });
+        }
       }
     }
   };
@@ -322,14 +341,14 @@ export const useExchanges = () => {
       console.warn('tx1', tx1)
       console.warn('amount', amount)
 
-      const receipt = await store.dispatch('account/transaction',tx1)
+      const receipt = await store.dispatch('account/transaction', tx1)
       $tradeConfirm.update({ status: "approve" })
       const receipt2 = await wallet.provider.waitForTransaction(receipt.hash, null, 60000)
       store.dispatch('account/waitTxQueueResponse')
-      const { status } = receipt2
+      const { status, transactionHash } = receipt2
       localStorage.setItem('receipt1', JSON.stringify(receipt2))
       if (status == 0) {
-        $tradeConfirm.update({ status: "fail" })
+        $tradeConfirm.update({ status: "fail", hash: transactionHash  })
         Toast(i18n.global.t('userexchange.transferfailed'))
         return false
       } else {
@@ -340,8 +359,18 @@ export const useExchanges = () => {
           }
         })
       }
-    } catch (err) {
-      $tradeConfirm.update({ status: "fail" })
+    } catch (err: any) {
+      if (err.toString().indexOf("timeout") > -1) {
+        $tradeConfirm.update({
+          status: "warn",
+          failMessage: i18n.global.t("error.timeout"),
+        });
+      } else {
+        $tradeConfirm.update({
+          status: "fail",
+          failMessage: err.reason,
+        });
+      }
       console.error(err)
     }
   }
@@ -457,20 +486,21 @@ export const useExchanges = () => {
       value: '0',
       data: `0x${data3}`,
     };
-    const sendData = await store.dispatch('account/transaction',tx1)
-          $tradeConfirm.update({ status: "approve" })
-          localStorage.setItem("close-exchange-tx", JSON.stringify(sendData));
-          const receipt = await wallet.provider.waitForTransaction(sendData.hash, null, 60000)
-          await dispatch("account/getExchangeStatus");
-          store.dispatch('account/waitTxQueueResponse')
-          const { status } = receipt
-          if (status == 0) {
-            $tradeConfirm.update({ status: "fail" })
-          } else {
-            $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "wallet" }) } })
-          }
-          return receipt
-    
+    const sendData = await store.dispatch('account/transaction', tx1)
+    $tradeConfirm.update({ status: "approve" })
+    localStorage.setItem("close-exchange-tx", JSON.stringify(sendData));
+    const receipt = await wallet.provider.waitForTransaction(sendData.hash, null, 60000)
+    await dispatch("account/getExchangeStatus");
+    store.dispatch('account/waitTxQueueResponse')
+    const { status,transactionHash } = receipt
+    if (status == 0) {
+      $tradeConfirm.update({ status: "fail", hash: transactionHash})
+    } else {
+      $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "wallet" }) } })
+    }
+    return receipt
+
+
   };
 
   // Sending Authorization Information
@@ -562,16 +592,30 @@ export const useExchanges = () => {
     })
     // Send the first pledge amount
     try {
-      const data1 = await store.dispatch('account/transaction',tx1)
+      const data1 = await store.dispatch('account/transaction', tx1)
       $tradeConfirm.update({ status: TradeStatus.approve })
       localStorage.setItem("data1", JSON.stringify(data1));
       const receipt1 = await wallet.provider.waitForTransaction(data1.hash, null, 60000);
       dispatch("account/updateAllBalance");
       store.dispatch('account/waitTxQueueResponse')
-      $tradeConfirm.update({ status: TradeStatus.success })
-      localStorage.setItem("tx1", JSON.stringify(receipt1));
-    } catch (err) {
-      $tradeConfirm.update({ status: TradeStatus.fail })
+      if(receipt1.status) {
+        $tradeConfirm.update({ status: TradeStatus.success })
+      } else {
+        $tradeConfirm.update({ status: TradeStatus.fail })
+      }
+      
+    } catch (err: any) {
+      if (err.toString().indexOf("timeout") > -1) {
+        $tradeConfirm.update({
+          status: TradeStatus.warn,
+          failMessage:i18n.global.t("error.timeout"),
+        });
+      } else {
+        $tradeConfirm.update({
+          status: TradeStatus.fail,
+          failMessage: err.reason,
+        });
+      }
       return Promise.reject(err);
     }
     return Promise.resolve();
@@ -598,16 +642,31 @@ export const useExchanges = () => {
       }
     })
     try {
-      const data1 = await store.dispatch('account/transaction',tx1)
+      const data1 = await store.dispatch('account/transaction', tx1)
       $tradeConfirm.update({ status: TradeStatus.approve })
       localStorage.setItem("data1", JSON.stringify(data1));
       const receipt1 = await wallet.provider.waitForTransaction(data1.hash, null, 60000);
+      if(receipt1.status) {
+        $tradeConfirm.update({ status: TradeStatus.success })
+      } else {
+        $tradeConfirm.update({ status: TradeStatus.fail })
+      }
       $tradeConfirm.update({ status: TradeStatus.success })
       dispatch("account/updateAllBalance");
       store.dispatch('account/waitTxQueueResponse')
       localStorage.setItem("tx1", JSON.stringify(receipt1));
-    } catch (err) {
-      $tradeConfirm.update({ status: TradeStatus.fail })
+    } catch (err: any) {
+      if (err.toString().indexOf("timeout") > -1) {
+        $tradeConfirm.update({
+          status: TradeStatus.warn,
+          failMessage:i18n.global.t("error.timeout"),
+        });
+      } else {
+        $tradeConfirm.update({
+          status: TradeStatus.fail,
+          failMessage: err.reason,
+        });
+      }
       return Promise.reject(err);
     }
   }

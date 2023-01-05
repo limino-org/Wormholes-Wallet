@@ -140,7 +140,7 @@ export default defineComponent({
     const accountInfo = computed(() => store.state.account.accountInfo);
     const currentNetwork = computed(() => store.state.account.currentNetwork);
     const showModal: Ref<boolean> = ref(false);
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const gasFee = ref("0");
     const showPopover = ref(false);
     watch(
@@ -210,33 +210,30 @@ export default defineComponent({
       nextLoading.value = true;
       $tradeConfirm.open({
         disabled: [TradeStatus.pendding],
-        callBack,
       });
       try {
         const txData = await store.dispatch(
           value ? "account/transaction" : "account/tokenTransaction",
           params
         );
-        $tradeConfirm.update({ status: "approve", callBack });
+        $tradeConfirm.update({ status: "approve" });
 
         await store.dispatch("account/waitTxQueueResponse", {
           callback(e: any) {
             waitTime.value = e;
           },
         });
-        $tradeConfirm.update({ status: "success", callBack });
+        $tradeConfirm.update({ status: "success" });
       } catch (err: any) {
         if (err.toString().indexOf("timeout") > -1) {
           $tradeConfirm.update({
             status: "warn",
             failMessage: t("error.timeout"),
-            callBack,
           });
         } else {
           $tradeConfirm.update({
             status: "fail",
             failMessage: err.reason,
-            callBack,
           });
         }
       } finally {

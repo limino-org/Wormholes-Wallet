@@ -158,7 +158,7 @@ export default defineComponent({
 
     const handleComfirm = () => {
       if (!amount.value) {
-        // $toast.warn(t("amountreminder.pleaseenter"));
+        // $wtoast.warn(t("amountreminder.pleaseenter"));
         return;
       }
       console.log("props---------", props);

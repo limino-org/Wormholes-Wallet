@@ -394,7 +394,7 @@ export default defineComponent({
       closeExchanges,
     } = useExchanges();
 
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const { logout } = useLogin();
     const accountInfo = computed(() => store.state.account.accountInfo);
     const exchangeStatus = computed(() => store.state.account.exchangeStatus);
@@ -414,7 +414,7 @@ export default defineComponent({
       show.value = false;
       router.push({ name });
     };
-    const { $dialog } = useDialog();
+    const { $wdialog } = useDialog();
     const goPledge = async () => {
       show.value = false;
       const wallet = await getWallet();
@@ -433,7 +433,7 @@ export default defineComponent({
         // router.push({ name: 'minersPledge' })
         router.push({ name: "minersDeal" });
       } else {
-        $dialog.open({
+        $wdialog.open({
           type: "warn",
           theme: "dark",
           hasCancelBtn: false,
@@ -569,7 +569,7 @@ export default defineComponent({
     });
 
     const toHelp = () => {
-      // $toast.warn(t('common.commingsoon'))
+      // $wtoast.warn(t('common.commingsoon'))
       window.open("https://www.wormholes.com/docs/wallet/");
     };
     const showAccount = ref(false);

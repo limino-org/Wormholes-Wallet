@@ -381,7 +381,7 @@ export default {
         at: '的',
         success: "成功",
         fail: "失败",
-        tradeTit: "信息确认"
+        tradeTit: "请求状态"
     },
 
     // 导入账户
@@ -1235,6 +1235,8 @@ export default {
     },
 
     error: {
-        500: "参数有误"
+        500: "参数有误",
+        timeout:"此时网络繁忙。交易已放入队列，请稍等，不要再发送相同的交易。",
+
     }
 }

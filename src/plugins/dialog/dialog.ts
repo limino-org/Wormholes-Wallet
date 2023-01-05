@@ -5,7 +5,7 @@ export default {
     install: (app: App, options: any) => {
         const vnode: VNode = createVNode(Dialog)
         
-        const $dialog: ToastFuns = {
+        const $wdialog: ToastFuns = {
             success: (message: string) =>{
                 render(vnode, document.body)
                 vnode.component?.exposed?.success(message)
@@ -24,7 +24,7 @@ export default {
 
             },
         }
-        app.config.globalProperties.$dialog = $dialog
+        app.config.globalProperties.$wdialog = $wdialog
 
     }
   }

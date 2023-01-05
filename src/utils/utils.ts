@@ -81,17 +81,22 @@ export const randArr = (arr: Array<any>) => {
 }
 
 
-export const viewTransactionByHash = (hash:string) => {
-  if(store.state.account.currentNetwork.id === 'wormholes-network-1') {
-    window.open(`${VUE_APP_SCAN_URL}TradeDetail/${hash}`);
-  } else {
-    const defaultUrl = store.state.account.currentNetwork.browser
-    if(defaultUrl) {
-      window.open(`${defaultUrl}`);
-    } else {
+export const viewTransactionByHash = (hash:string | null) => {
+  if(hash) {
+    if(store.state.account.currentNetwork.id === 'wormholes-network-1') {
       window.open(`${VUE_APP_SCAN_URL}TradeDetail/${hash}`);
+    } else {
+      const defaultUrl = store.state.account.currentNetwork.browser
+      if(defaultUrl) {
+        window.open(`${defaultUrl}`);
+      } else {
+        window.open(`${VUE_APP_SCAN_URL}TradeDetail/${hash}`);
+      }
     }
+  } else {
+    throw Error('The hash cannot be empty')
   }
+
 
 
 }

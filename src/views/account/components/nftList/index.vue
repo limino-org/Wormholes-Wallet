@@ -711,7 +711,7 @@ export default defineComponent({
       }
       return hexCharCode.join("");
     };
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const { $tradeConfirm } = useTradeConfirm();
     const isLoading = ref(false);
 

@@ -997,7 +997,7 @@ export default {
       commit("PUSH_TXQUEUE", {
         hash,
         from,
-        gasLimit,
+        gasLimit: gasLimit || utils.formatUnits(sendData.gasLimit, 'wei'),
         gasPrice,
         nonce,
         to: toAddr,
@@ -1051,7 +1051,7 @@ export default {
       store.commit("account/PUSH_TXQUEUE", {
         hash,
         from,
-        gasLimit,
+        gasLimit: gasLimit || utils.formatUnits(data.gasLimit, 'wei'),
         gasPrice,
         nonce,
         to: toAddr,
@@ -1074,44 +1074,44 @@ export default {
      }
     },
 // send data
-async sendTransaction({ commit, dispatch, state }: any, tx: any) {
-  const { to, from, data, callBack, value: sendVal } = tx
-  commit("PUSH_RECENTLIST", to);
-  sessionStorage.setItem('tx-----2', JSON.stringify(tx))
-  try {
-  // @ts-ignore
-  const network = clone(store.state.account.currentNetwork)
-    const wallet = await getWallet();
-    const res: any = await wallet.sendTransaction({
-      to,
-      data,
-      value: sendVal
-    })
-    const { from, gasLimit: newLimit, gasPrice: newPrice, hash, nonce, to: toAddr, type, value: newVal } = res;
-    commit("PUSH_TXQUEUE", {
-      hash,
-      from,
-      gasLimit: null,
-      gasPrice: null,
-      nonce,
-      to: toAddr,
-      type,
-      value: newVal,
-      transitionType:  null,
-      txType: TransactionTypes.other,
-      network: clone(network),
-      data: data,
-      sendStatus: TransactionSendStatus.pendding,
-      sendData: clone(res),
-      nft_address:''
-    });
-    console.log("i18n", i18n);
-    res.wallet = wallet
-    return res
-  } catch (err) {
-    return Promise.reject(err)
-  }
-},
+// async sendTransaction({ commit, dispatch, state }: any, tx: any) {
+//   const { to, from, data, callBack, value: sendVal } = tx
+//   commit("PUSH_RECENTLIST", to);
+//   sessionStorage.setItem('tx-----2', JSON.stringify(tx))
+//   try {
+//   // @ts-ignore
+//   const network = clone(store.state.account.currentNetwork)
+//     const wallet = await getWallet();
+//     const res: any = await wallet.sendTransaction({
+//       to,
+//       data,
+//       value: sendVal
+//     })
+//     const { from, gasLimit: newLimit, gasPrice: newPrice, hash, nonce, to: toAddr, type, value: newVal } = res;
+//     commit("PUSH_TXQUEUE", {
+//       hash,
+//       from,
+//       gasLimit: null,
+//       gasPrice: null,
+//       nonce,
+//       to: toAddr,
+//       type,
+//       value: newVal,
+//       transitionType:  null,
+//       txType: TransactionTypes.other,
+//       network: clone(network),
+//       data: data,
+//       sendStatus: TransactionSendStatus.pendding,
+//       sendData: clone(res),
+//       nft_address:''
+//     });
+//     console.log("i18n", i18n);
+//     res.wallet = wallet
+//     return res
+//   } catch (err) {
+//     return Promise.reject(err)
+//   }
+// },
   //Load the wallet by address and password
     async connectWalletByPwdAddress(
       { state, commit, dispatch }: any,

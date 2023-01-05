@@ -98,7 +98,7 @@
               }} -->
             </div>
           </div>
-          <div class="flex center mt-26">
+          <div :class="`flex ${defaultData.hash ? 'between' : 'center'} mt-26 btn-done-box`">
             <Button
               @click="callBack"
               :disabled="disabled"
@@ -106,6 +106,7 @@
               type="primary"
               >{{ i18n.global.t("returnreceipt.done") }}</Button
             >
+            <Button v-if="defaultData.hash"  class="okbtn" type="primary" @click="viewTransactionByHash(defaultData.hash)">History</Button>
           </div>
         </div>
       </div>
@@ -128,6 +129,7 @@ export type TradeOptions = {
   failMessageType: string
   successMessageType: string
   receipt?: null | Object
+  hash?: null | string
 };
 
 
@@ -136,7 +138,9 @@ import { computed, Ref, ref } from "vue";
 import { Button, Icon, Loading } from "vant";
 import i18n from "@/language";
 import { TradeConfirmOpt, TradeStatus } from "./tradeConfirm";
+import { viewTransactionByHash } from "@/utils/utils";
 console.warn("i18n-------", i18n);
+
 
 enum messageType {
   string = 'string',
@@ -153,6 +157,7 @@ const getDefaultOpt = () => {
     wattingMessageType: 'string',
     failMessageType:"string",
     successMessageType: 'string',
+    hash: null,
     callBack: () => {},
     failBack: () => {},
     // The button is disabled in this state
@@ -212,6 +217,9 @@ defineExpose({
 });
 </script>
 <style lang="scss" scoped>
+.btn-done-box {
+  padding: 0 50px;
+}
 .success {
   color: #3aae55 !important;
 }
@@ -247,7 +255,7 @@ defineExpose({
       font-size: 12px;
     }
     .info-box {
-      padding: 22px 25px 0;
+      padding: 22px 15px 0;
       &.fail {
         .approve,.approve-msg {
           color:#d73a49;

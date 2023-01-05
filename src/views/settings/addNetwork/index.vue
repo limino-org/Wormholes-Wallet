@@ -239,7 +239,7 @@ export default {
       return false;
     });
     const netWorkList = computed(() => state.account.netWorkList);
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const loading: Ref<boolean> = ref(false);
 
     const onSubmit = async() => {
@@ -291,7 +291,7 @@ export default {
       dispatch("account/getProviderWallet");
       handleUpdate();
       loading.value = false;
-      $toast.success(
+      $wtoast.success(
         isModif.value
           ? t("addNetwork.modifythenetworksuccessfully")
           : t("addNetwork.addednetworksuccessfully")
@@ -308,7 +308,7 @@ export default {
         // on confirm
         store.commit("account/DETETE_NETWORK", id);
         dispatch("account/getProviderWallet");
-        $toast.success(
+        $wtoast.success(
           t("addNetwork.deletingnetworksucceeded", { qlabel: qlabel })
         );
         router.back();

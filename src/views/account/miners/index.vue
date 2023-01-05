@@ -149,9 +149,9 @@ export default defineComponent({
         commit("account/UPDATE_EXCHANGEGUIDANCE", true);
       }
     });
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const warningSuccess = () => {
-      $toast.success(t("minerspledge.toggleSuccess"));
+      $wtoast.success(t("minerspledge.toggleSuccess"));
     };
 
     const showModal = ref(false);

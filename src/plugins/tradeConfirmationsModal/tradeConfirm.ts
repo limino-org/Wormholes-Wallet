@@ -5,7 +5,8 @@ export enum TradeStatus {
     pendding = 'pendding',
     approve = 'approve',
     success = 'success',
-    fail = 'fail'
+    fail = 'fail',
+    warn = 'warn'
 }
 export type TradeConfirmOpt = {
     status: TradeStatus

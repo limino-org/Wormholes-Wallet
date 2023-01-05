@@ -150,7 +150,7 @@ export default defineComponent({
     const store = useStore();
     const accountInfo = computed(() => store.state.account.accountInfo);
     const currentNetwork = computed(() => store.state.account.currentNetwork);
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const handleClose = () => {
       emit("handleClose");
     };

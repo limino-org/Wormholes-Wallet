@@ -278,11 +278,11 @@ const send3 = async () => {
 const userInfo: Ref<any> = ref({});
 const successModal = ref(false);
 const failModal = ref(false);
-const {$toast} = useToast()
+const {$wtoast} = useToast()
 const copyAddr = async() => {
   try {
     await toClipboard(address.toString() || '')
-    $toast.success(t('copy.copy'))
+    $wtoast.success(t('copy.copy'))
   }catch(err){
     console.error(err)
   }

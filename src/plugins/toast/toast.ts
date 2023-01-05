@@ -10,7 +10,7 @@ import Toast from './index.vue'
 export default {
     install: (app: App, options: any) => {
         const vnode: VNode = createVNode(Toast)
-        const $toast: ToastFuns = {
+        const $wtoast: ToastFuns = {
             success: (message: string) =>{
                 render(vnode, document.body)
                 vnode.component?.exposed?.success(message)
@@ -31,7 +31,7 @@ export default {
                 vnode.component?.exposed?.hide()
             }
         }
-        app.config.globalProperties.$toast = $toast
+        app.config.globalProperties.$wtoast = $wtoast
 
     }
   }

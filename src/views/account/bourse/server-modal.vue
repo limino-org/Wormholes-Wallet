@@ -171,7 +171,7 @@ export default defineComponent({
     const { emit } = context;
     const show = ref(false);
     const { state } = useStore();
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const { t } = useI18n();
     const accountInfo = computed(() => state.account.accountInfo);
     const exchangeStatus = computed(() => state.account.exchangeStatus);
@@ -219,7 +219,7 @@ export default defineComponent({
     const submit = async () => {
       const bigAmount = new Bignumber(accountInfo.value.amount);
       if (bigAmount.lte(201)) {
-        $toast.warn(t("wallet.haveNoMoney"));
+        $wtoast.warn(t("wallet.haveNoMoney"));
         return;
       }
       show.value = false;

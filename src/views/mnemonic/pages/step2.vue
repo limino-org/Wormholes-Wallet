@@ -105,12 +105,12 @@ export default {
 
     const checkPass = ref(false)
     const pwdErr = ref(false)
-    const {$toast} = useToast()
+    const {$wtoast} = useToast()
     const privateKey = ref()
     const handleCheck = () => {
       pwdErr.value = false
       if (!password.value) {
-        $toast.fail(t('sign.password'));
+        $wtoast.fail(t('sign.password'));
         pwdErr.value = true
         return;
       }
@@ -129,7 +129,7 @@ export default {
 
       } catch (err) {
         pwdErr.value = true
-        $toast.fail(t('loginwithpassword.wrong_password'));
+        $wtoast.fail(t('loginwithpassword.wrong_password'));
       }
     };
     return {

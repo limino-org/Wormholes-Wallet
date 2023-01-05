@@ -225,7 +225,7 @@ export default {
     const currentNetwork = computed(() => store.state.account.currentNetwork);
     const transactionList = ref([]);
     const pageData = reactive({ data: {} });
-    const { $dialog } = useDialog();
+    const { $wdialog } = useDialog();
     pageData.data = query;
     const txList = ref([]);
     const toogleAcceptCode = () => {

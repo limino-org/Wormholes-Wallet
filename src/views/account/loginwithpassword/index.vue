@@ -147,7 +147,7 @@ export default {
     };
     const pw1Error = ref(false);
     const password: Ref<string> = ref("");
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const asynPwd = async (val: string) => {
       pw1Error.value = false;
       if (!val) {
@@ -202,7 +202,7 @@ export default {
         }
       } catch (err) {
         pw1Error.value = true;
-        // $toast.warn(err)
+        // $wtoast.warn(err)
         return err;
       } finally {
         loading.value = false;

@@ -245,7 +245,7 @@ export default {
     console.log("-=============================");
     const currentNetwork = computed(() => store.state.account.currentNetwork);
     const accountInfo = computed(() => store.state.account.accountInfo);
-    const { $dialog } = useDialog();
+    const { $wdialog } = useDialog();
 
     const tabs = reactive({
       list: [
@@ -549,11 +549,10 @@ export default {
           60000
         );
         await store.dispatch("account/waitTxQueueResponse");
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
         showSpeedModal.value = false;
         Toast(err.reason);
-        console.error(err);
       } finally {
         showSpeedModal.value = false;
         reloading.value = false;

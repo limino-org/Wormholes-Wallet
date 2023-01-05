@@ -150,7 +150,7 @@ export default {
       handleBlur(str,iptIdx.value)
     }
 
-    const {$toast} = useToast()
+    const {$wtoast} = useToast()
 
     const next = () => {
       const mnemonic = list.value.map(item => item.value.trim()).join(' ')
@@ -165,7 +165,7 @@ export default {
         router.push({ name: "mnemonic-import", query: { mnemonic: encodeURIComponent(mnemonic) } })
       }catch(err){
         console.error(err.toString())
-        $toast.warn(t('importByMnemonic.errorMonic'))
+        $wtoast.warn(t('importByMnemonic.errorMonic'))
       }
     }
 
