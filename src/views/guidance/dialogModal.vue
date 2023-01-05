@@ -4,6 +4,7 @@
       <van-dialog
         v-model:show="showModal"
         teleport="#page-box"
+        class="techniqueAssistant-modal"
         :showConfirmButton="false"
         :showCancelButton="false"
         closeOnClickOverlay

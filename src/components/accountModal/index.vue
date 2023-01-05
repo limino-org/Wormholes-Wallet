@@ -144,9 +144,9 @@ export default defineComponent({
       toggleAccount,
       handleAccount,
       createAccount,
-      createLoading,
       accountLoading,
       clickAccountIdx,
+      createLoading,
       listDom,
     } = useToggleAccount();
     const show = ref(false);
@@ -201,6 +201,13 @@ export default defineComponent({
       })
     };
 
+    // const createLoading = ref(false)
+    // const handleCreateAccount = () => {
+    //   createLoading.value = true
+    //   createAccount(() => {
+    //     createLoading.value = false
+    //   })
+    // }
     return {
       t,
       options,

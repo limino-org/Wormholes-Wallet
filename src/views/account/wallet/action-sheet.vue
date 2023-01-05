@@ -150,9 +150,9 @@ export default defineComponent({
       toggleAccount,
       handleAccount,
       createAccount,
-      createLoading,
       accountLoading,
       clickAccountIdx,
+      createLoading,
       listDom,
     } = useToggleAccount();
     const show = ref(false);
