@@ -75,11 +75,11 @@ export default {
     const code = ref('')
     const { toClipboard } = useClipboard()
     const appProvide = inject('appProvide')
-    // const { $toast } = useToast()
+    // const { $wtoast } = useToast()
     const toCopy = async () => {
       try {
         await toClipboard(address)
-        // $toast.success(t('copy.title'))
+        // $wtoast.success(t('copy.title'))
       } catch (e) {
         console.error(e)
       }

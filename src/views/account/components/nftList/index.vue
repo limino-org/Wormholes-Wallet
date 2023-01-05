@@ -179,6 +179,7 @@
             <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
           </div>
         </div>
+        <Tip :message="t('common.converTip')" type="warn" />
         <i18n-t
           keypath="converSnft.tip"
           v-if="tabIndex == 2"
@@ -383,7 +384,7 @@ name="question hover"
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
+import { defineComponent, onUnmounted } from "@vue/runtime-core";
 import { computed, ref,onBeforeMount, onMounted } from "vue";
 import { useStore } from "vuex";
 import {
@@ -421,6 +422,7 @@ import { web3 } from "@/utils/web3";
 import { toUsd } from "@/utils/filters";
 import { ethers } from "ethers";
 import { TransactionTypes } from "@/store/modules/account";
+import Tip from '@/components/tip/index.vue'
 export default defineComponent({
   name: "nft-list",
   props: {
@@ -445,6 +447,7 @@ export default defineComponent({
     NoData,
     NftTag,
     SnftModal,
+    Tip
   },
   setup(props: any, context: any) {
     const { emit }: any = context;
@@ -708,7 +711,7 @@ export default defineComponent({
       }
       return hexCharCode.join("");
     };
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const { $tradeConfirm } = useTradeConfirm();
     const isLoading = ref(false);
 
@@ -727,6 +730,9 @@ export default defineComponent({
       reLoading();
       onLoad();
     });
+    onUnmounted(() => {
+      eventBus.off('changeAccount')
+    })
     const tabList = ref([
       // { label: t("createExchange.redemption"), value: "3", select: true },w
       { label: t("createExchange.convert"), value: "2", select: true },
@@ -790,17 +796,33 @@ export default defineComponent({
     });
 
     const handleSubmit = async () => {
-      const wallet = await getWallet();
       const data: any = list.value.filter((f: any) => f.flag);
       if (data.length) {
+        const count = data.length
+        const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion
+        let amount = 0
+        data.forEach((item: any) => {
+          const {metaData:{MergeLevel}} = item
+          if(MergeLevel == 0) {
+            amount += t0
+          }
+          if(MergeLevel == 1) {
+            amount += t1
+          }
+          if(MergeLevel == 2) {
+            amount += t2
+          }
+          if(MergeLevel == 3) {
+            amount += t3
+          }
+        })
         // isLoading.value = true;
         isSelectComputed.value = false;
         show.value = false;
         $tradeConfirm.open({
-          approveMessage: t("minerspledge.create_approve"),
-          successMessage: t("minerspledge.create_waiting"),
-          wattingMessage: t("minerspledge.create_success"),
-          failMessage: t("minerspledge.create_wrong"),
+          approveMessage: t("wallet.conver_approve"),
+          wattingMessage: t("wallet.conver_waiting",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount}</span>`}),
+          wattingMessageType:"html",
           disabled: [TradeStatus.pendding],
           callBack: () => {
             reLoading();
@@ -847,15 +869,29 @@ export default defineComponent({
           $tradeConfirm.update({
             status: "approve",
           });
-          await store.dispatch("account/waitTxQueueResponse");
+          const receiptList = await store.dispatch("account/waitTxQueueResponse");
+          const successList = receiptList.map((item: any) => item.status)
+          if(successList.length === count) {
           $tradeConfirm.update({
             status: "success",
+            successMessage: t("wallet.conver_success",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount}</span>`}),
+            successMessageType:'html',
           });
           emit("success");
+          } else {
+            $tradeConfirm.update({
+            status: "fail",
+            successMessage: t("wallet.conver_wrong",{count: successList.length}),
+            successMessageType:'html',
+            
+          });
+          emit("success");
+          }
         } catch (err) {
           console.error(err)
           $tradeConfirm.update({
             status: "fail",
+            failMessage: t("createExchange.create_wrong"),
           });
         } finally {
           isLoading.value = false;

@@ -9,6 +9,9 @@ window.decode = decode
 // fix iOS String.prototype.normalize 
 import '@/utils/unorm.js'
 import '@/utils/ether'
+import AnimatedNumber from 'animated-number-vue3'
+
+
 import { createApp } from 'vue'
 import i18n from '@/language/index'
 import App from './App.vue'
@@ -38,6 +41,7 @@ app.use(i18n)
 app.use(TradeConfirm)
 app.use(Toast)
 app.use(Dialog)
+app.use(AnimatedNumber)
 app.mount('#app')
 
 

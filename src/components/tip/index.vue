@@ -1,5 +1,5 @@
 <template>
-  <div class="wormholes-tip flex pl-16 pr-16 pt-12 pb-12">
+  <div :class="`wormholes-tip flex pl-16 pr-16 pt-12 pb-12 ${type}`">
     <div class="flex center icon">
       <van-icon name="warning" />
     </div>
@@ -7,8 +7,13 @@
   </div>
 </template>
 <script lang="ts">
+
 import { defineComponent } from "vue";
 import { Icon } from "vant";
+const tipType = {
+  primary:'primary',
+  warning: 'warning'
+};
 export default defineComponent({
   components: {
     [Icon.name]: Icon,
@@ -18,6 +23,10 @@ export default defineComponent({
       type: String,
       default: "Message",
     },
+    type: {
+      type: String,
+      default: tipType.primary
+    }
   },
   setup() {},
 });
@@ -25,14 +34,33 @@ export default defineComponent({
 <style lang="scss" scoped>
 .wormholes-tip {
     margin: 15px;
-    background: #F4FAFF;
     border-radius: 5px;
-}
-.icon i{
+    &.primary {
+      background: #F4FAFF;
+      .icon i {
+        color: #037CD6;
+      }
+    }
+    &.warn {
+      background: #FEFCDA;
+      .icon i {
+        color: #F7BF03;
+      }
+    }
+    &.error {
+      background: #FBF2F3;
+      .icon i {
+        color: #D73A49;
+      }
+    }
+    .icon i{
     font-size: 18px;
-    color: #037CD6;
+    
 }
+}
+
 .msg {
     padding-left: 9px;
+    color: #000000;
 }
 </style>

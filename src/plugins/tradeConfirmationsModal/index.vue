@@ -75,7 +75,8 @@
                 defaultData.status == 'approve' 
               "
             >
-              {{ defaultData.wattingMessage }}
+            <span v-if="defaultData.wattingMessageType === 'string'">{{ defaultData.wattingMessage }}</span>
+            <span v-else v-html="defaultData.wattingMessage"></span>
             </div>
             <div
               class="approve-msg pl-30 ml-8 mb-10"
@@ -83,22 +84,30 @@
                 defaultData.status == 'success' || defaultData.status == 'fail' || defaultData.status == 'warn'
               "
             >
-              {{
+            <div v-if="defaultData.status == 'success'">
+              <span v-if="defaultData.successMessageType === 'string'">{{ defaultData.successMessage }}</span>
+             <span v-else v-html="defaultData.successMessage"></span>
+            </div>
+            <div v-if="defaultData.status == 'fail'">
+              <span v-if="defaultData.failMessageType === 'string'">{{ defaultData.failMessage }}</span>
+             <span v-else v-html="defaultData.failMessage"></span>
+            </div>
+              <!-- {{
                 defaultData.status == "success"
                   ? defaultData.successMessage
                   : defaultData.failMessage
-              }}
+              }} -->
             </div>
           </div>
-          <div class="flex center mt-26">
+          <div :class="`flex ${defaultData.hash ? 'between' : 'center'} mt-26 btn-done-box`">
             <Button
-
               @click="callBack"
               :disabled="disabled"
               class="okbtn"
               type="primary"
               >{{ i18n.global.t("returnreceipt.done") }}</Button
             >
+            <Button v-if="defaultData.hash"  class="okbtn" type="primary" @click="viewTransactionByHash(defaultData.hash)">History</Button>
           </div>
         </div>
       </div>
@@ -106,6 +115,7 @@
   </transition>
 </template>
 <script lang="ts" setup>
+
 export type TradeOptions = {
   approveMessage?: string
   successMessage?: string
@@ -116,14 +126,27 @@ export type TradeOptions = {
   callBack?: Function
   failBack?: Function
   disabled: Array<string>
-}
+  wattingMessageType: string
+  failMessageType: string
+  successMessageType: string
+  receipt?: null | Object
+  hash?: null | string
+};
+
+
+
 import { computed, Ref, ref } from "vue";
 import { Button, Icon, Loading } from "vant";
 import i18n from "@/language";
 import { TradeConfirmOpt, TradeStatus } from "./tradeConfirm";
+import { viewTransactionByHash } from "@/utils/utils";
 console.warn("i18n-------", i18n);
 
 
+enum messageType {
+  string = 'string',
+  html = 'html'
+};
 const getDefaultOpt = () => {
   return ref({
     approveMessage: i18n.global.t('send.approveMessage'),
@@ -132,6 +155,10 @@ const getDefaultOpt = () => {
     failMessage: i18n.global.t('send.failMessage'),
     wattingTitle: i18n.global.t('bootstrapwindow.watting'),
     status: "pendding",
+    wattingMessageType: 'string',
+    failMessageType:"string",
+    successMessageType: 'string',
+    hash: null,
     callBack: () => {},
     failBack: () => {},
     // The button is disabled in this state
@@ -191,6 +218,9 @@ defineExpose({
 });
 </script>
 <style lang="scss" scoped>
+.btn-done-box {
+  padding: 0 50px;
+}
 .success {
   color: #3aae55 !important;
 }
@@ -229,7 +259,7 @@ defineExpose({
       font-size: 12px;
     }
     .info-box {
-      padding: 22px 25px 0;
+      padding: 22px 15px 0;
       &.fail {
         .approve,.approve-msg {
           color:#d73a49;

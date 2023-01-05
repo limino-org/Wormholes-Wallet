@@ -102,6 +102,7 @@ import {
 import { getWallet,clone ,TransactionTypes} from "@/store/modules/account";
 import { useStore } from "vuex";
 import { useI18n } from 'vue-i18n';
+import { useTradeConfirm } from '@/plugins/tradeConfirmationsModal';
 
 export default {
   components: {
@@ -144,6 +145,7 @@ export default {
       show.value = false;
       emit("warningSuccess");
     };
+    const {$tradeConfirm} = useTradeConfirm()
     const toHex = (str: string) => {
       if (str === "") return "";
       var hexCharCode = [];
@@ -170,12 +172,21 @@ export default {
         const receipt: any = await store.dispatch('account/transaction', tx1)
         const res = await receipt.wallet.provider.waitForTransaction(receipt.hash, null, 60000)
         store.dispatch("account/waitTxQueueResponse");
-        console.log(receipt);
-        console.log("receiptreceiptreceiptreceiptreceipt");
+
         isLoading.value = false;
         emitWarningSuccess();
-      } catch (error) {
-        console.log(error);
+      } catch (err: any) {
+        if (err.toString().indexOf("timeout") > -1) {
+          $tradeConfirm.update({
+            status: "warn",
+            failMessage: t("error.timeout"),
+          });
+        } else {
+          $tradeConfirm.update({
+            status: "fail",
+            failMessage: err.reason,
+          });
+        }
         isLoading.value = false;
       }
     };

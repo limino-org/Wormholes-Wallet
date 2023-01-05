@@ -25,9 +25,7 @@
             </span>
           </div>
           <div class="amount">
-            {{ formatDate(data.date, "MM/DD") }}
-            {{ $t("transactionDetails.at") }}
-            {{ formatDate(data.date, "HH:mm ") }}
+            {{ formatTxDate(data) }}
           </div>
         </div>
       </div>
@@ -35,7 +33,7 @@
     <div class="collection-card-right flex center">
       <div>
         <div class="van-ellipsis text-right val lh-18">
-          {{transferAmountText(data)}}
+          {{transferAmountText(data)}} {{currentNetwork.currencySymbol}}
         </div>
       </div>
     </div>
@@ -71,6 +69,7 @@ import {
   txTypeToIcon,
   handleTxType,
   transactionStatusClass,
+  formatTxDate
 } from "@/utils/filters";
 import { useStore } from "vuex";
 import { AccountInfo } from "@/store/modules/account";
@@ -101,13 +100,13 @@ export default defineComponent({
     const { emit } = context;
     const accountInfo = computed(() => store.state.account.accountInfo);
     const currentNetwork = computed(() => store.state.account.currentNetwork);
-    const {$toast} = useToast()
+    const {$wtoast} = useToast()
     const viewDetail = () => {
       emit("handleClick",props.data);
     };
     const handleSpeedSend = () => {
       if(accountInfo.value.address.toUpperCase() !== props.data.from.toUpperCase()){
-        $toast.warn(t('common.toggleAddress'))
+        $wtoast.warn(t('common.toggleAddress'))
         return 
       }
       emit('handleSend',props.data)
@@ -141,7 +140,8 @@ export default defineComponent({
       toUsdSymbol,
       transactionStatus,
       currentNetwork,
-      handleTxType
+      handleTxType,
+      formatTxDate
     };
   },
 });

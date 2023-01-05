@@ -506,7 +506,7 @@ export default defineComponent({
   setup(props: any, context: SetupContext) {
     const blockNumber = ref(0);
     const accountInfoBlockNumber = ref(0);
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const appProvide = inject("appProvide");
 
     const marks = reactive<Marks>({
@@ -748,7 +748,7 @@ export default defineComponent({
       const am = new BigNumber(accountInfo.value.amount);
       if (!exchanger_flag && status != 2) {
         if (am.lt(701)) {
-          $toast.warn(t("createExchange.ispoor"));
+          $wtoast.warn(t("createExchange.ispoor"));
           return;
         }
       }
@@ -777,7 +777,7 @@ export default defineComponent({
       );
       debugger;
       if (am.lt(diffAm)) {
-        $toast.warn(t("createExchange.ispoor"));
+        $wtoast.warn(t("createExchange.ispoor"));
         return;
       }
       showAddModal.value = true;
@@ -867,7 +867,7 @@ export default defineComponent({
     const addSubmit = () => {
       const addBigAmount = new BigNumber(addAmount.value || 0);
       if (addBigAmount.lte(0)) {
-        $toast.warn(t("sendto.no"));
+        $wtoast.warn(t("sendto.no"));
         return;
       }
       showAddModal.value = true;

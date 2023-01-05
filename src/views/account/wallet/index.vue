@@ -77,7 +77,7 @@ trigger="manual"
           ></i>
         </div>
       </div>
-      <div class="account-amount text-center">
+      <div class="account-amount text-center" >
         {{ decimal(accountInfo.amount) }} {{ currentNetwork.currencySymbol }}
       </div>
 
@@ -235,7 +235,6 @@ import {
 } from "vue";
 
 import BackUpBottom from '@/views/guidance/backupBottom.vue'
-
 import NavHeader from "@/components/navHeader/index.vue";
 import TokenCard from "../components/tokenCard/index.vue";
 import CollectionCard from "../components/collectionCard/index.vue";
@@ -317,9 +316,9 @@ export default {
     const layoutList = computed(() => store.state.system.layoutList);
     const layoutType = computed(() => store.state.system.layoutType);
     const symbol = currentNetwork.value.currencySymbol;
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const showHelp = ref(false);
-    const { initWallet } = useWallet();
+
     // Display the default token of the current network
     const myToken = computed(() => {
       const symbol = currentNetwork.value.currencySymbol;
@@ -378,6 +377,8 @@ export default {
         "http://faucet.wormholesscan.com/?address=" + accountInfo.value.address
       );
     };
+
+
     const actionSheetShow = ref(false);
     const tobuy = () => {};
     let transactionData: any = reactive({ data: {} });
@@ -428,7 +429,7 @@ export default {
     const toCopy = async () => {
       try {
         await toClipboard(`${accountInfo.value.address}`);
-        $toast.success(t("common.copyAddr"));
+        $wtoast.success(t("common.copyAddr"));
       } catch (e) {
         console.error(e);
       }
@@ -448,13 +449,28 @@ export default {
     const autostat = ref(false);
     eventBus.on('changeAccount', async() => {
      dispatch('account/getEthAccountInfo')
-
+     getWalletBalance()
+    })
+    eventBus.on('walletReady',() => {
+      dispatch("account/updateBalance");
+   
     })
 
     let time: any = null;
+    const getWalletBalance = () => {
+      dispatch("account/updateBalance");
+      dispatch("account/updateTokensBalances");
+    }
+    const handleLoopBalance = () => {
+      if(!time) {
+        time = setInterval(() => {
+          getWalletBalance()
+      }, 10000);
+      }
+    };
     onMounted(() => {
       dispatch("transfer/clearTx");
-      initWallet()
+
       dispatch("account/getExchangeStatus").then((res) => {
         console.warn("getExchangeStatus", res);
         autoexchange.value = res.status;
@@ -463,11 +479,8 @@ export default {
           initExchangeData();
         }
       });
-      dispatch("account/updateBalance");
-      time = setInterval(() => {
-        dispatch("account/updateBalance");
-        dispatch("account/updateTokensBalances");
-      }, 12000);
+      
+      handleLoopBalance()
     });
     onUnmounted(() => {
       clearInterval(time);

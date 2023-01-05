@@ -1,0 +1,28 @@
+html,body {
+    padding: 0;
+    margin: 0;
+}
+.loading-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f2f3f4;
+    
+}
+.loading-page-box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.loading-page-box img{
+    max-width: 100px;
+}
+.loading-page-box .loading-spinner {
+    width: 60px;
+    margin-top: 60px;
+}
+#app {
+    display: none;
+}

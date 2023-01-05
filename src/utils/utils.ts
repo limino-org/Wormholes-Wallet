@@ -1,5 +1,7 @@
 import { defaultAbiCoder } from 'ethers/lib/utils'
+import { VUE_APP_SCAN_URL } from "@/enum/env";
 import useClipboard from 'vue-clipboard3'
+import store from '@/store';
 const { toClipboard } = useClipboard()
 // Copy to clipboard
 export const copy = async (v: string) => {
@@ -76,4 +78,25 @@ export const randArr = (arr: Array<any>) => {
     arr.splice(index, 1);
   }
   return res;
+}
+
+
+export const viewTransactionByHash = (hash:string | null) => {
+  if(hash) {
+    if(store.state.account.currentNetwork.id === 'wormholes-network-1') {
+      window.open(`${VUE_APP_SCAN_URL}TradeDetail/${hash}`);
+    } else {
+      const defaultUrl = store.state.account.currentNetwork.browser
+      if(defaultUrl) {
+        window.open(`${defaultUrl}`);
+      } else {
+        window.open(`${VUE_APP_SCAN_URL}TradeDetail/${hash}`);
+      }
+    }
+  } else {
+    throw Error('The hash cannot be empty')
+  }
+
+
+
 }

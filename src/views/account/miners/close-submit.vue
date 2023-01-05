@@ -188,9 +188,9 @@ export default {
         const receipt: any = await store.dispatch('account/transaction', tx1)
         const receipt2 = await receipt.wallet.provider.waitForTransaction(receipt.hash, null, 60000);
         store.dispatch("account/waitTxQueueResponse");
-        const { status } = receipt2;
+        const { status,transactionHash } = receipt2;
         if (status == 0) {
-          $tradeConfirm.update({ status: "fail" });
+          $tradeConfirm.update({ status: "fail", hash: transactionHash });
         } else {
           $tradeConfirm.update({
             status: "success",
@@ -204,9 +204,18 @@ export default {
         isLoading.value = false;
         emit("update:show", false);
         emit("open");
-      } catch (error) {
-        $tradeConfirm.update({ status: "fail" });
-        console.error(error);
+      } catch (err: any) {
+        if (err.toString().indexOf("timeout") > -1) {
+          $tradeConfirm.update({
+            status: "warn",
+            failMessage: t("error.timeout"),
+          });
+        } else {
+          $tradeConfirm.update({
+            status: "fail",
+            failMessage: err.reason,
+          });
+        }
         isLoading.value = false;
       }
     };

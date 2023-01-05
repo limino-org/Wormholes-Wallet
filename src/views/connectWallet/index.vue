@@ -50,7 +50,7 @@ export default {
     const { query } = route;
     const { backUrl, action, address, params }: any = query;
     const queryData = params ? JSON.parse(decodeURIComponent(params)) : {};
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     Toast.loading({
       message: "loading...",
       duration: 0,
@@ -90,11 +90,11 @@ export default {
         "addNetwork"
       ];
       if (!backUrl || !action) {
-        $toast.warn("Parameter error");
+        $wtoast.warn("Parameter error");
         return;
       }
       if (!handleList.includes(action ? action?.toString() : "")) {
-        $toast.warn("Unsupported method");
+        $wtoast.warn("Unsupported method");
         return;
       }
       switch (action) {
@@ -119,21 +119,21 @@ export default {
           break;
         case "sendTransaction":
         if (!nowAccount.value) {
-        $toast.warn("common.addressnotfound");
+        $wtoast.warn("common.addressnotfound");
         return;
       }
           sendTransaction();
           break;
         case "sendOpenExchangeTransaction":
         if (!nowAccount.value) {
-        $toast.warn("common.addressnotfound");
+        $wtoast.warn("common.addressnotfound");
         return;
       }
           sendOpenExchangeTransaction()
           break;
         case "sendContractTransaction":
         if (!nowAccount.value) {
-        $toast.warn("common.addressnotfound");
+        $wtoast.warn("common.addressnotfound");
         return;
       }
 
@@ -293,7 +293,7 @@ export default {
     // How to obtain a wallet without affecting the wallet status
     async function getWallet2() {
       if (!nowAccount.value) {
-        $toast.warn("common.addressnotfound");
+        $wtoast.warn("common.addressnotfound");
         router.replace({name:'import'})
         return null;
       }

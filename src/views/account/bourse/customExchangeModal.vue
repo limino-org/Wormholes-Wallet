@@ -180,24 +180,24 @@ export default defineComponent({
     const cancel = () => {
       showModal.value = false;
     };
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
 
     const handleComfirm = () => {
       if (!amount.value) {
-        $toast.warn(t("amountreminder.pleaseenter"));
+        $wtoast.warn(t("amountreminder.pleaseenter"));
         return;
       }
       console.log("props---------", props);
       const num = new BigNumber(props.maxBalance);
       if (num.lt(parseFloat(amount.value))) {
-        $toast.warn(t("customExchangeModal.exceededmaximumamount"));
+        $wtoast.warn(t("customExchangeModal.exceededmaximumamount"));
         amount.value = props.maxBalance;
         return;
       }
       const num2 = new BigNumber(props.minBalance);
       if (num2.gt(parseFloat(amount.value))) {
         amount.value = props.minBalance;
-        $toast.warn(
+        $wtoast.warn(
           t("customExchangeModal.amountcannotbelessthan", {
             props: props.minBalance,
           })

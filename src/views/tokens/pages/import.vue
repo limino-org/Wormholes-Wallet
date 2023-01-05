@@ -105,7 +105,7 @@ export default {
   setup() {
     const { t } = useI18n();
     const { dispatch,state } = useStore();
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     // token
     const tokens = ref([
       { name: "ERB Token", value: 2, hasAdd: false },
@@ -234,10 +234,10 @@ export default {
             tokenContractAddress: tokenContractAddress.value,
             address,
           });
-          $toast.success(t("currencyList.Importsuccessful"));
+          $wtoast.success(t("currencyList.Importsuccessful"));
           router.replace({ name: "wallet" });
         } catch (err: any) {
-          $toast.fail(err.toString());
+          $wtoast.fail(err.toString());
         } finally {
           Toast.clear();
         }

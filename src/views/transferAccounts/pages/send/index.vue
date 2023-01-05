@@ -275,7 +275,7 @@ export default {
     const route = useRoute();
     const { commit } = store;
     const { t } = useI18n();
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
 
     const { dispatch } = store;
     const accountInfo = computed(() => store.state.account.accountInfo);
@@ -323,7 +323,7 @@ export default {
     const checkTx = () => {
       checkAddressError.value = false;
       if (!toAddress.value) {
-        // $toast.warn(t("sendto.erroraddress"));
+        // $wtoast.warn(t("sendto.erroraddress"));
         checkAddressError.value = true;
         addressMsg.value = t("send.addressError");
         return false;
@@ -337,7 +337,7 @@ export default {
       }
       // Whether the balance is greater than the sent amount
       if (new BigNumber(chooseToken.value.balance).lte(amount.value)) {
-        //  $toast.warn(t("sendto.nomoney",{symbol:chooseToken.value.name}));
+        //  $wtoast.warn(t("sendto.nomoney",{symbol:chooseToken.value.name}));
                      amountErrMsg.value = t("sendto.nomoney", {
           symbol: chooseToken.value.name,
           amount: chooseToken.value.balance
@@ -347,7 +347,7 @@ export default {
       }
       // Whether the balance is equal to 0
       if (chooseToken.value.balance == 0 || amount.value == 0) {
-        //  $toast.warn(t("sendto.no"));
+        //  $wtoast.warn(t("sendto.no"));
         amountErrMsg.value = t("sendto.no");
         amountErr.value = true;
         return false;
@@ -389,7 +389,7 @@ export default {
       }
       if (isNaN(amount.value) || new BigNumber(amount.value).lte(0)) {
         amountErr.value = true;
-        $toast.warn(t("sendto.no"));
+        $wtoast.warn(t("sendto.no"));
         return;
       }
 

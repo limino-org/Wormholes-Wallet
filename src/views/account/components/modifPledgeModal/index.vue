@@ -174,7 +174,7 @@ export default defineComponent({
     const handleCancel = () => {
       show.value = false;
     };
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const key = computed(() =>
       new BigNumber(props.max).minus(props.defaultValue).toString()
     );
@@ -213,7 +213,7 @@ export default defineComponent({
 
     const submit = async () => {
       if (value.value <= 0) {
-        $toast.warn(t("sendto.no"));
+        $wtoast.warn(t("sendto.no"));
         return;
       }
       nextTick(() => {

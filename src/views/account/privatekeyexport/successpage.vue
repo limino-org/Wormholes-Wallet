@@ -194,12 +194,12 @@ export default {
 
     // Copying User Addresses
     const { toClipboard } = useClipboard();
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const tocopy = async () => {
       try {
         isWarning.value = true;
         await toClipboard(privateKey.value);
-        $toast.success(t("exportprivatekey.copyText"));
+        $wtoast.success(t("exportprivatekey.copyText"));
       } catch (e) {
         console.error(e);
       }

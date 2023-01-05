@@ -95,7 +95,7 @@ export default {
     const store = useStore()
     const route: any = useRoute()
     const { dispatch, commit, state } = store
-    const { $toast } = useToast()
+    const { $wtoast } = useToast()
     const onClickLeft = () => history.back()
     const appProvide = inject('appProvide')
     const empty = () => {
@@ -142,7 +142,7 @@ export default {
         router.replace({ name: route.query.toName ? route.query.toName :'successpage',query:{clearCache: 'true'} })
       }catch(err){
         isError.value = true
-        $toast.warn(err)
+        $wtoast.warn(err)
       } finally {
         password.value = ''
         accountLoading.value = false

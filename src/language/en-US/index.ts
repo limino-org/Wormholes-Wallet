@@ -43,8 +43,14 @@ export default {
     selectSNFT: "You have not selected any S-NFTs",
     buySnft: "Do you have S-NFT? {link}",
     findMore: "Find More",
-    snftUnfree:"The SNFT of this pledge has not been unfrozen!"
+    snftUnfree: "The SNFT of this pledge has not been unfrozen!",
 
+
+
+    conver_approve: "The request is approved.The convert tansaction will be started.Please wait for seconds.",
+    conver_waiting: "{count} <span style='color:#037CD6;'>S-NFT</span> are being exchanged. You will receive {amount}<span style='color:#037CD6;'>ERB</span> if you are successfully exchanged. You can also check the exchange details in the history of the Personal Center",
+    conver_success: "{count} <span style='color:#037CD6;'>S-NFT</span> have been successfully exchanged and you have obtained {amount}<span style='color:#037CD6;'>ERB</span>. You can also check the exchange details in the history of the Personal center",
+    conver_wrong: "{count} S-NFT failed to exchange, you can check the exchange details in the Personal center history",
 
 
 
@@ -117,11 +123,11 @@ export default {
     amount: "Amount",
     tip: "You can also {link} at the exchange",
     buy: "Buy S-NFTs",
-    tab1:"S-NFT Redemption",
-    tab3:"S-NFT Staking",
-    staking:"Staking period",
-    iconmeTip:"This is the estimated annual profit you will get after S-NFT staking",
-    periodTip:"During this period,you will not be allowed redeeming your S-NFT back"
+    tab1: "S-NFT Redemption",
+    tab3: "S-NFT Staking",
+    staking: "Staking period",
+    iconmeTip: "This is the estimated annual profit you will get after S-NFT staking",
+    periodTip: "During this period,you will not be allowed redeeming your S-NFT back"
   },
   common: {
     clearCanche:"Clear Cache",
@@ -185,20 +191,21 @@ export default {
     all: "All",
     conver: "Convert",
     copyAddr: "Address Hash Copied",
-    confirmExit:"Confirm Exit",
-    guideBtnTip:"Your digital wallet data is only saved on your browser's local storage; be sure to create a backup to avoid potential permanent losses. Uninstalling your browser and/or clearing your browser data will also potentially result in permanent losses!",
-    asyncData:"Data synchronization, please wait.",
-    convertAmount:"Convert amount",
-    loadingWait:"Loading, please wait!",
-    noMoney:"Your account is short of assets. Please make sure you have enough money in your wallet",
-    recovery:"Recovery",
-    gasSpeedUp:"Gas Speed Up",
-    sendTipPendding:"There is an uncompleted transaction in the current transaction queue, please try again after completion!",
-    speedUp:"Speed Up",
-    toggleAddress:"Please switch your wallet account to this address first!",
-    snftColorTip:"S-NFT grades are L0, L1, L2, and L3 from the lowest to the highest. You can synthesize it to higher levels for higher revenue. The rules are as below: 16 specific S-NFT L0 synthesizes a unique S-NFT L1, 16 specific S-NFT L1 synthesizes a unique S-NFT L2, and 16 specific S-NFT L2 synthesizes a unique S-NFT L3. The blue number indicates the S-NFT L0 position number in an S-NFT L1.  The green number indicates the position number of S-NFT L1 in an S-NFT L2.  The yellow number indicates the S-NFT L2 position number in an S-NFT L3, and the red number refers to the position number of an S-NFT L3.",
-    contrctTx:"Transaction of contract",
-    contractAddr:"Address of contract"
+    confirmExit: "Confirm Exit",
+    guideBtnTip: "Your digital wallet data is only saved on your browser's local storage; be sure to create a backup to avoid potential permanent losses. Uninstalling your browser and/or clearing your browser data will also potentially result in permanent losses!",
+    asyncData: "Data synchronization, please wait.",
+    convertAmount: "Convert amount",
+    loadingWait: "Loading, please wait!",
+    noMoney: "Your account is short of assets. Please make sure you have enough money in your wallet",
+    recovery: "Recovery",
+    gasSpeedUp: "Gas Speed Up",
+    sendTipPendding: "There is an uncompleted transaction in the current transaction queue, please try again after completion!",
+    speedUp: "Speed Up",
+    toggleAddress: "Please switch your wallet account to this address first!",
+    snftColorTip: "S-NFT grades are L0, L1, L2, and L3 from the lowest to the highest. You can synthesize it to higher levels for higher revenue. The rules are as below: 16 specific S-NFT L0 synthesizes a unique S-NFT L1, 16 specific S-NFT L1 synthesizes a unique S-NFT L2, and 16 specific S-NFT L2 synthesizes a unique S-NFT L3. The blue number indicates the S-NFT L0 position number in an S-NFT L1.  The green number indicates the position number of S-NFT L1 in an S-NFT L2.  The yellow number indicates the S-NFT L2 position number in an S-NFT L3, and the red number refers to the position number of an S-NFT L3.",
+    contrctTx: "Transaction of contract",
+    contractAddr: "Address of contract",
+    converTip:"Tips: Your successful S-NFT exchange willdisappear from the asset list. You can viewthe exchange status in the transactionhistory details."
   },
   sidebar: {
     imported: 'Imported',
@@ -324,7 +331,7 @@ export default {
     at: 'at',
     success: "Success",
     fail: "Fail",
-    tradeTit: "Confirm Information"
+    tradeTit: "Status Request"
 
   },
   import: {
@@ -386,7 +393,7 @@ export default {
     confirm: "Confirm",
     wrongaddressformat: 'Wrong address format',
     lessthan: "Can't be less than 21000",
-    lessthanPrev:"Can't be less than {value}"
+    lessthanPrev: "Can't be less than {value}"
 
   },
   // receive page
@@ -456,46 +463,46 @@ export default {
     password2: 'confirm your password',
     input: 'Enter your mnemonic here',
     notmatch: 'Entered passwords differ',
-    mnemonicExport:"Mnemonic backup",
-    backUpDesc:"Mnemonic backup, export",
-    unlock:"Please enter a password to unlock the mnemonic",
-    errorMonic:"Invalid mnemonic",
-    
+    mnemonicExport: "Mnemonic backup",
+    backUpDesc: "Mnemonic backup, export",
+    unlock: "Please enter a password to unlock the mnemonic",
+    errorMonic: "Invalid mnemonic",
+
 
   },
-    // mnemonic
-    mnemonic: {
-      recoveryPhrase: "Recovery Phrase",
-      hint: "Your wallet is not backed up!",
-      tips: "Your funds will be at risk if you do not backup before using your wallet. Make sure to backup now.",
-      yourRecoveryPhrase: "Your Recovery Phrase",
-      yourRecoveryPhraseTitle:
-        "Under no circumstances will WormHoles ask for your recovery phrase. Protect your funds and do not share your recovery phrase with anyone.",
-      remindMeLater: "Remind Me Later",
-      backUp: "Backup",
-      hint1:
-        "Write down or copy these words in the right order and keep them in a safe place.",
-      suggest: "You are advised to write them dowm.",
-      getStarted: "Let’s Get Started",
-      saveTips:
-        "  Store your key in a secure Iocation. This is the only way to recover your wallet.WormHoles does not keep a copy.",
-      continue: "Continue",
-      verifyMnemonicPhrase: "Verify Mnemonic Phrase",
-      protectYourFunds:
-        "Protect your funds and do not share your recovery phrase with anyone.",
-      correctOrder: "Tap each word in the corrrect order.",
-      errorMessage: " Incorrect mnemonic phrase. please try again.",
-      backUpSuccessful: "Backup Successful",
-      backupQRcode: " You can also back up the QR code",
-      QRCode: "QR Code",
-      done: "Done",
-      backup: "Back up QR code",
-      saveQRcode: "Save QR Code to Photos",
-      tryagain:'Incorrect mnemonic phrase, please try again.',
-      checkthemnemonic:'Please check the mnemonic',
-      backupyourQRcodeinasafeenvironment:'Please back up your QR code in a safe environment Screenshot is not advised'
-    },
-      // backup
+  // mnemonic
+  mnemonic: {
+    recoveryPhrase: "Recovery Phrase",
+    hint: "Your wallet is not backed up!",
+    tips: "Your funds will be at risk if you do not backup before using your wallet. Make sure to backup now.",
+    yourRecoveryPhrase: "Your Recovery Phrase",
+    yourRecoveryPhraseTitle:
+      "Under no circumstances will WormHoles ask for your recovery phrase. Protect your funds and do not share your recovery phrase with anyone.",
+    remindMeLater: "Remind Me Later",
+    backUp: "Backup",
+    hint1:
+      "Write down or copy these words in the right order and keep them in a safe place.",
+    suggest: "You are advised to write them dowm.",
+    getStarted: "Let’s Get Started",
+    saveTips:
+      "  Store your key in a secure Iocation. This is the only way to recover your wallet.WormHoles does not keep a copy.",
+    continue: "Continue",
+    verifyMnemonicPhrase: "Verify Mnemonic Phrase",
+    protectYourFunds:
+      "Protect your funds and do not share your recovery phrase with anyone.",
+    correctOrder: "Tap each word in the corrrect order.",
+    errorMessage: " Incorrect mnemonic phrase. please try again.",
+    backUpSuccessful: "Backup Successful",
+    backupQRcode: " You can also back up the QR code",
+    QRCode: "QR Code",
+    done: "Done",
+    backup: "Back up QR code",
+    saveQRcode: "Save QR Code to Photos",
+    tryagain: 'Incorrect mnemonic phrase, please try again.',
+    checkthemnemonic: 'Please check the mnemonic',
+    backupyourQRcodeinasafeenvironment: 'Please back up your QR code in a safe environment Screenshot is not advised'
+  },
+  // backup
   backup: {
     safetyTips: "Safety Tips",
     warn: "Your wallet is not backed up!",
@@ -562,7 +569,7 @@ export default {
     title: "Signature"
   },
   createExchange: {
-    wattingTitle:"Setting Up",
+    wattingTitle: "Setting Up",
     headerTitle: "Auto NFT Marketplace",
     openexchange: 'OPEN THE EXCHANGE',
     exchangemanagement: 'Exchange management',
@@ -622,27 +629,27 @@ export default {
     ispoor: "Please make sure the balance is sufficient",
     addPl: "Stake Additional Tokens",
     pledgeRed: "Staking Redemption",
-    addTips:"Sorry, you need to wait 365 days to close your marketplace and redeem your stake.",
-    redemption:"Redemption",
-    snft:"S-NFT",
-    desc1:"You can stake your S-NFTs to have a chance to get rewards when a new block is created.",
-    desc2:"Click this button to redeem your staked S-NFTs.",
-    exchange:"Marketplace",
-    exchangeDesc:"Buy, sell, mint",
-    console:"Console",
-    consoleDesc:"Marketplace Management",
-    staking:"Staking & Redemption",
-    stakingDesc:"Add stake or redeem your stake",
-    server:"Server",
-    serverDesc:"{days} Days / {hours} Hours",
-    pageTip:"This is the exchange management page.If you want to go to Exchange's page ,click on \"Exchange\".If you want to he exchange's console,click on \"console\".If you want to add the stake amount or redeem your staking,click on \"Staking & Redemption\".If you want to change the setting of server,Click on \"Server\".",
-    serveTip1:"This is the fee you have to pay for the server for one year.",
-    serveTip2:"This is the using time of our server you left.",
-    serveTip3:"This is the using time of our server you bought for this transaction",
-    addStaking:"The transaction will help you stake addtional ERBs into your accounts.Your chance of getting rewards will be increased.Your additional ERBs will also can be redeemed after months。",
-    redeem:"This is the amount of ERB you want to redeem",
-    convert:"Convert",
-    desc3:"This the button that you can convert your S-NFT to ERB with Wormholes Blockchain."
+    addTips: "Sorry, you need to wait 365 days to close your marketplace and redeem your stake.",
+    redemption: "Redemption",
+    snft: "S-NFT",
+    desc1: "You can stake your S-NFTs to have a chance to get rewards when a new block is created.",
+    desc2: "Click this button to redeem your staked S-NFTs.",
+    exchange: "Marketplace",
+    exchangeDesc: "Buy, sell, mint",
+    console: "Console",
+    consoleDesc: "Marketplace Management",
+    staking: "Staking & Redemption",
+    stakingDesc: "Add stake or redeem your stake",
+    server: "Server",
+    serverDesc: "{days} Days / {hours} Hours",
+    pageTip: "This is the exchange management page.If you want to go to Exchange's page ,click on \"Exchange\".If you want to he exchange's console,click on \"console\".If you want to add the stake amount or redeem your staking,click on \"Staking & Redemption\".If you want to change the setting of server,Click on \"Server\".",
+    serveTip1: "This is the fee you have to pay for the server for one year.",
+    serveTip2: "This is the using time of our server you left.",
+    serveTip3: "This is the using time of our server you bought for this transaction",
+    addStaking: "The transaction will help you stake addtional ERBs into your accounts.Your chance of getting rewards will be increased.Your additional ERBs will also can be redeemed after months。",
+    redeem: "This is the amount of ERB you want to redeem",
+    convert: "Convert",
+    desc3: "This the button that you can convert your S-NFT to ERB with Wormholes Blockchain."
 
 
   },
@@ -719,19 +726,19 @@ export default {
     accessCMS: 'Access CMS',
   },
   minerspledge: {
-    smileTip:"Your credibility is good, {value}, please keep it and get more income. {btn}",
-    sadTip:"Your credibility is lower than 70, click the button on the right to recovery it. {btn}",
-    neutralTip:"Your credibility is lower than 70, click the button on the right to recovery it. {btn}",
-    homeTip:"Your Credibility is lower than 70, increase your Credibility to gain higher income. {btn}",
-    noMoney:"Please make sure your account balance is over {value} so that you can recover credibility successfully.",
-    resetSendTip:"By credibility recovery，your credibility can be recovered to maximum.One credibility will cost one ERB.",
-    gotIt:"Got it >",
-    resetBtnTip:"With this button，you can recover your credibility to 70 credibility will cost {value} ERB. The ERB cost will be burnt by Wormholes block chain.",
-    credibility:"Credibility",
-    upCredibility:"Credibility will be increased",
-    invalidChainId:"Invalid chainId {chainid}",
-    invalidNode:"Invalid node",
-    nodeErr:"Node format incorrect",
+    smileTip: "Your credibility is good, {value}, please keep it and get more income. {btn}",
+    sadTip: "Your credibility is lower than 70, click the button on the right to recovery it. {btn}",
+    neutralTip: "Your credibility is lower than 70, click the button on the right to recovery it. {btn}",
+    homeTip: "Your Credibility is lower than 70, increase your Credibility to gain higher income. {btn}",
+    noMoney: "Please make sure your account balance is over {value} so that you can recover credibility successfully.",
+    resetSendTip: "By credibility recovery，your credibility can be recovered to maximum.One credibility will cost one ERB.",
+    gotIt: "Got it >",
+    resetBtnTip: "With this button，you can recover your credibility to 70 credibility will cost {value} ERB. The ERB cost will be burnt by Wormholes block chain.",
+    credibility: "Credibility",
+    upCredibility: "Credibility will be increased",
+    invalidChainId: "Invalid chainId {chainid}",
+    invalidNode: "Invalid node",
+    nodeErr: "Node format incorrect",
     minerspledge: 'MINERS PLEDGE',
     miners_pledge: 'Miners pledge',
     unfortunately: 'Unfortunately,the node is wrong',
@@ -768,10 +775,10 @@ export default {
     addTip: "This is the additional amount pledged",
     proxyAccountTip: "Tips: The pledge period is one year. Please check the terms and regulations for details.",
 
-    closeTip2:"Sorry, the pledge is redeemable after 1 year.",
+    closeTip2: "Sorry, the pledge is redeemable after 1 year.",
 
     beValidator: "Be a Validator",
-    modifValidator:"Validator Management",
+    modifValidator: "Validator Management",
     tip1: "If you want to change the form of your mining rewards,click on \"Staking income\"; If you want to start pledging and to be a validator,click on \"Be a validator\"",
     stacking: "Staking income",
     erb_snft: "ERB & S-NFT",
@@ -796,9 +803,9 @@ export default {
     closeTip: "If you do the redemption. your income will decrease.",
     addzhiya: "Stake Additional Tokens",
     stackFee: "Pledge fee",
-    tip7:"The threshold value means the maxium amount of ERB you can redeem while you can still be the validator.If you enter the amount bigger than this amount,you will redeem all of your ERB.",
-    redemingAmount:"Redeming Amount",
-    redemingAmountTip:"Redeming Amount",
+    tip7: "The threshold value means the maxium amount of ERB you can redeem while you can still be the validator.If you enter the amount bigger than this amount,you will redeem all of your ERB.",
+    redemingAmount: "Redeming Amount",
+    redemingAmountTip: "Redeming Amount",
     minus_approve: "We are approving your  stake redeption request.You may have to wait for seconds.You can also find the details in transaction history.",
     minus_waiting: "We are doing the stake redeption.Please wait for  a minute.",
     minus_success: "Your stake redeption has been done.You can find the details in transaction history.",
@@ -846,7 +853,7 @@ export default {
   },
   addNetwork: {
     newnetwork: "New RPC Network",
-    newRpcPlaceholder:"New RPC Network URL",
+    newRpcPlaceholder: "New RPC Network URL",
     rpcNet: "RPC Network",
     introduce:
       "Use a custom RPC-capable network via URL instead of one of the provided networks.",
@@ -1081,10 +1088,10 @@ export default {
     confirmed: 'confirmed',
     failed: 'Failed',
     contract: 'Contract',
-    successly:"Success",
-    pendding:"Waiting",
-    cancelTx:"Are you sure to cancel the transaction with #{nonce}?",
-    cancelDealTit:"Cancel transaction",
+    successly: "Success",
+    pendding: "Waiting",
+    cancelTx: "Are you sure to cancel the transaction with #{nonce}?",
+    cancelDealTit: "Cancel transaction",
 
   },
 
@@ -1162,26 +1169,24 @@ export default {
     minusTit:"Staking Redemption",
     addTit:"Stake Additional Tokens",
     serverFee:"Server Fee",
-    period:"Server Period Remaining",
-    periodAdd:"Additional Server Period",
-    addServeAmount:"You can rent our server to host your marketplace for 200 ERB a year. Afer paying, your marketplace will be hosted on our server.",
     minusStaking:"You have to stake at least 700ERB to keep your exchange open.And also,after your exchange closed,you will not have a chance to get rewards when a new block is created.",
-
-    tipname:"This is the name of your NFT exchange.",
-    tipstake:"This is the total amount of ERB you have staked.",
-    tipre:"This is the amout of ERB you want to redeem.",
-    tipprofit:"This is the total profit you have received by staking.",
-    tipincome:"This is the estimated annual profit you will receive after redemption.",
-    tipadd:"This is the additional amount of ERB you want to stake.",
-    closeTip:"Sorry, you need to wait 365 days to close your marketplace and redeem your stake.",
-    sendProxyExchange:"Send proxy exchange trading",
+    period: "Server Period Remaining",
+    addServeAmount: "You can rent our server to host your marketplace for 200 ERB a year. Afer paying, your marketplace will be hosted on our server.",
+    tipname: "This is the name of your NFT exchange.",
+    tipstake: "This is the total amount of ERB you have staked.",
+    tipre: "This is the amout of ERB you want to redeem.",
+    tipprofit: "This is the total profit you have received by staking.",
+    tipincome: "This is the estimated annual profit you will receive after redemption.",
+    tipadd: "This is the additional amount of ERB you want to stake.",
+    closeTip: "Sorry, you need to wait 365 days to close your marketplace and redeem your stake.",
+    sendProxyExchange: "Send proxy exchange trading",
 
   },
   guidePopup: {
     tip1: "Account, Assets, Address, and Transactions",
-    tip2:"Tokens & NFTs",
-    createExchangGuideTip1:"Click to access",
-    createExchangGuideTip2:"Staking, Redemption, and Marketplace Server",
+    tip2: "Tokens & NFTs",
+    createExchangGuideTip1: "Click to access",
+    createExchangGuideTip2: "Staking, Redemption, and Marketplace Server",
   },
   // customExchangeModal
   customExchangeModal: {

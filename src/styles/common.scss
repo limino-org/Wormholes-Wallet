@@ -283,7 +283,15 @@ body {
 .transfer-detail-modal .van-dialog__content{
   height: 436px;
 }
-
+.server-modal {
+  height: 510px;
+}
+.techniqueAssistant-modal {
+  height: 318px;
+}
+.minus-pledge-dialog {
+  height: 374px;
+}
 @media screen and (min-width: 750px) {
   html {
     font-size: 40PX !important; // ignored

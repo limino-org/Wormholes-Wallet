@@ -206,32 +206,41 @@ export default defineComponent({
     // Get the three highest, lowest and average gas fees
     const gasData: any = ref([]);
     const initGas = async () => {
-      console.log('000', props)
-      console.log('111111111111',props.gasLimit)
-      console.log('222222',props.gasPrice)
+      console.log("000", props);
+      console.log("111111111111", props.gasLimit);
+      console.log("222222", props.gasPrice);
       try {
-        gasLimit.value = props.gasLimit || 21000
-        console.warn('gasLimit.value', gasLimit.value)
+        gasLimit.value = props.gasLimit || 21000;
+        console.warn("gasLimit.value", gasLimit.value);
         let gas = props.gasPrice || "0";
         if (!Number(gas)) {
           // debugger
           const wallet = await getWallet();
-          gas = await wallet.provider.getGasPrice();
+          let newgas = await wallet.provider.getGasPrice();
+          gas = utils.formatUnits(newgas, "gwei");
         }
         console.log("gasPrice", gas, gasLimit.value);
         // console.log('utils.formatUnits(gas, "wei")', utils.formatUnits(utils.parseEther(gas), "wei"))
-        const bigGas =  new BigNumber(utils.formatUnits(utils.parseEther(gas), "wei"));
+        const bigGas = new BigNumber(
+          utils.formatUnits(utils.parseEther(gas), "wei")
+        );
         const bigGasDiv = bigGas.multipliedBy(0.3);
         const bigGasDiv2 = bigGas.multipliedBy(0.2);
         const bigGasDiv3 = bigGas.multipliedBy(0.1);
-        const max = bigGas.plus(bigGasDiv).dividedBy(1000000000000000000).toString();
-        const min = bigGas.plus(bigGasDiv3).dividedBy(1000000000000000000).toString();
+        const max = bigGas
+          .plus(bigGasDiv)
+          .dividedBy(1000000000000000000)
+          .toString();
+        const min = bigGas
+          .plus(bigGasDiv3)
+          .dividedBy(1000000000000000000)
+          .toString();
         const average = bigGas
           .plus(bigGasDiv2)
           .dividedBy(1000000000000000000)
           .toString();
         gasData.value = [min, average, max];
-        console.log('gasData.value',gasData.value)
+        console.log("gasData.value", gasData.value);
         context.emit("change", {
           gasLimit: gasLimit.value,
           gasPrice: gasData.value[gasFee.value],
@@ -251,7 +260,7 @@ export default defineComponent({
       [() => gasFee.value, () => gasLimit.value],
       (newVal, oldVal) => {
         const [idx, limit] = newVal;
-        console.log('change',gasData.value, idx, limit)
+        console.log("change", gasData.value, idx, limit);
         context.emit("change", {
           gasLimit: limit,
           gasPrice: gasData.value[idx],
@@ -303,13 +312,13 @@ export default defineComponent({
       const bigLimit = new BigNumber(gasLimit.value);
       if (v == -1) {
         // minus
-        if(bigLimit.lt(21000)) {
+        if (bigLimit.lt(21000)) {
           Toast(t("sendto.lessthan"));
-          return
+          return;
         }
         // Not less than 1000
         if (bigLimit.lte(props.gasLimit)) {
-          Toast(t("sendto.lessthanPrev",{value:props.gasLimit}));
+          Toast(t("sendto.lessthanPrev", { value: props.gasLimit }));
           return;
         }
         // If minus 1000 is less than 21000, rewrite it directly as 21000
@@ -344,7 +353,6 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-
 .userinfo-box {
   height: 248px;
 }
@@ -385,11 +393,11 @@ export default defineComponent({
 }
 .gas-fee-page {
   font-size: 12px;
-  :deep(){
-.van-cell .van-field__body {
-    border: none;
+  :deep() {
+    .van-cell .van-field__body {
+      border: none;
+    }
   }
-}
   .text-bold {
     color: #000;
   }

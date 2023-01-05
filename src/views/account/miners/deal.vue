@@ -611,7 +611,7 @@ export default defineComponent({
   },
   setup(props: any, context: SetupContext) {
     const { t } = useI18n();
-    const { $dialog } = useDialog();
+    const { $wdialog } = useDialog();
     const showAccountModal = ref(false);
     const store = useStore();
     const accountInfo = computed(() => store.state.account.accountInfo);
@@ -654,7 +654,7 @@ export default defineComponent({
 
         if (!ethAccountInfo.value.PledgedBalance) {
           isModif.value = false;
-          // $dialog.open({title:t('minerspledge.beValidator'),message:t("minerspledge.warn"),type:'warn'});
+          // $wdialog.open({title:t('minerspledge.beValidator'),message:t("minerspledge.warn"),type:'warn'});
         } else {
           isModif.value = true;
           try {
@@ -769,11 +769,11 @@ export default defineComponent({
       }
       return false;
     });
-    const { $toast } = useToast();
+    const { $wtoast } = useToast();
     const isAddAffirmDialog = ref(false);
     const onSubmitAddNumber = async () => {
       if (!addNumber.value || addNumber.value == "0") {
-        $toast.warn(t("sendto.no"));
+        $wtoast.warn(t("sendto.no"));
         return;
       }
       console.log(addNumber.value, isAddAffirmDialog.value, isModif.value);
@@ -1035,7 +1035,7 @@ export default defineComponent({
     const onSubmit = async () => {
       if (isModif.value) {
         if (!addNumber.value) {
-          $toast.warn(t("receive.numTip"));
+          $wtoast.warn(t("receive.numTip"));
           return;
         }
         onSubmitAddNumber();
@@ -1050,7 +1050,7 @@ export default defineComponent({
         // @ts-ignore
         const [data] = err;
         const { message } = data;
-        $toast.warn(message);
+        $wtoast.warn(message);
       }
     };
 
@@ -1166,7 +1166,7 @@ export default defineComponent({
       debugger;
       const addNum = new BigNumber(addNumber.value);
       if (addNum.gte(accountInfo.value.amount)) {
-        $toast.warn(t("createExchange.ispoor"));
+        $wtoast.warn(t("createExchange.ispoor"));
         addNumber.value = maxBalance.value;
         return;
       } else {
@@ -1192,7 +1192,7 @@ export default defineComponent({
       if (
         new BigNumber(accountInfo.value.amount).lt(sendAmount+ 1)
       ) {
-        $toast.warn(t("minerspledge.noMoney", {value: sendAmount+ 1}));
+        $wtoast.warn(t("minerspledge.noMoney", {value: sendAmount+ 1}));
         return;
       }
       try {
@@ -1211,7 +1211,7 @@ export default defineComponent({
         };
         showReconveryModal.value = true;
       }catch(err: any){
-        $toast.warn(err.reason)
+        $wtoast.warn(err.reason)
       } finally {
         Toast.clear();
       }
@@ -1247,8 +1247,20 @@ export default defineComponent({
         const receipt = await data.wallet.provider.waitForTransaction(data.hash)
         $tradeConfirm.update({status:"success",callBack})
         dispatch('account/waitTxQueueResponse')
-      }catch(err){
-        $tradeConfirm.update({status:"fail",callBack})
+      }catch(err: any){
+        if (err.toString().indexOf("timeout") > -1) {
+          $tradeConfirm.update({
+            status: "warn",
+            failMessage: t("error.timeout"),
+            callBack
+          });
+        } else {
+          $tradeConfirm.update({
+            status: "fail",
+            failMessage: err.reason,
+            callBack
+          });
+        }
         console.error(err)
       }
     };

@@ -206,12 +206,22 @@ export default {
         if (receipt1.status == 1) {
           $tradeConfirm.update({ status: "success" });
         } else {
-          $tradeConfirm.update({ status: "fail" });
+          $tradeConfirm.update({ status: "fail", hash: receipt1.transactionHash  });
         }
         dispatch("account/updateAllBalance");
-      } catch (err) {
+      } catch (err: any) {
         console.error('err', err)
-        $tradeConfirm.update({ status: "fail" });
+        if (err.toString().indexOf("timeout") > -1) {
+          $tradeConfirm.update({
+            status: "warn",
+            failMessage: t("error.timeout"),
+          });
+        } else {
+          $tradeConfirm.update({
+            status: "fail",
+            failMessage: err.reason,
+          });
+        }
       }
     };
 

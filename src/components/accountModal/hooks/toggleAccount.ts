@@ -84,41 +84,50 @@ export const useToggleAccount = () => {
         pathIndex: pidx,
         path
       })
+      // let time = setTimeout(() => {
+      //   createWalletByPath(callBack)
+      //   clearTimeout(time)
+      // })
       createWalletByPath(callBack)
     } else {
+      // let time = setTimeout(() => {
+      //   callBack(wallet, mnemonic)
+      //   clearTimeout(time)
+      // })
       callBack(wallet, mnemonic)
     }
   }
 
-  const createAccount = async () => {
+  const createAccount = () => {
     createLoading.value = true
-    const { pathIndex, path }: any = { ...store.state.account.mnemonic }
-    const newPathIndex = Number(pathIndex) + 1 + ''
-    const password: string = getCookies('password') || ''
-    if (!password) {
-      router.replace({ name: 'withpassword' })
-    }
-
-    createWalletByPath(async (wallet: any, mnemonic: Mnemonic) => {
-      eventBus.emit('beforeChangeAccount')
-
-      const { privateKey, address } = wallet
-      const params: EncryptPrivateKeyParams = {
-        privateKey,
-        password
+    let time = setTimeout(() => {
+      const password: string = getCookies('password') || ''
+      if (!password) {
+        router.replace({ name: 'withpassword' })
       }
-      const keyStore = encryptPrivateKey(params)
-      await dispatch('account/addAccount', { keyStore, mnemonic, address }).finally(() => {
-        createLoading.value = false
-      })
-      eventBus.emit('changeAccount', address)
-      handleUpdate()
-      dispatch("account/getExchangeStatus")
-      createLoading.value = false
-      nextTick(() => {
-        listDom.value.scrollTop = listDom.value.scrollHeight
+      createWalletByPath((wallet: any, mnemonic: Mnemonic) => {
+        
+        eventBus.emit('beforeChangeAccount')
+        const { privateKey, address } = wallet
+        const params: EncryptPrivateKeyParams = {
+          privateKey,
+          password
+        }
+        const keyStore = encryptPrivateKey(params)
+        dispatch('account/addAccount', { keyStore, mnemonic, address }).then(() => {
+          eventBus.emit('changeAccount', address)
+          clearTimeout(time)
+          handleUpdate()
+          dispatch("account/getExchangeStatus")
+          nextTick(() => {
+            listDom.value.scrollTop = listDom.value.scrollHeight
+          })
+        }).finally(() => {
+          createLoading.value = false
+        })
       })
     })
+
 
 
   }

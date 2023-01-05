@@ -133,7 +133,7 @@ export default defineComponent({
     const router = useRouter();
     const appProvide = inject('appProvide')
     //  const isWarning = ref(false);
-    const {$toast} = useToast()
+    const {$wtoast} = useToast()
     const store = useStore();
     const { dispatch, commit } = store
     const networkTypeValue = computed(() => store.state.account.networkType);
@@ -178,7 +178,7 @@ export default defineComponent({
     const toCopyCMS = async () => {
       try {
         await toClipboard(`${exchangeUrl.value}`)
-        $toast.success(t('copy.copy'))
+        $wtoast.success(t('copy.copy'))
       } catch (e) {
         console.error(e)
       }
@@ -189,7 +189,7 @@ export default defineComponent({
     const toCopyAmount = async () => {
       try {
         await toClipboard(`${adminUrl.value}`)
-        $toast.success(t('copy.copy'))
+        $wtoast.success(t('copy.copy'))
       } catch (e) {
         console.error(e)
       }

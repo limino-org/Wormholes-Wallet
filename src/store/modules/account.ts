@@ -166,36 +166,6 @@ export const getWallet = () => {
 const createWallet = async () => {
   const wal: any = await store.dispatch('account/getProviderWallet')
     return wal
-  // try {
-  //   const vuex: any = await localforage.getItem('vuex')
-  //   if (vuex) {
-  //     const { accountInfo } = vuex.account;
-  //     const { keyStore } = accountInfo;
-  //     const password: string = getCookies("password") || "";
-  //     if (!password) {
-  //       const query = getQuery();
-  //       router.push({ name: "withpassword", query });
-  //       return Promise.reject(i18n.global.t("common.withpassword"));
-  //     }
-  //     // Load the wallet with the password and keyStore
-  //     const wa = await createWalletByJson({ password, json: keyStore });
-  //     const { URL } = vuex.account.currentNetwork
-  //     const provider = ethers.getDefaultProvider(URL)
-  //     // @ts-ignore
-  //     const wall = wa.connect(provider)
-  //     const network = await wall.provider.getNetwork()
-  //     wallet = wall
-  //     store.commit('account/UPDATE_NETSTATUS', NetStatus.success)
-  //     return Promise.resolve(wall)
-  //   }
-  // } catch (err) {
-  //   console.error('-----------------', err)
-  //   // Toast(err?.toString())
-  //   store.commit('account/UPDATE_NETSTATUS', NetStatus.fail)
-  //   return Promise.reject(null)
-  // }
-
-
 }
 // clear wallet
 export const clearWallet = () => {
@@ -252,7 +222,9 @@ export default {
       exchanger_flag: false,
     },
     ethAccountInfo:{},
-    ethNetwork:{},
+    ethNetwork:{
+      chainId: 51888
+    },
     recentList: [],
     // network switcher
     networkType: 1,
@@ -279,6 +251,14 @@ export default {
   mutations: {
     UPDATE_ETHNETWORK(state: State, val: any) {
       state.ethNetwork = val
+      if(val && val.chainId) {
+        state.currentNetwork.chainId = val.chainId
+        state.netWorkList.forEach(item => {
+          if(item.id.toUpperCase() === state.currentNetwork.id.toUpperCase()) {
+            item.chainId = val.chainId
+          }
+        })
+      }
     },
     UPDATE_EXCHANGEGUIDANCE(state: State, value: boolean) {
       state.exchangeGuidance = value
@@ -403,7 +383,9 @@ export default {
       const txNetwork: NetWorkData = {...network};
       const { id, currencySymbol } = txNetwork
       const formAdd = from.toUpperCase();
-      const txListKey = `txlist-${id}-${formAdd}`
+            // @ts-ignore
+      const chainId = state.ethNetwork.chainId
+      const txListKey = `txlist-${id}-${chainId}-${formAdd}`
       let txList: any = await localforage.getItem(txListKey)
       console.log('txList', txList)
       const receipt = {...value, symbol: currencySymbol}
@@ -423,34 +405,86 @@ export default {
     },
     async UPDATE_TRANSACTION(state: State, da: any) {
       console.warn('da----', da)
-      const { receipt, sendData, txType, network, transitionType, type, data , value, gasPrice, gasLimit, txId, tokenAddress, amount, isCancel} = da
-      const {hash, nonce, from, to } = sendData
+      const { receipt, sendData, txType, network, transitionType, type, data , gasLimit, txId, tokenAddress, amount, isCancel,value} = da
       const { id, currencySymbol } = network
-      const date = new Date()
-      const newReceipt = clone({
-        date,
-        hash,
+      const {convertAmount,date, nonce} = sendData
+      const {
+        blockHash,
+        blockNumber,
+        cumulativeGasUsed,
+        effectiveGasPrice,
+        gasUsed,
+        transactionHash,
         from,
-        gasLimit,
-        gasPrice,
-        nonce,
         to,
-        type,
-        value,
-        transitionType: transitionType || null,
-        txType,
-        network: clone(network),
-        data,
-        sendStatus: receipt ? TransactionSendStatus.success : TransactionSendStatus.pendding,
-        sendData: clone(sendData),
-        receipt: clone(receipt),
-        tokenAddress,
-        amount,
-        isCancel: isCancel || null,
-        txId
-      })
+        contractAddress,
+        transactionIndex,
+        status,
+      } = receipt
+      /**
+       * blockHash: "0x1482d2f2e879c9e02fe79469609d4e1c6ffed21c8b3cc09617df6b9228e81a08"
+       * blockNumber:60454
+       * contractAddress: null
+          convertAmount: 0
+          cumulativeGasUsed: 21000
+          from: "0x612dfa56dca1f581ed34b9c60da86f1268ab6349"
+          gas: 21000
+          gasPrice: 1200000000
+          gasUsed: 21000
+          hash: "0xc3b29fb20ac5ff813a9371e7d6d2913e450d950759a06a1d71fd866a3960978a"
+          input: "0x"
+          nonce: 0
+          status: 1
+          timestamp: 1672376574
+          to: "0x352deea28e6b15620c75acf0debe6aacbda965c9"
+          transactionIndex: 0
+          value: "230000000000000000"
+       */
+          const newReceipt = {
+            blockHash,
+            blockNumber,
+            contractAddress,
+            cumulativeGasUsed,
+            from,
+            gasPrice: ethers.utils.formatUnits(effectiveGasPrice,'wei'),
+            gasUsed: Number(ethers.utils.formatUnits(gasUsed,'wei')),
+            hash: transactionHash,
+            nonce,
+            to,
+            input:'',
+            transactionIndex,
+            convertAmount,
+            timestamp: Math.floor(new Date(date).getTime()/1000),
+            status,
+            value: value ?  ethers.utils.formatUnits(value,'wei') : '0'
+
+          }
+      // const newReceipt = clone({
+      //   date,
+      //   hash,
+      //   from,
+      //   gasLimit,
+      //   gasPrice,
+      //   nonce,
+      //   to,
+      //   type,
+      //   value,
+      //   transitionType: transitionType || null,
+      //   txType,
+      //   network: clone(network),
+      //   data,
+      //   sendStatus: receipt ? TransactionSendStatus.success : TransactionSendStatus.pendding,
+      //   sendData: clone(sendData),
+      //   receipt: clone(receipt),
+      //   tokenAddress,
+      //   amount,
+      //   isCancel: isCancel || null,
+      //   txId
+      // })
       const formAdd = from.toUpperCase();
-      const txListKey = `txlist-${id}-${formAdd}`
+      // @ts-ignore
+      const chainId = state.ethNetwork.chainId
+      const txListKey = `txlist-${id}-${chainId}-${formAdd}`
       let txList: any = await localforage.getItem(txListKey)
       if(txList && txList.length) {
         if(txList && txList.length) {
@@ -601,8 +635,8 @@ export default {
     // New trades are pushed to the trade queue
     async PUSH_TXQUEUE(state: State, tx: any) {
       const { network: { id }, from } = tx
-      const date = new Date()
-      const queuekey = `txQueue-${id}-${from.toUpperCase()}`
+      // @ts-ignore
+      const queuekey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
       const list: any = await localforage.getItem(queuekey)
       const txQueue = list && list.length ? list : []
       tx.txId = guid()
@@ -611,17 +645,11 @@ export default {
       store.commit("account/PUSH_TRANSACTION", clone(tx));
       await localforage.setItem(queuekey, txQueue)
     },
-    async UPDATE_TXQUEUE(state: State, tx: any) {
-      const { txId } = tx
-      const { network: { id } } = tx
-      const queuekey = `txQueue-${id}`
-      const list: any = await localforage.getItem(queuekey)
-      const txQueue = list && list.length ? list : []
-    },
     // Delete data from a queue
     async DEL_TXQUEUE(state: State, tx: any) {
       const {network:{id}, txId, from} = tx
-      const queueKey = `txQueue-${id}-${from.toUpperCase()}`
+      // @ts-ignore
+      const queueKey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
       const list: any = await localforage.getItem(queueKey)
       const txQueue = list && list.length ? list : []
       const newList = txQueue.filter((item: any) => item.txId.toUpperCase() != txId.toUpperCase())
@@ -726,7 +754,7 @@ export default {
     // Gets the balance of the current wallet
     async getBalance({ commit, state, dispatch }: any) {
       try {
-        const newwallet = wallet && wallet.provider ? wallet : await dispatch("getProviderWallet");
+        const newwallet = wallet && wallet.provider&& wallet.provider.connection.url === state.currentNetwork.URL ? wallet : await dispatch("getProviderWallet");
         const balance = await newwallet.getBalance();
         const amount = ethers.utils.formatEther(balance);
         return amount;
@@ -740,7 +768,7 @@ export default {
     },
     //Switch account
     async updateAccount({ commit, state, dispatch }: any) {
-      const newwallet = wallet && wallet.provider ? wallet : await dispatch("getProviderWallet");
+      const newwallet = wallet && wallet.provider&& wallet.provider.connection.url === state.currentNetwork.URL ? wallet  : await dispatch("getProviderWallet");
       const balance = await newwallet.getBalance();
       const amount = ethers.utils.formatEther(balance);
       const address = newwallet.address;
@@ -776,12 +804,14 @@ export default {
     ) {
       try {
         wallet = await createWalletByJson(params);
+        commit('UPDATE_WALLET', wallet)
         // And connect to the network
         const { currentNetwork } = state;
-        dispatch("setNetWork", currentNetwork);
+        await dispatch("setNetWork", currentNetwork);
         return wallet;
       } catch (err) {
-        return console.error(err);
+        console.error('err', err)
+        return Promise.reject(err);
       }
     },
     // Import the account using the private key
@@ -848,7 +878,7 @@ export default {
     },
     // Update the balance in the current account currency
     async updateBalance({ commit, state, dispatch }: any) {
-      const newwallet = wallet && wallet.provider ? wallet : await dispatch("getProviderWallet");
+      const newwallet = wallet && wallet.provider && wallet.provider.connection.url === state.currentNetwork.URL ? wallet : await dispatch("getProviderWallet");
       try {
         if (newwallet) {
           const balance = await newwallet.getBalance();
@@ -873,26 +903,27 @@ export default {
       }
       try {
         if(!wallet) {
-          const { accountInfo } = state;
+            const { accountInfo } = state;
           const { keyStore } = accountInfo;
+          const json = toRaw(keyStore)
           const password: string = getCookies("password") || "";
-          const wall =  await dispatch("createWalletByJson", { password, json: keyStore });
-          wallet = wall.connect(provider)
-          const res = await wallet.provider.getNetwork()
+          const wall = await dispatch("createWalletByJson", { password, json });
+          const newWallet = wall.connect(provider)
+          const res = await newWallet.provider.getNetwork()
           commit('UPDATE_ETHNETWORK',res)
           commit('UPDATE_NETSTATUS', NetStatus.success)
-          commit("UPDATE_WALLET", wallet);
-          return wallet
+          commit("UPDATE_WALLET", newWallet);
+          return newWallet
         }
         if(wallet && wallet.provider) {
           const {connection:{url}} = wallet.provider
           if(URL != url) {
-            wallet = wallet.connect(provider);
-            const res = await wallet.provider.getNetwork()
+            const newWallet = wallet.connect(provider)
+            const res = await newWallet.provider.getNetwork()
             commit('UPDATE_NETSTATUS', NetStatus.success)
-            commit("UPDATE_WALLET", wallet);
+            commit("UPDATE_WALLET", newWallet);
             commit('UPDATE_ETHNETWORK',res)
-            return wallet
+            return newWallet
           } else {
             commit('UPDATE_NETSTATUS', NetStatus.success)
             commit("UPDATE_WALLET", wallet);
@@ -902,14 +933,16 @@ export default {
 
         }
         if(wallet && !wallet.provider) {
-          wallet = wallet.connect(provider);
-          const res = await wallet.provider.getNetwork()
-          commit('UPDATE_NETSTATUS', NetStatus.success)
+          const newWallet = wallet.connect(provider)
+          const res = await newWallet.provider.getNetwork()
           commit('UPDATE_ETHNETWORK',res)
-          commit("UPDATE_WALLET", wallet);
-          return wallet
+
+          commit('UPDATE_NETSTATUS', NetStatus.success)
+          commit("UPDATE_WALLET", newWallet);
+          return newWallet
         }
       } catch (err: any) {
+        console.error('err:----2',err)
         commit('UPDATE_NETSTATUS', NetStatus.fail)
         return Promise.reject(err);
       }
@@ -918,7 +951,9 @@ export default {
     async hasPendingTransactions({state, commit}: any) {
       const { id } = state.currentNetwork
       const from = state.accountInfo.address
-      const txListKey = `txQueue-${id}-${from.toUpperCase()}`
+      // @ts-ignore
+      const txListKey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
+      // const txListKey = `txQueue-${id}-${from.toUpperCase()}`
       let txList: any = await localforage.getItem(txListKey)
       console.warn('txList', txList)
       return txList && txList.length ? true : false
@@ -962,7 +997,7 @@ export default {
       commit("PUSH_TXQUEUE", {
         hash,
         from,
-        gasLimit,
+        gasLimit: gasLimit || utils.formatUnits(sendData.gasLimit, 'wei'),
         gasPrice,
         nonce,
         to: toAddr,
@@ -1016,7 +1051,7 @@ export default {
       store.commit("account/PUSH_TXQUEUE", {
         hash,
         from,
-        gasLimit,
+        gasLimit: gasLimit || utils.formatUnits(data.gasLimit, 'wei'),
         gasPrice,
         nonce,
         to: toAddr,
@@ -1039,44 +1074,44 @@ export default {
      }
     },
 // send data
-async sendTransaction({ commit, dispatch, state }: any, tx: any) {
-  const { to, from, data, callBack, value: sendVal } = tx
-  commit("PUSH_RECENTLIST", to);
-  sessionStorage.setItem('tx-----2', JSON.stringify(tx))
-  try {
-  // @ts-ignore
-  const network = clone(store.state.account.currentNetwork)
-    const wallet = await getWallet();
-    const res: any = await wallet.sendTransaction({
-      to,
-      data,
-      value: sendVal
-    })
-    const { from, gasLimit: newLimit, gasPrice: newPrice, hash, nonce, to: toAddr, type, value: newVal } = res;
-    commit("PUSH_TXQUEUE", {
-      hash,
-      from,
-      gasLimit: null,
-      gasPrice: null,
-      nonce,
-      to: toAddr,
-      type,
-      value: newVal,
-      transitionType:  null,
-      txType: TransactionTypes.other,
-      network: clone(network),
-      data: data,
-      sendStatus: TransactionSendStatus.pendding,
-      sendData: clone(res),
-      nft_address:''
-    });
-    console.log("i18n", i18n);
-    res.wallet = wallet
-    return res
-  } catch (err) {
-    return Promise.reject(err)
-  }
-},
+// async sendTransaction({ commit, dispatch, state }: any, tx: any) {
+//   const { to, from, data, callBack, value: sendVal } = tx
+//   commit("PUSH_RECENTLIST", to);
+//   sessionStorage.setItem('tx-----2', JSON.stringify(tx))
+//   try {
+//   // @ts-ignore
+//   const network = clone(store.state.account.currentNetwork)
+//     const wallet = await getWallet();
+//     const res: any = await wallet.sendTransaction({
+//       to,
+//       data,
+//       value: sendVal
+//     })
+//     const { from, gasLimit: newLimit, gasPrice: newPrice, hash, nonce, to: toAddr, type, value: newVal } = res;
+//     commit("PUSH_TXQUEUE", {
+//       hash,
+//       from,
+//       gasLimit: null,
+//       gasPrice: null,
+//       nonce,
+//       to: toAddr,
+//       type,
+//       value: newVal,
+//       transitionType:  null,
+//       txType: TransactionTypes.other,
+//       network: clone(network),
+//       data: data,
+//       sendStatus: TransactionSendStatus.pendding,
+//       sendData: clone(res),
+//       nft_address:''
+//     });
+//     console.log("i18n", i18n);
+//     res.wallet = wallet
+//     return res
+//   } catch (err) {
+//     return Promise.reject(err)
+//   }
+// },
   //Load the wallet by address and password
     async connectWalletByPwdAddress(
       { state, commit, dispatch }: any,
@@ -1216,7 +1251,6 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
     },
     // Update current network, current address, current token list balance
     async updateTokensBalances({ commit, state, dispatch }: any) {
-      const wallet = await getWallet();
       const address = state.accountInfo.address.toUpperCase();
       const currentNetwork = state.currentNetwork;
       const tokens = currentNetwork.tokens[address];
@@ -1290,25 +1324,28 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
       }
       const {id} = state.currentNetwork
       const from = state.accountInfo.address
-      const queuekey = `txQueue-${id}-${from.toUpperCase()}`
+      // @ts-ignore
+      const queuekey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
       let t: any = null;
       const rep = new Promise((resolve, reject) => {
         t = setTimeout(async() => {
          const list: any = await localforage.getItem(queuekey)
          const txQueue = list && list.length ? list : []
-         const newWallet = await getWallet()
          if (!txQueue.length) {
            resolve(true)
          }
+         const receiptList = []
+                //  const newWallet = await getWallet()
          try {
            for await (const iterator of txQueue) {
              let {hash, transitionType, nft_address, blockNumber, network, txType, txId, amount, isCancel} = iterator
              let data1 = null
              if(_opt.time != null) {
-              data1 = await newWallet.provider.waitForTransaction(hash, null, _opt.time);
+              data1 = await wallet.provider.waitForTransaction(hash, null, _opt.time);
              } else {
-               data1 = await newWallet.provider.waitForTransaction(hash);
+               data1 = await wallet.provider.waitForTransaction(hash);
              }
+             receiptList.push(data1)
              let convertAmount: any = ''
              if(transitionType && transitionType == '6') {
                const len = nft_address.length
@@ -1325,7 +1362,7 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
                    nft_address += '000'
                    break;
                }
-               const nftAccountInfo = await newWallet.provider.send(
+               const nftAccountInfo = await wallet.provider.send(
                  "eth_getAccountInfo",
                  [nft_address,  web3.utils.toHex((data1.blockNumber - 1).toString())]
                );
@@ -1353,7 +1390,7 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
              commit("DEL_TXQUEUE", { ...iterator,txId,txType });
              commit("UPDATE_TRANSACTION", { ...rep,txId, txType, isCancel: isCancel || null, amount});
            }
-           resolve(true)
+           resolve(receiptList)
          } catch (err) {
            console.error(err)
            reject(err)
@@ -1361,14 +1398,15 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
            clearTimeout(t)
          }
        }, 1000)
+       
        _opt.callback(t)
      })
       return rep
     },
     // get ethAccountInfo
     async getEthAccountInfo({commit, state}: any) {
-      const wallet = await getWallet()
-      return wallet.provider.send(
+      const wall = await getWallet()
+      return wall.provider.send(
         "eth_getAccountInfo",
         [state.accountInfo.address, "latest"]
       ).then((res:any) => {
