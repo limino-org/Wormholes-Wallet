@@ -303,21 +303,21 @@ export default {
     onMounted(async () => {
       handleAsyncTxList();
       getPageList();
-      // store
-      //   .dispatch("account/waitTxQueueResponse", {
-      //     time: null,
-      //     callback(e: any) {
-      //       console.warn("e", e);
-      //       waitTime.value = e;
-      //     },
-      //   })
-      //   .then((res) => {
-      //     if (res !== true) {
-      //       eventBus.off("txPush");
-      //       eventBus.off("txupdate");
-      //       getPageList();
-      //     }
-      //   });
+      store
+        .dispatch("account/waitTxQueueResponse", {
+          time: null,
+          callback(e: any) {
+            console.warn("e", e);
+            waitTime.value = e;
+          },
+        })
+        .then((res) => {
+          if (res !== true) {
+            eventBus.off("txPush");
+            eventBus.off("txupdate");
+            getPageList();
+          }
+        });
     });
     const toSend = () => {
       router.push({ name: "send", query });
@@ -382,17 +382,17 @@ export default {
       // getPageList();
     });
     eventBus.on("txUpdate", (data: any) => {
-
+      getPageList();
       console.warn('txupdate', data)
-      for(let i = 0;i<txList.value.length;i++){
-        let item = txList.value[i]
-        const {hash} = item
-        // @ts-ignore
-        if(hash.toUpperCase() == data.hash.toUpperCase()) {
-          // @ts-ignore
-          txList.value[i] = data
-        }
-      }
+      // for(let i = 0;i<txList.value.length;i++){
+      //   let item = txList.value[i]
+      //   const {hash} = item
+      //   // @ts-ignore
+      //   if(hash.toUpperCase() == data.hash.toUpperCase()) {
+      //     // @ts-ignore
+      //     txList.value[i] = data
+      //   }
+      // }
     });
     onUnmounted(() => {
       // console.warn('waitTime.value', waitTime.value)

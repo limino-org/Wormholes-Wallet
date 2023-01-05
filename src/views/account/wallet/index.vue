@@ -448,13 +448,25 @@ export default {
     const autostat = ref(false);
     eventBus.on('changeAccount', async() => {
      dispatch('account/getEthAccountInfo')
-
+     getWalletBalance()
     })
     eventBus.on('walletReady',() => {
       dispatch("account/updateBalance");
+   
     })
 
     let time: any = null;
+    const getWalletBalance = () => {
+      dispatch("account/updateBalance");
+      dispatch("account/updateTokensBalances");
+    }
+    const handleLoopBalance = () => {
+      if(!time) {
+        time = setInterval(() => {
+          getWalletBalance()
+      }, 10000);
+      }
+    };
     onMounted(() => {
       dispatch("transfer/clearTx");
 
@@ -467,10 +479,7 @@ export default {
         }
       });
       
-      time = setInterval(() => {
-        dispatch("account/updateBalance");
-        dispatch("account/updateTokensBalances");
-      }, 12000);
+      handleLoopBalance()
     });
     onUnmounted(() => {
       clearInterval(time);

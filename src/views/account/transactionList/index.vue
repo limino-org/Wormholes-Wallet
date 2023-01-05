@@ -462,13 +462,14 @@ export default {
     });
     eventBus.on("txUpdate", (data: any) => {
       // console.warn('txupdate', data)
-      for (let i = 0; i < tlist.value.length; i++) {
-        let item = tlist.value[i];
-        const { hash } = item;
-        if (hash.toUpperCase() == data.hash.toUpperCase()) {
-          tlist.value[i] = data;
-        }
-      }
+      // for (let i = 0; i < tlist.value.length; i++) {
+      //   let item = tlist.value[i];
+      //   const { hash } = item;
+      //   if (hash.toUpperCase() == data.hash.toUpperCase()) {
+      //     tlist.value[i] = data;
+      //   }
+      // }
+      getPageList()
     });
 
     onUnmounted(() => {

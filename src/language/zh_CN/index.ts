@@ -151,11 +151,11 @@ export default {
         selectSNFT: "您还未选择任何SNFT",
         buySnft: "你有 S-NFT 吗？ {link}",
         findMore: "寻找更多",
-        snftUnfree:"该质押的SNFT还未解冻！",
+        snftUnfree: "该质押的SNFT还未解冻！",
         conver_approve: "请求被批准了。转换事务将被启动。请稍等。",
-conver_waiting: "交易正在进行中，请稍候。",
-conver_success: "交易发送成功。如果您想查看交易详情，请进入交易历史页面。",
-conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以去交易历史查看交易的具体信息。",
+        conver_waiting: "{count}<span style='color:#037CD6;'>个S-NFT</span>正在兑换，兑换成功，将获得{amount}<span style='color:#037CD6;'>ERB</span>，您也可以在个人中心的历史记录查看兑换详情",
+        conver_success: "{count}<span style='color:#037CD6;'>个S-NFT</span>兑换成功，已获得{amount}<span style='color:#037CD6;'>ERB</span>，您也可以在个人中心的历史记录查看兑换详情",
+        conver_wrong: "{count}个S-NFT兑换失败，您可以在个人中心历史记录查看兑换详情",
 
 
 
@@ -166,15 +166,15 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         amount: "数量",
         tip: "您也可以在交易所{link}",
         buy: "购买 S-NFTs",
-        tab1:"S-NFT 赎回",
-        tab3:"S-NFT 质押",
-        staking:"质押期",
-        iconmeTip:"这是 S-NFT 质押后您将获得的估计年度利润",
-        periodTip:"在此期间，您将无法赎回您的 S-NFT"
+        tab1: "S-NFT 赎回",
+        tab3: "S-NFT 质押",
+        staking: "质押期",
+        iconmeTip: "这是 S-NFT 质押后您将获得的估计年度利润",
+        periodTip: "在此期间，您将无法赎回您的 S-NFT"
 
     },
     common: {
-        days:"天",
+        days: "天",
         commingsoon: "即将来临",
         setting: '设置',
         failedtoload: '加载钱包失败',
@@ -198,7 +198,7 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         save: "保存",
         closed: "关闭",
         welcome: "欢迎",
-        server: '服务器:',
+        server: '服务器',
         year: '/年',
         aftertheexchangeisclosed: '交易所关闭后所有数据将被清除',
         yes: '同意',
@@ -232,20 +232,21 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         all: "全部",
         conver: "转换",
         copyAddr: "地址哈希复制",
-        confirmExit:"确认退出",
-        guideBtnTip:"您的数字钱包数据仅保存在您浏览器的本地存储中；请务必创建备份以避免潜在的永久性损失。卸载浏览器和/或清除浏览器数据也可能导致永久性损失",
-        asyncData:"数据同步中，请稍后",
-        convertAmount:"转换金额",
-        loadingWait:"加载中，请稍后!",
-        noMoney:"你的账户缺少资产。请确保钱包里有足够的钱",
-        recovery:"恢复",
-        gasSpeedUp:"汽油加速",
-        sendTipPendding:"当前交易队列存在未完成交易，请完成后重试！",
-        speedUp:"加速",
-        toggleAddress:"请先切换钱包账户到该地址！",
-        snftColorTip:"S-NFT等级从低到高分别为L0、L1、L2、L3。您可以合成更高等级以获取更高收益，合成规则如下：16个特定S-NFT L0可合成一个唯一S-NFT L1，16个特定S-NFT L1可合成一个唯一S-NFT L2，16个特定S-NFT L2可合成一个唯一S-NFT L3。蓝色数字表示在某一个S-NFT L1中，S-NFT L0的位置编号。绿色数字表示在某一个S-NFT L2中，S-NFT L1的位置编号。黄色数字表示在某一个S-NFT L3中，S-NFT L2的位置编号。红色数字表示S-NFT L3的位置编号。",
-        contrctTx:"合约交易",
-        contractAddr:"合约地址"
+        confirmExit: "确认退出",
+        guideBtnTip: "您的数字钱包数据仅保存在您浏览器的本地存储中；请务必创建备份以避免潜在的永久性损失。卸载浏览器和/或清除浏览器数据也可能导致永久性损失",
+        asyncData: "数据同步中，请稍后",
+        convertAmount: "转换金额",
+        loadingWait: "加载中，请稍后!",
+        noMoney: "你的账户缺少资产。请确保钱包里有足够的钱",
+        recovery: "恢复",
+        gasSpeedUp: "汽油加速",
+        sendTipPendding: "当前交易队列存在未完成交易，请完成后重试！",
+        speedUp: "加速",
+        toggleAddress: "请先切换钱包账户到该地址！",
+        snftColorTip: "S-NFT等级从低到高分别为L0、L1、L2、L3。您可以合成更高等级以获取更高收益，合成规则如下：16个特定S-NFT L0可合成一个唯一S-NFT L1，16个特定S-NFT L1可合成一个唯一S-NFT L2，16个特定S-NFT L2可合成一个唯一S-NFT L3。蓝色数字表示在某一个S-NFT L1中，S-NFT L0的位置编号。绿色数字表示在某一个S-NFT L2中，S-NFT L1的位置编号。黄色数字表示在某一个S-NFT L3中，S-NFT L2的位置编号。红色数字表示S-NFT L3的位置编号。",
+        contrctTx: "合约交易",
+        contractAddr: "合约地址",
+        converTip:"提示:S-NFT转换成功后将从资产列表中消失。您可以在交易历史详细信息中查看交易状态。"
 
 
 
@@ -444,7 +445,7 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         confirm: "确认",
         wrongaddressformat: '地址格式有误',
         lessthan: '不能小于21000',
-        lessthanPrev:"不能小于{value}"
+        lessthanPrev: "不能小于{value}"
     },
     //异常页面
     abnormal: {
@@ -496,46 +497,46 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         password2: '确认密码',
         input: '在此输入您的助记词',
         notmatch: '两次输入的密码不一致',
-        mnemonicExport:"助记词备份",
-        backUpDesc:"助记词备份，导出",
-        unlock:"请输入密码以解锁助记词",
+        mnemonicExport: "助记词备份",
+        backUpDesc: "助记词备份，导出",
+        unlock: "请输入密码以解锁助记词",
 
 
 
     },
     // mnemonic
-  mnemonic: {
-    recoveryPhrase: "恢复短语",
-    hint: "你的钱包没有备份！",
-    tips: "如果您在使用钱包之前不进行备份，您的资金将面临风险。 确保立即备份。",
-    yourRecoveryPhrase: "你的恢复短语",
-    yourRecoveryPhraseTitle:
-      "在任何情况下,WormHoles 都不会要求您提供恢复短语。保护您的资金，不要与任何人分享您的恢复短语。",
-    remindMeLater: "稍后提醒我",
-    backUp: "备份",
-    hint1: "以正确的顺序写下或复制这些单词并将它们保存在安全的地方。",
-    suggest: "建议您将它们写下来。",
-    getStarted: "让我们开始吧",
-    saveTips:
-      "将您的密钥存储在安全的位置。这是找回钱包的唯一方法。WormHoles不保留副本。",
-    continue: "继续",
-    verifyMnemonicPhrase: "验证助记词",
-    protectYourFunds: "保护您的资金，不要与任何人分享您的恢复短语。",
-    correctOrder: "以正确的顺序点击每个单词。",
-    errorMessage: " 助记词不正确。 请再试一次。",
-    backUpSuccessful: "备份成功",
-    backupQRcode: " 您也可以备份二维码",
-    QRCode: "二维码",
-    done: "完成",
-    backup: "备份二维码",
-    saveQRcode: "将二维码保存到照片",
-    tryagain:'错误的助记短语，请再试一次。',
-    checkthemnemonic:'请校验助记词',
-    backupyourQRcodeinasafeenvironment:'请在安全的环境中备份您的二维码 不建议截图',
-    errorMonic:"无效的助记词",
+    mnemonic: {
+        recoveryPhrase: "恢复短语",
+        hint: "你的钱包没有备份！",
+        tips: "如果您在使用钱包之前不进行备份，您的资金将面临风险。 确保立即备份。",
+        yourRecoveryPhrase: "你的恢复短语",
+        yourRecoveryPhraseTitle:
+            "在任何情况下,WormHoles 都不会要求您提供恢复短语。保护您的资金，不要与任何人分享您的恢复短语。",
+        remindMeLater: "稍后提醒我",
+        backUp: "备份",
+        hint1: "以正确的顺序写下或复制这些单词并将它们保存在安全的地方。",
+        suggest: "建议您将它们写下来。",
+        getStarted: "让我们开始吧",
+        saveTips:
+            "将您的密钥存储在安全的位置。这是找回钱包的唯一方法。WormHoles不保留副本。",
+        continue: "继续",
+        verifyMnemonicPhrase: "验证助记词",
+        protectYourFunds: "保护您的资金，不要与任何人分享您的恢复短语。",
+        correctOrder: "以正确的顺序点击每个单词。",
+        errorMessage: " 助记词不正确。 请再试一次。",
+        backUpSuccessful: "备份成功",
+        backupQRcode: " 您也可以备份二维码",
+        QRCode: "二维码",
+        done: "完成",
+        backup: "备份二维码",
+        saveQRcode: "将二维码保存到照片",
+        tryagain: '错误的助记短语，请再试一次。',
+        checkthemnemonic: '请校验助记词',
+        backupyourQRcodeinasafeenvironment: '请在安全的环境中备份您的二维码 不建议截图',
+        errorMonic: "无效的助记词",
 
-  },
-    
+    },
+
     // 创建钱包
     createwallet: {
         createwallet: '创建钱包',
@@ -546,15 +547,15 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         notmatch: '两次输入的密码不一致',
 
     },
-      // backup
-  backup: {
-    safetyTips: "安全提示",
-    warn: "你的钱包没有备份！",
-    warn1:
-      "如果您在使用钱包之前不进行备份，您的资金将面临风险。 确保立即备份。",
-    remindMeLater: "稍后提醒我",
-    backup: "备份",
-  },
+    // backup
+    backup: {
+        safetyTips: "安全提示",
+        warn: "你的钱包没有备份！",
+        warn1:
+            "如果您在使用钱包之前不进行备份，您的资金将面临风险。 确保立即备份。",
+        remindMeLater: "稍后提醒我",
+        backup: "备份",
+    },
     // 创建
     create: {
         createwallet: '创建钱包',
@@ -614,7 +615,7 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
     },
     // 创建交易所界面
     createExchange: {
-        wattingTitle:"配置",
+        wattingTitle: "配置",
         headerTitle: "一键交易所",
         openexchange: '开启交易所',
         exchangemanagement: '交易所管理',
@@ -671,26 +672,26 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         ispoor: "请确保余额充足",
         addPl: "追加质押",
         pledgeRed: "质押赎回",
-        addTips:"抱歉，交易所预计关闭时间为 1 年。",
-        redemption:"赎回",
-        snft:"S-NFT",
-        desc1:"您可以质押您的 S-NFT，并有机会在创建新区块时获得奖励。",
-        desc2:"单击此按钮，您可以赎回您的 S-NFTS。",
-        exchange:"交易所",
-        exchangeDesc:"卖，买，铸造",
-        console:"控制台",
-        consoleDesc:"交易所管理",
-        staking:"质押 & 赎回",
-        stakingDesc:"添加质押或赎回您的质押",
-        server:"服务器",
-        serverDesc:"{days} 天 / {hours} 小时",
-        pageTip:"这是交易所管理页面。如果你想去交易所的页面，点击“交易所”。如果你想进入交易所的控制台，点击“控制台”。如果你想添加质押量或赎回你的质押，点击在“Staking & Redemption”。如果要更改服务器的设置，请单击“Server”。",
-        serveTip1:"这是您必须为服务器支付一年的费用。",
-        serveTip2:"这是您离开我们服务器的使用时间。",
-        serveTip3:"这是您为本次交易购买的我们服务器的使用时间",
-        addStaking:"该交易将帮助您将额外的ERB存入您的账户。您获得奖励的机会将增加。您的额外ERB也可以在几个月后赎回。",
-        redeem:"这是您要赎回的 ERB 数量",
-        convert:"转换"
+        addTips: "抱歉，交易所预计关闭时间为 1 年。",
+        redemption: "赎回",
+        snft: "S-NFT",
+        desc1: "您可以质押您的 S-NFT，并有机会在创建新区块时获得奖励。",
+        desc2: "单击此按钮，您可以赎回您的 S-NFTS。",
+        exchange: "交易所",
+        exchangeDesc: "卖，买，铸造",
+        console: "控制台",
+        consoleDesc: "交易所管理",
+        staking: "质押 & 赎回",
+        stakingDesc: "添加质押或赎回您的质押",
+        server: "服务器",
+        serverDesc: "{days} 天 / {hours} 小时",
+        pageTip: "这是交易所管理页面。如果你想去交易所的页面，点击“交易所”。如果你想进入交易所的控制台，点击“控制台”。如果你想添加质押量或赎回你的质押，点击在“Staking & Redemption”。如果要更改服务器的设置，请单击“Server”。",
+        serveTip1: "这是您必须为服务器支付一年的费用。",
+        serveTip2: "这是您离开我们服务器的使用时间。",
+        serveTip3: "这是您为本次交易购买的我们服务器的使用时间",
+        addStaking: "该交易将帮助您将额外的ERB存入您的账户。您获得奖励的机会将增加。您的额外ERB也可以在几个月后赎回。",
+        redeem: "这是您要赎回的 ERB 数量",
+        convert: "转换"
 
 
 
@@ -722,19 +723,19 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
     },
     // 矿工质押
     minerspledge: {
-        smileTip:"你的信誉很好，{value}，请保留它，获得更多的收入 {btn}",
-        sadTip:"您的信誉度低于70，请单击右侧的按钮恢复 {btn}",
-        neutralTip:"您的信誉度低于70，请单击右侧的按钮恢复 {btn}",
-        resetBtnTip:"有了这个按钮，你可以恢复你的信誉到70信誉将花费 {value} ERB。ERB成本将被虫洞区块链烧毁。",
-        noMoney:"请保证账户余额大于{value}ERB以成功恢复权重！",
-        resetSendTip:"通过信誉恢复，可以最大程度恢复您的信誉。 一个信誉将花费一个 ERB。",
-        homeTip:"您的信誉度低于70，恢复你的信誉度以获得更高收入。{btn}",
-        gotIt:"知道了>",
-        credibility:"权重",
-        upCredibility:"权重提高",
-        invalidChainId:"无效的链Id {chainid}",
-        invalidNode:"无效的节点",
-        nodeErr:"节点格式有误",
+        smileTip: "你的信誉很好，{value}，请保留它，获得更多的收入 {btn}",
+        sadTip: "您的信誉度低于70，请单击右侧的按钮恢复 {btn}",
+        neutralTip: "您的信誉度低于70，请单击右侧的按钮恢复 {btn}",
+        resetBtnTip: "有了这个按钮，你可以恢复你的信誉到70信誉将花费 {value} ERB。ERB成本将被虫洞区块链烧毁。",
+        noMoney: "请保证账户余额大于{value}ERB以成功恢复权重！",
+        resetSendTip: "通过信誉恢复，可以最大程度恢复您的信誉。 一个信誉将花费一个 ERB。",
+        homeTip: "您的信誉度低于70，恢复你的信誉度以获得更高收入。{btn}",
+        gotIt: "知道了>",
+        credibility: "权重",
+        upCredibility: "权重提高",
+        invalidChainId: "无效的链Id {chainid}",
+        invalidNode: "无效的节点",
+        nodeErr: "节点格式有误",
         minerspledge: '矿工质押',
         miners_pledge: '矿工质押',
         unfortunately: '遗憾地告知您，节点是错误的',
@@ -770,10 +771,10 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         addTit: "追加的质押金额",
         addTip: "这是追加的质押金额",
         proxyAccountTip: "提示：质押期为一年。详情请参阅条款和规定。",
-        closeTip2:"抱歉，质押时间超过1年才可赎回。",
+        closeTip2: "抱歉，质押时间超过1年才可赎回。",
 
         beValidator: "成为矿工",
-        modifValidator:"矿工管理",
+        modifValidator: "矿工管理",
         tip1: "如果您想更改挖矿奖励的形式，请点击“挖矿收益”；如果您想开始质押并成为验证者，请点击“成为验证者”",
         stacking: "挖矿收益",
         erb_snft: "ERB & S-NFT",
@@ -798,15 +799,15 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         closeTip: "如果你做赎回。你的收入会减少。",
         addzhiya: "追加质押",
         stackFee: "质押金额",
-        tip7:"阈值是指您仍然可以作为验证者的情况下可以赎回的最大ERB 数量。如果您输入的金额大于此数量，您将赎回您的所有 ERB。",
-        redemingAmount:"赎回金额",
-        redemingAmountTip:"赎回金额",
+        tip7: "阈值是指您仍然可以作为验证者的情况下可以赎回的最大ERB 数量。如果您输入的金额大于此数量，您将赎回您的所有 ERB。",
+        redemingAmount: "赎回金额",
+        redemingAmountTip: "赎回金额",
         minus_approve: "我们正在批准您的股份赎回请求。您可能需要等待几秒钟。您也可以在交易记录中找到详细信息。",
         minus_waiting: "我们正在进行股权赎回。请稍等。",
         minus_success: "您的股份赎回已完成。您可以在交易记录中找到详细信息。",
         minus_wrong: "非常抱歉，由于一些意外，操作失败，您可以到交易记录查看交易的具体信息",
-    
-    
+
+
 
 
 
@@ -851,7 +852,7 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
     // 添加网络
     addNetwork: {
         newnetwork: "新的 RPC 网络",
-        newRpcPlaceholder:"新的 RPC 网络URL",
+        newRpcPlaceholder: "新的 RPC 网络URL",
         rpcNet: "RPC 网络",
         introduce: "通过 URL 使用支持 RPC 的自定义网络，而不是提供的网络之一。",
         networkname: "网络名字",
@@ -1121,10 +1122,10 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         confirmed: '确认的',
         failed: '失败的',
         contract: '合约',
-        successly:"成功",
-        pendding:"等待",
-        cancelTx:"确定取消nonce为#{nonce}的交易吗?",
-        cancelDealTit:"取消交易",
+        successly: "成功",
+        pendding: "等待",
+        cancelTx: "确定取消nonce为#{nonce}的交易吗?",
+        cancelDealTit: "取消交易",
 
     },
 
@@ -1199,32 +1200,32 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         tip18: "矿工&服务器&关闭交易所",
         tip19: "提示:如果继续执行该操作，将无法获得后续利益。",
         closeSuccess: "关闭成功",
-        minusTit:"质押赎回",
-        addTit:"追加质押",
-        serverFee:"服务器费",
-        period:"服务器剩余时间",
-        periodAdd:"服务器期附加",
-        addServeAmount:"您可以租用我们的服务器进行交易所，每年需要支付200ERB。支付后，您就可以在我们的服务器上设置您的交易所。",
-        minusStaking:"您必须至少质押 280ERB 才能保持您的交易所开放。而且，在您的交易所关闭后，您将没有机会在创建新区块时获得奖励。",
+        minusTit: "质押赎回",
+        addTit: "追加质押",
+        serverFee: "服务器费",
+        period: "服务器剩余时间",
+        periodAdd: "服务器期附加",
+        addServeAmount: "您可以租用我们的服务器进行交易所，每年需要支付200ERB。支付后，您就可以在我们的服务器上设置您的交易所。",
+        minusStaking: "您必须至少质押 280ERB 才能保持您的交易所开放。而且，在您的交易所关闭后，您将没有机会在创建新区块时获得奖励。",
 
 
-        tipname:"这是您的 NFT 交易所的名称。",
-        tipstake:"这是您质押的 ERB 总量。",
-        tipre:"这是您要赎回的ERB数量。",
-        tipprofit:"这是您通过质押获得的总利润。",
-        tipincome:"这是您在赎回后将获得的估计年度利润。",
-        tipadd:"这是您想要质押的额外 ERB 数量。",
-        closeTip:"抱歉，交易所预计关闭时间为 1 年。",
-        sendProxyExchange:"发送代理交易所交易",
+        tipname: "这是您的 NFT 交易所的名称。",
+        tipstake: "这是您质押的 ERB 总量。",
+        tipre: "这是您要赎回的ERB数量。",
+        tipprofit: "这是您通过质押获得的总利润。",
+        tipincome: "这是您在赎回后将获得的估计年度利润。",
+        tipadd: "这是您想要质押的额外 ERB 数量。",
+        closeTip: "抱歉，交易所预计关闭时间为 1 年。",
+        sendProxyExchange: "发送代理交易所交易",
 
 
 
     },
     guidePopup: {
         tip1: "帐户，资产，地址和交易",
-        tip2:"代币和 NFT",
-        createExchangGuideTip1:"直接点击箭头访问直接点击箭头访问",
-        createExchangGuideTip2:"质押 & 赎回 & 服务器",
+        tip2: "代币和 NFT",
+        createExchangGuideTip1: "直接点击箭头访问直接点击箭头访问",
+        createExchangGuideTip2: "质押 & 赎回 & 服务器",
 
     },
     // customExchangeModal
@@ -1233,7 +1234,7 @@ conver_wrong: "非常抱歉，因为一些意外，操作失败了，你可以�
         amountcannotbelessthan: '金额不能小于{props}',
     },
 
-    error:{
-        500:"参数有误"
+    error: {
+        500: "参数有误"
     }
 }

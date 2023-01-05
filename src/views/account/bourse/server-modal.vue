@@ -3,6 +3,7 @@
     v-model:show="show"
     show-cancel-button
     teleport="#page-box"
+    class="server-modal"
     :showConfirmButton="false"
     :showCancelButton="false"
     closeOnClickOverlay

@@ -74,7 +74,8 @@
                 defaultData.status == 'approve'
               "
             >
-              {{ defaultData.wattingMessage }}
+            <span v-if="defaultData.wattingMessageType === 'string'">{{ defaultData.wattingMessage }}</span>
+            <span v-else v-html="defaultData.wattingMessage"></span>
             </div>
             <div
               class="approve-msg pl-30 ml-8 mb-10"
@@ -82,16 +83,23 @@
                 defaultData.status == 'success' || defaultData.status == 'fail'
               "
             >
-              {{
+            <div v-if="defaultData.status == 'success'">
+              <span v-if="defaultData.successMessageType === 'string'">{{ defaultData.successMessage }}</span>
+             <span v-else v-html="defaultData.successMessage"></span>
+            </div>
+            <div v-if="defaultData.status == 'fail'">
+              <span v-if="defaultData.failMessageType === 'string'">{{ defaultData.failMessage }}</span>
+             <span v-else v-html="defaultData.failMessage"></span>
+            </div>
+              <!-- {{
                 defaultData.status == "success"
                   ? defaultData.successMessage
                   : defaultData.failMessage
-              }}
+              }} -->
             </div>
           </div>
           <div class="flex center mt-26">
             <Button
-
               @click="callBack"
               :disabled="disabled"
               class="okbtn"
@@ -105,6 +113,7 @@
   </transition>
 </template>
 <script lang="ts" setup>
+
 export type TradeOptions = {
   approveMessage?: string
   successMessage?: string
@@ -115,14 +124,24 @@ export type TradeOptions = {
   callBack?: Function
   failBack?: Function
   disabled: Array<string>
-}
+  wattingMessageType: string
+  failMessageType: string
+  successMessageType: string
+  receipt?: null | Object
+};
+
+
+
 import { computed, Ref, ref } from "vue";
 import { Button, Icon, Loading } from "vant";
 import i18n from "@/language";
 import { TradeConfirmOpt, TradeStatus } from "./tradeConfirm";
 console.warn("i18n-------", i18n);
 
-
+enum messageType {
+  string = 'string',
+  html = 'html'
+};
 const getDefaultOpt = () => {
   return ref({
     approveMessage: i18n.global.t('send.approveMessage'),
@@ -131,6 +150,9 @@ const getDefaultOpt = () => {
     failMessage: i18n.global.t('send.failMessage'),
     wattingTitle: i18n.global.t('bootstrapwindow.watting'),
     status: "pendding",
+    wattingMessageType: 'string',
+    failMessageType:"string",
+    successMessageType: 'string',
     callBack: () => {},
     failBack: () => {},
     // The button is disabled in this state

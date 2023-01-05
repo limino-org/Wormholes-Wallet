@@ -1334,6 +1334,7 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
          if (!txQueue.length) {
            resolve(true)
          }
+         const receiptList = []
                 //  const newWallet = await getWallet()
          try {
            for await (const iterator of txQueue) {
@@ -1344,6 +1345,7 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
              } else {
                data1 = await wallet.provider.waitForTransaction(hash);
              }
+             receiptList.push(data1)
              let convertAmount: any = ''
              if(transitionType && transitionType == '6') {
                const len = nft_address.length
@@ -1388,7 +1390,7 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
              commit("DEL_TXQUEUE", { ...iterator,txId,txType });
              commit("UPDATE_TRANSACTION", { ...rep,txId, txType, isCancel: isCancel || null, amount});
            }
-           resolve(true)
+           resolve(receiptList)
          } catch (err) {
            console.error(err)
            reject(err)
@@ -1396,6 +1398,7 @@ async sendTransaction({ commit, dispatch, state }: any, tx: any) {
            clearTimeout(t)
          }
        }, 1000)
+       
        _opt.callback(t)
      })
       return rep
