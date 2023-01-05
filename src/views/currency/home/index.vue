@@ -65,11 +65,10 @@
         class="flex center scan-link pb-30"
       >
         <template v-slot:link>
-          <a
-            :href="VUE_APP_SCAN_URL"
-            target="_blank"
+          <span
+            @click="viewAccountByAddress(accountInfo.address)"
             rel="noopener noreferrer"
-            >{{ t("wallet.scanLink") }}</a
+            >{{ t("wallet.scanLink") }}</span
           >
         </template>
       </i18n-t>
@@ -189,6 +188,7 @@ import { VUE_APP_SCAN_URL } from "@/enum/env";
 import localforage from "localforage";
 import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
+import {viewAccountByAddress} from '@/utils/utils'
 import {
   clone,
   getWallet,
@@ -580,6 +580,7 @@ export default {
         reloading.value = false;
       }
     };
+    
     return {
       showSpeedModal,
       sendTxType,
@@ -606,6 +607,7 @@ export default {
       pageData,
       toUsd,
       VUE_APP_SCAN_URL,
+      viewAccountByAddress,
       txList,
     };
   },
@@ -648,9 +650,10 @@ export default {
   .scan-link {
     color: #848484;
     margin-top: 40px;
-    a {
+    span {
       margin-left: 3px;
       color: #037cd6;
+      cursor: pointer;
       &:hover {
         text-decoration: underline;
       }

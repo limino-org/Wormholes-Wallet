@@ -96,7 +96,22 @@ export const viewTransactionByHash = (hash:string | null) => {
   } else {
     throw Error('The hash cannot be empty')
   }
-
-
-
 }
+
+export const viewAccountByAddress = (address:string ) => {
+  if(address) {
+    if(store.state.account.currentNetwork.id === 'wormholes-network-1') {
+      window.open(`${VUE_APP_SCAN_URL}AccountDetail/${address}`);
+    } else {
+      const defaultUrl = store.state.account.currentNetwork.browser
+      if(defaultUrl) {
+        window.open(`${defaultUrl}`);
+      } else {
+        window.open(`${VUE_APP_SCAN_URL}AccountDetail/${address}`);
+      }
+    }
+  } else {
+    throw Error('The address cannot be empty')
+  }
+}
+

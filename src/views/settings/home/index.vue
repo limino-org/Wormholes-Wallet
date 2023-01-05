@@ -93,7 +93,7 @@ export default {
     const router = useRouter();
     const {state} = useStore()
     const clickLeft = () => {};
-    const {$toast} = useToast()
+    const {$wtoast} = useToast()
     const routerPush = (type: string, value: string) => {
       router.push({ [type]: value });
     };
@@ -101,22 +101,24 @@ export default {
     const handleClearCanche = async () => {
       loading.value = true
       try {
-        const accountList = state.account.accountList
+      const accountList = state.account.accountList
       const netWorkList = state.account.netWorkList
-      debugger
+      const chainId = state.account.currentNetwork.chainId
       for await (const network of netWorkList) {
         for await (const accountInfo of accountList) {
           const { id } = network
           const { address } = accountInfo
           const addrUp = address.toUpperCase()
-          const key1 = `txlist-${id}-${addrUp}`
-          const key2 = `txQueue-${id}-${addrUp}`
+          const key1 = `txlist-${id}-${chainId}-${addrUp}`
+          const key2 = `txQueue-${id}-${chainId}-${addrUp}`
+          const key3 = `async-${id}-${chainId}-${addrUp}`
           await localforage.removeItem(key1)
           await localforage.removeItem(key2)
+          await localforage.removeItem(key3)
           //'txQueue' 'txlist'
         }
       }
-      $toast.success(t('common.clearCancheSuccess'))
+      $wtoast.success(t('common.clearCancheSuccess'))
       }finally{
         loading.value = false
       }
