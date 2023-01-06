@@ -291,7 +291,7 @@ export default {
         tokenError.value = true;
         return err.toString();
       } finally {
-        // Toast.clear();
+        Toast.clear();
       }
     };
     // Import function

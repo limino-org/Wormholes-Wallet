@@ -10,7 +10,7 @@ import { web3 } from '@/utils/web3'
 console.warn('web3', web3)
 import BigNumber from 'bignumber.js'
 
-const page_size = '10'
+const page_size = '20'
 const page_size_int = Number(page_size)
 interface State {
     time: any
@@ -137,7 +137,7 @@ export default {
                  */
                 const params = {
                     addr,
-                    page_size: '10',
+                    page_size: page_size,
                     page: txInfo.page
                 }
                 const { total, transactions } = await getTransitionsPage(params)
@@ -190,7 +190,7 @@ export default {
 
                 let hasRecord = false
                 if (transactions && transactions.length >= page_size_int) {
-                    if (newList && newList.length >= 10) {
+                    if (newList && newList.length >= page_size_int) {
                         hasRecord = true
                         page = Number(page) + 1 + ''
                     } else {

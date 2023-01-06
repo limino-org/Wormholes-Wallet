@@ -452,7 +452,7 @@ export default {
      getWalletBalance()
     })
     eventBus.on('walletReady',() => {
-      dispatch("account/updateBalance");
+      // dispatch("account/updateBalance");
    
     })
 

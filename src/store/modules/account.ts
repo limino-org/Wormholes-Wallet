@@ -406,7 +406,7 @@ export default {
     },
     async UPDATE_TRANSACTION(state: State, da: any) {
       console.warn('da----', da)
-      const { receipt, sendData, txType, network, transitionType, type, gasLimit, txId, tokenAddress, amount, isCancel,value} = da
+      const { receipt, sendData, network, txId, value} = da
       const { id, currencySymbol } = network
       const {convertAmount,date, nonce, data} = sendData
       const {
@@ -445,7 +445,7 @@ export default {
             blockHash,
             blockNumber,
             contractAddress,
-            cumulativeGasUsed,
+            cumulativeGasUsed: ethers.utils.formatUnits(cumulativeGasUsed,'wei'),
             from,
             gasPrice: ethers.utils.formatUnits(effectiveGasPrice,'wei'),
             gasUsed: Number(ethers.utils.formatUnits(gasUsed,'wei')),
@@ -463,28 +463,6 @@ export default {
             const convertAmount = await getConverAmount(wallet, {input:data,blockNumber})
             newReceipt['convertAmount'] = convertAmount
           }
-      // const newReceipt = clone({
-      //   date,
-      //   hash,
-      //   from,
-      //   gasLimit,
-      //   gasPrice,
-      //   nonce,
-      //   to,
-      //   type,
-      //   value,
-      //   transitionType: transitionType || null,
-      //   txType,
-      //   network: clone(network),
-      //   data,
-      //   sendStatus: receipt ? TransactionSendStatus.success : TransactionSendStatus.pendding,
-      //   sendData: clone(sendData),
-      //   receipt: clone(receipt),
-      //   tokenAddress,
-      //   amount,
-      //   isCancel: isCancel || null,
-      //   txId
-      // })
       const formAdd = from.toUpperCase();
       // @ts-ignore
       const chainId = state.ethNetwork.chainId
@@ -983,7 +961,7 @@ export default {
         const bigPrice = new BigNumber(gasPrice)
         console.warn('bigPrice', bigPrice.toNumber())
         const gasp = Number(gasPrice) ? bigPrice.dividedBy(1000000000).toFixed(12) : '0.0000000012';
-        tx.gasPrice = ethers.utils.parseEther(gasp)
+        tx.gasPrice = ethers.utils.parseEther('0.000000001')
       }
       if(gasLimit) {
         tx.gasLimit = gasLimit
@@ -1001,7 +979,7 @@ export default {
       commit("PUSH_TXQUEUE", {
         hash,
         from,
-        gasLimit: gasLimit || utils.formatUnits(sendData.gasLimit, 'wei'),
+        gasLimit: gasLimit || utils.formatUnits(newLimit, 'wei'),
         gasPrice,
         nonce,
         to: toAddr,
@@ -1532,4 +1510,46 @@ export function handleGetTranactionReceipt(
 
 export const clone = (params = {}) => {
   return JSON.parse(JSON.stringify(params))
+}
+
+
+export const getTxInfo = async (res : any) => {
+  const { receipt, sendData, value} = res
+  const {convertAmount,date, nonce, data} = sendData
+  const {
+    blockHash,
+    blockNumber,
+    cumulativeGasUsed,
+    effectiveGasPrice,
+    gasUsed,
+    transactionHash,
+    from,
+    to,
+    contractAddress,
+    transactionIndex,
+    status,
+  } = receipt
+      const newReceipt = {
+        blockHash,
+        blockNumber,
+        contractAddress,
+        cumulativeGasUsed: ethers.utils.formatUnits(cumulativeGasUsed,'wei'),
+        from,
+        gasPrice: ethers.utils.formatUnits(effectiveGasPrice,'wei'),
+        gasUsed: Number(ethers.utils.formatUnits(gasUsed,'wei')),
+        hash: transactionHash,
+        nonce,
+        to,
+        input:data,
+        transactionIndex,
+        convertAmount,
+        timestamp: Math.floor(new Date(date).getTime()/1000),
+        status,
+        value: value ?  ethers.utils.formatUnits(value,'wei') : '0'
+      }
+      if(data) {
+        const convertAmount = await getConverAmount(wallet, {input:data,blockNumber})
+        newReceipt['convertAmount'] = convertAmount
+      }
+      return Promise.resolve(newReceipt)
 }

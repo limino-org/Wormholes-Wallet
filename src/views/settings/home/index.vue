@@ -18,7 +18,7 @@
       <div class="icon flex center"><van-icon name="arrow" /></div>
     </div>
     <div
-      class="clickActive settings-card  flex between"
+      class="clickActive settings-card flex between"
       @click="routerPush('name', 'successpage')"
     >
       <div>
@@ -34,7 +34,7 @@
     </div>
 
     <div
-      class="clickActive settings-card  flex between"
+      class="clickActive settings-card flex between"
       @click="routerPush('name', 'mnemonic')"
     >
       <div>
@@ -63,8 +63,14 @@
       <div class="icon flex center"><van-icon name="arrow" /></div>
     </div>
     <div class="btn-groups">
-      <div class="container flex center  pl-26 pr-26">
-        <van-button type="primary" block :loading="loading" @click="handleClearCanche">{{ t('common.clearCanche') }}</van-button>
+      <div class="container flex center pl-26 pr-26">
+        <van-button
+          type="primary"
+          block
+          :loading="loading"
+          @click="handleClearCanche"
+          >{{ t("common.clearCanche") }}</van-button
+        >
       </div>
     </div>
   </div>
@@ -91,38 +97,26 @@ export default {
     const appProvide = inject("appProvide");
     const route = useRoute();
     const router = useRouter();
-    const {state} = useStore()
+    const { state } = useStore();
     const clickLeft = () => {};
-    const {$wtoast} = useToast()
+    const { $wtoast } = useToast();
     const routerPush = (type: string, value: string) => {
       router.push({ [type]: value });
     };
-    const loading = ref(false)
+    const loading = ref(false);
     const handleClearCanche = async () => {
-      loading.value = true
+      loading.value = true;
       try {
-      const accountList = state.account.accountList
-      const netWorkList = state.account.netWorkList
-      const chainId = state.account.currentNetwork.chainId
-      for await (const network of netWorkList) {
-        for await (const accountInfo of accountList) {
-          const { id } = network
-          const { address } = accountInfo
-          const addrUp = address.toUpperCase()
-          const key1 = `txlist-${id}-${chainId}-${addrUp}`
-          const key2 = `txQueue-${id}-${chainId}-${addrUp}`
-          const key3 = `async-${id}-${chainId}-${addrUp}`
-          await localforage.removeItem(key1)
-          await localforage.removeItem(key2)
-          await localforage.removeItem(key3)
-          //'txQueue' 'txlist'
-        }
+        await localforage.iterate(async (value, key, iterationNumber) => {
+          if (key !== "vuex") {
+            await localforage.removeItem(key);
+          }
+        });
+        $wtoast.success(t("common.clearCancheSuccess"));
+      } finally {
+        loading.value = false;
       }
-      $wtoast.success(t('common.clearCancheSuccess'))
-      }finally{
-        loading.value = false
-      }
-    }
+    };
     return {
       t,
       clickLeft,
@@ -140,12 +134,13 @@ export default {
   .settings-card {
     padding: 13px 12px 16px 14px;
     transition: ease 0.3s;
-    border-bottom: 1px solid #E6E6E6;
+    border-bottom: 1px solid #e6e6e6;
     &:hover {
       // background: rgb(244, 247, 250);
       color: #037cd6;
       i,
-      .desc,.label {
+      .desc,
+      .label {
         color: #037cd6;
       }
     }

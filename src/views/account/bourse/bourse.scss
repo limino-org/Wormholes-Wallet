@@ -1,7 +1,9 @@
 .loading-page {
     height: 80vh;
 }
-
+.insufficientMoney-tip {
+    color: #F7BF03;
+}
 .add-amount {
     color: #000;
 }
@@ -689,6 +691,13 @@
 
             span {
                 color: #037cd6;
+            }
+        }
+        .disabled {
+            border: 1px solid #ccc;
+
+            span {
+                color: #ccc;
             }
         }
 

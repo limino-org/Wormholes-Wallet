@@ -192,7 +192,9 @@ import {viewAccountByAddress} from '@/utils/utils'
 import {
   clone,
   getWallet,
+  handleGetTranactionReceipt,
   TransactionSendStatus,
+  getTxInfo
 } from "@/store/modules/account";
 import ModifGasFee from "../components/modifGasFee.vue";
 import { utils } from "ethers";
@@ -376,7 +378,9 @@ export default {
       // handleAsyncTxList();
     });
     eventBus.on("txUpdate", (data: any) => {
-      debugger
+      console.warn('data----', data)
+
+
       for(let i = 0;i<txList.value.length;i++){
         let item = txList.value[i]
         const { hash } = item
@@ -386,6 +390,16 @@ export default {
           txList.value[i] = data
         }
       }
+      // if(data.txId) {
+      //   debugger
+      //   if(showSpeedModal.value) {
+      //     showSpeedModal.value = false
+      //   }
+      //   const newList = txList.value.filter((item: any) => (item.txId && item.txId.toUpperCase() !== data.txId.toUpperCase() || !item.txId))
+      //   debugger
+      //   txList.value = newList
+      //   return
+      // }
     });
     onUnmounted(() => {
       // console.warn('waitTime.value', waitTime.value)
@@ -491,7 +505,9 @@ export default {
           data: newData,
           sendData,
           toAddress,
+          txId
         }: any = sendTx.value;
+        debugger
         const gasp = Number(gasPrice.value)
           ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
           : "0.0000000012";
@@ -528,42 +544,64 @@ export default {
           tx.value = value;
           data = await wallet.sendTransaction(tx);
         }
-        const { hash, from, type, value: newVal } = data;
+        const { hash, from, type, value: newVal, contractAddress } = data;
         store.commit("account/UPDATE_TRANSACTION", {
           ...sendTx.value,
           receipt: {
-            from,
-            to,
-            status: 0,
+            blockHash: hash,
+        blockNumber: 0,
+        cumulativeGasUsed:{type: 'BigNumber', hex: '0x0'},
+        effectiveGasPrice:{type: 'BigNumber', hex: '0x0'},
+        gasUsed: {type: 'BigNumber', hex: '0x0'},
+        transactionHash: hash,
+        from,
+        to,
+        contractAddress,
+        transactionIndex: 0,
+        status,
           },
-          gasPrice: gasPrice.value,
-          gasLimit,
+          value: ethers.utils.formatUnits(value,'wei'),
+          gasPrice: gasLimit,
+          gasLimit: gasLimit.value,
         });
 
-        store.commit("account/PUSH_TXQUEUE", {
-          hash,
-          from,
-          gasLimit: gasLimit.value,
-          gasPrice: gasPrice.value,
-          nonce,
-          to,
-          type,
-          value: newVal,
-          transitionType: transitionType || null,
-          txType,
-          network: clone(localNet),
-          data: clone(newData),
-          sendStatus: TransactionSendStatus.pendding,
-          sendData: clone(data),
-          tokenAddress,
-          amount,
-        });
+        // store.commit("account/PUSH_TXQUEUE", {
+        //   hash,
+        //   from,
+        //   gasLimit: gasLimit.value,
+        //   gasPrice: gasPrice.value,
+        //   nonce,
+        //   to,
+        //   type,
+        //   value: newVal,
+        //   transitionType: transitionType || null,
+        //   txType,
+        //   network: clone(localNet),
+        //   data: clone(newData),
+        //   sendStatus: TransactionSendStatus.pendding,
+        //   sendData: clone(data),
+        //   tokenAddress,
+        //   amount,
+        // });
         sessionStorage.setItem("new tx", JSON.stringify(data));
         const receipt = await wallet.provider.waitForTransaction(
           data.hash,
-          null,
-          60000
         );
+        const txRes = await getTxInfo({receipt, sendData: data, value,txId })
+        eventBus.emit('txUpdate', txRes)
+        // const rep= handleGetTranactionReceipt(
+        //        'other',
+        //        data,
+        //        receipt,
+        //        network
+        //      );
+        // store.commit("account/UPDATE_TRANSACTION", {
+        //   ...rep,
+        //   txId,
+        //   ...rep,
+        //   gasPrice: gasPrice.value,
+        //   gasLimit,
+        // });
         await store.dispatch("account/waitTxQueueResponse");
       } catch (err) {
         console.error(err);

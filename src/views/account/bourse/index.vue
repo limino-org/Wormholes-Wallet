@@ -177,6 +177,8 @@
           <van-icon name="question" class="ml-4" color="#9A9A9A" />
         </el-tooltip>
       </div>
+      <p v-show="insufficientMoney && !isExchanger_flag" class="insufficientMoney-tip">{{ insufficientMoney ? t('createExchange.insufficientMoney') : '' }}</p>
+
       <div
         v-if="!isExchanger_flag"
         :class="[
@@ -228,9 +230,9 @@
               :class="
                 serverIndex === 1 && !isExchangeStatusStatus
                   ? 'active'
-                  : isExchangeStatusStatus
+                  : (isExchangeStatusStatus
                   ? 'active-d'
-                  : ''
+                  : '') + (insufficientMoney === true ? 'disabled' : '')
               "
               @click="changeServerIndex(1)"
             >
@@ -645,6 +647,9 @@ export default defineComponent({
     // Server selection
     let serverIndex = ref(1);
     const changeServerIndex = (value: number) => {
+      if(value && insufficientMoney.value) {
+        return
+      }
       if (exchangeStatus.value.exchanger_flag) {
         return;
       }
@@ -718,8 +723,14 @@ export default defineComponent({
         .toString()
     );
 
+    const insufficientMoney = computed(() => {
+      return new Bignumber(accountInfo.value.amount).lt(901) ? true : false
+    })
     onMounted(() => {
       initPageData();
+      if(insufficientMoney.value) {
+        serverIndex.value = 0
+      }
     });
     const isExchanger_flag = computed(
       () => store.state.account.exchangeStatus.exchanger_flag
@@ -753,6 +764,18 @@ export default defineComponent({
         }
       }
 
+      if(serverIndex.value === 0) {
+        if (am.lt(701)) {
+          $wtoast.warn(t("createExchange.ispoor"));
+          return;
+        }
+      }
+      if(serverIndex.value === 1) {
+        if (am.lt(901)) {
+          $wtoast.warn(t("createExchange.ispoor"));
+          return;
+        }
+      }
       try {
         await formDom.value.validate();
         isError.value = false;
@@ -763,6 +786,7 @@ export default defineComponent({
         console.log(error);
       }
     };
+    
     // Additional pledge confirmation pop-up window
     const showAddModal = ref(false);
     const handleAddAmount = () => {
@@ -902,6 +926,7 @@ export default defineComponent({
       handleAdd,
       minusDisabled,
       handleConfirm,
+      insufficientMoney,
       money2,
       minBalance,
       showAddModal,
