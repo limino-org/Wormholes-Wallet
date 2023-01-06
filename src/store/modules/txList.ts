@@ -206,7 +206,6 @@ export default {
         },
         async loopAsyncTxList({ commit, state, dispatch }: any) {
             const network = store.state.account.currentNetwork
-            const wallet = await getWallet()
             // When you are currently on a wormholes network, synchronize transaction records from the block browser
             if (network.id === 'wormholes-network-1') {
                 const res = await dispatch('asyncAddrRecord')
@@ -217,7 +216,11 @@ export default {
                         await dispatch('asyncAddrRecord')
                     }, 4000)
                     commit('UPDATE_TIME', t)
+                } else {
+                    return true
                 }
+            } else {
+                return true
             }
         }
     },
@@ -264,7 +267,7 @@ function unRepet(list, list2) {
 
 }
 
-async function getConverAmount(wallet, data) {
+export async function getConverAmount(wallet, data) {
     const { input, blockNumber } = data
     if (input && blockNumber) {
         let jsonData = getInput(input)

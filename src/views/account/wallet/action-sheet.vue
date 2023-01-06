@@ -349,6 +349,9 @@ export default defineComponent({
   text-align: center;
   font-size: 12px;
   color: #037dd6;
+   i {
+    color: #037dd6;
+   }
 }
 .import {
   text-align: center;

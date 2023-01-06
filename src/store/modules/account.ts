@@ -41,6 +41,7 @@ import { useToast } from "@/plugins/toast";
 import Bignumber from 'bignumber.js'
 import { web3 } from "@/utils/web3";
 import { Console } from "console";
+import { getConverAmount, getInput } from "./txList";
 export interface State {
   mnemonic: Mnemonic;
   path: string;
@@ -405,9 +406,9 @@ export default {
     },
     async UPDATE_TRANSACTION(state: State, da: any) {
       console.warn('da----', da)
-      const { receipt, sendData, txType, network, transitionType, type, data , gasLimit, txId, tokenAddress, amount, isCancel,value} = da
+      const { receipt, sendData, txType, network, transitionType, type, gasLimit, txId, tokenAddress, amount, isCancel,value} = da
       const { id, currencySymbol } = network
-      const {convertAmount,date, nonce} = sendData
+      const {convertAmount,date, nonce, data} = sendData
       const {
         blockHash,
         blockNumber,
@@ -451,13 +452,16 @@ export default {
             hash: transactionHash,
             nonce,
             to,
-            input:'',
+            input:data,
             transactionIndex,
             convertAmount,
             timestamp: Math.floor(new Date(date).getTime()/1000),
             status,
             value: value ?  ethers.utils.formatUnits(value,'wei') : '0'
-
+          }
+          if(data) {
+            const convertAmount = await getConverAmount(wallet, {input:data,blockNumber})
+            newReceipt['convertAmount'] = convertAmount
           }
       // const newReceipt = clone({
       //   date,
@@ -1327,7 +1331,7 @@ export default {
       // @ts-ignore
       const queuekey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
       let t: any = null;
-      const rep = new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         t = setTimeout(async() => {
          const list: any = await localforage.getItem(queuekey)
          const txQueue = list && list.length ? list : []
@@ -1370,7 +1374,6 @@ export default {
               //  @ts-ignore
                const {t0,t1,t2,t3} = store.state.configuration.setting.conversion
 
-
                if(MergeLevel === 0) {
                  convertAmount = new BigNumber(MergeNumber).multipliedBy(t0).toNumber()
                }else if(MergeLevel === 1) {
@@ -1401,7 +1404,6 @@ export default {
        
        _opt.callback(t)
      })
-      return rep
     },
     // get ethAccountInfo
     async getEthAccountInfo({commit, state}: any) {

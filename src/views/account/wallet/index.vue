@@ -470,7 +470,7 @@ export default {
     };
     onMounted(() => {
       dispatch("transfer/clearTx");
-
+      dispatch("account/updateBalance");
       dispatch("account/getExchangeStatus").then((res) => {
         console.warn("getExchangeStatus", res);
         autoexchange.value = res.status;

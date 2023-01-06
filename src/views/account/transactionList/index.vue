@@ -287,23 +287,16 @@ export default {
     let tlist: any = ref([]);
     const waitTime: any = ref(null);
     onMounted(async () => {
-      handleAsyncTxList();
-      getPageList();
-      // store
-      //   .dispatch("account/waitTxQueueResponse", {
-      //     time: null,
-      //     callback(e: any) {
-      //       console.warn("e", e);
-      //       waitTime.value = e;
-      //     },
-      //   })
-      //   .then((res) => {
-      //     if (res !== true) {
-      //       eventBus.off("txPush");
-      //       eventBus.off("txupdate");
-      //       getPageList();
-      //     }
-      //   });
+      await handleAsyncTxList();
+      await getPageList();
+      store
+        .dispatch("account/waitTxQueueResponse", {
+          time: null,
+          callback(e: any) {
+            console.warn("e", e);
+            waitTime.value = e;
+          },
+        })
     });
     tlist.value = [];
     const loading = ref(true);
@@ -344,43 +337,9 @@ export default {
           loading.value = false;
         }
         clearTimeout(time);
-      }, 50);
+      },0);
     };
 
-    // const getPageList = async () => {
-    //   tlist.value = [];
-    //   Toast.loading({ duration: 0 });
-    //   let time = setTimeout(async() => {
-    //     try {
-    //     const id = currentNetwork.value.id;
-    //     const address = accountInfo.address.toUpperCase()
-    //     const key = `txlist-${id}-${address}`
-    //       console.log('key', key)
-    //       const tx: any = await localforage.getItem(key);
-    //       console.warn('tx', tx)
-    //     if (tx && tx.length) {
-    //       tlist.value.push(...tx)
-    //     }
-    //     // store.state.account.accountList.forEach(async(item: any) => {
-    //     //   const {address} = item
-    //     //   const key = `txlist-${id}-${address.toUpperCase()}`
-    //     //   console.log('key', key)
-    //     //   const tx: any = await localforage.getItem(key);
-    //     //   console.warn('tx', tx)
-    //     // if (tx && tx.length) {
-    //     //   tlist.value.push(...tx)
-    //     // }
-    //     // })
-
-    //   }catch(err){
-    //     console.error(err)
-    //   } finally {
-    //     Toast.clear();
-    //   }
-    //   clearTimeout(time)
-    //   }, 50)
-
-    // };
 
     // All transactions
     const transactionList = computed(() => {
@@ -458,18 +417,17 @@ export default {
       getPageList();
     });
     eventBus.on("txPush", (data: any) => {
-      // getPageList();
+      // handleAsyncTxList();
     });
     eventBus.on("txUpdate", (data: any) => {
       // console.warn('txupdate', data)
-      // for (let i = 0; i < tlist.value.length; i++) {
-      //   let item = tlist.value[i];
-      //   const { hash } = item;
-      //   if (hash.toUpperCase() == data.hash.toUpperCase()) {
-      //     tlist.value[i] = data;
-      //   }
-      // }
-      getPageList()
+      for (let i = 0; i < tlist.value.length; i++) {
+        let item = tlist.value[i];
+        const { hash } = item;
+        if (hash.toUpperCase() == data.hash.toUpperCase()) {
+          tlist.value[i] = data;
+        }
+      }
     });
 
     onUnmounted(() => {

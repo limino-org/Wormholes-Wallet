@@ -159,7 +159,7 @@ export default {
           console.log('$wdialog',$wdialog)
           errorMsg.value = reason || t('importerror.cannotenter')
           errAddress.value = address || ''
-          // $wtoast.warn(t(errorMsg.value))
+          // $toast.warn(t(errorMsg.value))
         })
     }
     const handleIpt = (v: any) => {

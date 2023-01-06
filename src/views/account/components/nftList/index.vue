@@ -800,20 +800,20 @@ export default defineComponent({
       if (data.length) {
         const count = data.length
         const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion
-        let amount = 0
+        let amount = new BigNumber(0)
         data.forEach((item: any) => {
           const {metaData:{MergeLevel}} = item
           if(MergeLevel == 0) {
-            amount += t0
+            amount = amount.plus(t0)
           }
           if(MergeLevel == 1) {
-            amount += t1
+            amount = amount.plus(t1)
           }
           if(MergeLevel == 2) {
-            amount += t2
+            amount = amount.plus(t2)
           }
           if(MergeLevel == 3) {
-            amount += t3
+            amount = amount.plus(t3)
           }
         })
         // isLoading.value = true;
@@ -821,7 +821,7 @@ export default defineComponent({
         show.value = false;
         $tradeConfirm.open({
           approveMessage: t("wallet.conver_approve"),
-          wattingMessage: t("wallet.conver_waiting",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount}</span>`}),
+          wattingMessage: t("wallet.conver_waiting",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount.toNumber()}</span>`}),
           wattingMessageType:"html",
           disabled: [TradeStatus.pendding],
           callBack: () => {
@@ -874,7 +874,7 @@ export default defineComponent({
           if(successList.length === count) {
           $tradeConfirm.update({
             status: "success",
-            successMessage: t("wallet.conver_success",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount}</span>`}),
+            successMessage: t("wallet.conver_success",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount.toNumber()}</span>`}),
             successMessageType:'html',
           });
           emit("success");

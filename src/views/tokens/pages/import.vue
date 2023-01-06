@@ -36,14 +36,12 @@
             name="contract"
             :class="tokenError ? 'error' : ''"
             :placeholder="$t('addtokens.contractAddeg')"
-            :rules="[
-              { validator: asynToken },
-            ]"
+            :rules="[{ validator: asynToken }]"
           />
         </van-cell-group>
         <div class="btn-group">
           <div class="container pl-28 pr-28 flex between">
-                        <van-button round block class="mr-10"  @click="cancel">
+            <van-button round block class="mr-10" @click="cancel">
               {{ t("common.cancel") }}
             </van-button>
             <van-button round block type="primary" native-type="submit">
@@ -104,7 +102,7 @@ export default {
   },
   setup() {
     const { t } = useI18n();
-    const { dispatch,state } = useStore();
+    const { dispatch, state } = useStore();
     const { $wtoast } = useToast();
     // token
     const tokens = ref([
@@ -206,8 +204,8 @@ export default {
     // Selected tab'
     const chooseTabdata = computed(() => tabs.list.find((item) => item.select));
     const router = useRouter();
-    const currentNetwork = computed(() => state.account.currentNetwork)
-    const accountInfo = computed(() => state.account.accountInfo)
+    const currentNetwork = computed(() => state.account.currentNetwork);
+    const accountInfo = computed(() => state.account.accountInfo);
     const precision: Ref<string> = ref("");
     const name: Ref<string> = ref("");
     const symbol: Ref<string> = ref("");
@@ -245,13 +243,15 @@ export default {
     };
 
     const asynToken = async (val: string) => {
-      tokenError.value = false
-      if(!val){
-         tokenError.value = true
-        return t('addtokens.message')
+      tokenError.value = false;
+      if (!val) {
+        tokenError.value = true;
+        return t("addtokens.message");
       }
       const key = accountInfo.value.address.toUpperCase();
-      const hasAddress = currentNetwork.value.tokens[key] ?  currentNetwork.value.tokens[key].length : 0;
+      const hasAddress = currentNetwork.value.tokens[key]
+        ? currentNetwork.value.tokens[key].length
+        : 0;
       if (hasAddress) {
         const newv = currentNetwork.value.tokens[key].find(
           (item: any) =>
@@ -259,41 +259,39 @@ export default {
             tokenContractAddress.value.toUpperCase()
         );
         if (newv) {
-          tokenError.value = true
-          return t("common.addressalreadyexists")
+          tokenError.value = true;
+          return t("common.addressalreadyexists");
         }
       }
       try {
-        
         Toast.loading({
           message: t("userexchange.loading"),
-          forbidClick: true,
+          // forbidClick: true,
           loadingType: "spinner",
         });
 
-        
-       try {
-         const wallet = await getWallet();
-        const contract = new ethers.Contract(
-          tokenContractAddress.value,
-          erc20Abi,
-          wallet.provider
-        );
-        const contractWithSigner = contract.connect(wallet);
-        const name = await contractWithSigner.name();
-        const decimal = await contractWithSigner.decimals();
-        const symbol = await contractWithSigner.symbol();
-       }catch(err){
-        tokenError.value = true
-        return t('addCurrency.errTip')
-       }
-        return true;
+        try {
+          const wallet = await getWallet();
+          const contract = new ethers.Contract(
+            tokenContractAddress.value,
+            erc20Abi,
+            wallet.provider
+          );
+          const contractWithSigner = contract.connect(wallet);
+          const name = await contractWithSigner.name();
+          const decimal = await contractWithSigner.decimals();
+          const symbol = await contractWithSigner.symbol();
+          return true;
+        } catch (err) {
+          tokenError.value = true;
+          return t("addCurrency.errTip");
+        }
       } catch (err: any) {
-        console.error(err)
-        tokenError.value = true
+        console.error(err);
+        tokenError.value = true;
         return err.toString();
-      }finally{
-        Toast.clear()
+      } finally {
+        // Toast.clear();
       }
     };
     // Import function
@@ -302,8 +300,8 @@ export default {
     };
 
     const cancel = () => {
-      router.replace({name:"wallet"})
-    }
+      router.replace({ name: "wallet" });
+    };
     return {
       tokenError,
       cancel,
@@ -327,7 +325,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
 .error {
   :deep(.van-field__body) {
     border: 1px solid #d73a49 !important;
@@ -481,7 +478,7 @@ export default {
 }
 :deep(.van-field__body) {
   margin-bottom: 10px;
-  
+
   &:hover {
     border: 1px solid #1989fa;
   }
