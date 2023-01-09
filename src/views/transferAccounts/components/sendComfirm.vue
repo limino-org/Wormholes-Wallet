@@ -225,6 +225,9 @@ export default defineComponent({
         });
         $tradeConfirm.update({ status: "success" });
       } catch (err: any) {
+        console.warn('idx', err.toString().indexOf("timeout"))
+        console.log('err:===', err)
+        console.log('t("error.timeout")', t("error.timeout"))
         if (err.toString().indexOf("timeout") > -1) {
           $tradeConfirm.update({
             status: "warn",

@@ -202,7 +202,7 @@ export default {
         }
       } catch (err) {
         pw1Error.value = true;
-        // $wtoast.warn(err)
+        $wtoast.warn(err)
         return err;
       } finally {
         loading.value = false;

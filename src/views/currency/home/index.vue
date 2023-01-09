@@ -288,6 +288,8 @@ export default {
               console.log("txList.value", txList.value);
             }
           }
+        }catch(err){
+          debugger
         } finally {
           loading.value = false;
         }
