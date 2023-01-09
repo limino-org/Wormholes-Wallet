@@ -109,6 +109,7 @@ export default {
       try {
         await localforage.iterate(async (value, key, iterationNumber) => {
           if (key !== "vuex") {
+            console.log('clear cancel', key)
             await localforage.removeItem(key);
           }
         });

@@ -88,7 +88,7 @@
               <span v-if="defaultData.successMessageType === 'string'">{{ defaultData.successMessage }}</span>
              <span v-else v-html="defaultData.successMessage"></span>
             </div>
-            <div v-if="defaultData.status == 'fail'">
+            <div v-if="defaultData.status == 'fail' || defaultData.status == 'warn'">
               <span v-if="defaultData.failMessageType === 'string'">{{ defaultData.failMessage }}</span>
              <span v-else v-html="defaultData.failMessage"></span>
             </div>

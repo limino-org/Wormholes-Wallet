@@ -113,6 +113,7 @@ export interface SendTransactionParams {
   transitionType?: string
   nft_address?: string
   checkTxQueue?: boolean
+  nonce? : number
 
 }
 
@@ -125,6 +126,7 @@ export interface SendTokenParams {
   gasLimit: number;
   to: string;
   checkTxQueue?: boolean
+  nonce? : number
 }
 
 export interface AddAccountParams {
@@ -378,37 +380,10 @@ export default {
     },
     // A list of transactions pushed to the current account
     // Transaction list pushed to current account
-    async PUSH_TRANSACTION(state: State, value: any) {
-      console.warn('push', value)
-      const { to, from, tokenAddress, network } = value;
-      const txNetwork: NetWorkData = {...network};
-      const { id, currencySymbol } = txNetwork
-      const formAdd = from.toUpperCase();
-            // @ts-ignore
-      const chainId = state.ethNetwork.chainId
-      const txListKey = `txlist-${id}-${chainId}-${formAdd}`
-      let txList: any = await localforage.getItem(txListKey)
-      console.log('txList', txList)
-      const receipt = {...value, symbol: currencySymbol}
-      if(txList && txList.length) {
-        txList.unshift(clone(receipt))
-      } else {
-        txList = [clone(receipt)]
-      }
-      // store.commit('account/DEL_TXQUEUE', value)
-      console.log('set txList', txList)
-      // save txlist
-      localforage.setItem(txListKey, clone(txList))
-      let time = setTimeout(() => {
-        eventBus.emit('txPush', clone(receipt))
-        clearTimeout(time)
-      },0)
-    },
-    async UPDATE_TRANSACTION(state: State, da: any) {
-      console.warn('da----', da)
-      const { receipt, sendData, network, txId, value} = da
-      const { id, currencySymbol } = network
-      const {convertAmount,date, nonce, data} = sendData
+    async PUSH_TRANSACTION(state: State, da: any) {
+      console.warn('push', da)
+      const { receipt, sendData, network, txId, value, date, sendType} = da
+      const {convertAmount, nonce, data} = sendData
       const {
         blockHash,
         blockNumber,
@@ -457,8 +432,11 @@ export default {
             convertAmount,
             timestamp: Math.floor(new Date(date).getTime()/1000),
             status,
-            value: value ?  ethers.utils.formatUnits(value,'wei') : '0'
+            value: value ?  ethers.utils.formatUnits(value,'wei') : '0',
+            txId,
+            sendType
           }
+          debugger
           if(data) {
             const convertAmount = await getConverAmount(wallet, {input:data,blockNumber})
             newReceipt['convertAmount'] = convertAmount
@@ -466,24 +444,141 @@ export default {
       const formAdd = from.toUpperCase();
       // @ts-ignore
       const chainId = state.ethNetwork.chainId
-      const txListKey = `txlist-${id}-${chainId}-${formAdd}`
+          let txListKey = ''
+      if(state.currentNetwork.id == 'wormholes-network-1') {
+        txListKey = `async-${state.currentNetwork.id}-${chainId}-${formAdd}`
+      } else {
+        txListKey = `txlist-${state.currentNetwork.id}-${chainId}-${formAdd}`
+      }
       let txList: any = await localforage.getItem(txListKey)
-      if(txList && txList.length) {
+      console.log('txList', txList)
+
+      if(state.currentNetwork.id == 'wormholes-network-1') {
+        if(txList && txList.list.length) {
+          txList.list.unshift(clone(newReceipt))
+        } else {
+          txList.list = [clone(newReceipt)]
+        }
+      } else {
         if(txList && txList.length) {
-          for(let i=0;i< txList.length;i++){
-            const item = txList[i]
-            if(item.txId === txId){
-              txList[i] = newReceipt
+          txList.unshift(clone(newReceipt))
+        } else {
+          txList = [clone(newReceipt)]
+        }
+      }
+
+      // store.commit('account/DEL_TXQUEUE', value)
+      console.log('set txList', txList)
+      // save txlist
+      await localforage.setItem(txListKey, clone(txList))
+      let time = setTimeout(() => {
+        eventBus.emit('txPush', clone(newReceipt))
+        clearTimeout(time)
+      })
+    },
+    async UPDATE_TRANSACTION(state: State, da: any) {
+      console.warn('da----', da)
+      const { receipt, sendData, network, txId, value, date} = da
+      const { id, currencySymbol } = network
+      const {convertAmount, nonce, data} = sendData
+      const {
+        blockHash,
+        blockNumber,
+        cumulativeGasUsed,
+        effectiveGasPrice,
+        gasUsed,
+        transactionHash,
+        from,
+        to,
+        contractAddress,
+        transactionIndex,
+        status,
+      } = receipt
+      /**
+       * blockHash: "0x1482d2f2e879c9e02fe79469609d4e1c6ffed21c8b3cc09617df6b9228e81a08"
+       * blockNumber:60454
+       * contractAddress: null
+          convertAmount: 0
+          cumulativeGasUsed: 21000
+          from: "0x612dfa56dca1f581ed34b9c60da86f1268ab6349"
+          gas: 21000
+          gasPrice: 1200000000
+          gasUsed: 21000
+          hash: "0xc3b29fb20ac5ff813a9371e7d6d2913e450d950759a06a1d71fd866a3960978a"
+          input: "0x"
+          nonce: 0
+          status: 1
+          timestamp: 1672376574
+          to: "0x352deea28e6b15620c75acf0debe6aacbda965c9"
+          transactionIndex: 0
+          value: "230000000000000000"
+       */
+          const newReceipt = {
+            blockHash,
+            blockNumber,
+            contractAddress,
+            cumulativeGasUsed: ethers.utils.formatUnits(cumulativeGasUsed,'wei'),
+            from,
+            gasPrice: ethers.utils.formatUnits(effectiveGasPrice,'wei'),
+            gasUsed: Number(ethers.utils.formatUnits(gasUsed,'wei')),
+            hash: transactionHash,
+            nonce,
+            to,
+            input:data,
+            transactionIndex,
+            convertAmount,
+            timestamp: Math.floor(new Date(date).getTime()/1000),
+            status,
+            value: value ?  ethers.utils.formatUnits(value,'wei') : '0',
+            txId
+          }
+          debugger
+          if(data) {
+            const convertAmount = await getConverAmount(wallet, {input:data,blockNumber})
+            newReceipt['convertAmount'] = convertAmount
+          }
+      const formAdd = from.toUpperCase();
+      // @ts-ignore
+      const chainId = state.ethNetwork.chainId
+      let txListKey = ''
+      if(state.currentNetwork.id == 'wormholes-network-1') {
+        txListKey = `async-${id}-${chainId}-${formAdd}`
+      } else {
+        txListKey = `txlist-${id}-${chainId}-${formAdd}`
+      }
+      let txList: any = await localforage.getItem(txListKey)
+      console.warn('has txID',txList)
+      if(state.currentNetwork.id == 'wormholes-network-1') {
+        if(txList && txList.list.length) {
+            for(let i=0;i< txList.list.length;i++){
+              const item = txList.list[i]
+              console.warn('----------', item, txId)
+              if(item.txId.toUpperCase() === txId.toUpperCase()){
+                txList.list[i] = newReceipt
+              }
+          }
+        }
+      } else {
+        if(txList && txList.length) {
+          if(txList && txList.length) {
+            for(let i=0;i< txList.length;i++){
+              const item = txList[i]
+              console.warn('----------', item, txId)
+              if(item.txId.toUpperCase() === txId.toUpperCase()){
+                debugger
+                txList[i] = newReceipt
+              }
             }
           }
         }
       }
+
       await localforage.setItem(txListKey, txList)
       store.commit('account/DEL_TXQUEUE', da)
       let time = setTimeout(() => {
         eventBus.emit('txUpdate', newReceipt)
         clearTimeout(time)
-      },0)
+      })
     },
     // Update transaction queue data
     UPDATE_TRANACTIONLIST(state: State, data: TransactionReceipt) {
@@ -624,18 +719,28 @@ export default {
       tx.txId = guid()
       tx.date = new Date()
       txQueue.push(tx)
-      store.commit("account/PUSH_TRANSACTION", clone(tx));
+      debugger
+      // store.commit("account/PUSH_TRANSACTION", clone(tx));
       await localforage.setItem(queuekey, txQueue)
+      let time = setTimeout(() => {
+        eventBus.emit('txQueuePush', tx)
+        clearTimeout(time)
+      })
     },
     // Delete data from a queue
     async DEL_TXQUEUE(state: State, tx: any) {
       const {network:{id}, txId, from} = tx
       // @ts-ignore
-      const queueKey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
+      let queueKey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
       const list: any = await localforage.getItem(queueKey)
       const txQueue = list && list.length ? list : []
       const newList = txQueue.filter((item: any) => item.txId.toUpperCase() != txId.toUpperCase())
+      debugger
       await localforage.setItem(queueKey, newList)
+      let time = setTimeout(() => {
+        eventBus.emit('delTxQueue', tx)
+        clearTimeout(time)
+      });
     },
     UPDATE_ACCOUNT(state: State, account: State) {
       state.accountInfo = account.accountInfo
@@ -789,7 +894,7 @@ export default {
         commit('UPDATE_WALLET', wallet)
         // And connect to the network
         const { currentNetwork } = state;
-        await dispatch("setNetWork", currentNetwork);
+        dispatch("setNetWork", currentNetwork);
         return wallet;
       } catch (err) {
         console.error('err', err)
@@ -944,7 +1049,7 @@ export default {
       { state, commit, dispatch }: any,
       params: SendTransactionParams
     ) {
-      const { to, value, gasPrice, gasLimit, data, transitionType, nft_address, checkTxQueue } = {checkTxQueue: true, ...params};
+      const { to, value, gasPrice, gasLimit, data, transitionType, nft_address, checkTxQueue, nonce: sendNonce } = {checkTxQueue: true, ...params};
       // Determine whether there are transactions in the current trading pool that have not returned transaction receipts, and if so, do not allow them to be sent
       if(checkTxQueue && await dispatch('hasPendingTransactions')){
         return Promise.reject({reason:i18n.global.t('common.sendTipPendding'), code: 500})
@@ -961,13 +1066,16 @@ export default {
         const bigPrice = new BigNumber(gasPrice)
         console.warn('bigPrice', bigPrice.toNumber())
         const gasp = Number(gasPrice) ? bigPrice.dividedBy(1000000000).toFixed(12) : '0.0000000012';
-        tx.gasPrice = ethers.utils.parseEther('0.000000001')
+        tx.gasPrice = ethers.utils.parseEther(gasp)
       }
       if(gasLimit) {
         tx.gasLimit = gasLimit
       }
       if(newData) {
         tx.data = newData
+      }
+      if(typeof sendNonce != undefined) {
+        tx.nonce = sendNonce
       }
       sessionStorage.setItem('tx------', JSON.stringify(tx))
       // Update recent contacts
@@ -1006,7 +1114,7 @@ export default {
       { state, commit, dispatch }: any,
       params: SendTokenParams
     ) {
-      const { address: tokenAddress, amount, to, gasPrice, gasLimit, checkTxQueue } = params;
+      const { address: tokenAddress, amount, to, gasPrice, gasLimit, checkTxQueue, nonce: sendNonce } = params;
       // Determine whether there are transactions in the current trading pool that have not returned transaction receipts, and if so, do not allow them to be sent
       if(checkTxQueue && await dispatch('hasPendingTransactions')){
         return Promise.reject({reason:i18n.global.t('common.sendTipPendding'), code: 500})
@@ -1023,10 +1131,13 @@ export default {
       const amountWei = web3.utils.toWei((amount || 0) + '','ether')
       console.log(" contract.estimate", contract, contractWithSigner);
       const gasp = Number(gasPrice) ? new BigNumber(gasPrice).dividedBy(1000000000).toFixed(12) : '0.0000000012';
-      const transferParams = {
+      const transferParams: any = {
         gasLimit: gasLimit,
         gasPrice: ethers.utils.parseEther(gasp),
       };
+      if(typeof sendNonce != undefined) {
+        transferParams['nonce'] = sendNonce
+      }
       console.log("transferParams", transferParams);
       const data = await contractWithSigner.transfer(to, amountWei, transferParams)
       const { from, gasLimit: newLimit, gasPrice: newPrice, hash, nonce, type, value: newVal, to: toAddr } = data;

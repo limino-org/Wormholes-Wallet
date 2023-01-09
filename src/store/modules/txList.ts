@@ -9,8 +9,9 @@ import { utils } from 'ethers'
 import { web3 } from '@/utils/web3'
 console.warn('web3', web3)
 import BigNumber from 'bignumber.js'
+import { guid } from '@/utils'
 
-const page_size = '20'
+const page_size = '10'
 const page_size_int = Number(page_size)
 interface State {
     time: any
@@ -47,7 +48,8 @@ export default {
             const asyncRecordKey = `async-${id}-${chainId}-${addr}`
             let txInfo = await localforage.getItem(asyncRecordKey)
             if (list && list.length) {
-                if ((txInfo && total >= txInfo.list.length) || !txInfo) {
+                const realList = txInfo.list.filter(item => !item.sendType)
+                if ((txInfo && total >= realList.length) || !txInfo) {
                     try {
                         for await (const item of list) {
                             const convertAmount = await getConverAmount(wallet, item)
@@ -60,7 +62,8 @@ export default {
             }
             console.log('txInfo', txInfo)
             if (txInfo) {
-                if (total <= txInfo.list.length) {
+                const realList = txInfo.list.filter(item => !item.sendType)
+                if (total <= realList.length) {
                     if (state.time && typeof hasRecord == 'undefined') {
                         clearInterval(state.time)
                         commit('UPDATE_TIME', null)
@@ -71,6 +74,7 @@ export default {
                     txInfo.page = Number(txInfo.page) + 1 + ''
                 }
                 const newList = unRepet(txInfo.list, list).sort((a, b) => b.blockNumber - a.blockNumber)
+                debugger
                 console.log('newList', newList)
                 txInfo.list = txInfo.list && txInfo.list.length ? newList : [...list].sort((a, b) => b.blockNumber - a.blockNumber)
                 txInfo.total = total
@@ -137,10 +141,14 @@ export default {
                  */
                 const params = {
                     addr,
-                    page_size: page_size,
+                    page_size,
                     page: txInfo.page
                 }
                 const { total, transactions } = await getTransitionsPage(params)
+                if(transactions && transactions.length) {
+                    transactions.forEach((item) => item.txId = guid())
+                }
+                    
                 if (transactions && transactions.length > page_size_int) {
                     txInfo.page = page_size_int + 1 + '                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          '
                 }
@@ -163,7 +171,8 @@ export default {
             const txInfo = await localforage.getItem(asyncRecordKey)
             // const totalPage = Math.ceil(total/10)
             // const listTotalPage = Math.ceil(txInfo.list.length/10)
-            if (total !== txInfo.list.length) {
+            const realList = txInfo.list.filter(item => !item.sendType)
+            if (total !== realList.length) {
                 const hasRecord1 = await handleUpdateList()
                 if (!hasRecord1) {
                     return
@@ -185,6 +194,9 @@ export default {
                 const hashList = txInfo.list.map(item => item.hash.toUpperCase())
                 const { total, transactions } = await getTransitionsPage(params)
                 console.warn('asyncUpdateList', transactions)
+                if(transactions && transactions.length) {
+                    transactions.forEach((item) => item.txId = guid())
+                }
                 const newList = transactions.filter(item => !hashList.includes(item.hash.toUpperCase()))
                 console.warn('newList', newList)
 
@@ -199,6 +211,7 @@ export default {
                 } else {
                     hasRecord = false
                 }
+                
                 await dispatch('updateRecordPage', { transactions: newList, total, chainId, hasRecord })
                 return hasRecord
             }
@@ -206,6 +219,7 @@ export default {
         },
         async loopAsyncTxList({ commit, state, dispatch }: any) {
             const network = store.state.account.currentNetwork
+            const wallet = await getWallet()
             // When you are currently on a wormholes network, synchronize transaction records from the block browser
             if (network.id === 'wormholes-network-1') {
                 const res = await dispatch('asyncAddrRecord')
@@ -216,11 +230,7 @@ export default {
                         await dispatch('asyncAddrRecord')
                     }, 4000)
                     commit('UPDATE_TIME', t)
-                } else {
-                    return true
                 }
-            } else {
-                return true
             }
         }
     },
@@ -312,3 +322,9 @@ export async function getConverAmount(wallet, data) {
     }
     return 0
 }
+
+
+function clone(params = {}) {
+    return JSON.parse(JSON.stringify(params))
+  }
+  
