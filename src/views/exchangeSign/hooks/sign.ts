@@ -7,6 +7,7 @@ import { ConnectWalletByPwdAddress } from '@/store/modules/account'
 import { getCookies } from '@/utils/jsCookie';
 import i18n from '@/language/index'
 import { decode } from 'js-base64';
+import { debug } from 'console';
 
 export const useSign = () => {
     const { global: { t } } = i18n
@@ -53,15 +54,39 @@ export const useSign = () => {
             console.log('wallet', wallet)
             try {
                 const sstr = sig
-                if(isAdmin){
-                    //@ts-ignore  
-                    sign.value = ethers.utils.joinSignature(new ethers.utils.SigningKey(wallet.privateKey).signDigest(sstr))
-                    const backstr = decode(back?.toString() || '')
-                    const newBack =`${backstr}${backstr.indexOf('?') > -1 ? '&' : '?'}` 
-                    backUrl.value = `${newBack}sig=${sign.value}`
+                
+                if(sstr?.toString().startsWith('[') && sstr?.toString().endsWith(']')) {
+                    const arr = sstr?.toString().replace('[','').replace(']','').split(',')
+                    if(isAdmin){
+                        const sigArr: any = []
+                        arr.forEach(key => {
+                            const sigmsg = ethers.utils.joinSignature(new ethers.utils.SigningKey(wallet.privateKey).signDigest(key))
+                            sigArr.push(sigmsg)
+                        })
+                        sign.value = sigArr
+                        const backstr = decode(back?.toString() || '')
+                        const newBack =`${backstr}${backstr.indexOf('?') > -1 ? '&' : '?'}` 
+                        backUrl.value = `${newBack}sig=${JSON.stringify(sign.value)}`
+                    } else {
+                        const sigArr: any = []
+                        for await (const key of arr) {
+                            sigArr.push(await wallet.signMessage(key))
+                        }
+                        sign.value = sigArr
+                    }
+                    
                 } else {
-                   sign.value = await wallet.signMessage(sstr)
+                    if(isAdmin){
+                        //@ts-ignore  
+                        sign.value = ethers.utils.joinSignature(new ethers.utils.SigningKey(wallet.privateKey).signDigest(sstr))
+                        const backstr = decode(back?.toString() || '')
+                        const newBack =`${backstr}${backstr.indexOf('?') > -1 ? '&' : '?'}` 
+                        backUrl.value = `${newBack}sig=${sign.value}`
+                    } else {
+                       sign.value = await wallet.signMessage(sstr)
+                    }
                 }
+
                 call(sign.value)
                 return sign.value
             } catch(err: any){

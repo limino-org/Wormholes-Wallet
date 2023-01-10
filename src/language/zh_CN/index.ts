@@ -249,6 +249,9 @@ export default {
         contrctTx: "合约交易",
         contractAddr: "合约地址",
         converTip:"提示:S-NFT转换成功后将从资产列表中消失。您可以在交易历史详细信息中查看交易状态。",
+        snftLabel:'S-NFTs转换',
+        hsitory: "交易历史"
+
 
 
 
@@ -1130,7 +1133,8 @@ export default {
         pendding: "等待",
         cancelTx: "确定取消nonce为#{nonce}的交易吗?",
         cancelDealTit: "取消交易",
-
+        canceled:'已取消',
+        accelerated:'已加速'
     },
 
     // transactionDetails

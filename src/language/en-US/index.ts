@@ -206,6 +206,9 @@ export default {
     contrctTx: "Transaction of contract",
     contractAddr: "Address of contract",
     converTip:"Tips: Your successful S-NFT exchange willdisappear from the asset list. You can viewthe exchange status in the transactionhistory details.",
+    snftLabel:'S-NFTs Convert',
+    hsitory: "History"
+
   },
   sidebar: {
     imported: 'Imported',
@@ -1094,6 +1097,9 @@ export default {
     pendding: "Waiting",
     cancelTx: "Are you sure to cancel the transaction with #{nonce}?",
     cancelDealTit: "Cancel transaction",
+    canceled:'Canceled',
+    accelerated:'Accelerated'
+
 
   },
 

@@ -195,12 +195,15 @@ import {
   handleGetTranactionReceipt,
   TransactionSendStatus,
   getTxInfo,
+  DEL_TXQUEUE,
+  PUSH_TRANSACTION,
 } from "@/store/modules/account";
 import ModifGasFee from "../components/modifGasFee.vue";
 import { utils } from "ethers";
 import { web3 } from "@/utils/web3";
 import { useDialog } from "@/plugins/dialog";
 import eventBus from "@/utils/bus";
+import { stopLoop } from '@/store/modules/txList';
 
 export default {
   components: {
@@ -252,10 +255,7 @@ export default {
     txList.value = [];
     const getPageList = async () => {
       // showSpeedModal.value = false;
-      let time = setTimeout(async () => {
-        // const wallet = await getWallet();
-        // const { chainId } = await wallet.provider.getNetwork();
-        try {
+      try {
           const chainId = currentNetwork.value.chainId;
           const id = currentNetwork.value.id;
           const targetAddress = accountInfo.value.address.toUpperCase();
@@ -278,23 +278,40 @@ export default {
           if (tx && tx.length) {
             const list = tx || [];
             if (tokenContractAddress) {
-              txList.value = list.filter((item: any) => item.contractAddress);
+              txList.value = list.filter((item: any) => {
+                if(item.to){
+                  return item.to.toUpperCase() == tokenContractAddress.toString().toUpperCase()
+                }
+              });
+              
             } else {
-              txList.value = list.filter((item: any) => !item.contractAddress);
-            }
-            if (id === "wormholes-network-1") {
-              // @ts-ignore
-              Array.isArray(txQueue) ? txList.value.unshift(...txQueue) : "";
-              console.log("txList.value", txList.value);
+              txList.value = list.filter((item: any) => item.txType != 'contract');
             }
           }
+          if(!tokenContractAddress) {
+            if(Array.isArray(txQueue)) {
+            txQueue.forEach(item => {
+              if(!item.tokenAddress){
+                // @ts-ignore
+                txList.value.unshift(item)
+              }
+            })
+          }
+          } else {
+            if(Array.isArray(txQueue)) {
+            txQueue.forEach(item => {
+              if(item.tokenAddress.toUpperCase() == tokenContractAddress.toString().toUpperCase()){
+                // @ts-ignore
+                txList.value.unshift(item)
+              }
+            })
+          }
+          }
+
         } catch (err) {
-          debugger;
         } finally {
           loading.value = false;
         }
-        clearTimeout(time);
-      }, 0);
     };
 
     const handleAsyncTxList = () => {
@@ -380,28 +397,26 @@ export default {
     eventBus.on("txPush", (data: any) => {
       // @ts-ignore
       txList.value.unshift(data)
-      // handleAsyncTxList();
     });
-    // eventBus.on('otherTxUpdate', (data: any) => {
-    //    // @ts-ignore
-    //   txList.value.unshift(data)
-    // })
     eventBus.on("delTxQueue", (data: any) => {
       // @ts-ignore
       txList.value = txList.value.filter(item => item.txId.toUpperCase() != data.txId.toUpperCase())
     });
     
     eventBus.on("txQueuePush", (data: any) => {
-      let time = setTimeout(() => {
+      let time = setTimeout(async() => {
         // @ts-ignore
         txList.value.unshift(data)
+        const qlist = await localforage.getItem(`txQueue-${data.network.id}-${data.network.chainId}-${data.from.toUpperCase()}`)
+        console.warn('qlist---', qlist)
         clearTimeout(time)
-      },1000)
+      },300)
     });
-    
+    eventBus.on('waitTxEnd', () => {
+      handleAsyncTxList()
+    })
     eventBus.on("txUpdate", (data: any) => {
       console.warn("data----", data);
-
       for (let i = 0; i < txList.value.length; i++) {
         let item = txList.value[i];
         const { txId } = item;
@@ -413,26 +428,20 @@ export default {
           }
         }
       }
-      // if(data.txId) {
-      //   debugger
-      //   if(showSpeedModal.value) {
-      //     showSpeedModal.value = false
-      //   }
-      //   const newList = txList.value.filter((item: any) => (item.txId && item.txId.toUpperCase() !== data.txId.toUpperCase() || !item.txId))
-      //   debugger
-      //   txList.value = newList
-      //   return
-      // }
     });
     onUnmounted(() => {
       // console.warn('waitTime.value', waitTime.value)
-
       if (waitTime.value) {
         clearInterval(waitTime.value);
       }
+      stopLoop()
       eventBus.off("txPush");
-      eventBus.off("txupdate");
+      eventBus.off("txUpdate");
       eventBus.off("loopTxListUpdata");
+      eventBus.off("txQueuePush");
+      eventBus.off("delTxQueue");
+      eventBus.off('waitTxEnd')
+
     });
     const cancelSend = async () => {
       try {
@@ -444,17 +453,13 @@ export default {
           network: localNet,
           value,
           tokenAddress,
+          toAddress,
           amount,
           transitionType,
-          txType,
           data: newData,
           sendData,
           txId,
         }: any = sendTx.value;
-        // const gasp = Number(gasPrice.value)
-        //   ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
-        //   : "0.0000000012";
-        // const bigGas = ethers.utils.parseEther(gasp);
         const tx = {
           to: wallet.address,
           nonce,
@@ -463,12 +468,32 @@ export default {
           value: ethers.utils.parseEther("0"),
           data: sendData.data
         };
-        
-        // let data = await wallet.sendTransaction(tx);
-        const data = await store.dispatch('account/transaction', {
+        let data = null;
+        if (tokenAddress) {
+          const transferParams = {
+            nonce,
+            gasPrice: gasPrice.value || '1.2',
+            gasLimit: gasLimit.value,
+            to: toAddress,
+            checkTxQueue: false,
+            address: tokenAddress,
+            amount
+          };
+          data = await store.dispatch('account/tokenTransaction', transferParams)
+        } else {
+          tx.value = utils.formatEther(value);
+          data = await store.dispatch('account/transaction', {
             ...tx,
             checkTxQueue: false
           })
+        }
+        const txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
+
+        // let data = await wallet.sendTransaction(tx);
+        // const data = await store.dispatch('account/transaction', {
+        //     ...tx,
+        //     checkTxQueue: false
+        //   })
         const { hash, from, type, value: newVal, contractAddress } = data;
         const txInfo =  {
           ...sendTx.value,
@@ -489,19 +514,16 @@ export default {
           gasPrice: gasLimit,
           gasLimit: gasLimit.value,
           value: ethers.utils.formatUnits(value, "wei"),
+          txType
         }
-
-
-        
-        store.commit("account/DEL_TXQUEUE",txInfo);
+        await DEL_TXQUEUE(txInfo)
         const newres = {
           ...clone(txInfo),
           txId: guid(),
           sendData: data,
-          sendType: 'speed',
+          sendType: 'cancel',
         }
-        store.commit("account/PUSH_TRANSACTION",newres);
-        sessionStorage.setItem("new tx", JSON.stringify(data));
+        await PUSH_TRANSACTION(newres)
         const receipt = await data.wallet.provider.waitForTransaction(
           data.hash,
           null,
@@ -520,9 +542,9 @@ export default {
 
     const resend = async () => {
       /**
-       * step1  原交易状态置为false，unshift到交易记录
-       * step2  新交易pendding
-       * step3  waitTx 查询pedding的交易回执
+       * step1  step1  Set the original transaction status to false and unshift to the transaction record
+       * step2  New transactions are added to the send queue
+       * step3  Query the transaction receipt of the send queue
        */
 
       try {
@@ -536,17 +558,11 @@ export default {
           tokenAddress,
           amount,
           transitionType,
-          txType,
           data: newData,
           sendData,
           toAddress,
           txId,
         }: any = sendTx.value;
-        // const gasp = Number(gasPrice.value)
-        //   ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
-        //   : "0.0000000012";
-        // const bigGas = ethers.utils.parseEther(gasp);
-        // debugger
         const tx: any = {
           to,
           nonce,
@@ -557,27 +573,16 @@ export default {
         console.warn("tx", tx);
         let data = null;
         if (tokenAddress) {
-          const { contractWithSigner, contract } = await store.dispatch(
-            "account/connectConstract",
-            tokenAddress
-          );
-          const amountWei = web3.utils.toWei((amount || 0) + "", "ether");
-          console.log("amountWei", amountWei);
-          console.log(" gasLimit.value", gasLimit.value);
           const transferParams = {
             nonce,
             gasPrice: gasPrice.value || '1.2',
             gasLimit: gasLimit.value,
-            toAddress,
-            checkTxQueue: false
- 
+            to: toAddress,
+            checkTxQueue: false,
+            address: tokenAddress,
+            amount
           };
-          // data = await contractWithSigner.transfer(
-          //   toAddress,
-          //   amountWei,
-          //   transferParams
-          // );
-          data = store.dispatch('account/tokenTransaction', transferParams)
+          data = await store.dispatch('account/tokenTransaction', transferParams)
         } else {
           tx.value = utils.formatEther(value);
           data = await store.dispatch('account/transaction', {
@@ -585,8 +590,9 @@ export default {
             checkTxQueue: false
           })
         }
-        // step1  原交易状态置为false，unshift到交易记录
+        // step1  Set the original transaction status to false and unshift to the transaction record
         const { hash, from, type, value: newVal, contractAddress } = data;
+        const txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
         const txInfo =  {
           ...sendTx.value,
           receipt: {
@@ -604,18 +610,20 @@ export default {
             status: 0,
           },
           value: ethers.utils.formatUnits(value, "wei"),
+          txType,
           gasPrice: gasLimit,
           gasLimit: gasLimit.value,
         }
-
-        store.commit("account/DEL_TXQUEUE",txInfo);
+        await DEL_TXQUEUE(txInfo)
+        // store.commit("account/DEL_TXQUEUE",txInfo);
         const newres = {
           ...clone(txInfo),
           txId: guid(),
           sendData: data,
           sendType: 'speed',
         }
-        store.commit("account/PUSH_TRANSACTION",newres);
+        await PUSH_TRANSACTION(newres)
+        // store.commit("account/PUSH_TRANSACTION",newres);
         sessionStorage.setItem("new tx", JSON.stringify(data));
         const receipt = await data.wallet.provider.waitForTransaction(data.hash);
         await store.dispatch("account/waitTxQueueResponse");
@@ -628,7 +636,6 @@ export default {
         reloading.value = false;
       }
     };
-
     return {
       showSpeedModal,
       sendTxType,

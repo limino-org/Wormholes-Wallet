@@ -107,10 +107,13 @@ export default {
     const handleClearCanche = async () => {
       loading.value = true;
       try {
-        await localforage.iterate(async (value, key, iterationNumber) => {
+        localforage.iterate((value, key, iterationNumber) => {
+          console.log('clear cancel', key)
           if (key !== "vuex") {
             console.log('clear cancel', key)
-            await localforage.removeItem(key);
+            localforage.removeItem(key);
+          } else {
+            [key, value]
           }
         });
         $wtoast.success(t("common.clearCancheSuccess"));

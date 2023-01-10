@@ -1,6 +1,7 @@
 <template>
 <van-sticky :offset-top="95">
-    <div class="flex right tab-box">
+    <div class="flex between tab-box">
+      <span class="pl-14 pr-14 lh-20 conver-label">{{t('common.snftLabel')}}</span>
       <!-- <div class="flex between tab-list">
         <div
           :class="`tab-card flex center hover ${item.select ? 'active' : ''}`"
@@ -1076,6 +1077,10 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+.conver-label {
+  color: #848484;
+  font-weight: bold;
+}
 .red {
   color: rgb(215, 58, 73);
 }

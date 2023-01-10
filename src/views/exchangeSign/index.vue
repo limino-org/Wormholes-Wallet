@@ -89,6 +89,7 @@ export default {
       }
       console.log('backUrl', backUrl.value)
       if(backUrl.value){
+        debugger
         location.href = backUrl.value
       }
     }

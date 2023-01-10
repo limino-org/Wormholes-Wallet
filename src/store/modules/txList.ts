@@ -11,19 +11,16 @@ console.warn('web3', web3)
 import BigNumber from 'bignumber.js'
 import { guid } from '@/utils'
 
-const page_size = '10'
+const page_size = '30'
 const page_size_int = Number(page_size)
+let timeOut = 6000
 interface State {
     time: any
 }
+let time = null
+let time2 = null
 export default {
-    state: {
-        time: null
-    },
     mutations: {
-        UPDATE_TIME(state: State, time) {
-            state.time = time
-        },
         // Update the page to which an address is synchronized
         PUSH_RECORD_PAGE(state: State, page: number) {
             const addr = store.state.account.accountInfo.address.toUpperCase()
@@ -48,7 +45,7 @@ export default {
             const asyncRecordKey = `async-${id}-${chainId}-${addr}`
             let txInfo = await localforage.getItem(asyncRecordKey)
             if (list && list.length) {
-                const realList = txInfo.list.filter(item => !item.sendType)
+                const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
                 if ((txInfo && total >= realList.length) || !txInfo) {
                     try {
                         for await (const item of list) {
@@ -64,9 +61,8 @@ export default {
             if (txInfo) {
                 const realList = txInfo.list.filter(item => !item.sendType)
                 if (total <= realList.length) {
-                    if (state.time && typeof hasRecord == 'undefined') {
-                        clearInterval(state.time)
-                        commit('UPDATE_TIME', null)
+                    if (time && typeof hasRecord == 'undefined') {
+                        clearInterval(time)
                     }
                     return
                 }
@@ -74,7 +70,6 @@ export default {
                     txInfo.page = Number(txInfo.page) + 1 + ''
                 }
                 const newList = unRepet(txInfo.list, list).sort((a, b) => b.blockNumber - a.blockNumber)
-                debugger
                 console.log('newList', newList)
                 txInfo.list = txInfo.list && txInfo.list.length ? newList : [...list].sort((a, b) => b.blockNumber - a.blockNumber)
                 txInfo.total = total
@@ -86,14 +81,10 @@ export default {
                 }
             }
             await localforage.setItem(asyncRecordKey, txInfo)
-            let time = setTimeout(() => {
-                eventBus.emit('loopTxListUpdata', txInfo.list)
-                clearTimeout(time)
-            })
+            eventBus.emit('loopTxListUpdata', txInfo.list)
             if (!list || list.length < page_size_int && typeof hasRecord == 'undefined') {
-                if (state.time) {
-                    clearInterval(state.time)
-                    commit('UPDATE_TIME', null)
+                if (time) {
+                    clearInterval(time)
                 }
             }
 
@@ -146,7 +137,19 @@ export default {
                 }
                 const { total, transactions } = await getTransitionsPage(params)
                 if(transactions && transactions.length) {
-                    transactions.forEach((item) => item.txId = guid())
+                    transactions.forEach((item) => {
+                        item.txId = guid()
+                        if(item.input == '0x') {
+                            item.txType = 'normal'
+                        } else {
+                            const json = getInput(item.input)
+                            if(json) {
+                                item.txType = 'wormholes'
+                            } else {
+                                item.txType = 'contract'
+                            }
+                        }
+                    })
                 }
                     
                 if (transactions && transactions.length > page_size_int) {
@@ -177,12 +180,12 @@ export default {
                 if (!hasRecord1) {
                     return
                 }
-                let time = setInterval(async () => {
+                time2 = setInterval(async () => {
                     const hasRecord = await handleUpdateList()
                     if (!hasRecord) {
-                        clearInterval(time)
+                        clearInterval(time2)
                     }
-                }, 4000)
+                }, timeOut)
             }
 
             async function handleUpdateList() {
@@ -191,11 +194,25 @@ export default {
                     page_size,
                     page
                 }
+                const txInfo = await localforage.getItem(asyncRecordKey)
                 const hashList = txInfo.list.map(item => item.hash.toUpperCase())
                 const { total, transactions } = await getTransitionsPage(params)
                 console.warn('asyncUpdateList', transactions)
                 if(transactions && transactions.length) {
-                    transactions.forEach((item) => item.txId = guid())
+                    transactions.forEach((item) => {
+                        item.txId = guid()
+                        if(item.input == '0x') {
+                            item.txType = 'normal'
+                        } else {
+                            const json = getInput(item.input)
+                            if(json) {
+                                item.txType = 'wormholes'
+                            } else {
+                                item.txType = 'contract'
+                            }
+                        }
+                        
+                    })
                 }
                 const newList = transactions.filter(item => !hashList.includes(item.hash.toUpperCase()))
                 console.warn('newList', newList)
@@ -226,23 +243,23 @@ export default {
                 const { asyncRecordKey, total } = res
                 const txInfo = await localforage.getItem(asyncRecordKey)
                 if (res && txInfo.list && txInfo.list.length < total) {
-                    let t = setInterval(async () => {
+                    time = setInterval(async () => {
                         await dispatch('asyncAddrRecord')
-                    }, 4000)
-                    commit('UPDATE_TIME', t)
+                    }, timeOut)
                 }
             }
-        }
+        },
     },
     namespaced: true,
 }
+
 
 export function getInput(input) {
     if (input) {
         try {
             const wormStr = web3.utils.toAscii(input)
             const [nullstr, jsonstr] = wormStr.split('wormholes:')
-            let jsonData = {}
+            let jsonData = null
             if (jsonstr) {
                 jsonData = JSON.parse(jsonstr)
             }
@@ -281,42 +298,45 @@ export async function getConverAmount(wallet, data) {
     const { input, blockNumber } = data
     if (input && blockNumber) {
         let jsonData = getInput(input)
-        const { type, nft_address } = jsonData
-        console.log('input data---', jsonData)
-        if (type && type == 6 && nft_address) {
-            const len = nft_address.length
-            switch (len) {
-                case 42:
-                    break;
-                case 41:
-                    nft_address += '0'
-                    break;
-                case 40:
-                    nft_address += '00'
-                    break;
-                case 39:
-                    nft_address += '000'
-                    break;
+        if(jsonData) {
+            const { type, nft_address } = jsonData
+            console.log('input data---', jsonData)
+            if (type && type == 6 && nft_address) {
+                const len = nft_address.length
+                switch (len) {
+                    case 42:
+                        break;
+                    case 41:
+                        nft_address += '0'
+                        break;
+                    case 40:
+                        nft_address += '00'
+                        break;
+                    case 39:
+                        nft_address += '000'
+                        break;
+                }
+                const nftAccountInfo = await wallet.provider.send(
+                    "eth_getAccountInfo",
+                    [nft_address, web3.utils.toHex((blockNumber - 1).toString())]
+                );
+                const { MergeLevel, MergeNumber } = nftAccountInfo
+                //  @ts-ignore
+                const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion
+    
+                let convertAmount = 0
+                if (MergeLevel === 0) {
+                    convertAmount = new BigNumber(MergeNumber).multipliedBy(t0).toNumber()
+                } else if (MergeLevel === 1) {
+                    convertAmount = new BigNumber(MergeNumber).multipliedBy(t1).toNumber()
+                } else if (MergeLevel === 2) {
+                    convertAmount = new BigNumber(MergeNumber).multipliedBy(t2).toNumber()
+                } else if (MergeLevel === 3) {
+                    convertAmount = new BigNumber(MergeNumber).multipliedBy(t3).toNumber()
+                }
+                return convertAmount
             }
-            const nftAccountInfo = await wallet.provider.send(
-                "eth_getAccountInfo",
-                [nft_address, web3.utils.toHex((blockNumber - 1).toString())]
-            );
-            const { MergeLevel, MergeNumber } = nftAccountInfo
-            //  @ts-ignore
-            const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion
-
-            let convertAmount = 0
-            if (MergeLevel === 0) {
-                convertAmount = new BigNumber(MergeNumber).multipliedBy(t0).toNumber()
-            } else if (MergeLevel === 1) {
-                convertAmount = new BigNumber(MergeNumber).multipliedBy(t1).toNumber()
-            } else if (MergeLevel === 2) {
-                convertAmount = new BigNumber(MergeNumber).multipliedBy(t2).toNumber()
-            } else if (MergeLevel === 3) {
-                convertAmount = new BigNumber(MergeNumber).multipliedBy(t3).toNumber()
-            }
-            return convertAmount
+            return 0
         }
         return 0
     }
@@ -328,3 +348,7 @@ function clone(params = {}) {
     return JSON.parse(JSON.stringify(params))
   }
   
+export const stopLoop = () => {
+    clearInterval(time)
+    clearInterval(time2)
+}

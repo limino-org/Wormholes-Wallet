@@ -177,19 +177,9 @@ export const toUsdSymbol = (v: string | number, keepDotLength = 6) => {
   // Return to transaction status
 export function transactionStatus(txData: any){
   console.log('txData', txData)
-  // const {receipt,sendStatus} = txData
-  // if(sendStatus === 'pendding'){
-  //   return  i18n.global.t('transationHistory.pendding')
-  // }
-  // if(sendStatus === 'success') {
-  //   const {status} = receipt
-  //   if(status === 1) {
-  //     return i18n.global.t('transationHistory.successly')
-  //   } else {
-  //     return i18n.global.t('transationHistory.failed')
-  //   }
-  // }
-  const {status,sendStatus} = txData
+  const {status,sendStatus, sendType} = txData
+  if(sendType && sendType === 'cancel') return i18n.global.t('transationHistory.canceled')
+  if(sendType && sendType === 'speed') return i18n.global.t('transationHistory.accelerated')
   if(sendStatus && sendStatus === 'pendding') return i18n.global.t('transationHistory.pendding')
   return status ? i18n.global.t('transationHistory.successly') : i18n.global.t('transationHistory.failed')
   }
@@ -205,52 +195,20 @@ export function transactionStatus(txData: any){
 
   export const handleSendStatus = (data: any) => {
     const {status,sendStatus} = data
-    // if(sendStatus === 'pendding' && !receipt){
-    //   return sendStatus
-    // }
-    // if(receipt) {
-    //   const {status} = receipt
-    // if(status)return 'success'
-    // if(!status)return 'fail'
-    // }
     if(sendStatus && sendStatus === 'pendding') return sendStatus
     return status ? 'success' : 'fail'
   }
 
   export const txTypeToIcon = (data: any) => {
-    // let {txType,transitionType} = data
-
-    // txType = txType || 'send'
-    // let s = ''
-    // if(transitionType == '6') {
-    //   return 'icon-caozuo-xunhuan1'
-    // }
     const myAddr = store.state.account.accountInfo.address.toUpperCase()
-    const { to, from, contractAddress} = data
-    if(contractAddress) return 'icon-icon-'
+    const { to, from, txType} = data
+    if(txType == 'contract') return 'icon-icon-'
     const bigTo = to.toUpperCase()
     const bigFrom = from.toUpperCase()
     if(bigTo === bigFrom || (myAddr === bigTo && bigFrom !== myAddr)) return 'icon-bottom'
-    if(bigTo !== bigFrom && !contractAddress) return 'icon-jiantou_youshang'
-    // switch(txType.trim()){
-    //   case 'send':
-    //   case 'other':
-    //     s = 'icon-jiantou_youshang'
-    //     break;
-    //   case 'contract':
-    //     s = 'icon-icon-'
-    //     break;
-    // }
-
+    if(bigTo !== bigFrom) return 'icon-jiantou_youshang'
   }
   export const handleTxType = (item: any) => {
-  //   const {transitionType,txType} = item
-  //   console.warn('transitionType', transitionType)
-  //  if(transitionType && transitionType == '6') {
-  //     return i18n.global.t('common.conver')
-  //  } else {
-  //   return transactiontxType(txType)
-  //  }
   const { to, from, contractAddress, sendStatus , txType} = item
   const myAddr = store.state.account.accountInfo.address.toUpperCase()
   if(sendStatus && sendStatus === 'pendding') {
@@ -260,7 +218,7 @@ export function transactionStatus(txData: any){
     return i18n.global.t('transationHistory.send')
   }
 
-  if(contractAddress) return i18n.global.t('transationHistory.contract')
+  if(txType === 'contract') return i18n.global.t('transationHistory.contract')
   const bigTo = to.toUpperCase()
   const bigFrom = from.toUpperCase()
   if(bigTo === bigFrom || myAddr === bigTo) return i18n.global.t('transactiondetails.recive')
@@ -274,11 +232,15 @@ export function transactionStatus(txData: any){
   }
 
   export const transferAmountText = (data: any) => {
-    const { to, from, contractAddress, value, input, convertAmount, sendStatus, status } = data
+    const { to, from, contractAddress, value, input, convertAmount, sendStatus, status, tokenAddress, amount, txType } = data
     const myAddr = store.state.account.accountInfo.address.toUpperCase()
     if(sendStatus && sendStatus === 'pendding'){
-      const val = utils.formatEther(value)
-      return val
+      if(tokenAddress) {
+        return amount
+      } else {
+        const val = utils.formatEther(value)
+        return val
+      }
     }
     // console.log('input:', utils.toUtf8String(input))
     const jsonData = getInput(input)

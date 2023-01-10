@@ -2,6 +2,8 @@ import { Toast } from 'vant';
 import Web3 from 'web3';
 import i18n from '@/language/index'
 export const web3 = new Web3(Web3.givenProvider);
+// @ts-ignore
+window.Web3 = web3
 import localforage from 'localforage';
 import { getCookies } from './jsCookie';
 import store from '@/store';

@@ -24,12 +24,14 @@
     <div class="all" v-show="!loading">
       <div v-if="transactionList.length">
         <CollectionCard
+        :id="item.hash"
           @handleClick="handleView(item)"
           v-for="item in transactionList"
           :key="item.to"
           :data="item"
           @handleSend="handleSend"
           @handleCancel="handleCancel"
+          :active="route.query.hash?.toString() === item.hash"
         />
       </div>
       <no-data v-else />
@@ -97,7 +99,11 @@
 
   <CommonModal
     v-model="showSpeedModal"
-    :title="t('common.gasSpeedUp')"
+    :title="
+      sendTxType == 1
+        ? t('common.gasSpeedUp')
+        : t('transationHistory.cancelDealTit')
+    "
     className="transactionDetailsModal"
   >
     <div class="m-14 pl-14 pr-14 border-round detail-modal">
@@ -200,12 +206,14 @@ import CommonModal from "@/components/commonModal/index.vue";
 import NavHeader from "@/components/navHeader/index.vue";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
-import { getRandomIcon } from "@/utils";
+import { useRoute, useRouter } from "vue-router";
+import { getRandomIcon, guid } from "@/utils";
 import { ElTableV2 } from "element-plus";
 import CollectionCard from "@/views/account/components/collectionCard/index.vue";
 import {
   clone,
+  DEL_TXQUEUE,
+  PUSH_TRANSACTION,
   TransactionSendStatus,
   TransactionTypes,
 } from "@/store/modules/account";
@@ -217,6 +225,8 @@ import { getWallet } from "@/store/modules/account";
 import { useDialog } from "@/plugins/dialog";
 import { web3 } from "@/utils/web3";
 import eventBus from "@/utils/bus";
+import { utils } from 'ethers';
+import { stopLoop } from '@/store/modules/txList';
 export default {
   name: "transaction-history",
   components: {
@@ -246,7 +256,7 @@ export default {
     const currentNetwork = computed(() => store.state.account.currentNetwork);
     const accountInfo = computed(() => store.state.account.accountInfo);
     const { $wdialog } = useDialog();
-
+    const route = useRoute()
     const tabs = reactive({
       list: [
         { name: t("transationHistory.all"), value: 1, select: true },
@@ -283,30 +293,68 @@ export default {
         accountInfo.value.address
       );
     };
+    eventBus.on('waitTxEnd', () => {
+      handleAsyncTxList()
+    })
+    eventBus.on("loopTxListUpdata", () => {
+      getPageList();
+    });
+    eventBus.on("txPush", (data: any) => {
+      // @ts-ignore
+      tlist.value.unshift(data)
+    });
+
+    eventBus.on("delTxQueue", (data: any) => {
+      // @ts-ignore
+      tlist.value = tlist.value.filter(item => item.txId.toUpperCase() != data.txId.toUpperCase())
+    });
+    
+    eventBus.on("txQueuePush", (data: any) => {
+      let time = setTimeout(async() => {
+        // @ts-ignore
+        tlist.value.unshift(data)
+        clearTimeout(time)
+      },300)
+    });
+    
+    eventBus.on("txUpdate", (data: any) => {
+      console.warn("data----", data);
+      for (let i = 0; i < tlist.value.length; i++) {
+        let item = tlist.value[i];
+        const { txId } = item;
+        if(data.txId) {
+          // @ts-ignore
+          if (txId && txId.toString().toUpperCase() == data.txId.toUpperCase()) {
+          // @ts-ignore
+          tlist.value[i] = data;
+          }
+        }
+      }
+    });
+
     // Current account transaction list
     let tlist: any = ref([]);
     const waitTime: any = ref(null);
     onMounted(async () => {
-      await handleAsyncTxList();
-      await getPageList();
-      store
-        .dispatch("account/waitTxQueueResponse", {
-          time: null,
-          callback(e: any) {
-            console.warn("e", e);
-            waitTime.value = e;
-          },
-        })
+      try {
+        await handleAsyncTxList();
+        await getPageList();
+      }finally {
+        loading.value = false
+      }
+      store.dispatch("account/waitTxQueueResponse", {
+        time: null,
+        callback(e: any) {
+          console.warn("e", e);
+          waitTime.value = e;
+        },
+      });
     });
-    tlist.value = [];
     const loading = ref(true);
     const getPageList = async () => {
-      showSpeedModal.value = false;
-      let time = setTimeout(async () => {
-        const wallet = await getWallet();
-        const { chainId } = await wallet.provider.getNetwork();
+      // showSpeedModal.value = false;
+        const chainId = currentNetwork.value.chainId;
         try {
-
           const id = currentNetwork.value.id;
           const targetAddress = accountInfo.value.address.toUpperCase();
           let searchKey = "";
@@ -324,20 +372,24 @@ export default {
           } else {
             tx = txInfo;
           }
-
-          if (tx && tx.length) {
-            if (id === "wormholes-network-1") {
-              // @ts-ignore
-              Array.isArray(txQueue) ? tlist.value.unshift(...txQueue) : "";
-              console.log("txList.value", tlist.value);
-            }
-            tlist.value.push(...tx);
-          }
+          tlist.value = [...tx]
+          Array.isArray(txQueue) ? tlist.value.unshift(...txQueue) : "";
         } finally {
           loading.value = false;
         }
-        clearTimeout(time);
-      },0);
+        const hash = route.query.hash
+        if(hash) {
+          const tx = tlist.value.find((item: any) => item.hash.toUpperCase() == hash?.toString().toUpperCase())
+          if(tx) {
+            transactionData.data = tx
+            showTransactionModal.value = true;
+            let time = setTimeout(() => {
+              const ele = document.getElementById(hash?.toString())
+             ele ? ele.scrollIntoView() : ''
+             clearTimeout(time)
+            })
+          }
+        }
     };
 
 
@@ -413,103 +465,110 @@ export default {
         cancelSend();
       }
     };
-    eventBus.on("loopTxListUpdata", () => {
-      getPageList();
-    });
-    eventBus.on("txPush", (data: any) => {
-      // handleAsyncTxList();
-    });
-    eventBus.on("txUpdate", (data: any) => {
-      // console.warn('txupdate', data)
-      for (let i = 0; i < tlist.value.length; i++) {
-        let item = tlist.value[i];
-        const { hash } = item;
-        if (hash.toUpperCase() == data.hash.toUpperCase()) {
-          tlist.value[i] = data;
-        }
-      }
-    });
+   
 
     onUnmounted(() => {
       if (waitTime.value) {
         clearInterval(waitTime.value);
       }
+      stopLoop()
       eventBus.off("txPush");
-      eventBus.off("txupdate");
-      eventBus.off('loopTxListUpdata')
+      eventBus.off("txUpdate");
+      eventBus.off("loopTxListUpdata");
+      eventBus.off("txQueuePush");
+      eventBus.off("delTxQueue");
+      eventBus.off('waitTxEnd')
     });
     const cancelSend = async () => {
       try {
         const wallet = await getWallet();
-        const network = await wallet.provider.getNetwork();
+        const blockNumber = await wallet.provider.getBlockNumber();
         const {
           nonce,
           to,
           network: localNet,
           value,
           tokenAddress,
+          toAddress,
           amount,
           transitionType,
-          txType,
           data: newData,
           sendData,
           txId,
         }: any = transactionData.data;
-        const gasp = Number(gasPrice.value)
-          ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
-          : "0.0000000012";
-        const bigGas = ethers.utils.parseEther(gasp);
         const tx = {
           to: wallet.address,
           nonce,
-          gasPrice: bigGas,
+          gasPrice: gasPrice.value || '1.2',
           gasLimit: gasLimit.value,
-          chainId: network.chainId,
           value: ethers.utils.parseEther("0"),
+          data: sendData.data
         };
-        let data = await wallet.sendTransaction(tx);
-        const { hash, from, type, value: newVal } = data;
-        store.commit("account/UPDATE_TRANSACTION", {
+        let data = null;
+        if (tokenAddress) {
+          const transferParams = {
+            nonce,
+            gasPrice: gasPrice.value || '1.2',
+            gasLimit: gasLimit.value,
+            to: toAddress,
+            checkTxQueue: false,
+            address: tokenAddress,
+            amount
+          };
+          data = await store.dispatch('account/tokenTransaction', transferParams)
+        } else {
+          tx.value = utils.formatEther(value);
+          data = await store.dispatch('account/transaction', {
+            ...tx,
+            checkTxQueue: false
+          })
+        }
+        const txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
+
+        // let data = await wallet.sendTransaction(tx);
+        // const data = await store.dispatch('account/transaction', {
+        //     ...tx,
+        //     checkTxQueue: false
+        //   })
+        const { hash, from, type, value: newVal, contractAddress } = data;
+        const txInfo =  {
           ...transactionData.data,
           receipt: {
+            blockHash: null,
+            blockNumber: blockNumber,
+            cumulativeGasUsed: { type: "BigNumber", hex: "0x0" },
+            effectiveGasPrice: { type: "BigNumber", hex: "0x0" },
+            gasUsed: { type: "BigNumber", hex: "0x0" },
+                 // @ts-ignore
+            transactionHash: transactionData.data.hash,
             from,
             to,
+            contractAddress,
+            transactionIndex: 0,
             status: 0,
           },
-          gasPrice: bigGas,
-          gasLimit,
-          txId,
-          isCancel: true,
-        });
-        data.date = new Date();
-        store.commit("account/PUSH_TXQUEUE", {
-          hash,
-          from,
+          gasPrice: gasLimit,
           gasLimit: gasLimit.value,
-          gasPrice: gasPrice.value,
-          nonce,
-          to,
-          type,
-          value: newVal,
-          transitionType: transitionType || null,
-          txType,
-          network: clone(localNet),
-          data: clone(newData),
-          sendStatus: TransactionSendStatus.pendding,
-          sendData: clone(data),
-          tokenAddress,
-          amount: "0",
-        });
-        sessionStorage.setItem("new tx", JSON.stringify(data));
-        const receipt = await wallet.provider.waitForTransaction(
+          value: ethers.utils.formatUnits(value, "wei"),
+          txType
+        }
+        await DEL_TXQUEUE(txInfo)
+        const newres = {
+          ...clone(txInfo),
+          txId: guid(),
+          sendData: data,
+          sendType: 'cancel',
+        }
+        await PUSH_TRANSACTION(newres)
+        const receipt = await data.wallet.provider.waitForTransaction(
           data.hash,
           null,
           60000
         );
         await store.dispatch("account/waitTxQueueResponse");
-      } catch (err: any) {
+        handleAsyncTxList()
+      } catch (err) {
         console.error(err);
-        showSpeedModal.value = false;
         Toast(err.reason);
       } finally {
         showSpeedModal.value = false;
@@ -518,9 +577,15 @@ export default {
     };
 
     const resend = async () => {
+      /**
+       * step1  step1  Set the original transaction status to false and unshift to the transaction record
+       * step2  New transactions are added to the send queue
+       * step3  Query the transaction receipt of the send queue
+       */
+
       try {
         const wallet = await getWallet();
-        const network = await wallet.provider.getNetwork();
+        const blockNumber = await wallet.provider.getBlockNumber();
         const {
           nonce,
           to,
@@ -529,85 +594,77 @@ export default {
           tokenAddress,
           amount,
           transitionType,
-          txType,
           data: newData,
           sendData,
           toAddress,
+          txId,
         }: any = transactionData.data;
-        const gasp = Number(gasPrice.value)
-          ? new BigNumber(gasPrice.value).dividedBy(1000000000).toFixed(12)
-          : "0.0000000012";
-        const bigGas = ethers.utils.parseEther(gasp);
         const tx: any = {
           to,
           nonce,
-          gasPrice: bigGas,
+          gasPrice: gasPrice.value || '1.2',
           gasLimit: gasLimit.value,
-          chainId: network.chainId,
+          data: sendData.data
         };
         console.warn("tx", tx);
         let data = null;
         if (tokenAddress) {
-          const { contractWithSigner, contract } = await store.dispatch(
-            "account/connectConstract",
-            tokenAddress
-          );
-          const amountWei = web3.utils.toWei((amount || 0) + "", "ether");
-          console.log("amountWei", amountWei);
-          console.log("gasp", gasp);
-          console.log(" gasLimit.value", gasLimit.value);
           const transferParams = {
             nonce,
-            gasPrice: bigGas,
+            gasPrice: gasPrice.value || '1.2',
             gasLimit: gasLimit.value,
+            to: toAddress,
+            checkTxQueue: false,
+            address: tokenAddress,
+            amount
           };
-          data = await contractWithSigner.transfer(
-            toAddress,
-            amountWei,
-            transferParams
-          );
+          data = await store.dispatch('account/tokenTransaction', transferParams)
         } else {
-          tx.value = value;
-          data = await wallet.sendTransaction(tx);
+          tx.value = utils.formatEther(value);
+          data = await store.dispatch('account/transaction', {
+            ...tx,
+            checkTxQueue: false
+          })
         }
-        const { hash, from, type, value: newVal } = data;
-        store.commit("account/UPDATE_TRANSACTION", {
+        // step1  Set the original transaction status to false and unshift to the transaction record
+        const { hash, from, type, value: newVal, contractAddress } = data;
+        const txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
+        const txInfo =  {
           ...transactionData.data,
           receipt: {
+            blockHash: null,
+            blockNumber: blockNumber,
+            cumulativeGasUsed: { type: "BigNumber", hex: "0x0" },
+            effectiveGasPrice: { type: "BigNumber", hex: "0x0" },
+            gasUsed: { type: "BigNumber", hex: "0x0" },
+                 // @ts-ignore
+            transactionHash: transactionData.data.hash,
             from,
             to,
+            contractAddress,
+            transactionIndex: 0,
             status: 0,
           },
-          gasPrice: gasPrice.value,
-          gasLimit,
-        });
-
-        store.commit("account/PUSH_TXQUEUE", {
-          hash,
-          from,
+          value: ethers.utils.formatUnits(value, "wei"),
+          gasPrice: gasLimit,
           gasLimit: gasLimit.value,
-          gasPrice: gasPrice.value,
-          nonce,
-          to,
-          type,
-          value: newVal,
-          transitionType: transitionType || null,
-          txType,
-          network: clone(localNet),
-          data: clone(newData),
-          sendStatus: TransactionSendStatus.pendding,
-          sendData: clone(data),
-          tokenAddress,
-          amount,
-        });
+          txType
+
+        }
+        await DEL_TXQUEUE(txInfo)
+        // store.commit("account/DEL_TXQUEUE",txInfo);
+        const newres = {
+          ...clone(txInfo),
+          txId: guid(),
+          sendData: data,
+          sendType: 'speed',
+        }
+        await PUSH_TRANSACTION(newres)
+        // store.commit("account/PUSH_TRANSACTION",newres);
         sessionStorage.setItem("new tx", JSON.stringify(data));
-        const receipt = await wallet.provider.waitForTransaction(
-          data.hash,
-          null,
-          60000
-        );
-        showSpeedModal.value = false;
+        const receipt = await data.wallet.provider.waitForTransaction(data.hash);
         await store.dispatch("account/waitTxQueueResponse");
+        handleAsyncTxList()
       } catch (err) {
         console.error(err);
         Toast(err.reason);
@@ -642,6 +699,7 @@ export default {
       loading,
       ethers,
       columns,
+      route,
       showSpeedModal,
       currentNetwork,
       changeTab,
@@ -657,6 +715,7 @@ export default {
       otherList,
       swapList,
       appProvide,
+      sendTxType,
       tlist,
     };
   },

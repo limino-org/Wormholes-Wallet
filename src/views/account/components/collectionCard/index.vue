@@ -1,6 +1,6 @@
 <template>
   <div
-    class="collection-card"
+    :class="`collection-card ${active ? 'active' : ''}`"
     @click="viewDetail"
   >
   <div class="flex between">
@@ -92,6 +92,10 @@ export default defineComponent({
       type: String,
       default: "",
     },
+    active: {
+      type: Boolean,
+      default: false
+    }
   },
   emits:['handleSend','handleCancel','handleClick'],
   setup(props: any, context: SetupContext) {
@@ -158,6 +162,10 @@ export default defineComponent({
   border-bottom: 1px solid #E4E7E8;
   cursor: pointer;
   transition: ease .3s;
+  &.active {
+    background: #E9F5FE;
+    padding-left: 20px;
+  }
   &:hover {
     background: #E9F5FE;
     padding-left: 20px;

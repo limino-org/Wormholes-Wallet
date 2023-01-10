@@ -107,7 +107,7 @@
               type="primary"
               >{{ i18n.global.t("returnreceipt.done") }}</Button
             >
-            <Button v-if="defaultData.hash"  class="okbtn" type="primary" @click="viewTransactionByHash(defaultData.hash)">History</Button>
+            <Button v-if="defaultData.hash"  class="okbtn" type="primary" @click="toHistory(defaultData.hash)">{{i18n.global.t('common.hsitory') }}</Button>
           </div>
         </div>
       </div>
@@ -140,6 +140,7 @@ import { Button, Icon, Loading } from "vant";
 import i18n from "@/language";
 import { TradeConfirmOpt, TradeStatus } from "./tradeConfirm";
 import { viewTransactionByHash } from "@/utils/utils";
+import router from "@/router";
 console.warn("i18n-------", i18n);
 
 
@@ -207,6 +208,9 @@ const update = (_opt: TradeConfirmOpt= {status: TradeStatus.approve}) => {
   show(defaultOpt);
 };
 
+const toHistory = (hash: string) => {
+  router.replace({name:'transactionList', query: {hash}})
+}
 
 defineExpose({
   isShow,
