@@ -285,7 +285,9 @@ export default {
               });
               
             } else {
-              txList.value = list.filter((item: any) => item.txType != 'contract');
+              const tokens = currentNetwork.value.tokens[accountInfo.value.address.toUpperCase()]
+              const tokenAddrs = tokens && tokens.length ? tokens.map((item: any) => item.tokenContractAddress.toUpperCase()) : []
+              txList.value = list.filter((item: any) => !tokenAddrs.includes(item.to.toUpperCase()));
             }
           }
           if(!tokenContractAddress) {
@@ -487,8 +489,12 @@ export default {
             checkTxQueue: false
           })
         }
-        const txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
-
+        let txType = 'normal'
+        if(tokenAddress) {
+          txType = 'contract'
+        } else {
+          txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
+        }
         // let data = await wallet.sendTransaction(tx);
         // const data = await store.dispatch('account/transaction', {
         //     ...tx,
@@ -592,7 +598,12 @@ export default {
         }
         // step1  Set the original transaction status to false and unshift to the transaction record
         const { hash, from, type, value: newVal, contractAddress } = data;
-        const txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
+        let txType = 'normal'
+        if(tokenAddress) {
+          txType = 'contract'
+        } else {
+          txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
+        }
         const txInfo =  {
           ...sendTx.value,
           receipt: {

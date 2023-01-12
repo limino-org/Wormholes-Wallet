@@ -196,7 +196,10 @@ export default {
   getters: {
     // Whether the pop-up window guides the pop-up window
     getGuideModal(state: State){
-      const { finishedGuide } = state
+      const { finishedGuide, show0, show1, show2,show3,show4, show5, show6 } = state
+      if(show1 || show2 || show3 || show4 || show5 || show6) {
+        return false
+      }
       if(finishedGuide){
         return false
       } else {

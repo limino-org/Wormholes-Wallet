@@ -1,4 +1,5 @@
 <template>
+ <div>
   <div :class="`bourse ${isModif ? 'modif' : ''}`">
     <NavHeader
       :title="
@@ -351,7 +352,6 @@
         show-cancel-button
         teleport="#page-box"
         :showConfirmButton="false"
-        :showCancelButton="false"
       >
         <div class="miners-success" v-if="isClose">
           <div class="miners-header">
@@ -470,6 +470,7 @@
       </div>
     </div>
   </div>
+ </div>
 </template>
 <script lang="ts">
 import {
@@ -632,6 +633,7 @@ export default defineComponent({
     })
     //  const { state } = store;
     onMounted(async () => {
+      debugger
       try {
         const wallet = await getWallet();
         const { address } = wallet;
@@ -663,6 +665,7 @@ export default defineComponent({
                 item.Addr.toUpperCase() ==
                 accountInfo.value.address.toUpperCase()
             );
+            debugger
             console.warn("pledge", pledge);
             const selectAcc = accountList.value.find(
               (item: any) =>
@@ -1245,7 +1248,12 @@ export default defineComponent({
         const data = await dispatch('account/transaction', tx)
         $tradeConfirm.update({status:"approve",callBack})
         const receipt = await data.wallet.provider.waitForTransaction(data.hash)
-        $tradeConfirm.update({status:"success",callBack})
+        const {status} = receipt
+        if(!status) {
+          $tradeConfirm.update({status:"fail",callBack, hash: data.hash})
+        } else {
+          $tradeConfirm.update({status:"success",callBack, hash: data.hash})
+        }
         dispatch('account/waitTxQueueResponse')
       }catch(err: any){
         if (err.toString().indexOf("timeout") > -1) {

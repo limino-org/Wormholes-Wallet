@@ -1,7 +1,6 @@
 <template>
   <van-dialog
     v-model:show="showModal"
-    show-cancel-button
     :showConfirmButton="false"
     :showCancelButton="false"
     teleport="#page-box"
@@ -50,7 +49,6 @@ import { useI18n } from "vue-i18n";
 const { state } = useStore();
 const { t } = useI18n();
 const accountList = computed(() => state.account.accountList);
-const VanDialog = Dialog.Component;
 const props = defineProps({
   modelValue: Boolean,
 });
@@ -58,6 +56,7 @@ console.warn("props", props.modelValue);
 const emits = defineEmits(["update:modelValue", "onChange"]);
 const showModal: Ref<boolean> = ref(false);
 const selectAccount: Ref<AccountInfo | any> = ref({});
+const VanDialog = Dialog.Component;
 watch(
   () => props.modelValue,
   (n) => {

@@ -15,8 +15,9 @@
         </div>
       </div>
     </div>
-    <dialog-warning @warningSuccess="warningSuccess" theme="light"  :text="t('common.confirmExit')"  v-model:isWarning="isWarning"></dialog-warning>
   </div>
+  <dialog-warning @warningSuccess="warningSuccess" theme="light" @close="handleClose"  :text="t('common.confirmExit')"  v-model:isWarning="isWarning"></dialog-warning>
+
 </template>
 
 <script lang="ts">
@@ -71,13 +72,18 @@ export default defineComponent({
     }
     const dispatchClose = () => {
       isWarning.value = true
+      showModal.value = false
     }
     const warningSuccess = () => {
       dispatch('system/closeGuide')
       showModal.value = false
       isWarning.value = false
     }
+    const handleClose = () => {
+      showModal.value = true
+    }
     return {
+      handleClose,
       t,
       // show1,
       handleClick,

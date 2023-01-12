@@ -3,41 +3,24 @@
   <div v-if="showModal" class="custom-popover">
     <div class="custom-popover-header">
             <div class="footer-btns">
-        <div class="container pl-20 pr-20 evenly flex">   
-          <span @click="handleClick(6)">{{ t("returnreceipt.done") }} 6/6</span>
+        <div class="container pl-20 pr-20 evenly flex">          <span @click="dispatchClose">{{ t("common.cancel") }}</span>
+          <span @click="handleClick(6)">{{ t("common.next") }} 6/6</span>
         </div>
       </div>
-      <!-- <div class="header-left"></div>
-      <div class="header-right">
-        <div class="footer-text">
-          <div class="flex center h-10">
-            <div class="dot"></div>
-          </div>
-          <div class="flex center lh-30">
-            {{ t("sendNFT.more") }}
-          </div>
-        </div>
-      </div> -->
     </div>
-    <div class="custom-popover-container">
-      <div class="container-left"></div>
-            <span class="tip-txt">
-        <span>{{t('common.helpCenter')}}</span>
+    <div class="custom-popover-container"></div>
+    <div class="custom-popover-footer flex">
+      <div class="left-footer"></div>
+      <span class="tip-txt">
+        <span>{{t('sidebar.myexchange')}}</span>
       </span>
       <span class="line"></span>
       <span class="line-circle"></span>
     </div>
-    <div class="custom-popover-footer">
-      <div class="footer-left"></div>
-    </div>
 
-    <dialog-warning
-      @warningSuccess="warningSuccess"
-      :text="t('common.confirmExit')"
-      v-model:isWarning="isWarning"
-      theme="light" 
-    ></dialog-warning>
   </div>
+  <dialog-warning @warningSuccess="warningSuccess" theme="light"  @close="handleClose"  :text="t('common.confirmExit')"  v-model:isWarning="isWarning"></dialog-warning>
+
 </template>
 
 <script lang="ts">
@@ -48,13 +31,19 @@ import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
 import dialogWarning from "@/components/dialogWarning/indexAffirm.vue";
 export default defineComponent({
-  name: "guide-modal6",
+  name: "guide-modal5",
   components: {
     [Popover.name]: Popover,
     [Dialog.Component.name]: Dialog.Component,
     [Button.name]: Button,
     WormTransition,
     "dialog-warning": dialogWarning,
+  },
+  props: {
+    type: {
+      type: Number,
+      default: 6,
+    },
   },
   setup(props: any, context: SetupContext) {
     const { t } = useI18n();
@@ -84,17 +73,23 @@ export default defineComponent({
       }
     };
     let isWarning = ref(false);
-    const dispatchClose = () => {
-      isWarning.value = true;
-    };
+
     const warningSuccess = () => {
       dispatch("system/closeGuide");
       showModal.value = false;
       isWarning.value = false;
     };
+
+    const dispatchClose = () => {
+      isWarning.value = true
+      showModal.value = false
+    }
+    const handleClose = () => {
+      showModal.value = true
+    }
     return {
       t,
-      show6,
+      handleClose,
       beforeClose,
       handleClick,
       showModal,
@@ -110,17 +105,15 @@ export default defineComponent({
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom:0;
   width: 100%;
   height: 100%;
   z-index: 100000;
 }
 .custom-popover-header {
-  height: calc(100vh - 165px);
+  height: 200px;
   width: 100%;
   display: flex;
-        background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.7);
   // .header-left {
   //   width: 50px;
   //   height: 100%;
@@ -154,17 +147,20 @@ export default defineComponent({
   // }
 }
 .custom-popover-container {
-    height: 100px;
-    position: relative;
-    .container-left {
-    width:75%;
+  height: calc(100vh - 300px);
   background-color: rgba(0, 0, 0, 0.7);
-  height: 100%;
-    }
-    .tip-txt {
+}
+.custom-popover-footer {
+  position: relative;
+  height: 100px;
+  .left-footer {
+    width: 30%;
+  background-color: rgba(0, 0, 0, 0.7);
+  }
+  .tip-txt {
     position: absolute;
     top: -98px;
-    right: 14px;
+    right: 50px;
     color: #fff;
 
   }
@@ -173,7 +169,7 @@ export default defineComponent({
       border-right: 1px solid #037cd6;
       height: 75px;
       position: absolute;
-      right: 48px;
+      right: 126px;
       top: -75px;
   }
   .line-circle {
@@ -182,31 +178,21 @@ export default defineComponent({
     border-radius: 50%;
     background: #037cd6;
     position: absolute;
-    right: 45px;
+    right: 123px;
     top: -80px;
   }
-
-}
-.custom-popover-footer {
-  position: relative;
-  height: 65px;
-  // position: absolute;
-  // left: 0;
-  // right: 0;
-  // bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  
 }
 .footer-btns {
     position: fixed;
-    top: 235px;
+    top: 230px;
     left: 0;
     right: 0;
     width: 100%;
-
   div {
     span {
       display: inline-block;
-      width: 230px;
+      width: 100px;
       height: 45px;
       cursor: pointer;
       font-size: 12px;
@@ -215,7 +201,10 @@ export default defineComponent({
       line-height: 45px;
       color: #fff;
       box-sizing: border-box;
-
+      &:first-child {
+        border: 1px solid #fff;
+        margin-right: 40px;
+      }
       &:last-child {
         background-color: #037cd6;
       }
@@ -281,9 +270,9 @@ export default defineComponent({
 }
 
 @media screen and (min-width:750px) {
-  .custom-popover-container{
-  .container-left {
-    width: 86%;
+  .custom-popover-footer {
+  .left-footer {
+    width: 65%;
   }
   }
 }

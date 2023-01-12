@@ -28,6 +28,7 @@
       <van-dialog
         v-model:show="showModal2"
         teleport="#page-box"
+        class="startGuideModal"
         :showConfirmButton="false"
         :showCancelButton="false"
         closeOnClickOverlay
@@ -47,7 +48,7 @@
       </van-dialog>
     </div>
 
-    <dialog-warning  @warningSuccess="warningSuccess" theme="light" :text="t('common.confirmExit')"  v-model:isWarning="isWarning"></dialog-warning>
+    <dialog-warning  @warningSuccess="warningSuccess" @close="handleClose" theme="light" :text="t('common.confirmExit')"  v-model:isWarning="isWarning"></dialog-warning>
   </div>
 </template>
 
@@ -124,11 +125,30 @@ export default defineComponent({
       showModal.value = false
       isWarning.value = false
     }
+    const cancelIdx = ref(0)
     const dispatchClose = () => {
       isWarning.value = true
+      if(showModal.value) {
+        cancelIdx.value = 0
+        showModal.value = false
+      }
+      if(showModal2.value) {
+        cancelIdx.value = 1
+        showModal2.value = false
+      }
+
+    }
+    const handleClose = () => {
+      if(cancelIdx.value === 0) {
+        showModal.value = true
+      }
+      if(cancelIdx.value) {
+        showModal2.value = true
+      }
     }
     return {
       warningSuccess,
+      handleClose,
       isWarning,
       t,
       dispatchClose,

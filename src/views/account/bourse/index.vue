@@ -177,7 +177,7 @@
           <van-icon name="question" class="ml-4" color="#9A9A9A" />
         </el-tooltip>
       </div>
-      <p v-show="insufficientMoney && !isExchanger_flag" class="insufficientMoney-tip">{{ insufficientMoney ? t('createExchange.insufficientMoney') : '' }}</p>
+      <p v-show="insufficientMoney && !isExchanger_flag" class="insufficientMoney-tip">{{ insufficientMoney ? t('createExchange.insufficientMoney', {value: addBalance}) : '' }}</p>
 
       <div
         v-if="!isExchanger_flag"
@@ -726,6 +726,9 @@ export default defineComponent({
     const insufficientMoney = computed(() => {
       return new Bignumber(accountInfo.value.amount).lt(901) ? true : false
     })
+    const addBalance = computed(() => {
+      return new Bignumber(901).minus(accountInfo.value.amount).toFixed(6)
+    })
     onMounted(() => {
       initPageData();
       if(insufficientMoney.value) {
@@ -922,6 +925,7 @@ export default defineComponent({
       addAmount,
       visible1,
       visible2,
+      addBalance,
       changeAdd,
       handleAdd,
       minusDisabled,

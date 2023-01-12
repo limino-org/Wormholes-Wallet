@@ -75,14 +75,26 @@ body {
   color: #037CD6;
 }
 .van-dialog {
-  overflow: scroll;
-  top: 50%;
+  overflow: hidden;
+  top: 45%;
+    // width: var(--van-dialog-width);
+    // overflow: hidden;
+    // font-size: var(--van-dialog-font-size);
+    // border-radius: var(--van-dialog-radius);
+    // backface-visibility: hidden;
+    // transition: var(--van-dialog-transition);
+    // transition-property: transform,opacity;
+    backface-visibility: hidden;
   .van-dialog__content {
     border-radius: 10px;
     overflow-x: hidden;
   }
   &.van-popup--center {
-  
+    // left: 0;
+    // right: 0;
+    // max-width: calc(100vw - var(--van-padding-md) * 2);
+    // margin: 0 auto;
+    // transform: translateY(-50%);
   }
 }
 .van-button--danger {
@@ -169,7 +181,7 @@ body {
   cursor: pointer;
   margin-left: 5px !important;
   color: #848484;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 
@@ -292,6 +304,9 @@ body {
 .minus-pledge-dialog {
   height: 374px;
 }
+.startGuideModal {
+  height: 324px;
+}
 @media screen and (min-width: 750px) {
   html {
     font-size: 40PX !important; // ignored
@@ -307,3 +322,16 @@ body {
   }
   
 }
+
+// .van-dialog-bounce-enter-from {
+//   transform: translate3d(0,-50%,0) scale(.7);
+//   opacity: 0
+// }
+
+// .van-dialog-bounce-leave-active {
+//   transform: translate3d(0,-50%,0) scale(.9);
+//   opacity: 0
+// }
+// .van-dialog-bounce-enter-to{
+
+// }

@@ -53,7 +53,6 @@ export default {
   // overflow-y: scroll;
   position: relative;
   box-sizing: border-box;
-  padding-bottom: 30px;
   &::-webkit-scrollbar {
     display: none;
     /* Chrome Safari */

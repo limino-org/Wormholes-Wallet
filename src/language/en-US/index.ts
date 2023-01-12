@@ -205,7 +205,7 @@ export default {
     snftColorTip: "S-NFT grades are L0, L1, L2, and L3 from the lowest to the highest. You can synthesize it to higher levels for higher revenue. The rules are as below: 16 specific S-NFT L0 synthesizes a unique S-NFT L1, 16 specific S-NFT L1 synthesizes a unique S-NFT L2, and 16 specific S-NFT L2 synthesizes a unique S-NFT L3. The blue number indicates the S-NFT L0 position number in an S-NFT L1.  The green number indicates the position number of S-NFT L1 in an S-NFT L2.  The yellow number indicates the S-NFT L2 position number in an S-NFT L3, and the red number refers to the position number of an S-NFT L3.",
     contrctTx: "Transaction of contract",
     contractAddr: "Address of contract",
-    converTip:"Tips: Your successful S-NFT exchange willdisappear from the asset list. You can viewthe exchange status in the transactionhistory details.",
+    converTip:"Tips: After the S-NFT exchange is successful, it will disappear from the wallet. You can view the exchange record in the wallet's transaction history or browser.",
     snftLabel:'S-NFTs Convert',
     hsitory: "History"
 
@@ -653,7 +653,7 @@ export default {
     redeem: "This is the amount of ERB you want to redeem",
     convert: "Convert",
     desc3: "This the button that you can convert your S-NFT to ERB with Wormholes Blockchain.",
-    insufficientMoney:"Sorry,your balance is not enough to rent our server. You can only set up your market website on your own server."
+    insufficientMoney:"After staking ,your balance will be less than 201 ERB wihich is not enough to set up your market on our server.You will need to get extra {value} ERB."
 
 
 
@@ -1192,7 +1192,7 @@ export default {
   },
   guidePopup: {
     tip1: "Account, Assets, Address, and Transactions",
-    tip2: "Tokens & NFTs",
+    tip2: "Tokens",
     createExchangGuideTip1: "Click to access",
     createExchangGuideTip2: "Staking, Redemption, and Marketplace Server",
   },

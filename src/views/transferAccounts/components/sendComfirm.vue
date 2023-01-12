@@ -107,6 +107,7 @@ import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { clone } from "@/store/modules/account";
 import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
 import { useToast } from "@/plugins/toast";
+import eventBus from "@/utils/bus";
 
 export default defineComponent({
   name: "send-confirm-modal",
@@ -217,13 +218,18 @@ export default defineComponent({
           params
         );
         $tradeConfirm.update({ status: "approve" });
-
+        eventBus.emit('sendComfirm')
+        const receipt = await txData.wallet.provider.waitForTransaction(txData.hash, null, 60000)
         await store.dispatch("account/waitTxQueueResponse", {
           callback(e: any) {
             waitTime.value = e;
           },
         });
-        $tradeConfirm.update({ status: "success" });
+        if(receipt.status) {
+          $tradeConfirm.update({ status: "success", hash:txData.hash });
+        } else {
+          $tradeConfirm.update({ status: "fail", hash:txData.hash });
+        }
       } catch (err: any) {
         console.warn('idx', err.toString().indexOf("timeout"))
         console.log('err:===', err)

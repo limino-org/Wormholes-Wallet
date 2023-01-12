@@ -204,7 +204,7 @@ export default {
         const receipt1 = await data1.wallet.provider.waitForTransaction(data1.hash, null, 60000);
         dispatch("account/waitTxQueueResponse");
         if (receipt1.status == 1) {
-          $tradeConfirm.update({ status: "success" });
+          $tradeConfirm.update({ status: "success", hash: receipt1.transactionHash  });
         } else {
           $tradeConfirm.update({ status: "fail", hash: receipt1.transactionHash  });
         }

@@ -552,7 +552,12 @@ export default {
       // Clear the last selected token cache each time the account is re selected
       commit("transfer/CLEAR_TX");
     });
-
+    eventBus.on('sendComfirm', () => {
+      clearAddress()
+      toAddress.value = ''
+      amount.value = null
+      commit("transfer/CLEAR_TX");
+    })
     // Balance display type
     const amountType = computed(() => store.state.system.amountType);
 

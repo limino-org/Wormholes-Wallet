@@ -115,3 +115,24 @@ export const viewAccountByAddress = (address:string ) => {
   }
 }
 
+
+export function throttle(fn: Function, delay = 200) {
+  let timer: any = null
+  return function () {
+      if(timer) return
+      timer = setTimeout(() => {
+        // @ts-ignore
+        fn.apply(this, arguments)
+        timer = null
+      })
+  }
+}
+
+
+export function debounce(fn: Function, wait = 500) {
+  let timeout: any = null;
+  return function() {
+      if(timeout !== null) clearTimeout(timeout);
+      timeout = setTimeout(fn, wait);
+  }
+}

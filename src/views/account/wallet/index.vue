@@ -168,8 +168,8 @@ trigger="manual"
           </div>
         </div>
       </Transition>
-      <div v-if="active === 0 && currentNetwork.id == 'wormholes-network-1'">
-        <div class="btn-groups">
+      <Transition name="slider">
+        <div class="btn-groups" v-if="currentNetwork.id == 'wormholes-network-1' && (!isSelect || active === 0)">
           <div class="container pl-20 pr-20 flex right center-v">
             <div
               :class="[
@@ -188,7 +188,8 @@ trigger="manual"
             </div>
           </div>
         </div>
-      </div>
+      </Transition>
+
     </div>
     <GuideModal
       @guideModalSuccess="guideModalSuccess"
@@ -200,6 +201,7 @@ trigger="manual"
     <guide-fore></guide-fore>
     <guide-five></guide-five>
     <guide-six></guide-six>
+    <guide-seven></guide-seven>
     <action-sheet v-model="actionSheetShow"></action-sheet>
     <BackUpBottom />
   </div>
@@ -259,6 +261,7 @@ import GuideModal3 from "@/views/guidance/step3.vue";
 import GuideModal4 from "@/views/guidance/step4.vue";
 import GuideModal5 from "@/views/guidance/step5.vue";
 import GuideModal6 from "@/views/guidance/step6.vue";
+import GuideModal7 from "@/views/guidance/step7.vue";
 import actionSheet from "./action-sheet.vue";
 import dialogWarning from "@/components/dialogWarning/message.vue";
 import { useToast } from "@/plugins/toast";
@@ -296,6 +299,7 @@ export default {
     "guide-fore": GuideModal4,
     "guide-five":GuideModal5,
     "guide-six":GuideModal6,
+    'guide-seven':GuideModal7,
     "dialog-warning": dialogWarning,
   },
   setup() {
@@ -456,6 +460,8 @@ export default {
    
     })
 
+    
+
     let time: any = null;
     const getWalletBalance = () => {
       dispatch("account/updateBalance");
@@ -469,6 +475,9 @@ export default {
       }
     };
     onMounted(() => {
+      eventBus.on('guideSnftModal', (n) => {
+        active.value = n
+      })
       dispatch("transfer/clearTx");
       dispatch("account/updateBalance");
       dispatch("account/getExchangeStatus").then((res) => {

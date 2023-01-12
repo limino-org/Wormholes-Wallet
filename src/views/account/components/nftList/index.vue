@@ -26,9 +26,10 @@
       </div>
     </div>
   </van-sticky>
+
   <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
     <div class="snft-list-box">
-      <div :class="`snftcontainer ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" :title="item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : t('wallet.snftUnfree')" v-for="(item, i) in list" :key="i" @mouseover="item.renderPop = true" @mouseleave="item.renderPop = false">
+      <div :class="`snftcontainer ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" :title="item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : t('wallet.snftUnfree')" v-for="(item, i) in list" :key="item.nft_address" @mouseover="item.renderPop = true" @mouseleave="item.renderPop = false"  @click.stop="toNftExchange(item)">
         <div class="snftcontainer_left">
           <div :class="`checkbox_img flex center ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" v-if="isSelectComputed">
             <i
@@ -43,7 +44,7 @@
             ></i>
           </div>
           <div class="snftcontainer_left_container">
-            <div class="img-p" @click.stop="toNftExchange(item)">
+            <div class="img-p">
               <van-image
                 :src="`https://www.wormholestest.com${item.source_url}`"
                 fit="cover"
@@ -57,22 +58,22 @@
             <div class="snftmiddle flex column between" >
               <div class="flex between center-v snftName h-14 text-weight">
                 <span class="f-14 lh-12 hover flex center-v"  @click.stop="toNftExchange(item)">
-                  {{ item.collections }}-<span class="red">#</span><span class="nft-p">{{item.pidx}}</span>
+                  {{ item.collections }}-<span class="red"></span>
+                  <span class="nft-p">{{item.pidx}}</span>
                   <span class="nft-c" v-if="item.cidx !== undefined">{{item.cidx}}</span>
                   <span class="nft-n"  v-if="item.nidx !== undefined">{{item.nidx}}</span>
                   <span class="nft-f" v-if="item.fidx !== undefined">{{item.fidx}}</span>
                   <span v-if="item.renderPop">
-                    <van-popover v-model:show="item.showPop"              theme="dark"
-                placement="right" >
+                    <van-popover v-model:show="item.showPop" theme="dark" placement="right" >
             <div class="lh-16 text-left p-8">{{t(`common.snftColorTip`)}}</div>
             <template #reference>
               <van-icon name="question" @mouseover.stop="item.showPop = true" size="15" @mouseout.stop="item.showPop = false" />
             </template></van-popover>
                   </span>
-
-                  
                   </span
-                ><NftTag :tag="item.tag" />
+                >
+                <van-icon name="arrow" v-show="!value" />
+                <!-- <NftTag :tag="item.tag" /> -->
               </div>
               <div class="snftleftcolleaddre flex center-v">
                 <span class="snftmiddle-text">{{ item.nft_address }}</span>
@@ -97,6 +98,15 @@
       </i18n-t> -->
     </div>
   </van-list>
+  <!-- <van-pull-refresh v-model="loading2" @refresh="onRefresh">
+</van-pull-refresh> -->
+  <Transition name="slider">
+    <div :class="`flex center buySnft ${bugTipClass}`" v-if="showBuyTip">
+      <i18n-t keypath="wallet.buySnft" tag="div" class="text-center f-12">
+        <template v-slot:link><a :href="VUE_APP_OFFICIAL_EXCHANGE" target="__blank">{{ t('wallet.findMore') }}</a></template>
+      </i18n-t>
+    </div>
+  </Transition>
   <Transition name="slider">
     <div class="snft_bottom" v-if="isSelectComputed">
       <div class="snft_bottom-left">
@@ -189,7 +199,7 @@
         >
           <template v-slot:link>
             <a
-              :href="VUE_APP_EXCHANGES_URL"
+              :href="VUE_APP_OFFICIAL_EXCHANGE"
               target="_blank"
               rel="noopener noreferrer"
               >{{ t("converSnft.buy") }}</a
@@ -386,7 +396,7 @@ name="question hover"
 
 <script lang="ts">
 import { defineComponent, onUnmounted } from "@vue/runtime-core";
-import { computed, ref,onBeforeMount, onMounted } from "vue";
+import { computed, ref,onBeforeMount, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import {
   queryArraySnft,
@@ -408,6 +418,8 @@ import {
   Dialog,
   Popover,
   Switch,
+  ListInstance,
+  PullRefresh 
 } from "vant";
 import eventBus from "@/utils/bus";
 import { useI18n } from "vue-i18n";
@@ -416,7 +428,7 @@ import { useToast } from "@/plugins/toast";
 import BigNumber from "bignumber.js";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
-import { VUE_APP_EXCHANGES_URL } from "@/enum/env";
+import { VUE_APP_EXCHANGES_URL, VUE_APP_OFFICIAL_EXCHANGE } from "@/enum/env";
 import SnftModal from "./snftModal.vue";
 import { getRandomColor } from "@/utils";
 import { web3 } from "@/utils/web3";
@@ -424,6 +436,9 @@ import { toUsd } from "@/utils/filters";
 import { ethers } from "ethers";
 import { TransactionTypes } from "@/store/modules/account";
 import Tip from '@/components/tip/index.vue'
+import { debounce, throttle } from "@/utils/utils";
+import router from "@/router";
+
 export default defineComponent({
   name: "nft-list",
   props: {
@@ -442,6 +457,7 @@ export default defineComponent({
     [Switch.name]: Switch,
     [Button.name]: Button,
     [Popover.name]: Popover,
+    [PullRefresh.name] : PullRefresh,
     "dialog-warning": dialogWarning,
     [Sticky.name]: Sticky,
     [Dialog.Component.name]: Dialog.Component,
@@ -688,6 +704,8 @@ export default defineComponent({
       }
     };
 
+    // const 
+
     onBeforeMount(async() => {
       const wallet = await getWallet()
       network.value = await wallet.provider.getNetwork()
@@ -796,6 +814,10 @@ export default defineComponent({
       return str;
     });
 
+    const historyCallBack = () => {
+      router.replace({name:'transactionList'})
+    }
+
     const handleSubmit = async () => {
       const data: any = list.value.filter((f: any) => f.flag);
       if (data.length) {
@@ -877,6 +899,7 @@ export default defineComponent({
             status: "success",
             successMessage: t("wallet.conver_success",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount.toNumber()}</span>`}),
             successMessageType:'html',
+            historyCallBack
           });
           emit("success");
           } else {
@@ -884,7 +907,7 @@ export default defineComponent({
             status: "fail",
             successMessage: t("wallet.conver_wrong",{count: successList.length}),
             successMessageType:'html',
-            
+            historyCallBack
           });
           emit("success");
           }
@@ -893,6 +916,7 @@ export default defineComponent({
           $tradeConfirm.update({
             status: "fail",
             failMessage: t("createExchange.create_wrong"),
+            historyCallBack
           });
         } finally {
           isLoading.value = false;
@@ -1024,8 +1048,57 @@ export default defineComponent({
       }
       Toast(t('wallet.snftUnfree'))
     }
+
+    const showBuyTip = ref(true)
+    let oldScrollTop = 0
+    const scrolling = () => {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      let scrollStep = scrollTop - oldScrollTop;
+      oldScrollTop = scrollTop;
+      if (scrollStep < 0) {
+        console.log("scroll up.")
+        if(!showBuyTip.value)showBuyTip.value = true
+      } else {
+        if(showBuyTip.value)showBuyTip.value = false
+        console.log("scroll down.")
+      }
+    }
+    
+    onMounted(() => {
+      window.addEventListener('scroll', debounce(scrolling, 300))
+    })
+    onUnmounted(() => {
+      window.removeEventListener('scroll', debounce(scrolling, 300))
+    })
+    const bugTipClass = ref('')
+    const watchList = (val: any) => {
+      if(val && val.length > 10) {
+        !bugTipClass.value ? bugTipClass.value = 'fixed' : ''
+        // if(showBuyTip.value)showBuyTip.value = false 
+      } else {
+        bugTipClass.value ? bugTipClass.value = '' :''
+        // if(!showBuyTip.value)showBuyTip.value = true 
+      }
+    }
+
+    watch(()=> list.value, watchList , {
+      deep: true,
+      immediate: true
+    })
+
+    const loading2 = ref(false)
+    const onRefresh = () => {
+      list.value = []
+      loading2.value = true
+      onLoad();
+    }
+    
     return {
+      showBuyTip,
+      onRefresh,
+      VUE_APP_OFFICIAL_EXCHANGE,
       handleSelect,
+      bugTipClass,
       toNftExchange,
       myprofit,
       historyProfit,
@@ -1078,20 +1151,44 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .conver-label {
-  color: #848484;
   font-weight: bold;
 }
 .red {
   color: rgb(215, 58, 73);
+  margin-left: 2px;
 }
 .nft-c,.nft-f,.nft-n,.nft-p{
   color: #fff;
-padding: 0 5px;
-font-size: 18px;
+
 margin-right: 3px;
 border-radius: 3px;
+// font-size: 20px;
+// padding: 0 5px;
+// line-height: 14px;
+font-size: 18px;
+padding: 0 4px;
+line-height: 14px;
 font-family: KenneyPixel;
 text-align: center;
+}
+.buySnft {
+  color: #848484;
+    background: #fff;
+   &.fixed {
+    z-index: 1;
+    position: fixed;
+    width: 190px;
+    bottom: 10px;
+    line-height: 14px;
+    left: 50%;
+    margin-left: -95px;
+    padding: 3px 5px;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+   }
+  a {
+    color: #037cd6;
+  }
 }
 .nft-p {
 background: rgb(215, 58, 73);
@@ -1107,11 +1204,11 @@ background: rgb(215, 58, 73);
   background: rgb(3, 124, 214);
 }
 .snft-list-box {
-  padding-bottom: 40px;
+  padding-bottom: 20px;
 }
 .tab-box {
   position: relative;
-  background: #fff;
+  background: #F1F3F4;
   padding: 8px 0;
 }
 
@@ -1167,9 +1264,9 @@ background: rgb(215, 58, 73);
 </style>
 <style lang="scss" scoped>
 .snftcontainer {
-  height: 64px;
-  padding: 0px 15px;
-  border-bottom: 1px solid #dbd9da;
+  height: 67px;
+  padding: 0px 10px 0 15px;
+  border-bottom: 1px solid #E4E7E8;
   display: flex;
   align-items: center;
   &.disabled {
@@ -1259,9 +1356,12 @@ background: rgb(215, 58, 73);
       font-weight: bold;
       &>span {
         span {
-          display: inline;
           vertical-align: top;
         }
+      }
+      i {
+        color: #B3B3B3;
+        font-size: 18px;
       }
     }
   }
@@ -1278,6 +1378,16 @@ background: rgb(215, 58, 73);
   display: flex;
   align-items: flex-start;
   width: 100%;
+  &:hover {
+    cursor: pointer;
+    color: #037cd6;
+    .snftmiddle .snftmiddle-text {
+      color: #037cd6;
+    }
+    .snftmiddle .snftName i{
+      color: #037cd6;
+    }
+  }
 }
 .snftimg {
   width: 40px;
@@ -1334,6 +1444,7 @@ background: rgb(215, 58, 73);
     .total {
       font-size: 12px;
       margin-bottom: 4px;
+      letter-spacing: 0.4px;
     }
     .usd {
       color: #037cd6;
@@ -1470,6 +1581,7 @@ background: rgb(215, 58, 73);
   animation: slider-in 0.3s reverse ease-in-out;
 }
 
+
 .confirm-card {
   color: #000;
   min-height: 150px;
@@ -1510,6 +1622,14 @@ background: rgb(215, 58, 73);
 
   100% {
     transform: translateY(0);
+  }
+}
+
+
+@media screen and (min-width:750px) {
+  .snftcontainer .snftmiddle .snftmiddle-text {
+    letter-spacing: 0px;
+    font-size: 14px;
   }
 }
 </style>

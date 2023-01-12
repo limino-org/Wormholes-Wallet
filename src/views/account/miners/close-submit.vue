@@ -197,6 +197,7 @@ export default {
             callBack() {
               router.replace({ name: "wallet" });
             },
+            hash: transactionHash
           });
         }
         console.log(receipt);

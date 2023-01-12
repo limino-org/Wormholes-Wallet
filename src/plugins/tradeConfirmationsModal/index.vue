@@ -99,7 +99,7 @@
               }} -->
             </div>
           </div>
-          <div :class="`flex ${defaultData.hash ? 'between' : 'center'} mt-26 btn-done-box`">
+          <div :class="`flex ${(defaultData.hash || defaultData.historyCallBack) ? 'between' : 'center'} mt-26 btn-done-box`">
             <Button
               @click="callBack"
               :disabled="disabled"
@@ -107,7 +107,7 @@
               type="primary"
               >{{ i18n.global.t("returnreceipt.done") }}</Button
             >
-            <Button v-if="defaultData.hash"  class="okbtn" type="primary" @click="toHistory(defaultData.hash)">{{i18n.global.t('common.hsitory') }}</Button>
+            <Button v-if="defaultData.hash || defaultData.historyCallBack"  class="okbtn" type="primary" @click="toHistory(defaultData.hash)">{{i18n.global.t('common.hsitory') }}</Button>
           </div>
         </div>
       </div>
@@ -125,11 +125,11 @@ export type TradeOptions = {
   status: string
   callBack?: Function
   failBack?: Function
+  historyCallBack?: Function | null
   disabled: Array<string>
   wattingMessageType: string
   failMessageType: string
   successMessageType: string
-  receipt?: null | Object
   hash?: null | string
 };
 
@@ -161,7 +161,7 @@ const getDefaultOpt = () => {
     successMessageType: 'string',
     hash: null,
     callBack: () => {},
-    failBack: () => {},
+    historyCallBack: null,
     // The button is disabled in this state
     disabled: [TradeStatus.pendding, TradeStatus.approve]
   });
@@ -208,8 +208,16 @@ const update = (_opt: TradeConfirmOpt= {status: TradeStatus.approve}) => {
   show(defaultOpt);
 };
 
-const toHistory = (hash: string) => {
-  router.replace({name:'transactionList', query: {hash}})
+const toHistory = (hash: string | null | undefined) => {
+  hide()
+  if(defaultData.value.historyCallBack && typeof defaultData.value.historyCallBack == 'function') {
+    defaultData.value.historyCallBack()
+  } else {
+    if(hash) {
+    router.replace({name:'transactionList', query: {hash}})
+  }
+  }
+
 }
 
 defineExpose({

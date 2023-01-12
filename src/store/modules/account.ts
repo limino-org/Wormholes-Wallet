@@ -1069,7 +1069,6 @@ export default {
         if (typeof sendNonce != undefined) {
           tx.nonce = sendNonce
         }
-        sessionStorage.setItem('tx------', JSON.stringify(tx))
         // Update recent contacts
         commit("PUSH_RECENTLIST", to);
         const newwallet = await getWallet();
@@ -1692,7 +1691,7 @@ export const DEL_TXQUEUE = async (tx: any) => {
 export const PUSH_TRANSACTION = async (da: any) => {
   const state = store.state.account
   console.warn('push', da)
-  const { receipt, sendData, network, txId, value, date, sendType } = da
+  const { receipt, sendData, network, txId, value, date, sendType, txType } = da
   const { convertAmount, nonce, data } = sendData
   const {
     blockHash,
@@ -1744,7 +1743,8 @@ export const PUSH_TRANSACTION = async (da: any) => {
     status,
     value: value ? ethers.utils.formatUnits(value, 'wei') : '0',
     txId,
-    sendType
+    sendType,
+    txType
   }
   if (data) {
     const convertAmount = await getConverAmount(wallet, { input: data, blockNumber })

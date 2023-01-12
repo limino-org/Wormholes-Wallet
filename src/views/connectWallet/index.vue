@@ -22,6 +22,7 @@ import { useToggleAccount } from '@/components/accountModal/hooks/toggleAccount'
 import { ethers } from "ethers";
 import { useI18n } from "vue-i18n";
 import { decode } from "js-base64";
+import localforage from 'localforage';
 export enum Actions {
   getAddress = "getAddress",
   login = "login",
@@ -66,6 +67,7 @@ export default {
         // @ts-ignore
         router.replace({name:"withpassword",query: {backUrl:'connectWallet',loginParams: {...query}}})
     }
+
     const nowAccount = computed(() => {
       if (address) {
         return accountList.value.find(
@@ -292,9 +294,13 @@ export default {
     };
     // How to obtain a wallet without affecting the wallet status
     async function getWallet2() {
+      if(!address){
+        $wtoast.warn('The address parameter cannot be empty')
+        return null;
+      }
       if (!nowAccount.value) {
         $wtoast.warn("common.addressnotfound");
-        router.replace({name:'import'})
+        // router.replace({name:'import'})
         return null;
       }
       if (nowAccount.value.address.toUpperCase() != accountInfo.value.address.toUpperCase()) {
@@ -302,7 +308,7 @@ export default {
       } else {
         try {
           return await getWallet()
-        }catch(err){
+        }catch(err: any){
           Toast(err.toString())
         }
       }

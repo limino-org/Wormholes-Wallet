@@ -248,7 +248,7 @@ export default {
         snftColorTip: "S-NFT等级从低到高分别为L0、L1、L2、L3。您可以合成更高等级以获取更高收益，合成规则如下：16个特定S-NFT L0可合成一个唯一S-NFT L1，16个特定S-NFT L1可合成一个唯一S-NFT L2，16个特定S-NFT L2可合成一个唯一S-NFT L3。蓝色数字表示在某一个S-NFT L1中，S-NFT L0的位置编号。绿色数字表示在某一个S-NFT L2中，S-NFT L1的位置编号。黄色数字表示在某一个S-NFT L3中，S-NFT L2的位置编号。红色数字表示S-NFT L3的位置编号。",
         contrctTx: "合约交易",
         contractAddr: "合约地址",
-        converTip:"提示:S-NFT转换成功后将从资产列表中消失。您可以在交易历史详细信息中查看交易状态。",
+        converTip:"提示: S-NFT交换成功后，将从钱包中消失。您可以在钱包的交易历史记录或浏览器中查看交易记录。",
         snftLabel:'S-NFTs转换',
         hsitory: "交易历史"
 
@@ -698,7 +698,7 @@ export default {
         addStaking: "该交易将帮助您将额外的ERB存入您的账户。您获得奖励的机会将增加。您的额外ERB也可以在几个月后赎回。",
         redeem: "这是您要赎回的 ERB 数量",
         convert: "转换",
-        insufficientMoney:"对不起，您的余额不足以租用我们的服务器。你只能在自己的服务器上建立你的市场网站。"
+        insufficientMoney:"在质押后，您的余额将低于201ERB，这不足以在我们的服务器上建立您的交易所。你需要支付额外的{value}ERB。"
 
 
 

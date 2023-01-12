@@ -194,7 +194,7 @@ async function toSend() {
     await dispatch('account/waitTxQueueResponse')
     const { status: status1 } = receipt1;
     if(!status1) {
-      $tradeConfirm.update({ status: "fail" })
+      $tradeConfirm.update({ status: "fail", hash: data1.hash })
       return
     }
     }
@@ -205,7 +205,7 @@ async function toSend() {
     await dispatch('account/waitTxQueueResponse')
     const { status: status2 } = receipt2;
     if(!status2) {
-      $tradeConfirm.update({ status: "fail" }) 
+      $tradeConfirm.update({ status: "fail", hash: data2.hash }) 
       return
     }
     }
@@ -223,9 +223,19 @@ async function toSend() {
       clearTimeout(time)
     }, 60000)
 
-  } catch (err) {
+  } catch (err: any) {
+    if (err.toString().indexOf("timeout") > -1) {
+          $tradeConfirm.update({
+            status: "warn",
+            failMessage: t("error.timeout"),
+          });
+        } else {
+          $tradeConfirm.update({
+            status: "fail",
+            failMessage: err.reason,
+          });
+        }
     console.error(err);
-    $tradeConfirm.update({ status: "fail" });
   }
 }
 
@@ -290,7 +300,7 @@ async function send1(
   try {
     const data: any = await dispatch('account/transaction', tx1)
     return Promise.resolve(data);
-  } catch (err) {
+  } catch (err: any) {
     console.error('err: 1', err)
     $tradeConfirm.update({ status: "fail" });
     return Promise.reject(err);

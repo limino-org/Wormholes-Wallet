@@ -35,6 +35,19 @@
         />
       </div>
       <no-data v-else />
+      <i18n-t
+        tag="div"
+        keypath="wallet.toBrowser"
+        class="flex center scan-link pb-30"
+      >
+        <template v-slot:link>
+          <span
+            @click="viewAccountByAddress(accountInfo.address)"
+            rel="noopener noreferrer"
+            >{{ t("wallet.scanLink") }}</span
+          >
+        </template>
+      </i18n-t>
     </div>
     <div class="loading-list-con" v-show="loading">
       <div class="loading-list-card" v-for="item in 16" :key="item">
@@ -207,9 +220,10 @@ import NavHeader from "@/components/navHeader/index.vue";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
-import { getRandomIcon, guid } from "@/utils";
+import { guid, viewAccountByAddress } from "@/utils/utils";
 import { ElTableV2 } from "element-plus";
 import CollectionCard from "@/views/account/components/collectionCard/index.vue";
+
 import {
   clone,
   DEL_TXQUEUE,
@@ -523,7 +537,12 @@ export default {
             checkTxQueue: false
           })
         }
-        const txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
+        let txType = 'normal'
+        if(tokenAddress) {
+          txType = 'contract'
+        } else {
+          txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
+        }
 
         // let data = await wallet.sendTransaction(tx);
         // const data = await store.dispatch('account/transaction', {
@@ -628,7 +647,12 @@ export default {
         }
         // step1  Set the original transaction status to false and unshift to the transaction record
         const { hash, from, type, value: newVal, contractAddress } = data;
-        const txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
+        let txType = 'normal'
+        if(tokenAddress) {
+          txType = 'contract'
+        } else {
+          txType = !newData ? 'normal' : (newData.indexOf('wormholes') > -1 ? 'wormholes' : 'contract')
+        }
         const txInfo =  {
           ...transactionData.data,
           receipt: {
@@ -694,6 +718,7 @@ export default {
       handleCancel,
       tabs,
       handleGasChange,
+      accountInfo,
       reloading,
       reSendTx,
       loading,
@@ -704,6 +729,7 @@ export default {
       currentNetwork,
       changeTab,
       t,
+      viewAccountByAddress,
       chooseTabdata,
       back,
       transactionList,
@@ -722,6 +748,18 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+  .scan-link {
+    color: #848484;
+    margin-top: 40px;
+    span {
+      margin-left: 3px;
+      color: #037cd6;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 :deep() {
   .van-skeleton__avatar--round {
     margin-top: 12px;

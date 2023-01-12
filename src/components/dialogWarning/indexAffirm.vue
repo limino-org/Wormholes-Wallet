@@ -10,7 +10,7 @@
         <div class="footer-btns">
             <div>
 
-                <span @click="show = false">{{t('common.no')}}</span>
+                <span @click="emitClose">{{t('common.no')}}</span>
                 <span @click="emitWarningSuccess">{{t('common.yes')}}</span>
             </div>
       </div>
@@ -55,10 +55,15 @@ export default {
         const emitWarningSuccess = () => {
             emit('warningSuccess')
         }
+        const emitClose = () => {
+            emit('close')
+            show.value = false
+        }
         const text = props.text
         return {
             show,
             text,
+            emitClose,
             emitWarningSuccess,
             t
         }
@@ -69,7 +74,7 @@ export default {
 <style lang="scss" scoped>
     .mask {
         background: rgba($color: #000000, $alpha: 0.7);
-        position: absolute;
+        position: fixed;
         left: 0;
         right: 0;
         top: 0;

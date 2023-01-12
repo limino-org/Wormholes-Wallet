@@ -30,6 +30,7 @@ export const vantLangs: any = {
 Locale.use(vantLangs[fallbackLocale].value, vantLangs[fallbackLocale]['package']);
 
 const i18n = createI18n({
+  legacy: false,
   silentFallbackWarn:true,
   fallbackLocale,
   globalInjection:true,

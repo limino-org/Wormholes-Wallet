@@ -205,8 +205,8 @@ export function transactionStatus(txData: any){
     if(txType == 'contract') return 'icon-icon-'
     const bigTo = to.toUpperCase()
     const bigFrom = from.toUpperCase()
-    if(bigTo === bigFrom || (myAddr === bigTo && bigFrom !== myAddr)) return 'icon-bottom'
-    if(bigTo !== bigFrom) return 'icon-jiantou_youshang'
+    if((myAddr === bigTo && bigFrom !== myAddr)) return 'icon-bottom'
+    if(bigTo !== bigFrom || bigTo === bigFrom) return 'icon-jiantou_youshang'
   }
   export const handleTxType = (item: any) => {
   const { to, from, contractAddress, sendStatus , txType} = item
@@ -221,6 +221,7 @@ export function transactionStatus(txData: any){
   if(txType === 'contract') return i18n.global.t('transationHistory.contract')
   const bigTo = to.toUpperCase()
   const bigFrom = from.toUpperCase()
+  if(bigTo === bigFrom)return i18n.global.t('transationHistory.send')
   if(bigTo === bigFrom || myAddr === bigTo) return i18n.global.t('transactiondetails.recive')
   if(bigTo !== bigFrom) return i18n.global.t('transationHistory.send')
   }
@@ -255,7 +256,8 @@ export function transactionStatus(txData: any){
     if(contractAddress) return val
     const bigTo = to.toUpperCase()
     const bigFrom = from.toUpperCase()
-    if(bigTo === bigFrom || (myAddr == bigTo && myAddr !== bigFrom)) return '+' + val
+    if(bigTo === bigFrom) return '-' + val
+    if((myAddr == bigTo && myAddr !== bigFrom)) return '+' + val
     if(bigTo !== bigFrom) return '-' + val
 
   }
