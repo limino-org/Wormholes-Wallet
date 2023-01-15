@@ -177,7 +177,6 @@ export const toUsdSymbol = (v: string | number, keepDotLength = 6) => {
 
   // Return to transaction status
 export function transactionStatus(txData: any){
-  console.log('txData', txData)
   const {status,sendStatus, sendType} = txData
   if(sendType && sendType === 'cancel') return i18n.global.t('transationHistory.canceled')
   if(sendType && sendType === 'speed') return i18n.global.t('transationHistory.accelerated')
@@ -269,8 +268,6 @@ export function transactionStatus(txData: any){
     if(txType === 'wormholes') {
       if(jsonData){
         if(jsonData.type == 6) {
-          console.warn('jsonData.type', jsonData.type)
-          console.log('convertAmount', convertAmount)
           return '+' + convertAmount
         }
         if(jsonData.type == 26 || jsonData.type == 12) {

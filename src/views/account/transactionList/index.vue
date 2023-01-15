@@ -307,15 +307,20 @@ export default {
         accountInfo.value.address
       );
     };
-    eventBus.on('waitTxEnd', () => {
-      handleAsyncTxList()
+    eventBus.on('waitTxEnd', async() => {
+      store.dispatch('txList/asyncUpdateList',{total: 0})
     })
     eventBus.on("loopTxListUpdata", () => {
       getPageList();
     });
     eventBus.on("txPush", (data: any) => {
+      console.warn('txPush', data)
+      const tx = tlist.value.find((item: any) => item.txId.toUpperCase() != data.txId.toUpperCase())
+      if(!tx) {
+        debugger
       // @ts-ignore
       tlist.value.unshift(data)
+      }
     });
 
     eventBus.on("delTxQueue", (data: any) => {
@@ -325,14 +330,17 @@ export default {
     
     eventBus.on("txQueuePush", (data: any) => {
       let time = setTimeout(async() => {
-        // @ts-ignore
+        const tx = tlist.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
+      if(!tx) {
         tlist.value.unshift(data)
+      }
         clearTimeout(time)
       },300)
     });
     
     eventBus.on("txUpdate", (data: any) => {
-      console.warn("data----", data);
+      console.warn("txUpdate----", data);
+
       for (let i = 0; i < tlist.value.length; i++) {
         let item = tlist.value[i];
         const { txId } = item;
@@ -344,12 +352,17 @@ export default {
           }
         }
       }
+      const tx = tlist.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
+      if(!tx) {
+        tlist.value.unshift(data)
+      }
     });
     eventBus.on('changeNetwork', async(address) => {
       loading.value = true
       tlist.value = []
       try {
-        await handleAsyncTxList();
+        const { total, asyncRecordKey} = await handleAsyncTxList();
+        await store.dispatch('txList/asyncUpdateList',{total})
         await getPageList();
       }finally {
         loading.value = false
@@ -368,7 +381,8 @@ export default {
     const waitTime: any = ref(null);
     onMounted(async () => {
       try {
-        await handleAsyncTxList();
+        const { total, asyncRecordKey} = await handleAsyncTxList();
+        await store.dispatch('txList/asyncUpdateList',{total})
         await getPageList();
       }finally {
         loading.value = false

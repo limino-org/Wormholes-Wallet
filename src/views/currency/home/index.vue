@@ -326,20 +326,8 @@ export default {
     let waitTime: any = ref(null);
     onMounted(async () => {
       try {
-
-        // if(asyncRecordKey){
-        //   const txInfo: any = await localforage.getItem(asyncRecordKey)
-        //   if(txInfo && txInfo?.list && txInfo.list.length) {
-        //     if(total === txInfo.list.length) {
-        //       return
-        //     } else {
-        //       await getPageList();
-        //     }
-        //   }
-        // } else {
-    
-        // }
-        await handleAsyncTxList();
+       const { total, asyncRecordKey} = await handleAsyncTxList();
+        await store.dispatch('txList/asyncUpdateList',{total})
         await getPageList();
         
       }finally {
@@ -411,7 +399,8 @@ export default {
       loading.value = true
       txList.value = [];
       try {
-        await handleAsyncTxList();
+        const { total, asyncRecordKey} = await handleAsyncTxList();
+        await store.dispatch('txList/asyncUpdateList',{total})
         await getPageList();
       }finally {
         loading.value = false
@@ -428,8 +417,11 @@ export default {
       getPageList();
     });
     eventBus.on("txPush", (data: any) => {
+      const tx = txList.value.find((item: any) => item.txId.toUpperCase() != data.txId.toUpperCase())
+      if(!tx) {
       // @ts-ignore
       txList.value.unshift(data)
+      }
     });
     eventBus.on("delTxQueue", (data: any) => {
       // @ts-ignore
@@ -438,18 +430,21 @@ export default {
     
     eventBus.on("txQueuePush", (data: any) => {
       let time = setTimeout(async() => {
-        // @ts-ignore
-        txList.value.unshift(data)
-        const qlist = await localforage.getItem(`txQueue-${data.network.id}-${data.network.chainId}-${data.from.toUpperCase()}`)
-        console.warn('qlist---', qlist)
-        clearTimeout(time)
+        const tx = txList.value.find((item: any) => item.txId.toUpperCase() != data.txId.toUpperCase())
+      if(!tx) {
+      // @ts-ignore
+      txList.value.unshift(data)
+      }
+      clearTimeout(time)
       },300)
     });
-    eventBus.on('waitTxEnd', () => {
-      handleAsyncTxList()
+    eventBus.on('waitTxEnd', async() => {
+      store.dispatch('txList/asyncUpdateList',{total: 0})
+
     })
     eventBus.on("txUpdate", (data: any) => {
-      console.warn("data----", data);
+      console.warn("txUpdate----", data);
+
       for (let i = 0; i < txList.value.length; i++) {
         let item = txList.value[i];
         const { txId } = item;
@@ -460,6 +455,12 @@ export default {
           txList.value[i] = data;
           }
         }
+      }
+      const tx = txList.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
+      if(!tx) {
+         // @ts-ignore
+        txList.value.unshift(data)
+        return
       }
     });
     onUnmounted(() => {

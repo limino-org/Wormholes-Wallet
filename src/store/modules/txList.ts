@@ -11,9 +11,10 @@ console.warn('web3', web3)
 import BigNumber from 'bignumber.js'
 import { guid } from '@/utils'
 
-const page_size = '10'
+const page_size = '30'
 const page_size_int = Number(page_size)
 let timeOut = 6000
+let timeOut2 = 2000
 interface State {
     time: any
 }
@@ -157,8 +158,7 @@ export default {
                 }
                 await localforage.setItem(asyncRecordKey, txInfo)
                 await dispatch('updateRecordPage', { transactions, total, chainId })
-                dispatch('asyncUpdateList', { total })
-                return { total, chainId, asyncRecordKey, transactions,...params }
+                return { total, chainId, asyncRecordKey, transactions,...params,txInfo }
             }
             return null
         },
@@ -175,29 +175,37 @@ export default {
             // const totalPage = Math.ceil(total/10)
             // const listTotalPage = Math.ceil(txInfo.list.length/10)
             const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
-            if (total !== realList.length) {
-                const hasRecord1 = await handleUpdateList()
-                if (!hasRecord1) {
-                    return
-                }
-                time2 = setInterval(async () => {
-                    const hasRecord = await handleUpdateList()
-                    if (!hasRecord) {
+            return new Promise(async(resolve) => {
+                if (total !== realList.length) {
+                    const hasRecord1 = await handleUpdateList()
+                    console.warn('hasRecord1', hasRecord1)
+                    if (!hasRecord1) {
+                        resolve()
                         clearInterval(time2)
+                        return 
                     }
-                }, timeOut)
-            }
+                    time2 = setInterval(async () => {
+                        const hasRecord = await handleUpdateList()
+                        console.warn('hasRecord', hasRecord)
+                        if (!hasRecord) {
+                            resolve()
+                            clearInterval(time2)
+                        } 
+                    }, timeOut2)
+                } else {
+                    resolve()
+                }
+            })
 
             async function handleUpdateList() {
                 const params = {
                     addr,
-                    page_size,
+                    page_size: 10,
                     page
                 }
                 const txInfo = await localforage.getItem(asyncRecordKey)
                 const hashList = txInfo.list.map(item => item.hash.toUpperCase())
                 const { total, transactions } = await getTransitionsPage(params)
-                console.warn('asyncUpdateList', transactions)
                 if(transactions && transactions.length) {
                     transactions.forEach((item) => {
                         item.txId = guid()
@@ -219,8 +227,8 @@ export default {
                 console.warn('newList', newList)
 
                 let hasRecord = false
-                if (transactions && transactions.length >= page_size_int) {
-                    if (newList && newList.length >= page_size_int) {
+                if (transactions && transactions.length >= 10) {
+                    if (newList && newList.length == transactions.length) {
                         hasRecord = true
                         page = Number(page) + 1 + ''
                     } else {
@@ -239,24 +247,46 @@ export default {
             const network = store.state.account.currentNetwork
             const wallet = await getWallet()
             // When you are currently on a wormholes network, synchronize transaction records from the block browser
-            if (network.id === 'wormholes-network-1') {
-                const res = await dispatch('asyncAddrRecord')
-                if(res){
-                    const { asyncRecordKey, total } = res
-                    const txInfo = await localforage.getItem(asyncRecordKey)
+            return new Promise(async(resolve) => {
+                if (network.id === 'wormholes-network-1') {
+                    
+                    try {
+                        const res = await dispatch('asyncAddrRecord')
+                        console.warn('res', res)
+                    const txInfo = await localforage.getItem(res.asyncRecordKey)
                     const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
-                    if (res && realList.length < total) {
-                        time = setInterval(async () => {
-                            await dispatch('asyncAddrRecord')
-                        }, timeOut)
+                    if(realList.length === res.total) {
+                        resolve({total:res.total,asyncRecordKey: res.asyncRecordKey})
                     }
-                    return { total, asyncRecordKey }
-                } else {
-                    clearInterval(time)
+                    if(res){
+                        const { asyncRecordKey, total } = res
+                            time = setInterval(async () => {
+                                const txInfo = await localforage.getItem(asyncRecordKey)
+                                const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
+                                if (res && realList.length < total) {
+                                    const info = await dispatch('asyncAddrRecord')
+                                    if(info.total === info.txInfo.list.length) {
+                                        resolve({ total: info.total, asyncRecordKey })
+                                        clearInterval(time)
+                                    }
+                                } else {
+                                    resolve({ total, asyncRecordKey })
+                                    clearInterval(time)
+                                }
+                               
+                            }, timeOut)
+                            
+                    } else {
+                        resolve({ total: 0, asyncRecordKey: '' })
+                        clearInterval(time)
+                    }
+                    } catch(err){
+                        console.error(err)
+                    }
                 }
-  
-            }
-            return {total:0, asyncRecordKey:''}
+                resolve({total:0, asyncRecordKey:''}) 
+            })
+
         },
     },
     namespaced: true,

@@ -853,7 +853,7 @@ export default defineComponent({
     });
 
     const historyCallBack = () => {
-      router.replace({name:'transactionList'})
+      router.push({name:'transactionList'})
     }
 
     const handleSubmit = async () => {

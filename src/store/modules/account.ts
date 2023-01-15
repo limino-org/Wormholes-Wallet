@@ -1780,13 +1780,20 @@ export const PUSH_TRANSACTION = async (da: any) => {
 
   if (state.currentNetwork.id == 'wormholes-network-1') {
     if (txList && txList.list.length) {
-      txList.list.unshift(clone(newReceipt))
+      const tx = txList.list.find((item: any) => item.txId.toUpperCase() != newReceipt.txId.toUpperCase())
+      debugger
+      if(!tx) {
+        txList.list.unshift(clone(newReceipt))
+      }
     } else {
       txList.list = [clone(newReceipt)]
     }
   } else {
     if (txList && txList.length) {
-      txList.unshift(clone(newReceipt))
+      const tx = txList.find((item: any) => item.txId.toUpperCase() != newReceipt.txId.toUpperCase())
+      if(!tx) {
+        txList.unshift(clone(newReceipt))
+      }
     } else {
       txList = [clone(newReceipt)]
     }
@@ -1881,6 +1888,7 @@ export const UPDATE_TRANSACTION = async( da: any) => {
           txList.list[i] = newReceipt
         }
       }
+
     }
   } else {
     if (txList && txList.length) {
@@ -1892,10 +1900,10 @@ export const UPDATE_TRANSACTION = async( da: any) => {
             txList[i] = newReceipt
           }
         }
+
       }
     }
   }
-debugger
   await localforage.setItem(txListKey, txList)
   if (newReceipt.status) {
     await DEL_TXQUEUE(da)
