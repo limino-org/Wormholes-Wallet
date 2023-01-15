@@ -4,7 +4,7 @@
     <div class="custom-popover-header">
             <div class="footer-btns">
         <div class="container pl-20 pr-20 evenly flex">   
-          <span @click="handleClick(7)">{{ t("returnreceipt.done") }} 6/6</span>
+          <span @click="handleClick(7)">{{ t("returnreceipt.done") }} 7/7</span>
         </div>
       </div>
       <!-- <div class="header-left"></div>
@@ -106,7 +106,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .custom-popover {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;

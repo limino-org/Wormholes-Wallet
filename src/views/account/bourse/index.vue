@@ -52,7 +52,7 @@
           popper-class="tooltip4"
           class="box-item"
           effect="dark"
-          :content="t('createExchange.commission')"
+          :content="feilvstr"
           placement="right"
           trigger="hover"
         >
@@ -87,7 +87,7 @@
           popper-class="tooltip1"
           class="box-item"
           effect="dark"
-          :content="t('createExchange.commission')"
+          :content="feilvstr"
           placement="right"
           trigger="hover"
         >
@@ -909,7 +909,12 @@ export default defineComponent({
       showMinusModal.value = true;
     };
     const showClose = ref(true);
+    const feilvstr = computed(() => {
+      console.warn('moneyStr.value', t('createExchange.commission',{value: moneyStr.value}))
+      return t('createExchange.commission',{value: moneyStr.value})
+    })
     return {
+      feilvstr,
       showClose,
       handleClose,
       minusAmount,

@@ -27,10 +27,10 @@ import { useRoute, useRouter } from "vue-router";
 import { Language, languages } from "@/enum/language";
 import { defineComponent, Ref, ref, watch, SetupContext, inject } from "vue";
 import { useStore } from "vuex";
-import { useI18n } from "vue-i18n";
 import { vantLangs } from "@/language/index";
 import { Locale } from "vant";
 import NavHeader from "@/components/navHeader/index.vue";
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: "language",
@@ -42,7 +42,8 @@ export default {
   },
   setup(props: any, context: SetupContext) {
     const appProvide = inject('appProvide')
-    const { locale,t } = useI18n();
+    const i18n = useI18n()
+    const {t,locale} = i18n
     const store = useStore();
     const { dispatch, state } = store;
     const lang = computed(() => state.system.language);
@@ -57,11 +58,8 @@ export default {
     }
     const setLanguage = (item: Language) => {
       const { value } = item;
-      locale.value = value;
-      console.log("vantLangs", vantLangs);
+      locale.value = value
       console.log("value", value);
-      // @ts-ignore
-      console.log("vantLangs[value].value", vantLangs[value]["package"]);
       // @ts-ignore
       Locale.use(vantLangs[value].value, vantLangs[value]["package"]);
       dispatch("system/setLanguage", value);

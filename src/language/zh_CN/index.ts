@@ -153,7 +153,7 @@ export default {
         findMore: "寻找更多",
         snftUnfree: "该质押的SNFT还未解冻！",
         conver_approve: "请求被批准了。转换事务将被启动。请稍等。",
-        conver_waiting: "{count}<span style='color:#037CD6;'>个S-NFT</span>正在兑换，兑换成功，将获得{amount}<span style='color:#037CD6;'>ERB</span>，您也可以在个人中心的历史记录查看兑换详情",
+        conver_waiting: "{count}<span style='color:#037CD6;'>个S-NFT{countstr}</span>正在兑换，兑换成功，将获得{amount}<span style='color:#037CD6;'>ERB</span>，您也可以在个人中心的历史记录查看兑换详情",
         conver_success: "{count}<span style='color:#037CD6;'>个S-NFT</span>兑换成功，已获得{amount}<span style='color:#037CD6;'>ERB</span>，您也可以在个人中心的历史记录查看兑换详情",
         conver_wrong: "{count}个S-NFT兑换失败，您可以在个人中心历史记录查看兑换详情",
 
@@ -250,7 +250,9 @@ export default {
         contractAddr: "合约地址",
         converTip:"提示: S-NFT交换成功后，将从钱包中消失。您可以在钱包的交易历史记录或浏览器中查看交易记录。",
         snftLabel:'S-NFTs转换',
-        hsitory: "交易历史"
+        hsitory: "交易历史",
+        viewInExchange:"去交易所查看",
+        viewInBrowser:"去区块浏览器查看"
 
 
 
@@ -673,7 +675,7 @@ export default {
         create_wrong: "非常抱歉，因为某些意外，操作失败，您可以去交易历史里查看交易的具体信息",
         formCharge: "佣金",
 
-        commission: "这是%的费用，你的市场将收取谁在你的市场交易的卖家。",
+        commission: "这是{value}%的费用，你的市场将收取谁在你的市场交易的卖家。",
         placeholder: "输入 {min}～{max}",
         ispoor: "请确保余额充足",
         addPl: "追加质押",

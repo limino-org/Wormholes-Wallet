@@ -1,4 +1,5 @@
 <template>
+    <div class="snft-list">
 <van-sticky :offset-top="95">
     <div class="flex between tab-box">
       <span class="pl-14 pr-14 lh-20 conver-label">{{t('common.snftLabel')}}</span>
@@ -26,10 +27,24 @@
       </div>
     </div>
   </van-sticky>
-
   <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
     <div class="snft-list-box">
-      <div :class="`snftcontainer ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" :title="item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : t('wallet.snftUnfree')" v-for="(item, i) in list" :key="item.nft_address" @mouseover="item.renderPop = true" @mouseleave="item.renderPop = false"  @click.stop="toNftExchange(item)">
+      <div class="flex " v-for="(item) in list" :key="item.nft_address" >
+        <div :class="`checkbox_img flex center-v pr-10 right pl-14 ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" v-show="isSelectComputed">
+            <i
+              v-if="item.flag"
+              @click.stop="handleSelect(item)"
+              class="iconfont icon-xuanzhong2"
+            ></i>
+            <i
+              v-else
+              @click.stop="handleSelect(item)"
+              class="iconfont icon-xuanzhong"
+            ></i>
+          </div>
+        <SnftCard :data="item" :select="isSelectComputed" />
+      </div>
+      <!-- <div :class="`snftcontainer ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" :title="item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : t('wallet.snftUnfree')" v-for="(item, i) in list" :key="item.nft_address" @mouseover="item.renderPop = true" @mouseleave="item.renderPop = false"  @click.stop="toNftExchange(item)">
         <div class="snftcontainer_left">
           <div :class="`checkbox_img flex center ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" v-if="isSelectComputed">
             <i
@@ -51,9 +66,7 @@
                 alt=""
                 class="snftimg"
               />
-              <!-- <div class="number" :style="{ background: item.color }">
-                {{ item.number }}
-              </div> -->
+          
             </div>
             <div class="snftmiddle flex column between" >
               <div class="flex between center-v snftName h-14 text-weight">
@@ -73,7 +86,7 @@
                   </span
                 >
                 <van-icon name="arrow" v-show="!value" />
-                <!-- <NftTag :tag="item.tag" /> -->
+      
               </div>
               <div class="snftleftcolleaddre flex center-v">
                 <span class="snftmiddle-text">{{ item.nft_address }}</span>
@@ -82,7 +95,7 @@
           </div>
         </div>
 
-      </div>
+      </div> -->
       <div v-if="finished && !list.length">
         <NoData />
       </div>
@@ -98,10 +111,12 @@
       </i18n-t> -->
     </div>
   </van-list>
+  </div>
+
   <!-- <van-pull-refresh v-model="loading2" @refresh="onRefresh">
 </van-pull-refresh> -->
   <Transition name="slider">
-    <div :class="`flex center buySnft ${bugTipClass}`" v-if="showBuyTip">
+    <div :class="`flex center buySnft pb-30 pt-30 ${bugTipClass}`" v-if="showBuyTip">
       <i18n-t keypath="wallet.buySnft" tag="div" class="text-center f-12">
         <template v-slot:link><a :href="VUE_APP_OFFICIAL_EXCHANGE" target="__blank">{{ t('wallet.findMore') }}</a></template>
       </i18n-t>
@@ -127,7 +142,7 @@
         }}</span>
         <div class="snft_bottom-left-text">
           <div class="total">
-            {{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)
+            {{ sumP }}(L3)/{{ sumC }}(L2)/{{ sumN }}(L1)/{{ sumF }}(L0)
           </div>
           <div class="usd">{{ sumAll }}ERB <span>( ≈${{toUsd( sumAll,4)}})</span></div>
         </div>
@@ -144,8 +159,7 @@
     v-model:show="show"
     :show-cancel-button="false"
     :show-confirm-button="false"
-    class="transfer-modal"
-  >
+    class="transfer-modal">
     <div class="dialog-warning-dark-c">
       <div v-if="show" class="dialog-warning-dark-c-container">
         <div class="dialog-warning-header-c">
@@ -157,7 +171,7 @@
               <span>{{  t("converSnft.select") }}</span>
         
             </div>
-            <div class="card-value ">{{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)</div>
+            <div class="card-value ">{{ sumP }}(L3)/{{ sumC }}(L2)/{{ sumN }}(L1)/{{ sumF }}(L0)</div>
           </div>
           <div class="card">
             <div class="card-label">
@@ -206,8 +220,8 @@
             >
           </template>
         </i18n-t>
-        <div class="confirm-card" v-if="tabIndex == 1">
-                  <div class="card">
+        <!-- <div class="confirm-card" v-if="tabIndex == 1">
+          <div class="card">
             <div class="card-label">{{ t("converSnft.select") }}</div>
             <div class="card-value">{{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)</div>
           </div>
@@ -216,28 +230,24 @@
             <div class="card-value">{{sumAll}}ERB(≈${{toUsd(sumAll,2)}})</div>
           </div>
           <div class="card">
-<div class="card-label">
-<span>{{ t("bourse.hsitoryReturn") }}</span>
-<van-popover
- v-model:show="showTip2"
-theme="dark"
-placement="top"
-trigger="manual"
->
-<div class="f-12 pl-10 pr-10 pt-10 pb-10 popover-tip">
-{{ t("bourse.tip6") }} 
-</div>
-<template #reference>
-<van-icon
-@mouseenter="showTip2 = true"
- @mouseout="showTip2 = false"
-name="question hover"
-/>
-</template>
-</van-popover>
-</div>
-<div class="card-value">{{historyProfit}} ERB(≈ ${{toUsd(historyProfit,2)}})</div>
-</div>
+            <div class="card-label">
+            <span>{{ t("bourse.hsitoryReturn") }}</span>
+              <van-popover
+              v-model:show="showTip2"
+              theme="dark"
+              placement="top"
+              trigger="manual">
+              <div class="f-12 pl-10 pr-10 pt-10 pb-10 popover-tip">{{ t("bourse.tip6") }} </div>
+              <template #reference>
+              <van-icon
+                @mouseenter="showTip2 = true"
+                @mouseout="showTip2 = false"
+                name="question hover" />
+                </template>
+              </van-popover>
+          </div>
+          <div class="card-value">{{historyProfit}} ERB(≈ ${{toUsd(historyProfit,2)}})</div>
+        </div>
 
           <div class="card">
             <div class="card-label">
@@ -285,9 +295,9 @@ name="question hover"
             </div>
             <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
           </div>
-        </div>
+        </div> -->
 
-        <div class="confirm-card" v-if="tabIndex == 3">
+        <!-- <div class="confirm-card" v-if="tabIndex == 3">
           <div class="card">
             <div class="card-label">{{ t("converSnft.select") }}</div>
             <div class="card-value">{{ sumP }}(P)/{{ sumC }}(C)/{{ sumN }}(N)/{{ sumF }}(F)</div>
@@ -365,7 +375,7 @@ name="question hover"
             </div>
             <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
           </div>
-        </div>
+        </div> -->
 
         <div class="footer-btns-c">
           <van-button
@@ -395,7 +405,7 @@ name="question hover"
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted } from "@vue/runtime-core";
+import { defineComponent, onDeactivated, onUnmounted } from "@vue/runtime-core";
 import { computed, ref,onBeforeMount, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import {
@@ -404,8 +414,8 @@ import {
   tokenIdByNftaddr
 } from "@/http/modules/nft";
 import dialogWarning from "@/components/dialogWarning/message.vue";
-import NftTag from "./nftTag.vue";
 import NoData from "@/components/noData/index.vue";
+import SnftCard from './nftCard.vue'
 import {
   List,
   Cell,
@@ -461,8 +471,8 @@ export default defineComponent({
     "dialog-warning": dialogWarning,
     [Sticky.name]: Sticky,
     [Dialog.Component.name]: Dialog.Component,
+    SnftCard,
     NoData,
-    NftTag,
     SnftModal,
     Tip
   },
@@ -577,28 +587,39 @@ export default defineComponent({
     const params2 = {
       owner: accountInfo.value.address,
       page: "1",
-      page_size: "30",
+      page_size: "20",
       status: "3",
     };
-   
+    
+    const getSnftList = async(snftlist: Array<any>, blockNumber: number)=> {
+      if(!wallet) {
+        wallet = await getWallet()
+      }
+      const list = []
+      for await (const nft_address of snftlist) {
+        const nftAccountInfo = await wallet.provider.send("eth_getAccountInfo",[nft_address, web3.utils.toHex((blockNumber - 1).toString())])
+        nftAccountInfo.nft_address = nft_address
+        list.push(nftAccountInfo)
+      }
+      return list
+    }
 
     const onLoad = async () => {
-      let wallet = null
       let blockNumber = 0
       let network: any = null
       params2.status = tabIndex.value;
       loading.value = true;
       try {
-        if(!wallet&& tabIndex.value == '1'){
+        if(tabIndex.value == '2'){
           wallet = await getWallet()
           blockNumber = await wallet.provider.getBlockNumber();
           network = await wallet.provider.getNetwork()
-          console.log('wallet.value--', wallet)
-        }
-        console.log('wallet.value', wallet)
-        
+        }        
         let { nfts } = await snft_com_page(params2);
         nfts = nfts && nfts.length ? nfts : [];
+        const nftsAddr = nfts && nfts.length ? nfts.map((item: any) => item.address.toUpperCase()) : ''
+        let copyList = JSON.parse(JSON.stringify(list.value))
+        copyList = copyList.filter((item: any) => !nftsAddr.includes(item.address.toUpperCase()))
         const nftAddList = nfts.map((item: any) => {
           const len = item.address.length;
           let str = item.address;
@@ -621,12 +642,17 @@ export default defineComponent({
           finished.value = true;
           loading.value = false;
         }
-        const { data: nftInfoList } = await queryArraySnft({
-          array: `${JSON.stringify(nftAddList)}`,
-        });
-        console.warn(web3.utils)
+        
+        // // 去重
+        // const newlist = list.value.map((item: any) => item.address)
+        // const newNftList = nftAddList.filter((item: any) => item.nft_address.toUpperCase())
+        const nftInfoList = await getSnftList(nftAddList, blockNumber)
+        // const { data: nftInfoList } = await queryArraySnft({
+        //   array: `${JSON.stringify(nftAddList)}`,
+        // });
+        console.warn('nftInfoList', nftInfoList)
         nfts.forEach((item: any) => {
-          if(tabIndex.value == '1' && item.pledge_number !== null) {
+          if(tabIndex.value == '2' && item.pledge_number !== null) {
             item.hasUnfreeze = (blockNumber - Number(item.pledge_number)) > (network && network.chainId === 51888 ? 73 : 6307201)
           }
           
@@ -639,17 +665,23 @@ export default defineComponent({
           switch (reallen) {
             case 39:
               item.tag = "P";
+              item.tagName = "L3";
+              item.tagIdx = 3;
               str = str + "000";
               item.pidx = web3.utils.hexToNumber(hexp)
               break;
             case 40:
               item.tag = "C";
               str = str + "00";
+              item.tagName = "L2";
+              item.tagIdx = 2;
               item.pidx = web3.utils.hexToNumber(hexp)
               item.cidx = web3.utils.hexToNumber(hexc) + 1
               break;
             case 41:
               item.tag = "N";
+              item.tagName = "L1";
+              item.tagIdx = 1;
               str = str + "0";
               item.pidx = web3.utils.hexToNumber(hexp)
               item.cidx = web3.utils.hexToNumber(hexc) + 1
@@ -657,6 +689,8 @@ export default defineComponent({
               break;
             case 42:
               item.tag = "F";
+              item.tagName = "L0";
+              item.tagIdx = 0;
               item.pidx = web3.utils.hexToNumber(hexp)
               item.cidx = web3.utils.hexToNumber(hexc) + 1
               item.nidx = web3.utils.hexToNumber(hexn) + 1
@@ -691,7 +725,8 @@ export default defineComponent({
         });
         params2.page = (Number(params2.page) + 1).toString();
 
-        list.value.push(...nfts);
+        copyList.push(...nfts);
+        list.value = copyList
         emit("updateLength", list.value.length);
         if (!nfts.length) {
           finished.value = true;
@@ -705,9 +740,9 @@ export default defineComponent({
     };
 
     // const 
-
+    let wallet: any = null
     onBeforeMount(async() => {
-      const wallet = await getWallet()
+      wallet = await getWallet()
       network.value = await wallet.provider.getNetwork()
     })
     const isSelectAll = ref(false);
@@ -745,13 +780,16 @@ export default defineComponent({
       // onLoad();
     };
     eventBus.on("changeAccount", (address) => {
+      show.value = false
       params2.owner = address;
       reLoading();
       onLoad();
     });
     onUnmounted(() => {
       eventBus.off('changeAccount')
+      window.removeEventListener('scroll', deFun)
     })
+
     const tabList = ref([
       // { label: t("createExchange.redemption"), value: "3", select: true },w
       { label: t("createExchange.convert"), value: "2", select: true },
@@ -824,27 +862,41 @@ export default defineComponent({
         const count = data.length
         const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion
         let amount = new BigNumber(0)
+        let pstr = 0
+        let cstr = 0
+        let nstr = 0
+        let fstr = 0
         data.forEach((item: any) => {
-          const {metaData:{MergeLevel}} = item
+          const {metaData:{ MergeLevel, MergeNumber}} = item
           if(MergeLevel == 0) {
             amount = amount.plus(t0)
+            fstr++
           }
           if(MergeLevel == 1) {
-            amount = amount.plus(t1)
+            amount = amount.plus(new BigNumber(MergeNumber).multipliedBy(t1))
+            nstr++
           }
           if(MergeLevel == 2) {
-            amount = amount.plus(t2)
+            amount = amount.plus(new BigNumber(MergeNumber).multipliedBy(t2))
+            cstr++
           }
           if(MergeLevel == 3) {
-            amount = amount.plus(t3)
+            amount = amount.plus(new BigNumber(MergeNumber).multipliedBy(t3))
+            pstr++
           }
         })
+        let numstr = '';
+        pstr ? numstr = numstr + pstr + `(L3*${pstr})` + '、' :''
+        cstr ? numstr = numstr + cstr + `(L2*${cstr})` + '、' :''
+        nstr ? numstr = numstr + nstr + `(L1*${nstr})` + '、' :''
+        fstr ? numstr = numstr + fstr + `(L0*${fstr})` + '、' :''
+        numstr = numstr.slice(0, numstr.length -1)
         // isLoading.value = true;
         isSelectComputed.value = false;
         show.value = false;
         $tradeConfirm.open({
           approveMessage: t("wallet.conver_approve"),
-          wattingMessage: t("wallet.conver_waiting",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount.toNumber()}</span>`}),
+          wattingMessage: t("wallet.conver_waiting",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount.toNumber()}</span>`,countstr:numstr }),
           wattingMessageType:"html",
           disabled: [TradeStatus.pendding],
           callBack: () => {
@@ -856,6 +908,7 @@ export default defineComponent({
             onLoad();
           },
         });
+        debugger
         let transitionType = ''
         try {
           for await (const iterator of data) {
@@ -944,9 +997,10 @@ export default defineComponent({
     const myprofit = ref('')
     const historyProfit = ref('')
         const calcProfit = async() => {
-      const wallet = await getWallet()
+          if(!wallet) {
+            wallet = await getWallet()
+          }
           const  blockNumber = await wallet.provider.getBlockNumber();
-          
           const blockn = web3.utils.toHex(blockNumber.toString());
       const data = await wallet.provider.send('eth_getValidator',[blockn])
           // const data2 = await getAccount(accountInfo.value.address)
@@ -1003,7 +1057,6 @@ export default defineComponent({
 
 
     const toNftExchange = async(item: any) => {
-      debugger
       const { tag, nft_address } = item
       let tokenidmm = ''
       switch(nft_address.length){
@@ -1052,6 +1105,9 @@ export default defineComponent({
     const showBuyTip = ref(true)
     let oldScrollTop = 0
     const scrolling = () => {
+      if(list.value.length < 10) {
+        return
+      }
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       let scrollStep = scrollTop - oldScrollTop;
       oldScrollTop = scrollTop;
@@ -1063,16 +1119,14 @@ export default defineComponent({
         console.log("scroll down.")
       }
     }
-    
+    const deFun = debounce(scrolling, 300)
     onMounted(() => {
-      window.addEventListener('scroll', debounce(scrolling, 300))
+      window.addEventListener('scroll', deFun)
     })
-    onUnmounted(() => {
-      window.removeEventListener('scroll', debounce(scrolling, 300))
-    })
+
     const bugTipClass = ref('')
     const watchList = (val: any) => {
-      if(val && val.length > 10) {
+      if(val && val.length >= 10) {
         !bugTipClass.value ? bugTipClass.value = 'fixed' : ''
         // if(showBuyTip.value)showBuyTip.value = false 
       } else {
@@ -1150,6 +1204,9 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+.snft-list-box {
+  // padding-bottom:70px;
+}
 .conver-label {
   font-weight: bold;
 }
@@ -1204,12 +1261,13 @@ background: rgb(215, 58, 73);
   background: rgb(3, 124, 214);
 }
 .snft-list-box {
-  padding-bottom: 20px;
+
 }
 .tab-box {
   position: relative;
   background: #F1F3F4;
   padding: 8px 0;
+
 }
 
 :deep() {
@@ -1285,6 +1343,7 @@ background: rgb(215, 58, 73);
     }
   }
   .checkbox_img {
+    border-bottom: 1px solid #E4E7E8;
     &.disabled {
       cursor: not-allowed;
     }

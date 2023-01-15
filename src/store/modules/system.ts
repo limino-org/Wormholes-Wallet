@@ -157,7 +157,7 @@ export default {
     },
     showDialog({ commit, state }: any, idx: number) {
       commit("UPDATA_HIDE", idx);
-      if (idx === 6) {
+      if (idx === 7) {
         commit("UPDATA_SHOW", 13);
       } else {
         commit("UPDATA_SHOW", idx+1);
@@ -196,8 +196,8 @@ export default {
   getters: {
     // Whether the pop-up window guides the pop-up window
     getGuideModal(state: State){
-      const { finishedGuide, show0, show1, show2,show3,show4, show5, show6 } = state
-      if(show1 || show2 || show3 || show4 || show5 || show6) {
+      const { finishedGuide, show0, show1, show2,show3,show4, show5, show6, show7 } = state
+      if(show1 || show2 || show3 || show4 || show5 || show6 || show7) {
         return false
       }
       if(finishedGuide){

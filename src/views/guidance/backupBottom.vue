@@ -51,14 +51,6 @@ export default defineComponent({
     const showModal: Ref<boolean> = ref(false);
     const { state, dispatch, getters, commit } = useStore();
     const hasBackUpMnemonic = computed(() => state.system.hasBackUpMnemonic);
-    const show13 = computed(() => state.system.show13);
-    const show6 = computed(() => state.system.show6);
-    const show5 = computed(() => state.system.show5);
-    const show4 = computed(() => state.system.show4);
-    const show3 = computed(() => state.system.show3);
-    const show2 = computed(() => state.system.show2);
-    const show1 = computed(() => state.system.show1);
-    const show0 = computed(() => state.system.show0);
     const lastDelayTime = computed(() => state.system.lastDelayTime);
     const handleModalChange = (n: Ref<any>) => {
       let time = setTimeout(() => {

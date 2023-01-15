@@ -4,7 +4,7 @@
     <div class="custom-popover-header">
             <div class="footer-btns">
         <div class="container pl-20 pr-20 evenly flex">          <span @click="dispatchClose">{{ t("common.cancel") }}</span>
-          <span @click="handleClick(6)">{{ t("common.next") }} 6/6</span>
+          <span @click="handleClick(6)">{{ t("common.next") }} 6/7</span>
         </div>
       </div>
     </div>
@@ -102,7 +102,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .custom-popover {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;

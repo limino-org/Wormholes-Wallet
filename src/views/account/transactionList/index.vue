@@ -345,6 +345,23 @@ export default {
         }
       }
     });
+    eventBus.on('changeNetwork', async(address) => {
+      loading.value = true
+      tlist.value = []
+      try {
+        await handleAsyncTxList();
+        await getPageList();
+      }finally {
+        loading.value = false
+      }
+      store.dispatch("account/waitTxQueueResponse", {
+        time: null,
+        callback(e: any) {
+          console.warn("e", e);
+          waitTime.value = e;
+        },
+      });
+    })
 
     // Current account transaction list
     let tlist: any = ref([]);
@@ -386,7 +403,7 @@ export default {
           } else {
             tx = txInfo;
           }
-          tlist.value = [...tx]
+          Array.isArray(tx) ? tlist.value = [...tx] : '';
           Array.isArray(txQueue) ? tlist.value.unshift(...txQueue) : "";
         } finally {
           loading.value = false;
@@ -531,7 +548,6 @@ export default {
           };
           data = await store.dispatch('account/tokenTransaction', transferParams)
         } else {
-          tx.value = utils.formatEther(value);
           data = await store.dispatch('account/transaction', {
             ...tx,
             checkTxQueue: false

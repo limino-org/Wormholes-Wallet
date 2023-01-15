@@ -9,7 +9,7 @@
     <div class="title">{{ t("wallet.account") }}</div>
     <div class="account-list">
       <div
-        :class="`card flex between hover ${
+        :class="`card flex between hover van-hairline--bottom ${
           item.address.toUpperCase() == selectAccount.address.toUpperCase()
             ? 'active'
             : ''
@@ -99,7 +99,6 @@ onMounted(async () => {
   padding: 20px 0 48px 0;
   .card {
     padding: 16px 15px;
-    border-bottom: 1px solid #ecedef;
     transition: ease .3s;
     &:hover {
       .acc-info {

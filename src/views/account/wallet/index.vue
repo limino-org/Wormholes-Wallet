@@ -153,7 +153,7 @@ trigger="manual"
     <div>
       <Transition name="slider">
         <div class="help-center-box" v-if="!isSelect || active === 0">
-          <div class="container flex right pl-20 pr-20">
+          <div class="flex right pl-20 pr-20">
             <div
               class="help-btn flex center hover"
               @click="toHelp"
@@ -170,7 +170,7 @@ trigger="manual"
       </Transition>
       <Transition name="slider">
         <div class="btn-groups" v-if="currentNetwork.id == 'wormholes-network-1' && (!isSelect || active === 0)">
-          <div class="container pl-20 pr-20 flex right center-v">
+          <div class="pl-20 pr-20 flex right center-v">
             <div
               :class="[
                 'wallet-hint pt-10 pb-10 pl-10 pr-10 mr-12',

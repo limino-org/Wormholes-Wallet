@@ -195,14 +195,14 @@ body {
 
 .nft-tag-popover {
   .van-popover__content {
-    background: #3AAE55;
+    background: rgba($color: #000, $alpha: .7);
     border-radius: 5px;
     padding: 2px 5px;
     color: #fff;
     font-size: 12px;
   }
   .van-popover__arrow {
-    color: #3AAE55;
+    color: rgba($color: #000, $alpha: .7);
   }
 }
 

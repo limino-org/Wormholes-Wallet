@@ -5,7 +5,7 @@
       <div class="footer-btns">
         <div class="container pl-20 pr-20 evenly flex">
           <span @click="dispatchClose">{{t('common.cancel')}}</span>
-          <span @click="handleClick(3)">{{t('common.next')}} 3/6</span>
+          <span @click="handleClick(3)">{{t('common.next')}} 3/7</span>
         </div>
       </div>
       <div class="footer-text">
@@ -15,45 +15,14 @@
       </div>
     </div>
     <div class="custom-popover-container">
-      <div :class="`snftcontainer `" v-for="(item, i) in list" :key="i">
-      <div class="snftcontainer_left">
-
-        <div class="snftcontainer_left_container">
-          <div class="img-p">
-            <van-image
-              :src="`https://www.wormholestest.com${item.source_url}`"
-              fit="cover"
-              alt=""
-              class="snftimg"
-            />
-            <!-- <div class="number" :style="{ background: item.color }">
-              {{ item.number }}
-            </div> -->
-          </div>
-          <div class="snftmiddle flex column between" >
-            <div class="flex between center-v snftName h-14 text-weight">
-              <span class="f-14 lh-12 hover flex center-v"  >
-                {{ item.collections }}-<span class="red"></span>
-                <span class="nft-p">{{item.pidx}}</span>
-                <span class="nft-c" v-if="item.cidx !== undefined">{{item.cidx}}</span>
-                <span class="nft-n"  v-if="item.nidx !== undefined">{{item.nidx}}</span>
-                <span class="nft-f" v-if="item.fidx !== undefined">{{item.fidx}}</span>
-                </span
-              >
-              <van-icon name="arrow"  />
-
-            </div>
-            <div class="snftleftcolleaddre flex center-v">
-              <span class="snftmiddle-text">{{ item.nft_address }}</span>
-            </div>
-          </div>
-        </div>
+      <div class="container list-container">
+        <SnftCard v-for="item in list" :data="item" :key="item.nft_address" />
       </div>
-    </div>
     </div>
     <div class="custom-popover-footer">
     </div>
-  </div>
+    </div>
+
   <dialog-warning @warningSuccess="warningSuccess" theme="light"  @close="handleClose"  :text="t('common.confirmExit')"  v-model:isWarning="isWarning"></dialog-warning>
 
 </template>
@@ -67,6 +36,7 @@ import { useI18n } from "vue-i18n";
 import dialogWarning from '@/components/dialogWarning/indexAffirm.vue'
 import eventBus from "@/utils/bus";
 import { nextTick } from "process";
+import SnftCard from '@/views/account/components/nftList/nftCard.vue'
 export default defineComponent({
   name: 'guide-modal2',
     components: {
@@ -74,7 +44,8 @@ export default defineComponent({
     [Dialog.Component.name]: Dialog.Component,
     [Button.name]: Button,
     WormTransition,
-    'dialog-warning': dialogWarning
+    'dialog-warning': dialogWarning,
+    SnftCard
   },
   props: {
     type: {
@@ -89,16 +60,45 @@ export default defineComponent({
     const showModal = ref(false);
     const show3 = computed(() => state.system.show3);
     const list = ref([
-      {},
-      {},
-      {},
-      {}
+      {
+        nft_address:'0x1232',
+        tagName:'L0',
+        tagIdx: 0,
+        pidx: 9,
+        cidx: 88,
+        nidx:110,
+        fidx: 5555
+      },
+      {
+        nft_address:'0x1232',
+        tagName:'L1',
+        tagIdx: 1,
+        pidx: 9,
+        cidx: 88,
+        nidx:110
+      },
+      {
+        nft_address:'0x1232',
+        tagName:'L2',
+        tagIdx: 2,
+        pidx: 9,
+        cidx: 88
+      },
+      {
+        nft_address:'0x1232',
+        tagName:'L3',
+        tagIdx: 3,
+        pidx: 9
+      }
     ])
     watch(
       () => show3,
       (n) => {
-        if(n){
-          eventBus.emit('guideSnftModal',1)
+        if(n.value){
+          let time = setTimeout(() => {
+            eventBus.emit('guideSnftModal',1)
+            clearTimeout(time)
+          },200)
         }
         showModal.value = n.value
       },
@@ -158,7 +158,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .custom-popover {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -169,6 +169,25 @@ export default defineComponent({
   height: 308px;
   background-color: rgba(0, 0, 0, .7);
   position: relative;
+}
+.custom-popover-container {
+  padding-top: 80px;
+  height: 348px;
+  img {
+      width: 100%;
+  }
+}
+.list-container {
+  background: #fff;
+  position: relative;
+  &::after {
+     content: '';
+     position: absolute;
+     left: 0;
+     right: 0;
+     top: 0;
+     bottom: 0;
+  }
 }
 .footer-text {
   position: absolute;
@@ -205,15 +224,10 @@ export default defineComponent({
     }
   }
 }
-.custom-popover-container {
-  padding-top: 80px;
-  img {
-      width: 100%;
-  }
-}
+
 .custom-popover-footer {
   position: relative;
-  height: calc(100% - 308px - 350px);
+  height: calc(100vh - 308px - 348px);
   background-color: rgba(0, 0, 0, .7);
 }
 .footer-btns {

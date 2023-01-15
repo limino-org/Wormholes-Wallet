@@ -926,13 +926,14 @@ export default {
     },
     // Update balance for all accounts
     async updateAllBalance({ commit, state, dispatch }: any) {
+      const wallet = await getWallet()
       try {
         const accountList = state.accountList;
         const list: Array<string> = accountList.map(
           (item: AccountInfo) => item.address
         );
         const asyncList = list.map((address) => {
-          return dispatch("getBalanceByAddress", address);
+          return dispatch("getBalanceByAddress", {address,wallet});
         });
         const data = await Promise.all(asyncList);
         const banList: any = {};
@@ -949,7 +950,7 @@ export default {
       // return Promise.resolve([])
     },
     // Returns the balance of the current address account
-    async getBalanceByAddress({ commit, state }: any, address: string) {
+    async getBalanceByAddress({ commit, state }: any, {address, wallet}: any) {
       if (!address || !wallet) {
         return Promise.reject(i18n.global.t("common.cannotbeempty"));
       }
@@ -1337,12 +1338,13 @@ export default {
     },
     // Update current network, current address, current token list balance
     async updateTokensBalances({ commit, state, dispatch }: any) {
+      const wallet = await getWallet();
       const address = state.accountInfo.address.toUpperCase();
       const currentNetwork = state.currentNetwork;
       const tokens = currentNetwork.tokens[address];
       if (tokens && tokens.length) {
         const plist = tokens.map((item: any) =>
-          dispatch("updateTokenBalance", item.tokenContractAddress)
+          dispatch("updateTokenBalance", {tokenAddress:item.tokenContractAddress, wallet})
         );
         Promise.all(plist).then((result) => {
           for (let i = 0; i < tokens.length; i++) {
@@ -1355,14 +1357,13 @@ export default {
     // Gets the balance of a token
     async updateTokenBalance(
       { commit, state, dispatch }: any,
-      tokenAddress: string
+      {tokenAddress, wallet}: any
     ) {
       // Check the address
       if (!tokenAddress || !wallet || !wallet.provider) {
         return Promise.reject("Address cannot be empty!");
       }
       try {
-        const wallet = await getWallet();
         const contract = new ethers.Contract(
           tokenAddress,
           erc20Abi,
@@ -1424,7 +1425,7 @@ export default {
           //  const newWallet = await getWallet()
           try {
             for await (const iterator of txQueue) {
-              let { hash, transitionType, nft_address, blockNumber, network, txType, txId, amount, isCancel } = iterator
+              let { hash, transitionType, nft_address, blockNumber, network, txType, txId, amount, isCancel, sendData, date, value } = iterator
               let data1 = null
               if (_opt.time != null) {
                 data1 = await wallet.provider.waitForTransaction(hash, null, _opt.time);
@@ -1466,15 +1467,28 @@ export default {
                   convertAmount = new BigNumber(MergeNumber).multipliedBy(t3).toNumber()
                 }
               }
-              const rep: TransactionReceipt = handleGetTranactionReceipt(
-                txType || TransactionTypes.other,
-                data1,
-                { ...iterator, convertAmount, transitionType },
-                network
-              );
+              // const rep: TransactionReceipt = handleGetTranactionReceipt(
+              //   txType || TransactionTypes.other,
+              //   data1,
+              //   { ...iterator, convertAmount, transitionType },
+              //   network
+              // );
 
               await DEL_TXQUEUE({ ...iterator, txId, txType })
-              await UPDATE_TRANSACTION({ ...rep, txId, txType, isCancel: isCancel || null, amount })
+              const newtx = {
+                receipt: data1,
+                network,
+                sendData,
+                txId,
+                date,
+                value
+              }
+              if(id === 'wormholes-network-1') {
+                await UPDATE_TRANSACTION(newtx)
+              }else {
+                await PUSH_TRANSACTION(newtx)
+              }
+              
             }
             eventBus.emit('waitTxEnd')
             resolve(receiptList)
@@ -1678,13 +1692,15 @@ export const PUSH_TXQUEUE = async (tx: any) => {
 
 export const DEL_TXQUEUE = async (tx: any) => {
   const { network: { id, chainId }, txId, from } = tx
-  // @ts-ignore
-  let queueKey = `txQueue-${id}-${chainId}-${from.toUpperCase()}`
-  const list: any = await localforage.getItem(queueKey)
-  const txQueue = list && list.length ? list : []
-  const newList = txQueue.filter((item: any) => item.txId.toUpperCase() != txId.toUpperCase())
-  await localforage.setItem(queueKey, newList)
-  eventBus.emit('delTxQueue', tx)
+  if(id && chainId && txId && from) {
+    // @ts-ignore
+    let queueKey = `txQueue-${id}-${chainId}-${from.toUpperCase()}`
+    const list: any = await localforage.getItem(queueKey)
+    const txQueue = list && list.length ? list : []
+    const newList = txQueue.filter((item: any) => item.txId.toUpperCase() != txId.toUpperCase())
+    await localforage.setItem(queueKey, newList)
+    eventBus.emit('delTxQueue', tx)
+  }
   return tx
 }
 
@@ -1879,7 +1895,7 @@ export const UPDATE_TRANSACTION = async( da: any) => {
       }
     }
   }
-
+debugger
   await localforage.setItem(txListKey, txList)
   if (newReceipt.status) {
     await DEL_TXQUEUE(da)

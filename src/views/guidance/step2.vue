@@ -12,7 +12,7 @@
       <div class="footer-btns">
         <div class="container pl-20 pr-20 evenly flex">
           <span @click="dispatchClose">{{t('common.cancel')}}</span>
-          <span @click="handleClick(2)">{{t('common.next')}} 2/6</span>
+          <span @click="handleClick(2)">{{t('common.next')}} 2/7</span>
         </div>
       </div>
     </div>
@@ -28,6 +28,7 @@ import WormTransition from "@/components/wromTransition/index.vue";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
 import dialogWarning from '@/components/dialogWarning/indexAffirm.vue'
+import eventBus from "@/utils/bus";
 export default defineComponent({
   name: 'guide-modal2',
     components: {
@@ -50,7 +51,15 @@ export default defineComponent({
     const show2 = computed(() => state.system.show2);
     watch(
       () => show2,
-      (n) => (showModal.value = n.value),
+      (n) => {
+        if(n.value) {
+          let time = setTimeout(() => {
+            eventBus.emit('guideSnftModal',0)
+            clearTimeout(time)
+          },500)
+        }
+          showModal.value = n.value
+      },
       { immediate: true, deep: true }
     );
 
@@ -100,7 +109,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .custom-popover {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;

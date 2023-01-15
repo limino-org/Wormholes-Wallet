@@ -10,7 +10,7 @@ import 'vant/lib/index.css'
 // fix iOS String.prototype.normalize 
 import '@/utils/unorm.js'
 import '@/utils/ether'
-
+import VConsole from 'vconsole'
 
 import { createApp } from 'vue'
 import i18n from '@/language/index'
@@ -29,6 +29,7 @@ import Dialog from './plugins/dialog/dialog'
 import CancelBtn from '@/components/cancelBtn/index.vue'
 import VueCookies from 'vue-cookies'
 import '@/assets/font/KenneyPixel.css'
+import { isProduct } from './http/modules/common';
 const app = createApp(App)
 app.component('no-data',NoData)
 app.component('cancel-btn',CancelBtn)
@@ -41,6 +42,9 @@ app.use(i18n)
 app.use(TradeConfirm)
 app.use(Toast)
 app.use(Dialog)
+if(!isProduct) {
+  new VConsole()
+}
 app.mount('#app')
 
 

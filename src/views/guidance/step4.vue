@@ -2,7 +2,9 @@
 <template>
   <div v-if="showModal" class="custom-popover">
     <div class="custom-popover-header">
-      <div class="header-left"></div>
+      <div class="left-b"></div>
+      <div class="container flex">
+        <div class="header-left"></div>
       <div class="header-right">
         <div class="footer-text">
           <div class="flex center h-10">
@@ -13,12 +15,15 @@
           </div>
         </div>
       </div>
+      </div>
+      <div class="right-b"></div>
+
     </div>
     <div class="custom-popover-container"></div>
     <div class="custom-popover-footer">
       <div class="footer-btns">
         <div class="container pl-20 pr-20 evenly flex">          <span @click="dispatchClose">{{ t("common.cancel") }}</span>
-          <span @click="handleClick(4)">{{ t("common.next") }} 4/6</span>
+          <span @click="handleClick(4)">{{ t("common.next") }} 4/7</span>
         </div>
       </div>
     </div>
@@ -106,7 +111,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .custom-popover {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -117,6 +122,17 @@ export default defineComponent({
   height: 48px;
   width: 100%;
   display: flex;
+  .left-b,.right-b {
+    background-color: rgba(0, 0, 0, 0.7);
+    // width: 100%;
+    // height: 100%;
+    flex: 1;
+  }
+  .container {
+    height: 100%;
+    width: 100%;
+    
+  }
   .header-left {
     height: 100%;
     width: calc(100% - 50px);

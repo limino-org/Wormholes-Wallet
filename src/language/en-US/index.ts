@@ -48,7 +48,7 @@ export default {
 
 
     conver_approve: "The request is approved.The convert tansaction will be started.Please wait for seconds.",
-    conver_waiting: "{count} <span style='color:#037CD6;'>S-NFT</span> are being exchanged. You will receive {amount}<span style='color:#037CD6;'>ERB</span> if you are successfully exchanged. You can also check the exchange details in the history of the Personal Center",
+    conver_waiting: "{count} <span style='color:#037CD6;'>S-NFT{countstr}</span> are being exchanged. You will receive {amount}<span style='color:#037CD6;'>ERB</span> if you are successfully exchanged. You can also check the exchange details in the history of the Personal Center",
     conver_success: "{count} <span style='color:#037CD6;'>S-NFT</span> have been successfully exchanged and you have obtained {amount}<span style='color:#037CD6;'>ERB</span>. You can also check the exchange details in the history of the Personal center",
     conver_wrong: "{count} S-NFT failed to exchange, you can check the exchange details in the Personal center history",
 
@@ -207,7 +207,9 @@ export default {
     contractAddr: "Address of contract",
     converTip:"Tips: After the S-NFT exchange is successful, it will disappear from the wallet. You can view the exchange record in the wallet's transaction history or browser.",
     snftLabel:'S-NFTs Convert',
-    hsitory: "History"
+    hsitory: "History",
+    viewInExchange:"Go to the exchange",
+    viewInBrowser:"Go to the block browser"
 
   },
   sidebar: {
@@ -627,7 +629,7 @@ export default {
     close_success: "The pledge has been successfully unfrozen for you, the pledged amount has been returned to your account, you can also view the details of the transaction through the transaction history",
     close_wrong: "I'm very sorry, because of some accident, the operation failed, you can go to the transaction history to check the specific information of the transaction",
     formCharge: "Commission Charge",
-    commission: "This is the % fee your marketplace will charge sellers who transact on your marketplace.",
+    commission: "This is the {value}% fee your marketplace will charge sellers who transact on your marketplace.",
     placeholder: "Enter {min}～{max}",
     ispoor: "Please make sure the balance is sufficient",
     addPl: "Stake Additional Tokens",

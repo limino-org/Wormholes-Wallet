@@ -173,7 +173,7 @@ import {
   nextTick,
   onUnmounted,
 } from "vue";
-import { Icon, Popup, Empty, Dialog, Button, Toast, Skeleton } from "vant";
+import { Icon, Popup, Empty, Dialog, Button, Toast, Skeleton, List } from "vant";
 import CollectionCard from "@/views/account/components/collectionCard/index.vue";
 import { addressMask, decimal, toUsd } from "@/utils/filters";
 import AcceptCode from "@/views/account/components/acceptCode/index.vue";
@@ -212,6 +212,7 @@ export default {
     [Empty.name]: Empty,
     [Button.name]: Button,
     [Skeleton.name]: Skeleton,
+    [List.name]: List,
     [Dialog.Component.name]: Dialog.Component,
     CollectionCard,
     AcceptCode,
@@ -325,9 +326,22 @@ export default {
     let waitTime: any = ref(null);
     onMounted(async () => {
       try {
-      
+
+        // if(asyncRecordKey){
+        //   const txInfo: any = await localforage.getItem(asyncRecordKey)
+        //   if(txInfo && txInfo?.list && txInfo.list.length) {
+        //     if(total === txInfo.list.length) {
+        //       return
+        //     } else {
+        //       await getPageList();
+        //     }
+        //   }
+        // } else {
+    
+        // }
         await handleAsyncTxList();
         await getPageList();
+        
       }finally {
         loading.value = false
       }
@@ -393,6 +407,23 @@ export default {
         cancelSend();
       }
     };
+    eventBus.on('changeNetwork', async(address) => {
+      loading.value = true
+      txList.value = [];
+      try {
+        await handleAsyncTxList();
+        await getPageList();
+      }finally {
+        loading.value = false
+      }
+      store.dispatch("account/waitTxQueueResponse", {
+        time: null,
+        callback(e: any) {
+          console.warn("e", e);
+          waitTime.value = e;
+        },
+      });
+    })
     eventBus.on("loopTxListUpdata", () => {
       getPageList();
     });
@@ -483,7 +514,6 @@ export default {
           };
           data = await store.dispatch('account/tokenTransaction', transferParams)
         } else {
-          tx.value = utils.formatEther(value);
           data = await store.dispatch('account/transaction', {
             ...tx,
             checkTxQueue: false

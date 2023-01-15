@@ -51,9 +51,9 @@ export const useNetWork = () => {
             networkLoading.value = true
             try {
                 await dispatch('account/setNetWork', chooseN).finally(() => networkLoading.value = false)
+                eventBus.emit('changeNetwork',chooseN)
                 dispatch("account/updateAllBalance")
                 showModalNetwork.value = false
-                eventBus.emit('changeNetwork',chooseN)
             } catch (err) {
                 Toast(JSON.stringify(err))
             } finally { () => networkLoading.value = false }

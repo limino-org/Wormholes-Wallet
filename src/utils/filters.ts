@@ -9,6 +9,7 @@ import { computed } from "vue";
 import i18n from '@/language/index'
 import { getInput } from "@/store/modules/txList";
 import store from '@/store/index'
+const txTypes = [14,15,16,17,18,19,20,27]
 
 // Mask the address
 export const addressMask = (v: string) => {
@@ -201,7 +202,17 @@ export function transactionStatus(txData: any){
 
   export const txTypeToIcon = (data: any) => {
     const myAddr = store.state.account.accountInfo.address.toUpperCase()
-    const { to, from, txType} = data
+    const { to, from, txType, input, jsonData} = data
+    if(txType === 'wormholes') {
+      if(jsonData){
+        if(jsonData.type == 6) {
+          return 'icon-icon-'
+        }
+       if(txTypes.includes(jsonData.type)) {
+         return 'icon-jiantou_youshang'
+       }
+      }
+   }
     if(txType == 'contract') return 'icon-icon-'
     const bigTo = to.toUpperCase()
     const bigFrom = from.toUpperCase()
@@ -209,8 +220,19 @@ export function transactionStatus(txData: any){
     if(bigTo !== bigFrom || bigTo === bigFrom) return 'icon-jiantou_youshang'
   }
   export const handleTxType = (item: any) => {
-  const { to, from, contractAddress, sendStatus , txType} = item
+  const { to, from, contractAddress, sendStatus , txType, input} = item
   const myAddr = store.state.account.accountInfo.address.toUpperCase()
+  if(txType === 'wormholes') {
+     const data = getInput(input)
+     if(data){
+      if(data.type == 6) {
+        return i18n.global.t('common.conver')
+      }
+      if(txTypes.includes(data.type)) {
+        return i18n.global.t('transationHistory.send')
+      }
+     }
+  }
   if(sendStatus && sendStatus === 'pendding') {
     if(txType === 'contract') {
       return i18n.global.t('transationHistory.contract')
@@ -233,7 +255,7 @@ export function transactionStatus(txData: any){
   }
 
   export const transferAmountText = (data: any) => {
-    const { to, from, contractAddress, value, input, convertAmount, sendStatus, status, tokenAddress, amount, txType } = data
+    const { to, from, contractAddress, value, input, convertAmount, sendStatus, status, tokenAddress, amount, txType, jsonData } = data
     const myAddr = store.state.account.accountInfo.address.toUpperCase()
     if(sendStatus && sendStatus === 'pendding'){
       if(tokenAddress) {
@@ -243,10 +265,23 @@ export function transactionStatus(txData: any){
         return val
       }
     }
-    // console.log('input:', utils.toUtf8String(input))
-    const jsonData = getInput(input)
-
     const val = new BigNumber(value).div(1000000000000000000).toString()
+    if(txType === 'wormholes') {
+      if(jsonData){
+        if(jsonData.type == 6) {
+          console.warn('jsonData.type', jsonData.type)
+          console.log('convertAmount', convertAmount)
+          return '+' + convertAmount
+        }
+        if(jsonData.type == 26 || jsonData.type == 12) {
+          return '+' + val
+        }
+       if(txTypes.includes(jsonData.type)) {
+         return '-' + val
+       }
+      }
+   }
+
     if(jsonData) {
     // @ts-ignore
     let { type, nft_address } = jsonData

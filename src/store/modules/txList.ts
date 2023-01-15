@@ -11,7 +11,7 @@ console.warn('web3', web3)
 import BigNumber from 'bignumber.js'
 import { guid } from '@/utils'
 
-const page_size = '30'
+const page_size = '10'
 const page_size_int = Number(page_size)
 let timeOut = 6000
 interface State {
@@ -59,7 +59,7 @@ export default {
             }
             console.log('txInfo', txInfo)
             if (txInfo) {
-                const realList = txInfo.list.filter(item => !item.sendType)
+                const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
                 if (total <= realList.length) {
                     if (time && typeof hasRecord == 'undefined') {
                         clearInterval(time)
@@ -82,19 +82,18 @@ export default {
             }
             await localforage.setItem(asyncRecordKey, txInfo)
             eventBus.emit('loopTxListUpdata', txInfo.list)
-            if (!list || list.length < page_size_int && typeof hasRecord == 'undefined') {
+            const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
+            if (!list || realList.length < page_size_int && typeof hasRecord == 'undefined') {
                 if (time) {
                     clearInterval(time)
                 }
             }
 
+
         },
         async asyncAddrRecord({ commit, state, dispatch }: any) {
             const addr = store.state.account.accountInfo.address.toUpperCase()
-            const { id } = store.state.account.currentNetwork
-            // const wallet = await getWallet()
-            // const { chainId } = await wallet.provider.getNetwork()
-            const chainId = store.state.account.currentNetwork.chainId
+            const { id, chainId } = store.state.account.currentNetwork
             /**
              * Check whether synchronization is complete based on total and the current page number
              * Synchronize block browser transaction records
@@ -145,6 +144,7 @@ export default {
                             const json = getInput(item.input)
                             if(json) {
                                 item.txType = 'wormholes'
+                                item.jsonData = json
                             } else {
                                 item.txType = 'contract'
                             }
@@ -158,7 +158,7 @@ export default {
                 await localforage.setItem(asyncRecordKey, txInfo)
                 await dispatch('updateRecordPage', { transactions, total, chainId })
                 dispatch('asyncUpdateList', { total })
-                return { total, chainId, asyncRecordKey }
+                return { total, chainId, asyncRecordKey, transactions,...params }
             }
             return null
         },
@@ -174,7 +174,7 @@ export default {
             const txInfo = await localforage.getItem(asyncRecordKey)
             // const totalPage = Math.ceil(total/10)
             // const listTotalPage = Math.ceil(txInfo.list.length/10)
-            const realList = txInfo.list.filter(item => !item.sendType)
+            const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
             if (total !== realList.length) {
                 const hasRecord1 = await handleUpdateList()
                 if (!hasRecord1) {
@@ -207,6 +207,7 @@ export default {
                             const json = getInput(item.input)
                             if(json) {
                                 item.txType = 'wormholes'
+                                item.jsonData = json
                             } else {
                                 item.txType = 'contract'
                             }
@@ -240,14 +241,22 @@ export default {
             // When you are currently on a wormholes network, synchronize transaction records from the block browser
             if (network.id === 'wormholes-network-1') {
                 const res = await dispatch('asyncAddrRecord')
-                const { asyncRecordKey, total } = res
-                const txInfo = await localforage.getItem(asyncRecordKey)
-                if (res && txInfo.list && txInfo.list.length < total) {
-                    time = setInterval(async () => {
-                        await dispatch('asyncAddrRecord')
-                    }, timeOut)
+                if(res){
+                    const { asyncRecordKey, total } = res
+                    const txInfo = await localforage.getItem(asyncRecordKey)
+                    const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
+                    if (res && realList.length < total) {
+                        time = setInterval(async () => {
+                            await dispatch('asyncAddrRecord')
+                        }, timeOut)
+                    }
+                    return { total, asyncRecordKey }
+                } else {
+                    clearInterval(time)
                 }
+  
             }
+            return {total:0, asyncRecordKey:''}
         },
     },
     namespaced: true,

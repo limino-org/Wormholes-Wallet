@@ -9,7 +9,7 @@ import zhCN from 'vant/es/locale/lang/zh-CN';
 import localforage from 'localforage';
 // Locale.use('en-US', enUS);
 // const store = localStorage.getItem('vuex') ? JSON.parse(localStorage.getItem('vuex') || '') : null
-const messages = {
+export const messages = {
     zh,
     en,
 }
@@ -30,7 +30,6 @@ export const vantLangs: any = {
 Locale.use(vantLangs[fallbackLocale].value, vantLangs[fallbackLocale]['package']);
 
 const i18n = createI18n({
-  legacy: false,
   silentFallbackWarn:true,
   fallbackLocale,
   globalInjection:true,
