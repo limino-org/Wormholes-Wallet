@@ -1166,17 +1166,21 @@ export default defineComponent({
       addNumber.value = addNumber2.value;
     };
     const handleAddBlur = () => {
-      debugger;
-      const addNum = new BigNumber(addNumber.value);
+      if(addNumber.value) {
+        const addNum = new BigNumber(addNumber.value);
       if (addNum.gte(accountInfo.value.amount)) {
         $wtoast.warn(t("createExchange.ispoor"));
-        addNumber.value = maxBalance.value;
+        addNumber.value = addNumber2.value.toString();
         return;
       } else {
         nextTick(() => {
           addNumber2.value = parseFloat(addNumber.value);
         });
       }
+      } else {
+        addNumber2.value = 0
+      }
+
     };
 
     const showMinusModal = ref(false);
