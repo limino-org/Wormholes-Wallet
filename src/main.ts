@@ -10,7 +10,7 @@ import 'vant/lib/index.css'
 // fix iOS String.prototype.normalize 
 import '@/utils/unorm.js'
 import '@/utils/ether'
-import VConsole from 'vconsole'
+// import VConsole from 'vconsole'
 
 import { createApp } from 'vue'
 import i18n from '@/language/index'
@@ -42,9 +42,9 @@ app.use(i18n)
 app.use(TradeConfirm)
 app.use(Toast)
 app.use(Dialog)
-if(!isProduct) {
-  new VConsole()
-}
+// if(!isProduct) {
+//   new VConsole()
+// }
 app.mount('#app')
 
 

@@ -205,7 +205,7 @@ export function transactionStatus(txData: any){
     if(txType === 'wormholes') {
       if(jsonData){
         if(jsonData.type == 6) {
-          return 'icon-icon-'
+          return 'icon-bottom'
         }
        if(txTypes.includes(jsonData.type)) {
          return 'icon-jiantou_youshang'
