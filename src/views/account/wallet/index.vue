@@ -108,7 +108,7 @@ trigger="manual"
           <div class="action-name text-center">{{ t("wallet.swap") }}</div>
         </div>
       </div>
-      <van-tabs v-model:active="active" sticky :offset-top="48">
+      <van-tabs v-model:active="active" sticky :offset-top="48" @click-tab="onClickTab" >
 
         <van-tab :title="$t('wallet.token')">
           <TokenCard :data="myToken" :networkIcon="false" />
@@ -135,6 +135,7 @@ trigger="manual"
               <NftList
                 @success="isSelect = false"
                 v-model:isSelect="isSelect"
+                :active="active"
                 v-if="active === 1"
                 @updateLength="handleLength"
                 @showSwitch="handleShowSwitch"
@@ -551,7 +552,16 @@ export default {
       if (Coefficient.value == 40 || Coefficient.value == 50) return "neutral";
       if (Coefficient.value > 50) return "smile";
     });
+
+    const onClickTab = ({name}: any) => {
+      console.warn('onClickTab', name)
+      if(!name) {
+        isSelect.value = false
+      }
+    }
+  
     return {
+      onClickTab,
       handleShowSwitch,
       ethAccountInfo,
       expresionClass,

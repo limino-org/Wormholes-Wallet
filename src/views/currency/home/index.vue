@@ -328,9 +328,8 @@ export default {
       try {
        const { total, asyncRecordKey} = await handleAsyncTxList();
         await store.dispatch('txList/asyncUpdateList',{total})
-        await getPageList();
-        
       }finally {
+        getPageList();
         loading.value = false
       }
       store.dispatch("account/waitTxQueueResponse", {
@@ -417,26 +416,29 @@ export default {
       getPageList();
     });
     eventBus.on("txPush", (data: any) => {
-      const tx = txList.value.find((item: any) => item.txId.toUpperCase() != data.txId.toUpperCase())
-      if(!tx) {
-      // @ts-ignore
-      txList.value.unshift(data)
-      }
+      getPageList()
+      // const tx = txList.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
+      // if(!tx) {
+      // // @ts-ignore
+      // txList.value.unshift(data)
+      // }
     });
     eventBus.on("delTxQueue", (data: any) => {
+      getPageList()
       // @ts-ignore
-      txList.value = txList.value.filter(item => item.txId.toUpperCase() != data.txId.toUpperCase())
+      // txList.value = txList.value.filter(item => item.txId.toUpperCase() == data.txId.toUpperCase())
     });
     
     eventBus.on("txQueuePush", (data: any) => {
-      let time = setTimeout(async() => {
-        const tx = txList.value.find((item: any) => item.txId.toUpperCase() != data.txId.toUpperCase())
-      if(!tx) {
-      // @ts-ignore
-      txList.value.unshift(data)
-      }
-      clearTimeout(time)
-      },300)
+      getPageList()
+      // let time = setTimeout(async() => {
+      //   const tx = txList.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
+      // if(!tx) {
+      // // @ts-ignore
+      // txList.value.unshift(data)
+      // }
+      // clearTimeout(time)
+      // },300)
     });
     eventBus.on('waitTxEnd', async() => {
       store.dispatch('txList/asyncUpdateList',{total: 0})
@@ -444,24 +446,24 @@ export default {
     })
     eventBus.on("txUpdate", (data: any) => {
       console.warn("txUpdate----", data);
-
-      for (let i = 0; i < txList.value.length; i++) {
-        let item = txList.value[i];
-        const { txId } = item;
-        if(data.txId) {
-          // @ts-ignore
-          if (txId && txId.toString().toUpperCase() == data.txId.toUpperCase()) {
-          // @ts-ignore
-          txList.value[i] = data;
-          }
-        }
-      }
-      const tx = txList.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
-      if(!tx) {
-         // @ts-ignore
-        txList.value.unshift(data)
-        return
-      }
+      getPageList()
+      // for (let i = 0; i < txList.value.length; i++) {
+      //   let item = txList.value[i];
+      //   const { txId } = item;
+      //   if(data.txId) {
+      //     // @ts-ignore
+      //     if (txId && txId.toString().toUpperCase() == data.txId.toUpperCase()) {
+      //     // @ts-ignore
+      //     txList.value[i] = data;
+      //     }
+      //   }
+      // }
+      // const tx = txList.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
+      // if(!tx) {
+      //    // @ts-ignore
+      //   txList.value.unshift(data)
+      //   return
+      // }
     });
     onUnmounted(() => {
       // console.warn('waitTime.value', waitTime.value)

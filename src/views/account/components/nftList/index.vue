@@ -456,6 +456,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    active: {
+      type: Number,
+      default: 1
+    }
   },
   emits: ["updateLength", "success", "showSwitch", "update:modelValue"],
   components: {
@@ -491,6 +495,7 @@ export default defineComponent({
     const list: any = ref([]);
     const accountInfo = computed(() => store.state.account.accountInfo);
     let Time = ref(3);
+    
     const isSelectComputed = computed({
       get: () => {
         return props.isSelect;
@@ -886,11 +891,17 @@ export default defineComponent({
           }
         })
         let numstr = '';
-        pstr ? numstr = numstr + pstr + `(L3*${pstr})` + '、' :''
-        cstr ? numstr = numstr + cstr + `(L2*${cstr})` + '、' :''
-        nstr ? numstr = numstr + nstr + `(L1*${nstr})` + '、' :''
-        fstr ? numstr = numstr + fstr + `(L0*${fstr})` + '、' :''
+        pstr ? numstr = numstr + `(L3*${pstr})` + '、' :''
+        cstr ? numstr = numstr + `(L2*${cstr})` + '、' :''
+        nstr ? numstr = numstr + `(L1*${nstr})` + '、' :''
+        fstr ? numstr = numstr + `(L0*${fstr})` + '、' :''
         numstr = numstr.slice(0, numstr.length -1)
+        console.warn('numstr pstr', pstr)
+        console.warn('numstr cstr', cstr)
+        console.warn('numstr nstr', nstr)
+        console.warn('numstr fstr', fstr)
+
+        console.warn('numstr', numstr)
         // isLoading.value = true;
         isSelectComputed.value = false;
         show.value = false;

@@ -5,6 +5,7 @@
     :showCancelButton="false"
     teleport="#page-box"
     closeOnClickOverlay
+    class="miner-account-list-modal"
   >
     <div class="title">{{ t("wallet.account") }}</div>
     <div class="account-list">
@@ -96,7 +97,6 @@ onMounted(async () => {
 .account-list {
   max-height: 40vh;
   overflow-y: scroll;
-  padding: 20px 0 48px 0;
   .card {
     padding: 16px 15px;
     transition: ease .3s;

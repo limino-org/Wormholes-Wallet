@@ -314,48 +314,51 @@ export default {
       getPageList();
     });
     eventBus.on("txPush", (data: any) => {
+      getPageList();
       console.warn('txPush', data)
-      const tx = tlist.value.find((item: any) => item.txId.toUpperCase() != data.txId.toUpperCase())
-      if(!tx) {
-        debugger
-      // @ts-ignore
-      tlist.value.unshift(data)
-      }
+      // const tx = tlist.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
+      // if(!tx) {
+      //   debugger
+      // // @ts-ignore
+      // tlist.value.unshift(data)
+      // }
     });
 
     eventBus.on("delTxQueue", (data: any) => {
+      getPageList();
       // @ts-ignore
-      tlist.value = tlist.value.filter(item => item.txId.toUpperCase() != data.txId.toUpperCase())
+      // tlist.value = tlist.value.filter(item => item.txId.toUpperCase() == data.txId.toUpperCase())
     });
     
     eventBus.on("txQueuePush", (data: any) => {
-      let time = setTimeout(async() => {
-        const tx = tlist.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
-      if(!tx) {
-        tlist.value.unshift(data)
-      }
-        clearTimeout(time)
-      },300)
+      getPageList();
+      // let time = setTimeout(async() => {
+      //   const tx = tlist.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
+      // if(!tx) {
+      //   tlist.value.unshift(data)
+      // }
+      //   clearTimeout(time)
+      // },300)
     });
     
     eventBus.on("txUpdate", (data: any) => {
       console.warn("txUpdate----", data);
-
-      for (let i = 0; i < tlist.value.length; i++) {
-        let item = tlist.value[i];
-        const { txId } = item;
-        if(data.txId) {
-          // @ts-ignore
-          if (txId && txId.toString().toUpperCase() == data.txId.toUpperCase()) {
-          // @ts-ignore
-          tlist.value[i] = data;
-          }
-        }
-      }
-      const tx = tlist.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
-      if(!tx) {
-        tlist.value.unshift(data)
-      }
+      getPageList();
+      // for (let i = 0; i < tlist.value.length; i++) {
+      //   let item = tlist.value[i];
+      //   const { txId } = item;
+      //   if(data.txId) {
+      //     // @ts-ignore
+      //     if (txId && txId.toString().toUpperCase() == data.txId.toUpperCase()) {
+      //     // @ts-ignore
+      //     tlist.value[i] = data;
+      //     }
+      //   }
+      // }
+      // const tx = tlist.value.find((item: any) => item.txId.toUpperCase() == data.txId.toUpperCase())
+      // if(!tx) {
+      //   tlist.value.unshift(data)
+      // }
     });
     eventBus.on('changeNetwork', async(address) => {
       loading.value = true
@@ -383,8 +386,8 @@ export default {
       try {
         const { total, asyncRecordKey} = await handleAsyncTxList();
         await store.dispatch('txList/asyncUpdateList',{total})
-        await getPageList();
       }finally {
+        getPageList();
         loading.value = false
       }
       store.dispatch("account/waitTxQueueResponse", {

@@ -307,6 +307,9 @@ body {
 .startGuideModal {
   height: 324px;
 }
+.miner-account-list-modal {
+  max-height: 430px;
+}
 @media screen and (min-width: 750px) {
   html {
     font-size: 40PX !important; // ignored
@@ -320,7 +323,9 @@ body {
   .el-popper,.van-popover {
     max-width: 160px;
   }
-  
+  .miner-account-list-modal {
+    max-height: 326px;
+  }
 }
 
 // .van-dialog-bounce-enter-from {

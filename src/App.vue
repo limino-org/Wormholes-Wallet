@@ -76,7 +76,7 @@ export default {
         // @ts-ignore
         document.getElementById("app").style.display = "block";
         clearTimeout(time);
-      }, 600);
+      }, 300);
     };
     onMounted(() => {
       initWallet()

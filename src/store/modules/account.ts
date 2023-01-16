@@ -1486,7 +1486,7 @@ export default {
               if(id === 'wormholes-network-1') {
                 await UPDATE_TRANSACTION(newtx)
               }else {
-                await PUSH_TRANSACTION(newtx)
+                await PUSH_TRANSACTION({...newtx, txId: guid()})
               }
               
             }
@@ -1697,6 +1697,7 @@ export const DEL_TXQUEUE = async (tx: any) => {
     let queueKey = `txQueue-${id}-${chainId}-${from.toUpperCase()}`
     const list: any = await localforage.getItem(queueKey)
     const txQueue = list && list.length ? list : []
+    debugger
     const newList = txQueue.filter((item: any) => item.txId.toUpperCase() != txId.toUpperCase())
     await localforage.setItem(queueKey, newList)
     eventBus.emit('delTxQueue', tx)
@@ -1789,8 +1790,9 @@ export const PUSH_TRANSACTION = async (da: any) => {
       txList.list = [clone(newReceipt)]
     }
   } else {
+    debugger
     if (txList && txList.length) {
-      const tx = txList.find((item: any) => item.txId.toUpperCase() != newReceipt.txId.toUpperCase())
+      const tx = txList.find((item: any) => item.txId.toUpperCase() == newReceipt.txId.toUpperCase())
       if(!tx) {
         txList.unshift(clone(newReceipt))
       }
