@@ -323,6 +323,8 @@ export default {
     };
     let waitTime: any = ref(null);
     onMounted(async () => {
+      store.dispatch('account/clearWaitTime')
+
       try {
        const { total, asyncRecordKey} = await handleAsyncTxList();
         await store.dispatch('txList/asyncUpdateList',{total})
@@ -331,11 +333,7 @@ export default {
         loading.value = false
       }
       store.dispatch("account/waitTxQueueResponse", {
-        time: null,
-        callback(e: any) {
-          console.warn("e", e);
-          waitTime.value = e;
-        },
+        time: null
       });
     });
     const toSend = () => {
@@ -404,10 +402,6 @@ export default {
       }
       store.dispatch("account/waitTxQueueResponse", {
         time: null,
-        callback(e: any) {
-          console.warn("e", e);
-          waitTime.value = e;
-        },
       });
     })
     eventBus.on("loopTxListUpdata", () => {
@@ -475,6 +469,7 @@ export default {
       eventBus.off("txQueuePush");
       eventBus.off("delTxQueue");
       eventBus.off('waitTxEnd')
+      store.dispatch('account/clearWaitTime')
 
     });
     const cancelSend = async () => {

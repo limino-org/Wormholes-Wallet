@@ -174,7 +174,7 @@ const createWallet = async () => {
 export const clearWallet = () => {
   wallet = null;
 };
-
+let waitTime: any = null
 // calc gasFee
 export const getGasFee = async (tx: any) => {
   try {
@@ -1401,6 +1401,14 @@ export default {
         commit('UPDATE_CHAINACCOUNTINFO', {})
       }
     },
+    //  Stop polling
+    clearWaitTime(){
+      clearTimeout(waitTime)
+      waitTime = null
+      if(wallet && wallet.provider) {
+         wallet.provider.removeAllListeners()
+      }
+    },
     // The result of polling the transaction queue
     async waitTxQueueResponse({ commit, state }: any, opt?: Object) {
       console.warn('waitTxQueueResponse---')
@@ -1413,9 +1421,8 @@ export default {
       const from = state.accountInfo.address
       // @ts-ignore
       const queuekey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
-      let t: any = null;
       return new Promise((resolve, reject) => {
-        t = setTimeout(async () => {
+        waitTime = setTimeout(async () => {
           const list: any = await localforage.getItem(queuekey)
           const txQueue = list && list.length ? list : []
           if (!txQueue.length) {
@@ -1496,11 +1503,11 @@ export default {
             console.error(err)
             reject(err)
           } finally {
-            clearTimeout(t)
+            clearTimeout(waitTime)
           }
         }, 1000)
 
-        _opt.callback(t)
+        _opt.callback(waitTime)
       })
     },
     // get ethAccountInfo
