@@ -96,7 +96,7 @@ import {
   Icon,
   Popover,
 } from "vant";
-import { addressMask, decimal } from "@//utils/filters";
+import { addressMask, decimal } from "@/utils/filters";
 import { ethers, utils } from "ethers";
 import { useI18n } from "vue-i18n";
 import BigNumber from "bignumber.js";

@@ -192,9 +192,6 @@ import { guid, viewAccountByAddress } from "@/utils/utils";
 import {
   clone,
   getWallet,
-  handleGetTranactionReceipt,
-  TransactionSendStatus,
-  getTxInfo,
   DEL_TXQUEUE,
   PUSH_TRANSACTION,
 } from "@/store/modules/account";
@@ -288,7 +285,8 @@ export default {
             } else {
               const tokens = currentNetwork.value.tokens[accountInfo.value.address.toUpperCase()]
               const tokenAddrs = tokens && tokens.length ? tokens.map((item: any) => item.tokenContractAddress.toUpperCase()) : []
-              txList.value = list.filter((item: any) => !tokenAddrs.includes(item.to.toUpperCase()));
+              console.warn('tokenAddrs', tokenAddrs,list)
+              txList.value = list
             }
           }
           if(!tokenContractAddress) {
@@ -667,8 +665,6 @@ export default {
           sendType: 'speed',
         }
         await PUSH_TRANSACTION(newres)
-        // store.commit("account/PUSH_TRANSACTION",newres);
-        sessionStorage.setItem("new tx", JSON.stringify(data));
         const receipt = await data.wallet.provider.waitForTransaction(data.hash);
         await store.dispatch("account/waitTxQueueResponse");
         handleAsyncTxList()

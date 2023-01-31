@@ -120,7 +120,7 @@ const handlerQRcode = () => {
   codeShow.value = true;
 };
 const sendLink = computed(() => {
-  return `${location.origin}/#/transferAccount/send?value=${amount.value}&tokenContractAddress=${tokenContractAddress.value}&address=${address.value}&action=transfer`;
+  return `${location.origin}${location.pathname}/#/transferAccount/send?value=${amount.value}&tokenContractAddress=${tokenContractAddress.value}&address=${address.value}&action=transfer`;
 });
 const isWarning = ref(false);
 </script>

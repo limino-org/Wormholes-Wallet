@@ -54,45 +54,6 @@
         <van-skeleton avatar :row="2" />
       </div>
     </div>
-    <!-- <div class="all">
-      <el-table-v2
-        :columns="columns"
-        :data="transactionList"
-        :row-height="40"
-        :width="700"
-        :height="`calc(100vh - 60px)`"
-        :footer-height="50"
-        row-key="item"
-      >
-        <template #row="scope">
-          <CollectionCard
-              @handleClick="handleView(scope)"
-              :key="scope.to"
-              :data="scope"
-            />
-        </template>
-      </el-table-v2>
-    </div> -->
-    <!-- <div class="receive" v-show="chooseTabdata.value == 2"></div>
-    <div class="send" v-show="chooseTabdata.value == 3">
-      <div v-if="sendList.length">
-        <CollectionCard @handleClick="handleView(item)" v-for="item in sendList" :key="item.to" :data="item" />
-      </div>
-      <no-data v-else />
-    </div>
-    <div class="swap" v-show="chooseTabdata.value == 4">
-      <div v-if="swapList.length">
-        <CollectionCard @handleClick="handleView(item)" v-for="item in swapList" :key="item.to" :data="item" />
-      </div>
-      <no-data v-else />
-    </div>
-
-    <div class="other" v-show="chooseTabdata.value == 5">
-      <div v-if="otherList.length">
-        <CollectionCard @handleClick="handleView(item)" v-for="item in otherList" :key="item.to" :data="item" />
-      </div>
-      <no-data v-else />
-    </div> -->
   </div>
   <!-- View transaction details -->
   <van-dialog

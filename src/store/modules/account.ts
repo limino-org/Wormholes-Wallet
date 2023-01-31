@@ -1763,6 +1763,7 @@ export const PUSH_TRANSACTION = async (da: any) => {
     sendType,
     txType
   }
+  console.warn('newReceipt', newReceipt)
   if (data) {
     const convertAmount = await getConverAmount(wallet, { input: data, blockNumber })
     newReceipt['convertAmount'] = convertAmount
@@ -1781,8 +1782,7 @@ export const PUSH_TRANSACTION = async (da: any) => {
 
   if (state.currentNetwork.id == 'wormholes-network-1') {
     if (txList && txList.list.length) {
-      const tx = txList.list.find((item: any) => item.txId.toUpperCase() != newReceipt.txId.toUpperCase())
-      debugger
+      const tx = txList.list.find((item: any) => item.txId.toUpperCase() == newReceipt.txId.toUpperCase())
       if(!tx) {
         txList.list.unshift(clone(newReceipt))
       }
@@ -1790,7 +1790,6 @@ export const PUSH_TRANSACTION = async (da: any) => {
       txList.list = [clone(newReceipt)]
     }
   } else {
-    debugger
     if (txList && txList.length) {
       const tx = txList.find((item: any) => item.txId.toUpperCase() == newReceipt.txId.toUpperCase())
       if(!tx) {

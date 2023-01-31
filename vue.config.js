@@ -110,7 +110,8 @@ module.exports = {
           name: 'chunk-libs',
           test: /[\\/]node_modules[\\/]/,
           priority: 10,
-          chunks: 'initial'
+          chunks: 'initial',
+          reuseExistingChunk: true
         },
         commons: {
           name: 'chunk-commons',
