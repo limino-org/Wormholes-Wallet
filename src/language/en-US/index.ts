@@ -22,7 +22,7 @@ export default {
     suspensionText: 'AUTO EXCHANFGE',
     wormHoles: "Wormholes",
     account: "Account",
-    recive: "Recive",
+    recive: "Receive",
     tokens: "Tokens",
     NFTs: "NFTs",
     SNFTs: "SNFTs",
@@ -209,7 +209,8 @@ export default {
     snftLabel:'S-NFTs Convert',
     hsitory: "History",
     viewInExchange:"Go to the exchange",
-    viewInBrowser:"Go to the block browser"
+    viewInBrowser:"Go to the block browser",
+    noMore:"No more."
 
   },
   sidebar: {
@@ -324,7 +325,7 @@ export default {
     maxfee: 'Max Fee Per Gas',
     total: 'Total Gas fee',
     actionlog: 'activity log',
-    recive: "Recive",
+    recive: "Receive",
     swap: "Swap",
     transationHistoryDetails: "Transation History Details",
     date: "Date",
@@ -1107,7 +1108,7 @@ export default {
 
   // Transaction Details
   transactionDetails: {
-    recive: "Recive",
+    recive: "Receive",
     send: "Send",
     swap: "Swap",
     transationHistoryDetails: "Transation History Details",

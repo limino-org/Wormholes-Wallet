@@ -28,7 +28,7 @@
     </div>
   </van-sticky>
   <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
-    <div class="snft-list-box">
+    <div :class="`snft-list-box ${!loading && list.length ? 'pb-80' : ''}`">
       <div class="flex " v-for="(item) in list" :key="item.nft_address" >
         <div :class="`checkbox_img flex center-v pr-10 right pl-14 ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" v-show="isSelectComputed">
             <i
@@ -600,13 +600,13 @@ export default defineComponent({
       if(!wallet) {
         wallet = await getWallet()
       }
-      const list = []
+      const obj: any = {}
       for await (const nft_address of snftlist) {
         const nftAccountInfo = await wallet.provider.send("eth_getAccountInfo",[nft_address, web3.utils.toHex((blockNumber - 1).toString())])
         nftAccountInfo.nft_address = nft_address
-        list.push(nftAccountInfo)
+        obj[nft_address.toString().toUpperCase()] = nftAccountInfo
       }
-      return list
+      return obj
     }
 
     const onLoad = async () => {
@@ -651,10 +651,11 @@ export default defineComponent({
         // // 去重
         // const newlist = list.value.map((item: any) => item.address)
         // const newNftList = nftAddList.filter((item: any) => item.nft_address.toUpperCase())
-        const nftInfoList = await getSnftList(nftAddList, blockNumber)
-        // const { data: nftInfoList } = await queryArraySnft({
-        //   array: `${JSON.stringify(nftAddList)}`,
-        // });
+        const metaDataList = await getSnftList(nftAddList, blockNumber)
+        const { data: nftInfoList } = await queryArraySnft({
+          array: `${JSON.stringify(nftAddList)}`,
+        });
+
         console.warn('nftInfoList', nftInfoList)
         nfts.forEach((item: any) => {
           if(tabIndex.value == '2' && item.pledge_number !== null) {
@@ -722,7 +723,8 @@ export default defineComponent({
             if (
               item.realAddr.toUpperCase() == child.nft_address.toUpperCase()
             ) {
-              item.metaData = { ...child };
+              const {MergeLevel,MergeNumber} = metaDataList[child.nft_address.toString().toUpperCase()]
+              item.metaData = {...child,MergeLevel,MergeNumber};
               item.source_url = child.source_url;
               item.collections = child.name;
             }
@@ -1116,6 +1118,10 @@ export default defineComponent({
     const showBuyTip = ref(true)
     let oldScrollTop = 0
     const scrolling = () => {
+      if(value.value) {
+        value.value = false
+        isSelectComputed.value = false
+      }
       if(list.value.length < 10) {
         return
       }
@@ -1131,10 +1137,6 @@ export default defineComponent({
       }
     }
     const deFun = debounce(scrolling, 300)
-    onMounted(() => {
-      window.addEventListener('scroll', deFun)
-    })
-
     const bugTipClass = ref('')
     const watchList = (val: any) => {
       if(val && val.length >= 10) {
@@ -1145,6 +1147,11 @@ export default defineComponent({
         // if(!showBuyTip.value)showBuyTip.value = true 
       }
     }
+    onMounted(() => {
+      window.addEventListener('scroll', deFun)
+    })
+
+
 
     watch(()=> list.value, watchList , {
       deep: true,
@@ -1272,7 +1279,9 @@ background: rgb(215, 58, 73);
   background: rgb(3, 124, 214);
 }
 .snft-list-box {
-
+  &.pb-80 {
+    padding-bottom: 80px;
+  }
 }
 .tab-box {
   position: relative;
@@ -1468,6 +1477,7 @@ background: rgb(215, 58, 73);
 .checkbox_img {
   cursor: pointer;
   // background-color: red;
+  border-bottom: 1px solid #E4E7E8;
 
   i {
     width: 22px;

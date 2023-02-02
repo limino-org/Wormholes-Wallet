@@ -62,6 +62,9 @@ export default {
 
       waittxlist();
     });
+    eventBus.on('walletReady',newwallet => {
+      dispatch('system/getChainVersion', newwallet);
+    })
     window.onload = async () => {
       // let time2 = setTimeout(function () {
       //   commit("account/UPDATE_WORMHOLES_URL", {
@@ -95,6 +98,7 @@ export default {
       };
       dispatch("account/getContractAddress");
       dispatch("configuration/getConfiguration");
+    
       (async function () {
         const vuex = localStorage.getItem("vuex");
         const mnemonic = localStorage.getItem("mnemonic");

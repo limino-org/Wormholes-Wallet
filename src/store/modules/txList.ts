@@ -223,7 +223,10 @@ export default {
                         
                     })
                 }
-                const newList = transactions.filter(item => !hashList.includes(item.hash.toUpperCase()))
+                let newList = []
+                if(transactions && transactions.length) {
+                    newList = transactions.filter(item => !hashList.includes(item.hash.toUpperCase()))
+                }
                 console.warn('newList', newList)
 
                 let hasRecord = false

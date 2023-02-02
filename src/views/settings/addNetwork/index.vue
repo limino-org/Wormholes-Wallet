@@ -5,7 +5,9 @@
     </template>
   </NavHeader>
   <div class="addNetwork">
-    <div class="tip-tit  pt-20">{{isModif ? t('addNetwork.rpcNet'): t("addNetwork.newnetwork") }}</div>
+    <div class="tip-tit pt-20">
+      {{ isModif ? t("addNetwork.rpcNet") : t("addNetwork.newnetwork") }}
+    </div>
     <div class="w-tips flex between pt-6 pb-10 mb-6">
       <div class="text lh-16 f-12">{{ t("addNetwork.introduce") }}</div>
     </div>
@@ -25,7 +27,7 @@
             {
               // required: true,
               // message: t('addNetwork.inputnetworknameoptional'),
-              validator: asyncName
+              validator: asyncName,
             },
           ]"
         />
@@ -38,7 +40,6 @@
           :placeholder="$t('addNetwork.newRpcPlaceholder')"
           maxlength="200"
           :disabled="isMain ? true : false"
-
           validate-trigger="onChange"
           @blur="getChainId"
           :rules="[
@@ -55,7 +56,6 @@
           maxlength="30"
           validate-trigger="onChange"
           :disabled="isMain ? true : false"
-
           :class="chainError ? 'error' : ''"
           :placeholder="$t('addNetwork.chain')"
           :rules="[
@@ -74,7 +74,6 @@
         <van-field
           v-model="currencySymbol"
           :disabled="isMain ? true : false"
-
           :placeholder="$t('addNetwork.symboloptional')"
           maxlength="20"
           :rules="[{ required: false, message: t('addNetwork.inputsymbol') }]"
@@ -84,7 +83,6 @@
           v-model="browser"
           maxlength="50"
           :disabled="isMain ? true : false"
-
           :placeholder="$t('addNetwork.blockexploreroptional')"
           :rules="[{ required: false }]"
         />
@@ -99,7 +97,12 @@
               @click="handleDelNet"
               >{{ t("addNetwork.delete") }}</van-button
             >
-            <van-button block type="primary" :loading="loading" @click="onSubmit">
+            <van-button
+              block
+              type="primary"
+              :loading="loading"
+              @click="onSubmit"
+            >
               {{ isModif ? t("addNetwork.submit") : t("addNetwork.add") }}
             </van-button>
           </div>
@@ -139,7 +142,7 @@ export default {
   setup() {
     const { t } = useI18n();
     const store = useStore();
-    const form = ref()
+    const form = ref();
     const { query } = useRoute();
     const appProvide = inject("appProvide");
     const data = typeof query.data == "string" ? JSON.parse(query.data) : {};
@@ -152,9 +155,9 @@ export default {
       id,
       icon: qicon,
     }: any = data;
-    const { state, commit,dispatch } = store;
+    const { state, commit, dispatch } = store;
     const label: Ref<string> = ref(qlabel);
-    const URL: Ref<string> = ref(qurl || query.URL || '');
+    const URL: Ref<string> = ref(qurl || query.URL || "");
     const chainId: Ref<number> = ref(qid);
     const ID: Ref<string> = ref("");
     const currencySymbol: Ref<string> = ref(qsymbol);
@@ -201,27 +204,31 @@ export default {
     const chainError = ref(false);
     const asyncid = async (val: number) => {
       chainError.value = false;
-      const workList = toRaw(state.account.netWorkList);
-      const data = workList.find((item: any) => item.chainId == val);
-      let provider = ethers.getDefaultProvider(URL.value);
-      const { chainId: newchainId } = await provider.getNetwork();
-      if (RegNum1.test(String(val))) {
-        if (newchainId != chainId.value) {
-          chainError.value = true;
-          return t("addNetwork.chainIdDiff", { chainId: newchainId });
-        }
-        if (!data) {
-          return true;
-        } else {
-          // If the duplicate Chain ID is not verified during editing
-          if (isModif.value) {
+      try {
+        const workList = toRaw(state.account.netWorkList);
+        const data = workList.find((item: any) => item.chainId == val);
+        let provider = ethers.getDefaultProvider(URL.value);
+        const { chainId: newchainId } = await provider.getNetwork();
+        if (RegNum1.test(String(val))) {
+          if (newchainId != chainId.value) {
+            chainError.value = true;
+            return t("addNetwork.chainIdDiff", { chainId: newchainId });
+          }
+          if (!data) {
+            return true;
+          } else {
+            // If the duplicate Chain ID is not verified during editing
+            if (isModif.value) {
+              return true;
+            }
             return true;
           }
-          return true;
+        } else {
+          chainError.value = true;
+          return t("addNetwork.Invalidchain");
         }
-      } else {
+      } catch (err) {
         chainError.value = true;
-
         return t("addNetwork.Invalidchain");
       }
     };
@@ -242,29 +249,27 @@ export default {
     const { $wtoast } = useToast();
     const loading: Ref<boolean> = ref(false);
 
-    const onSubmit = async() => {
+    const onSubmit = async () => {
       loading.value = true;
       try {
-        await form.value.validate()
-      let time = setTimeout(()=>{
-        saveData();
-        clearTimeout(time)
-      },300)
-      }catch(err){
+        await form.value.validate();
+        let time = setTimeout(() => {
+          saveData();
+          clearTimeout(time);
+        }, 300);
+      } catch (err) {
         loading.value = false;
       }
-
     };
-    const nameError = ref(false)
+    const nameError = ref(false);
     const asyncName = (v: string) => {
-      nameError.value = false
-      if(!v){
-        nameError.value = true
-        return t('addNetwork.inputnetworknameoptional')
+      nameError.value = false;
+      if (!v) {
+        nameError.value = true;
+        return t("addNetwork.inputnetworknameoptional");
       }
-    }
+    };
     const saveData = () => {
-
       // Verify whether the URL Chain ID is duplicate
       const len = netWorkList.value.length;
       const icon = len >= 6 ? chessIcons[5] : chessIcons[len];
@@ -283,7 +288,7 @@ export default {
         icon: qicon && qicon != undefined ? qicon : icon,
       };
       console.log("netWork", netWork, qicon);
-      !isModif.value ? netWork.isMain = false : ''
+      !isModif.value ? (netWork.isMain = false) : "";
       store.commit(
         isModif.value ? "account/MODIF_NETWORK" : "account/PUSH_NETWORK",
         netWork
@@ -321,7 +326,7 @@ export default {
         const url = URL.value;
         const provider = ethers.getDefaultProvider(url);
         const network = await provider.getNetwork();
-        debugger
+        debugger;
         urlError.value = false;
         chainId.value = network.chainId;
       } catch (err: any) {
@@ -330,15 +335,19 @@ export default {
       }
     };
 
-    const isMain = computed(() => data ? data.isMain : false )
-    watch(()=>isMain.value,async() => {
-      const provider = ethers.getDefaultProvider(URL.value)
-      const net = await provider.getNetwork()
-      chainId.value = net.chainId
-      store.commit('account/UPDATE_WORMHOLES_CHAINID',net.chainId)
-    },{
-      immediate: true
-    })
+    const isMain = computed(() => (data ? data.isMain : false));
+    watch(
+      () => isMain.value,
+      async () => {
+        const provider = ethers.getDefaultProvider(URL.value);
+        const net = await provider.getNetwork();
+        chainId.value = net.chainId;
+        store.commit("account/UPDATE_WORMHOLES_CHAINID", net.chainId);
+      },
+      {
+        immediate: true,
+      }
+    );
     return {
       t,
       onSubmit,
@@ -362,7 +371,7 @@ export default {
       getChainId,
       appProvide,
       hasChainId,
-      isMain
+      isMain,
     };
   },
 };
@@ -399,8 +408,8 @@ export default {
       font-size: 18px;
     }
     .text {
-     line-height: 16px;
-     color: #848484;
+      line-height: 16px;
+      color: #848484;
     }
   }
 

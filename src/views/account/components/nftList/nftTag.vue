@@ -11,7 +11,8 @@
       >
         <div class="lh-16 text-center">L3</div>
         <template #reference>
-          <div   v-show="data.pidx || data.pidx == 0" class="tag-circle P" @mouseover="showPopover3 = true" @mouseout="showPopover3 = false" >
+          <div v-show="data.pidx || data.pidx == 0"  :class="`tag-circle P ${!data.cidx && data.cidx != 0 ? 'last' : ''}`"
+ @mouseover="showPopover3 = true" @mouseout="showPopover3 = false" >
             {{ data.pidx }}
           </div>
         </template>
@@ -26,7 +27,7 @@
           <div
           v-show="data.cidx || data.cidx == 0"
           @mouseover="showPopover2 = true" @mouseout="showPopover2 = false"
-            class="tag-circle C"
+          :class="`tag-circle C ${!data.nidx && data.nidx != 0 ? 'last' : ''}`"
           >
             {{ data.cidx }}
           </div>
@@ -42,7 +43,7 @@
           <div
           v-show="data.nidx || data.nidx == 0"
           @mouseover="showPopover1 = true" @mouseout="showPopover1 = false"
-          class="tag-circle N"
+          :class="`tag-circle N ${!data.fidx && data.fidx != 0 ? 'last' : ''}`"
           >
             {{ data.nidx }}
           </div>
@@ -59,7 +60,7 @@
           <div
           v-show="data.fidx || data.fidx == 0"
           @mouseover="showPopover = true" @mouseout="showPopover = false"
-            class="tag-circle F"
+          class="tag-circle F last"
           >
             {{ data.fidx }}
           </div>
@@ -128,6 +129,11 @@ $L3Color: #d73a49;
     // transform: translateX(7px);
     margin-right: -7px;
     position: relative;
+    &.last {
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      padding: 0 7px;
+    }
     &.P {
       background: $L3Color;
       &::after {
@@ -183,14 +189,6 @@ $L3Color: #d73a49;
     }
 
   }
-  .van-popover__wrapper {
-    &:nth-last-of-type(1) {
-        .tag-circle {
-            border-top-right-radius: 8px;
-      border-bottom-right-radius: 8px;
-      padding: 0 7px;
-        }
-    }
-  }
+
 }
 </style>

@@ -3,6 +3,8 @@ import router from '@/router';
 import { erb_price } from '@/http/modules/price'
 import Cookies from 'js-cookie'
 import localforage from 'localforage';
+import { getWallet } from './account';
+import store from '../index'
 type WalletToken = {
   seconds: number
   time: number
@@ -11,6 +13,7 @@ type WalletToken = {
 interface State {
   language: string;
   version: string;
+  chainVersion: string;
 // List arrangement
   layoutType: string;
   // Convert the amount to U.S. dollars
@@ -42,6 +45,7 @@ interface State {
 export default {
   state: {
     version,
+    chainVersion:'',
     language: "en",
     layoutType: "card",
     layoutList: [
@@ -79,6 +83,9 @@ export default {
     hasBackUpMnemonic: false
   },
   mutations: {
+    UPDATE_CHAINVERSION(state: State, value: string) {
+      state.chainVersion = value
+    },
     UPDATE_LANGUAGE(state: State, value: string) {
       state.language = value;
     },
@@ -183,6 +190,32 @@ export default {
         location.reload()
       }
       return Promise.resolve(value);
+    },
+    async getChainVersion({commit, state}: any, wallet: any){
+      const version =  await wallet.provider.send('eth_version')
+      const { chainId } =  await wallet.provider.getNetwork()
+      const { id } = store.state.account.currentNetwork
+      const queryList = [
+        `async-${id}-${chainId}`,
+        `txQueue-${id}-${chainId}`,
+        `txlist-${id}-${chainId}`
+      ]
+      const oldVersion = state.chainVersion
+      if(oldVersion && version != oldVersion) {
+        localforage.iterate((value, key, iterationNumber) => {
+          console.log('clear cancel', key)
+          if (key !== "vuex") {
+            const flag = queryList.some(str => key.indexOf(str) > -1)
+            console.log('clear cancel', key)
+            if(flag){
+              localforage.removeItem(key);
+            }
+          } else {
+            [key, value]
+          }
+        });
+      }
+      commit('UPDATE_CHAINVERSION', version)
     },
     // Obtain the dollar exchange rate
     getTransferUSDRate({commit, state}: any) {

@@ -574,6 +574,7 @@ export default {
           null,
           60000
         );
+        store.dispatch('account/clearWaitTime')
         await store.dispatch("account/waitTxQueueResponse");
         handleAsyncTxList()
       } catch (err) {
@@ -677,6 +678,7 @@ export default {
         // store.commit("account/PUSH_TRANSACTION",newres);
         sessionStorage.setItem("new tx", JSON.stringify(data));
         const receipt = await data.wallet.provider.waitForTransaction(data.hash);
+        store.dispatch('account/clearWaitTime')
         await store.dispatch("account/waitTxQueueResponse");
         handleAsyncTxList()
       } catch (err) {

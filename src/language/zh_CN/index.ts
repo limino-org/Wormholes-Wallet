@@ -252,7 +252,9 @@ export default {
         snftLabel:'S-NFTs转换',
         hsitory: "交易历史",
         viewInExchange:"去交易所查看",
-        viewInBrowser:"去区块浏览器查看"
+        viewInBrowser:"去区块浏览器查看",
+        noMore:"没有更多了"
+
 
 
 

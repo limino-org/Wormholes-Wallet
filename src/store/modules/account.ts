@@ -977,7 +977,9 @@ export default {
     async getProviderWallet({ commit, state, dispatch }: any) {
       let provider = null
       const { URL } = state.currentNetwork;
-
+      if(wallet && wallet.provider && (wallet.provider.connection.url == URL)){
+        return wallet
+      }
       if (!wallet || !wallet.provider || (wallet.provider.connection.url != URL)) {
         provider = ethers.getDefaultProvider(URL)
       }
