@@ -206,6 +206,25 @@ export default {
                 const txInfo = await localforage.getItem(asyncRecordKey)
                 const hashList = txInfo.list.map(item => item.hash.toUpperCase())
                 const { total, transactions } = await getTransitionsPage(params)
+                if(!total && txInfo.list && txInfo.list.length) {
+                    const addr = store.state.account.accountInfo.address.toUpperCase()
+                    const { id, chainId } = store.state.account.currentNetwork
+                    // Clear the transaction history of the current account
+                    const qstr1 = `async-${id}-${chainId}-${addr.toUpperCase()}`
+                    const qstr2 = `txQueue-${id}-${chainId}-${addr.toUpperCase()}`
+                    await localforage.iterate(async(value, key, iterationNumber) => {
+                        console.log('clear cancel', key)
+                        if (key !== "vuex") {
+                            if(key == qstr1 || key == qstr2) {
+                                console.log('clear cancel', key)
+                               await localforage.removeItem(key);
+                            }
+                        } else {
+                          [key, value]
+                        }
+                    });
+                    return false
+                }
                 if(transactions && transactions.length) {
                     transactions.forEach((item) => {
                         item.txId = guid()

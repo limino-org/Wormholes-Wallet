@@ -1,5 +1,4 @@
 <template>
-  <van-sticky>
     <NavHeader :title="t('setting.transitionHistory')">
       <template v-slot:left>
         <span class="back hover f-12" @click="back">{{
@@ -7,7 +6,6 @@
         }}</span>
       </template>
     </NavHeader>
-  </van-sticky>
   <div class="transaction-history">
     <!-- <van-sticky offset-top="48">
       <div class="flex center tabs-box pt-14">
@@ -35,19 +33,6 @@
         />
       </div>
       <no-data v-else />
-      <i18n-t
-        tag="div"
-        keypath="wallet.toBrowser"
-        class="flex center scan-link pb-30"
-      >
-        <template v-slot:link>
-          <span
-            @click="viewAccountByAddress(accountInfo.address)"
-            rel="noopener noreferrer"
-            >{{ t("wallet.scanLink") }}</span
-          >
-        </template>
-      </i18n-t>
     </div>
     <div class="loading-list-con" v-show="loading">
       <div class="loading-list-card" v-for="item in 16" :key="item">
@@ -55,6 +40,23 @@
       </div>
     </div>
   </div>
+  <Transition name="slider">
+      <i18n-t
+        tag="div"
+        v-if="showBuyTip"
+        keypath="wallet.toBrowser"
+        :class="`flex center scan-link fixed-bottom ${bugTipClass}`"
+      >
+        <template v-slot:link>
+          <span
+            @click="viewAccountByAddress(accountInfo.address)"
+            class="f-12 view-history hover"
+            rel="noopener noreferrer"
+            >{{ t("wallet.scanLink") }}</span
+          >
+        </template>
+      </i18n-t>
+  </Transition>
   <!-- View transaction details -->
   <van-dialog
     v-model:show="showTransactionModal"
@@ -154,6 +156,7 @@ import {
   inject,
   Transition,
   onUnmounted,
+  watch,
 } from "vue";
 import {
   Icon,
@@ -181,7 +184,7 @@ import NavHeader from "@/components/navHeader/index.vue";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
-import { guid, viewAccountByAddress } from "@/utils/utils";
+import { debounce, guid, viewAccountByAddress } from "@/utils/utils";
 import { ElTableV2 } from "element-plus";
 import CollectionCard from "@/views/account/components/collectionCard/index.vue";
 
@@ -341,7 +344,7 @@ export default {
     const waitTime: any = ref(null);
     onMounted(async () => {
       store.dispatch('account/clearWaitTime')
-
+      
       try {
         const { total, asyncRecordKey} = await handleAsyncTxList();
         await store.dispatch('txList/asyncUpdateList',{total})
@@ -352,6 +355,7 @@ export default {
       store.dispatch("account/waitTxQueueResponse", {
         time: null
       });
+      window.addEventListener('scroll', deFun)
     });
     const loading = ref(true);
     const getPageList = async () => {
@@ -381,8 +385,11 @@ export default {
           loading.value = false;
         }
         const hash = route.query.hash
+        console.warn('hash', hash)
+        console.warn('tlist.value', tlist.value)
         if(hash) {
           const tx = tlist.value.find((item: any) => item.hash.toUpperCase() == hash?.toString().toUpperCase())
+          console.warn('tx', tx)
           if(tx) {
             transactionData.data = tx
             showTransactionModal.value = true;
@@ -482,6 +489,7 @@ export default {
       eventBus.off("delTxQueue");
       eventBus.off('waitTxEnd')
       store.dispatch('account/clearWaitTime')
+      window.removeEventListener('scroll', deFun)
 
     });
     const cancelSend = async () => {
@@ -704,8 +712,44 @@ export default {
       transactionData.data = data;
       showSpeedModal.value = true;
     };
+    const showBuyTip = ref(true)
+    const bugTipClass = ref('')
+    const watchList = (val: any) => {
+      if(val && val.length >= 10) {
+        !bugTipClass.value ? bugTipClass.value = 'fixed' : ''
+      } else {
+        bugTipClass.value ? bugTipClass.value = '' :''
+      }
+    }
+    
+    watch(()=> tlist.value, watchList , {
+      deep: true,
+      immediate: true
+    })
+    let oldScrollTop = 0
+    const scrolling = () => {
+      if(tlist.value.length < 10) {
+        return
+      }
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      let scrollStep = scrollTop - oldScrollTop;
+      oldScrollTop = scrollTop;
+      if (scrollStep < 0) {
+        console.log("scroll up.")
+        if(!showBuyTip.value)showBuyTip.value = true
+
+
+      } else {
+        if(showBuyTip.value)showBuyTip.value = false
+        console.log("scroll down.")
+      }
+    }
+    
+    const deFun = debounce(scrolling, 300)
 
     return {
+      bugTipClass,
+      showBuyTip,
       handleSend,
       handleCancel,
       tabs,
@@ -740,6 +784,26 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.fixed-bottom {
+  height: 20px;
+  width: 220px;
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  margin-left: -110px;
+  &.fixed {
+    padding: 3px 5px;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background: #fff;
+  }
+}
+.view-history {
+  color: #037cd6;
+  &:hover {
+    text-decoration: underline;
+  }
+}
   .scan-link {
     color: #848484;
     margin-top: 40px;
@@ -770,7 +834,6 @@ export default {
   }
 }
 .transaction-history {
-  height: calc(100vh - 48px - 16px);
   overflow-y: scroll;
 }
 .tabs-box {

@@ -1429,7 +1429,6 @@ export default defineComponent({
   .el-slider__button {
     width: 20px;
     height: 20px;
-    background: #ffffff;
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
     border: none;
   }

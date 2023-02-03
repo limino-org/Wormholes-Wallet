@@ -971,7 +971,7 @@ export default defineComponent({
           } else {
             $tradeConfirm.update({
             status: "fail",
-            successMessage: t("wallet.conver_wrong",{count: successList.length}),
+            successMessage: t("wallet.conver_wrong",{count: count - successList.length}),
             successMessageType:'html',
             historyCallBack
           });
@@ -1654,12 +1654,6 @@ background: rgb(215, 58, 73);
   font-size: 12px;
 }
 
-.slider-enter-active {
-  animation: slider-in 0.3s ease-in-out;
-}
-.slider-leave-active {
-  animation: slider-in 0.3s reverse ease-in-out;
-}
 
 
 .confirm-card {
@@ -1692,16 +1686,6 @@ background: rgb(215, 58, 73);
       line-height: 16px;
       margin-top: 3px;
     }
-  }
-}
-
-@keyframes slider-in {
-  0% {
-    transform: translateY(90px);
-  }
-
-  100% {
-    transform: translateY(0);
   }
 }
 

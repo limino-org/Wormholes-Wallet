@@ -69,7 +69,10 @@ body {
 .actions-list-card {
   cursor: pointer;
 }
-
+.van-button--plain,.van-button--default{
+  border: 1px solid rgb(134, 133, 133);
+  color: rgb(134, 133, 133);
+}
 .van-button--plain:hover,.van-button--default:hover {
   border: 1px solid #037CD6;
   color: #037CD6;
@@ -310,10 +313,27 @@ body {
 .miner-account-list-modal {
   max-height: 430px;
 }
+.slider-enter-active {
+  animation: slider-in 0.3s ease-in-out;
+}
+.slider-leave-active {
+  animation: slider-in 0.3s reverse ease-in-out;
+}
+.el-slider__button,.van-slider__button {
+  background: #037CD6 !important;
+}
 
-// .van-switch__node {
-//   background: #f1eded;
-// }
+@keyframes slider-in {
+  0% {
+    transform: translateY(90px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+
 @media screen and (min-width: 750px) {
   html {
     font-size: 40PX !important; // ignored

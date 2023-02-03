@@ -3,7 +3,7 @@
     <i class="iconfont icon-empty"></i>
   </div>
   <div class="flex center msg f-12 mt-10">
-      {{text}}
+      {{t('common.no_data')}}
   </div>
 </template>
 <script>
@@ -15,7 +15,7 @@ export default defineComponent({
   props:{
       text: {
           type: String,
-          default:''
+          default:'no-data'
       }
   },
   setup() {

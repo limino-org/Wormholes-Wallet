@@ -49,23 +49,7 @@ export const useExchanges = () => {
       const data = await contractWithSigner.functions.payForRenew({
         value: ethers.utils.parseEther(amount + ''),
       });
-      const { from, gasLimit, gasPrice, hash, nonce, to, type, value } = data;
-      store.commit("account/PUSH_TXQUEUE", {
-        hash,
-        from,
-        gasLimit,
-        gasPrice,
-        nonce,
-        to,
-        type,
-        value,
-        transitionType: null,
-        txType: TransactionTypes.contract,
-        network,
-        data: '',
-        sendStatus: TransactionSendStatus.pendding,
-        sendData: clone(data),
-      });
+
       callBack ? callBack() : "";
       localStorage.setItem('tx2', JSON.stringify(data))
       // debugger

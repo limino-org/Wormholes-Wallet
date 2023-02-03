@@ -9,21 +9,26 @@
     :showCancelButton="false"
     closeOnClickOverlay
   >
-
     <div class="sheet-header">
       {{ t("createExchange.snft") }}
     </div>
     <div class="account-container">
-        <div :class="`card flex between ${item.select ? 'active' : ''}`" v-for="(item,i) in list" :key="item.value" @click="handleChange(i)">
-            <div class="info">
-                <div class="label">{{item.label}}</div>
-                <div class="desc">{{item.desc}}</div>
-            </div>
-            <div class="flex center">
-                <i :class="`iconfont  ${item.select ? 'icon-duihao2' : 'icon-dui'} `"></i>
-                
-            </div>
+      <div
+        :class="`card flex between ${item.select ? 'active' : ''}`"
+        v-for="(item, i) in list"
+        :key="item.value"
+        @click="handleChange(i)"
+      >
+        <div class="info">
+          <div class="label">{{ item.label }}</div>
+          <div class="desc">{{ item.desc }}</div>
         </div>
+        <div class="flex center">
+          <i
+            :class="`iconfont  ${item.select ? 'icon-duihao2' : 'icon-dui'} `"
+          ></i>
+        </div>
+      </div>
     </div>
   </van-dialog>
 </template>
@@ -56,7 +61,7 @@ export default defineComponent({
     [ActionSheet.name]: ActionSheet,
     AccountIcon,
   },
-  emits:['change','update:modelValue'],
+  emits: ["change", "update:modelValue"],
   props: {
     modelValue: {
       type: Boolean,
@@ -75,9 +80,7 @@ export default defineComponent({
     const showModal: Ref<boolean> = ref(false);
 
     const show = ref(false);
-    const handleSelect = async (item: any, index: number) => {
-
-    };
+    const handleSelect = async (item: any, index: number) => {};
     watch(
       () => props.modelValue,
       (n: boolean) => {
@@ -92,15 +95,27 @@ export default defineComponent({
     );
 
     const list = ref([
-      {label:t('createminerspledge.stake'),value:'3',desc:t('createExchange.desc1'),select: true},
-      {label:t('createExchange.redemption'),value:'1',desc:t('createExchange.desc2'),select: false},
-    ])
-    context.emit('change', {...list.value[0]})
+      {
+        label: t("createminerspledge.stake"),
+        value: "3",
+        desc: t("createExchange.desc1"),
+        select: true,
+      },
+      {
+        label: t("createExchange.redemption"),
+        value: "1",
+        desc: t("createExchange.desc2"),
+        select: false,
+      },
+    ]);
+    context.emit("change", { ...list.value[0] });
     const handleChange = (idx: number) => {
-      list.value.forEach((item,i) => i!=idx ? item.select = false : item.select = true)
-      context.emit('change', {...list.value[idx]})
-      nextTick(() => show.value = false)
-    }
+      list.value.forEach((item, i) =>
+        i != idx ? (item.select = false) : (item.select = true)
+      );
+      context.emit("change", { ...list.value[idx] });
+      nextTick(() => (show.value = false));
+    };
 
     return {
       t,
@@ -111,7 +126,7 @@ export default defineComponent({
       decimal,
       accountInfo,
       show,
-      list
+      list,
     };
   },
 });
@@ -119,11 +134,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 .btn-box {
   padding: 12px 45px;
-   button:hover {
+  button:hover {
     border: 1px solid #037dd6;
     color: #037dd6;
     background: none;
-   }
+  }
 }
 .icon-danxuanxuanzhong {
   font-size: 16px !important;
@@ -139,10 +154,6 @@ export default defineComponent({
   }
 }
 
-
-
-
-
 .sheet-header {
   height: 60px;
   display: flex;
@@ -152,17 +163,17 @@ export default defineComponent({
   background: #f8fcff;
   font-size: 15px;
   font-weight: bold;
-
 }
 .card {
   margin: 15px 15px;
   padding: 6px 15px 15px;
   border-radius: 7.5px;
-border: 1px solid #848484;
+  border: 1px solid #848484;
   cursor: pointer;
   &:hover {
-     color: #037dd6;
-    .desc,i {
+    color: #037dd6;
+    .desc,
+    i {
       color: #037dd6;
     }
   }
@@ -172,28 +183,28 @@ border: 1px solid #848484;
   &.active {
     color: #037dd6;
     border: 1px solid #037dd6;
-    background: #F4FAFF;
-    .desc,i {
+    background: #f4faff;
+    .desc,
+    i {
       color: #037dd6;
     }
   }
-.label {
-  font-size: 15px;
-  font-weight: bold;
-  line-height: 24px;
-}
-.desc {
-  font-size: 12px;
-  line-height: 16px;
-  color: #848484;
-}
-i {
-  font-size: 22px;
-  color: #848484;
-  &.icon-duihao2 {
-    font-size: 20px;
+  .label {
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 24px;
   }
-
-}
+  .desc {
+    font-size: 12px;
+    line-height: 16px;
+    color: #848484;
+  }
+  i {
+    font-size: 22px;
+    color: #848484;
+    &.icon-duihao2 {
+      font-size: 20px;
+    }
+  }
 }
 </style>

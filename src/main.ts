@@ -11,7 +11,9 @@ import 'vant/lib/index.css'
 import '@/utils/unorm.js'
 import '@/utils/ether'
 // import VConsole from 'vconsole'
-
+// if(!isProduct) {
+//   new VConsole()
+// }
 import { createApp } from 'vue'
 import i18n from '@/language/index'
 import App from './App.vue'
@@ -42,9 +44,7 @@ app.use(i18n)
 app.use(TradeConfirm)
 app.use(Toast)
 app.use(Dialog)
-// if(!isProduct) {
-//   new VConsole()
-// }
+
 app.mount('#app')
 
 

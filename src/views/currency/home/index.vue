@@ -59,7 +59,7 @@
         :data="item"
       />
       <NoData v-if="!txList.length" :message="$t('wallet.no')" />
-      <i18n-t
+      <!-- <i18n-t
         tag="div"
         keypath="wallet.toBrowser"
         class="flex center scan-link pb-30"
@@ -71,7 +71,7 @@
             >{{ t("wallet.scanLink") }}</span
           >
         </template>
-      </i18n-t>
+      </i18n-t> -->
       <van-dialog
         v-model:show="showTransactionModal"
         title
@@ -94,6 +94,23 @@
       </div>
     </div>
   </div>
+  <Transition name="slider">
+      <i18n-t
+        tag="div"
+        v-if="showBuyTip"
+        keypath="wallet.toBrowser"
+        :class="`flex center scan-link fixed-bottom ${bugTipClass}`"
+      >
+        <template v-slot:link>
+          <span
+            @click="viewAccountByAddress(accountInfo.address)"
+            class="f-12 view-history hover"
+            rel="noopener noreferrer"
+            >{{ t("wallet.scanLink") }}</span
+          >
+        </template>
+      </i18n-t>
+  </Transition>
   <CommonModal
     v-model="showSpeedModal"
     :title="
@@ -172,6 +189,7 @@ import {
   onBeforeMount,
   nextTick,
   onUnmounted,
+  watch,
 } from "vue";
 import { Icon, Popup, Empty, Dialog, Button, Toast, Skeleton, List } from "vant";
 import CollectionCard from "@/views/account/components/collectionCard/index.vue";
@@ -188,7 +206,7 @@ import { VUE_APP_SCAN_URL } from "@/enum/env";
 import localforage from "localforage";
 import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
-import { guid, viewAccountByAddress } from "@/utils/utils";
+import { debounce, guid, viewAccountByAddress } from "@/utils/utils";
 import {
   clone,
   getWallet,
@@ -335,6 +353,8 @@ export default {
       store.dispatch("account/waitTxQueueResponse", {
         time: null
       });
+      window.addEventListener('scroll', deFun)
+
     });
     const toSend = () => {
       router.push({ name: "send", query });
@@ -470,6 +490,8 @@ export default {
       eventBus.off("delTxQueue");
       eventBus.off('waitTxEnd')
       store.dispatch('account/clearWaitTime')
+      window.removeEventListener('scroll', deFun)
+
 
     });
     const cancelSend = async () => {
@@ -673,7 +695,46 @@ export default {
         reloading.value = false;
       }
     };
+
+
+    const showBuyTip = ref(true)
+    const bugTipClass = ref('')
+    const watchList = (val: any) => {
+      if(val && val.length >= 10) {
+        !bugTipClass.value ? bugTipClass.value = 'fixed' : ''
+      } else {
+        bugTipClass.value ? bugTipClass.value = '' :''
+      }
+    }
+    
+    watch(()=> txList.value, watchList , {
+      deep: true,
+      immediate: true
+    })
+    let oldScrollTop = 0
+    const scrolling = () => {
+      if(txList.value.length < 10) {
+        return
+      }
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      let scrollStep = scrollTop - oldScrollTop;
+      oldScrollTop = scrollTop;
+      if (scrollStep < 0) {
+        console.log("scroll up.")
+        if(!showBuyTip.value)showBuyTip.value = true
+
+
+      } else {
+        if(showBuyTip.value)showBuyTip.value = false
+        console.log("scroll down.")
+      }
+    }
+    
+    const deFun = debounce(scrolling, 300)
+
     return {
+      showBuyTip,
+      bugTipClass,
       showSpeedModal,
       sendTxType,
       handleGasChange,
@@ -709,6 +770,26 @@ export default {
 :deep() {
   .van-skeleton__avatar--round {
     margin-top: 12px;
+  }
+}
+.fixed-bottom {
+  height: 20px;
+  width: 220px;
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  margin-left: -110px;
+  &.fixed {
+    padding: 3px 5px;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background: #fff;
+  }
+}
+.view-history {
+  color: #037cd6;
+  &:hover {
+    text-decoration: underline;
   }
 }
 .loading-list-con {
