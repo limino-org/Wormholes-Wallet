@@ -1522,6 +1522,17 @@ export default {
         commit('UPDATE_ETHACCOUNTINFO', res)
         return res
       });
+    },
+    // Indicates that the current transaction exists in the transaction queue
+    async checkIsTxHash({commit, state}: any, hash: string) {
+      const { id } = state.currentNetwork
+      const from = state.accountInfo.address
+      const queuekey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
+      const list: any = await localforage.getItem(queuekey)
+      if(!list || !list.length) {
+        return false
+      }
+      return list.some((item: any) => item.hash.toUpperCase() == hash.toUpperCase())
     }
   },
   namespaced: true,

@@ -235,10 +235,12 @@ export default defineComponent({
         console.log('err:===', err)
         console.log('t("error.timeout")', t("error.timeout"))
         if (err.toString().indexOf("timeout") > -1) {
-          $tradeConfirm.update({
-            status: "warn",
-            failMessage: t("error.timeout"),
-          });
+          if(await store.dispatch('account/checkIsTxHash')) {
+            $tradeConfirm.update({
+              status: "warn",
+              failMessage: t("error.timeout"),
+            });
+          }
         } else {
           $tradeConfirm.update({
             status: "fail",
