@@ -73,6 +73,7 @@ const success = (message: string) => {
   open({
     message,
     type: ToastType.success,
+
   });
 };
 const warn = (message: string) => {

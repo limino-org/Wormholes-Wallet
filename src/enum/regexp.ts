@@ -1,5 +1,7 @@
 // http/https 
 export const RegUrl: RegExp = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+// ws/wss
+export const RegUrl2: RegExp = /ws(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
 
 
 // Checks a non-zero positive integer

@@ -6,7 +6,10 @@
         <div>
           <div class="title" v-if="title">{{title}}</div>
 
-          <div class="flex center icon-box"><Icon name="warning" /></div>
+          <div :class="`flex center icon-box ${type}`">
+            <i class="iconfont icon-gantanhao" v-if="type == 'warn' || type == 'fail'" />
+            <i v-else class="iconfont icon-xuanzhong2"></i>
+          </div>
           <div class="text text-center mt-8 pl-20 pr-20">{{ message }}</div>
           <div
             :class="`flex mt-26 btn-box ${
@@ -181,10 +184,20 @@ defineExpose({
     max-height: 500px;
     border-radius: 7px;
     padding-bottom: 35px;
-    .icon-box i {
+    .icon-box {
+      &.success {
+        color: #3AAE55;
+      }
+      &.warn {
+        color: #f7bf03;
+      }
+      &.fail {
+        color: #D73A49;
+      }
+     i {
       font-size: 44px;
-      color: #f7bf03;
       margin-top: 50px;
+     }
     }
     .text {
       font-size: 15px;

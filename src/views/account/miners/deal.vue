@@ -247,7 +247,7 @@
         <!-- <AccountModal v-model:actionSheetShow="showAccountModal" :hasBtn="false" :showAmount="false" /> -->
       </div>
 
-      <!-- <div class="bourse-container-name pt-14 border-top" v-if="!isModif">
+      <div class="bourse-container-name pt-14 border-top" v-if="!isModif">
         <span class="card-tit">{{ t("minerspledge.node") }} </span>
         <el-tooltip
           popper-class="tooltip4"
@@ -279,11 +279,11 @@
               class="text"
               type="text"
               :placeholder="t('bourse.placenode')"
-              :rules="[{ validator: asynPwd2, message: t('bourse.vainode') }]"
+              :rules="[{ validator: asynChain, message: t('bourse.vainode') }]"
             />
           </div>
         </van-form>
-      </div> -->
+      </div>
       <div class="bourse-container-btns">
         <div class="container pl-28 pr-28">
           <Tip :message="t('minerspledge.tip4')" v-if="!isModif" />
@@ -489,7 +489,7 @@ import {
   onBeforeMount,
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { RegUrl, RegNum1 } from "@/enum/regexp";
+import { RegUrl, RegUrl2 } from "@/enum/regexp";
 import { ethers, utils } from "ethers";
 import { useStore, mapState } from "vuex";
 import NavHeader from "@/components/navHeader/index.vue";
@@ -633,7 +633,6 @@ export default defineComponent({
     })
     //  const { state } = store;
     onMounted(async () => {
-      debugger
       try {
         const wallet = await getWallet();
         const { address } = wallet;
@@ -643,7 +642,6 @@ export default defineComponent({
           "eth_getAccountInfo",
           [address, "latest"]
         );
-        debugger
         const blockn = web3.utils.toHex(blockNumber.value.toString());
         // Amount of the first pledge/total amount of the pledge *36 (start time of the second cancellation of the pledge calculation)+ Amount of the second pledge/total amount *72=54 = (time when the second cancellation of the pledge can be revoked)
         showCloseBtn.value = new BigNumber(blockNumber.value)
@@ -685,6 +683,19 @@ export default defineComponent({
       } finally {
         pageLoading.value = false;
       }
+      const checkStatus = route.query.checkStatus?.toString()
+      if(checkStatus) {
+        if(Number(checkStatus)) {
+          name.value = route.query.node ? route.query.node.toString() : ''
+          $wdialog.open({type:'success',message: t('minerspledge.checkChainSuccess'),callBack: () => {
+            openConfirmInfoModal();
+          }})
+    
+        } else {
+          $wdialog.open({type:'fail',message:t('minerspledge.checkChainErr'), hasCancelBtn: false})
+        }
+        
+      }
     });
     const isTimeQualified = computed(
       () =>
@@ -703,7 +714,7 @@ export default defineComponent({
     const { emit }: any = context;
     const firstamount = ref(100);
     const isSuccess = computed(() => {
-      return name.value && asynPwd2(name.value);
+      return name.value && asynChain(name.value);
     });
     const {
       createExchanges,
@@ -882,7 +893,6 @@ export default defineComponent({
     let serverIndex = ref(0);
     let money = ref(0);
     let moneyMin = ref(0);
-    let updateMoney = ref(0);
     let showAcount = ref(false);
     let checked = ref(false);
     let showAgreement = ref(false);
@@ -922,41 +932,79 @@ export default defineComponent({
     const mainNetwork = computed(() =>
       networkList.value.find((item: any) => item.id == "wormholes-network-1")
     );
-    const asynPwd2 = async (val: string) => {
+    const asynChain = async (val: string) => {
       isError.value = false;
       if (!name.value) {
         return t("minerspledge.nodeErr");
       }
       if (RegUrl.test(name.value)) {
         //Verify node chainId
-        Toast.loading({
-          message: t("common.veriPwd"),
-        });
-        try {
-          const provider = ethers.getDefaultProvider(name.value);
-          const { chainId } = await provider.getNetwork();
-          debugger;
-          const mainProvider = ethers.getDefaultProvider(mainNetwork.value.URL);
-          debugger;
-          const { chainId: mainChainId } = await mainProvider.getNetwork();
-          console.warn("mainChainId", mainChainId);
-          console.warn("chainId", chainId);
-          if (chainId != mainChainId) {
-            isError.value = true;
-            return t("minerspledge.invalidChainId", { chainId });
-          }
-          return true;
-        } catch (err) {
-          isError.value = true;
-          return t("minerspledge.invalidNode");
-        } finally {
-          Toast.clear();
-        }
+        // Toast.loading({
+        //   message: t("common.veriPwd"),
+        // });
+        return true
+        // try {
+
+        //   const checkStatus = route.query.checkStatus?.toString()
+        //   if(checkStatus){
+
+        //     if(Number(checkStatus)) {
+        //       return true
+        //     } else {
+        //       return t("minerspledge.invalidNode");
+        //     }
+        //   } else {
+        //     return true
+        //   }
+          
+        //   // let provider = ethers.getDefaultProvider(name.value);
+        //   // // provider.addListener('error', (err: any) => {
+        //   // //   console.error('连接ws节点失败', err)
+        //   // // })
+        //   // console.warn('provider',provider)
+          
+        //   // // if(!provider.network){
+        //   // //   return t("minerspledge.invalidNode");
+        //   // // }
+        //   // const { chainId } = await provider.getNetwork();
+        //   // debugger
+        //   // const chainBlockNumber = await provider.getBlockNumber()
+        //   // debugger
+        //   // const mainProvider = ethers.getDefaultProvider(mainNetwork.value.URL);
+        //   // console.warn('mainProvider',mainProvider)
+        //   // // if(!mainProvider.network){
+        //   // //   return t("minerspledge.invalidNode");
+        //   // // }
+        //   // const mainBlockNumber = await mainProvider.getBlockNumber()
+        //   // const { chainId: mainChainId } = await mainProvider.getNetwork();
+        //   // debugger
+        //   // console.warn("mainChainId", mainChainId, mainBlockNumber);
+        //   // console.warn("chainId", chainId, chainBlockNumber);
+        //   // if(!mainChainId || !chainId) {
+        //   //   return t("minerspledge.invalidNode");
+        //   // }
+        //   // if (chainId != mainChainId) {
+        //   //   isError.value = true;
+        //   //   return t("minerspledge.invalidChainId", { chainId });
+        //   // }
+        //   // if((mainBlockNumber - chainBlockNumber) < 8) {
+        //   //   return t("minerspledge.invalidChainNumber");
+        //   // }
+        //   // return true;
+        // } catch (err) {
+        //   console.error('网络校验失败', err)
+        //   isError.value = true;
+        //   return t("minerspledge.invalidNode");
+        // } finally {
+        //   Toast.clear();
+        // }
       } else {
+        console.error('http、https规则校验失败')
         isError.value = true;
         return t("minerspledge.nodeErr");
       }
     };
+
 
     // Disable the node input box
     const isOpen = ref(false);
@@ -1031,6 +1079,7 @@ export default defineComponent({
     const formDom = ref();
     const formDom2 = ref();
     const router = useRouter();
+    const route = useRoute()
     const back = () => {
       router.back();
     };
@@ -1046,8 +1095,10 @@ export default defineComponent({
       }
       // The pledge amount
       try {
-        // await formDom2.value.validate();
-        openConfirmInfoModal();
+        await formDom2.value.validate();
+        const url = `${process.env.VUE_APP_CHECKCHAIN}?node=${name.value}&main=${mainNetwork.value.URL}&lang=${store.state.system.language}&backUrl=${location.href}`
+          location.href  = url
+
       } catch (err) {
         console.error(err);
         // @ts-ignore
@@ -1322,7 +1373,7 @@ export default defineComponent({
       ethAccountInfo,
       Coefficient,
       isClosePladge,
-      asynPwd2,
+      asynChain,
       back,
       formDom,
       showAccountModal,

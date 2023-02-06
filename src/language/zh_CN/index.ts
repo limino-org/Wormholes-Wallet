@@ -744,7 +744,8 @@ export default {
         gotIt: "知道了>",
         credibility: "权重",
         upCredibility: "权重提高",
-        invalidChainId: "无效的链Id {chainid}",
+        invalidChainId: "无效的链Id {chainId}",
+        invalidChainNumber: "请确认块高度低于主网8个块",
         invalidNode: "无效的节点",
         nodeErr: "节点格式有误",
         minerspledge: '矿工质押',
@@ -817,6 +818,8 @@ export default {
         minus_waiting: "我们正在进行股权赎回。请稍等。",
         minus_success: "您的股份赎回已完成。您可以在交易记录中找到详细信息。",
         minus_wrong: "非常抱歉，由于一些意外，操作失败，您可以到交易记录查看交易的具体信息",
+        checkChainSuccess:'节点验证成功',
+        checkChainErr:'节点验证失败'
 
 
 

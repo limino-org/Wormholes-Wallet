@@ -744,7 +744,8 @@ export default {
     resetBtnTip: "With this button，you can recover your credibility to 70 credibility will cost {value} ERB. The ERB cost will be burnt by Wormholes block chain.",
     credibility: "Credibility",
     upCredibility: "Credibility will be increased",
-    invalidChainId: "Invalid chainId {chainid}",
+    invalidChainId: "Invalid chainId {chainId}",
+    invalidChainNumber: "Ensure that the block height is less than 8 blocks on the main network",
     invalidNode: "Invalid node",
     nodeErr: "Node format incorrect",
     minerspledge: 'MINERS PLEDGE',
@@ -818,7 +819,8 @@ export default {
     minus_waiting: "We are doing the stake redeption.Please wait for  a minute.",
     minus_success: "Your stake redeption has been done.You can find the details in transaction history.",
     minus_wrong: "I'm very sorry, because of some accident, the operation failed, you can go to the transaction history to check the specific information of the transaction",
-
+    checkChainSuccess:'Node verification succeeded',
+    checkChainErr:'Node validation failure'
 
 
   },
