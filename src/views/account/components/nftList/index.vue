@@ -1507,6 +1507,9 @@ background: rgb(215, 58, 73);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  .checkbox_img {
+     border-bottom: none;
+  }
 }
 .snft_bottom-left {
   display: flex;
