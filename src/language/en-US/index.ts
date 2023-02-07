@@ -775,7 +775,7 @@ export default {
     close_success: "The pledge has been successfully unfrozen for you, the pledged amount has been returned to your account, you can also view the details of the transaction through the transaction history",
     close_wrong: "I'm very sorry, because of some accident, the operation failed, you can go to the transaction history to check the specific information of the transaction",
     toggleSuccess: "Switch success",
-    node: "Node (Not mandatory)",
+    node: "Node (Mandatory)",
     nodeTip: "This is the address of the staking node. LAN:http(s)://192.168.x.x:port. WAN:http(s)://xxx.xxx.xxx",
     stackTit: "Staking fee",
     stackTip: "Tips: The pledge period is one year. Please check the terms and regulations for details.",
