@@ -270,6 +270,9 @@ export function transactionStatus(txData: any){
         if(jsonData.type == 6) {
           return '+' + convertAmount
         }
+        if(jsonData.type == 10) {
+          return '+' + val
+        }
         if(jsonData.type == 26 || jsonData.type == 12) {
           return '+' + val
         }
