@@ -57,7 +57,7 @@ export const setExchangeSig = (address: string, params = {}) => {
 
 // Get the smart contract address
 export const getContractAddress = () => {
-    return httpGet(`https://www.wormholesscan.com/ERBPay.json?${new Date().getTime()}`)
+    return httpGet(`https://www.wormholes.com/upload/ERBPay.json?${new Date().getTime()}`)
 }
 
 export const getConfiguration = () => {

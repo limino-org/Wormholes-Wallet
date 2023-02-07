@@ -921,7 +921,6 @@ export default defineComponent({
             onLoad();
           },
         });
-        debugger
         let transitionType = ''
         try {
           for await (const iterator of data) {
