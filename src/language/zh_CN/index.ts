@@ -776,7 +776,7 @@ export default {
         close_wrong: "非常抱歉，因为某些意外，操作失败，您可以去交易历史里查看交易的具体信息",
         toggleSuccess: "切换成功",
         node: "节点(非必填)",
-        nodeTip: "这是关联节点的地址",
+        nodeTip: "这是关联节点的地址。 LAN:http(s)://192.168.x.x:port。 WAN:http(s)://xxx.xxx.xxx",
         stackTit: "质押费用",
         stackTip: "提示：质押期为一年。详情请参阅条款和规定。",
         isPoor: "提示：您的账户缺少资产。请确保钱包里有足够的钱。",

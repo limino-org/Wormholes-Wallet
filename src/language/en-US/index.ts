@@ -776,7 +776,7 @@ export default {
     close_wrong: "I'm very sorry, because of some accident, the operation failed, you can go to the transaction history to check the specific information of the transaction",
     toggleSuccess: "Switch success",
     node: "Node (Not mandatory)",
-    nodeTip: "This is the address of the staking node",
+    nodeTip: "This is the address of the staking node. LAN:http(s)://192.168.x.x:port. WAN:http(s)://xxx.xxx.xxx",
     stackTit: "Staking fee",
     stackTip: "Tips: The pledge period is one year. Please check the terms and regulations for details.",
     isPoor: "Tips：Your account is short of assets. Please make sure you have enough money in your wallet.",
