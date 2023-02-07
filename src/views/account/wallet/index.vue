@@ -489,7 +489,7 @@ export default {
           initExchangeData();
         }
       });
-      
+      dispatch('account/getEthAccountInfo')
       handleLoopBalance()
     });
     onUnmounted(() => {

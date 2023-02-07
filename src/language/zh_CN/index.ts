@@ -819,7 +819,8 @@ export default {
         minus_success: "您的股份赎回已完成。您可以在交易记录中找到详细信息。",
         minus_wrong: "非常抱歉，由于一些意外，操作失败，您可以到交易记录查看交易的具体信息",
         checkChainSuccess:'节点验证成功',
-        checkChainErr:'节点验证失败'
+        checkChainErr:'节点验证失败',
+        cantnotSameWithMainNet:"不能与主网一样"
 
 
 

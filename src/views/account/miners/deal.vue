@@ -9,7 +9,7 @@
       "
     >
       <template v-slot:left>
-        <span class="back" @click="appProvide.back">{{
+        <span class="back" @click="appProvide.backHome">{{
           t("common.back")
         }}</span>
       </template>
@@ -935,69 +935,15 @@ export default defineComponent({
     const asynChain = async (val: string) => {
       isError.value = false;
       if (!name.value) {
+        isError.value = true;
         return t("minerspledge.nodeErr");
       }
       if (RegUrl.test(name.value)) {
-        //Verify node chainId
-        // Toast.loading({
-        //   message: t("common.veriPwd"),
-        // });
+        if(mainNetwork.value.URL === name.value || mainNetwork.value.URL.indexOf(name.value) > -1) {
+          isError.value = true;
+          return t('minerspledge.cantnotSameWithMainNet')
+        }
         return true
-        // try {
-
-        //   const checkStatus = route.query.checkStatus?.toString()
-        //   if(checkStatus){
-
-        //     if(Number(checkStatus)) {
-        //       return true
-        //     } else {
-        //       return t("minerspledge.invalidNode");
-        //     }
-        //   } else {
-        //     return true
-        //   }
-          
-        //   // let provider = ethers.getDefaultProvider(name.value);
-        //   // // provider.addListener('error', (err: any) => {
-        //   // //   console.error('连接ws节点失败', err)
-        //   // // })
-        //   // console.warn('provider',provider)
-          
-        //   // // if(!provider.network){
-        //   // //   return t("minerspledge.invalidNode");
-        //   // // }
-        //   // const { chainId } = await provider.getNetwork();
-        //   // debugger
-        //   // const chainBlockNumber = await provider.getBlockNumber()
-        //   // debugger
-        //   // const mainProvider = ethers.getDefaultProvider(mainNetwork.value.URL);
-        //   // console.warn('mainProvider',mainProvider)
-        //   // // if(!mainProvider.network){
-        //   // //   return t("minerspledge.invalidNode");
-        //   // // }
-        //   // const mainBlockNumber = await mainProvider.getBlockNumber()
-        //   // const { chainId: mainChainId } = await mainProvider.getNetwork();
-        //   // debugger
-        //   // console.warn("mainChainId", mainChainId, mainBlockNumber);
-        //   // console.warn("chainId", chainId, chainBlockNumber);
-        //   // if(!mainChainId || !chainId) {
-        //   //   return t("minerspledge.invalidNode");
-        //   // }
-        //   // if (chainId != mainChainId) {
-        //   //   isError.value = true;
-        //   //   return t("minerspledge.invalidChainId", { chainId });
-        //   // }
-        //   // if((mainBlockNumber - chainBlockNumber) < 8) {
-        //   //   return t("minerspledge.invalidChainNumber");
-        //   // }
-        //   // return true;
-        // } catch (err) {
-        //   console.error('网络校验失败', err)
-        //   isError.value = true;
-        //   return t("minerspledge.invalidNode");
-        // } finally {
-        //   Toast.clear();
-        // }
       } else {
         console.error('http、https规则校验失败')
         isError.value = true;
