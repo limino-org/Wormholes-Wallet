@@ -2304,9 +2304,9 @@ export default defineComponent({
 .bt {
   border-top: 1px solid #e4e7e8;
 }
-:deep(.van-icon-arrow-down) {
-  margin-top: 13px !important;
-}
+// :deep(.van-icon-arrow-down) {
+//   margin-top: 13px !important;
+// }
 :deep(.van-cell-group) {
   border: 1px solid #e4e7e8;
 }
