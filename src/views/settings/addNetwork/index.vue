@@ -309,6 +309,7 @@ export default {
       Dialog.confirm({
         title: t("addNetwork.hint"),
         message: t("addNetwork.confirmdeletion", { qlabel: qlabel }),
+        className:'del-net-modal'
       }).then(() => {
         // on confirm
         store.commit("account/DETETE_NETWORK", id);

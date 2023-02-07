@@ -310,6 +310,11 @@ body {
 .startGuideModal {
   height: 324px;
 }
+.del-net-modal {
+  button {
+    border: none;
+  }
+}
 .miner-account-list-modal {
   max-height: 430px;
 }
