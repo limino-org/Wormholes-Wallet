@@ -1,7 +1,7 @@
 <template>
     <NavHeader :title="t('setting.transitionHistory')">
       <template v-slot:left>
-        <span class="back hover f-12" @click="back">{{
+        <span class="back hover f-12" @click="appProvide.backHome">{{
           t("createAccountpage.back")
         }}</span>
       </template>
@@ -261,9 +261,7 @@ export default {
     // Selected tab'
     const chooseTabdata = computed(() => tabs.list.find((item) => item.select));
     const router = useRouter();
-    const back = () => {
-      router.go(-1);
-    };
+
 
     const handleAsyncTxList = () => {
       return store.dispatch(
@@ -767,7 +765,7 @@ export default {
       t,
       viewAccountByAddress,
       chooseTabdata,
-      back,
+      appProvide,
       transactionList,
       sendList,
       transactionData,
@@ -776,7 +774,6 @@ export default {
       showTransactionModal,
       otherList,
       swapList,
-      appProvide,
       sendTxType,
       tlist,
     };

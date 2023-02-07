@@ -939,7 +939,8 @@ export default defineComponent({
         return t("minerspledge.nodeErr");
       }
       if (RegUrl.test(name.value)) {
-        if(mainNetwork.value.URL === name.value || mainNetwork.value.URL.indexOf(name.value) > -1) {
+        debugger
+        if(mainNetwork.value.URL === name.value || mainNetwork.value.URL.indexOf(name.value) > -1 || name.value.toString().indexOf(mainNetwork.value.URL) > -1) {
           isError.value = true;
           return t('minerspledge.cantnotSameWithMainNet')
         }

@@ -821,7 +821,7 @@ export default {
     minus_wrong: "I'm very sorry, because of some accident, the operation failed, you can go to the transaction history to check the specific information of the transaction",
     checkChainSuccess:'Node verification succeeded',
     checkChainErr:'Node validation failure',
-    cantnotSameWithMainNet:"Cannot be the same as the main network"
+    cantnotSameWithMainNet:"Cannot be the same as the main network address"
 
 
 
