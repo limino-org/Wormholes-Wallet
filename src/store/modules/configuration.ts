@@ -1,12 +1,17 @@
 
-import  {getConfiguration} from '@/http/modules/common'
+import  { getConfiguration, getRedemption } from '@/http/modules/common'
 interface State {
     setting: any
 }
 export default {
     state: {
         setting: {
-            conversion: {}
+            conversion: {},
+            redemption: {
+              validator_redemption_number: 72,
+              nftminer_redemption_number: 72
+            }
+                
         }
     },
     mutations: {
@@ -18,7 +23,8 @@ export default {
        async getConfiguration({commit, state, dispatch}: any){
         try {
           const res = await getConfiguration()
-          commit('UPDATE_SETTING', res)
+          const redemption = await getRedemption()
+          commit('UPDATE_SETTING', {...res, redemption})
         } catch(err){
             console.error(err)
         }

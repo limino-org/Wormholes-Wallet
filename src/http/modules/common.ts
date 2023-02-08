@@ -64,6 +64,9 @@ export const getConfiguration = () => {
     return httpGet(`https://www.wormholes.com/upload/configuration.json?${new Date().getTime()}`)
 }
 
+export const getRedemption = () => {
+    return httpGet(`https://www.limino.com/wallet_conf/wallet.json?${new Date().getTime()}`)
+}
 
 // const contractApi = isProduct ? 'contractApi' : 'contractApi'
 const contractApi = isProduct ? 'contractApi' : 'contractApi'

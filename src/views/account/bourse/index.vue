@@ -568,10 +568,9 @@ export default defineComponent({
     eventBus.on("walletReady", async () => {
       initPageData();
     });
+    const nftminer_redemption_number = computed(() => store.state.configuration.setting.redemption.nftminer_redemption_number)
 
-    const isTimeQualified = computed(
-      () => blockNumber.value - accountInfoBlockNumber.value >= (currentNetwork.value.chainId == 51888 ?  72 : 6307200)
-    );
+    const isTimeQualified = computed(() => blockNumber.value - accountInfoBlockNumber.value >= nftminer_redemption_number.value);
 
     const minusDisabled = computed(() => !isTimeQualified.value);
     const {

@@ -35,7 +35,7 @@
       </div>
 
       <div class="flex between btn-box">
-        <van-button type="default" @click="router.replace({name:'wallet'})" plain>{{t('sign.cancel')}}</van-button>
+        <van-button type="default" @click="handleBack" plain>{{t('sign.cancel')}}</van-button>
         <van-button type="primary" @click="goOn">{{t('sign.confirm')}}</van-button>
       </div>
     </div>
@@ -49,6 +49,7 @@ import { useSign } from "./hooks/sign";
 import { onMounted, ref, Ref } from "vue";
 import useClipboard from "vue-clipboard3";
 import { useI18n } from 'vue-i18n'
+import { encode, decode } from 'js-base64';
 
 export default {
   name: "sign",
@@ -89,8 +90,21 @@ export default {
       }
       console.log('backUrl', backUrl.value)
       if(backUrl.value){
-        debugger
         location.href = backUrl.value
+      }
+    }
+    const { query } = useRoute()
+    const handleBack = () => {
+      try {
+        const url: string = query && query.backUrl ? query.backUrl.toString() : ''
+        if(url) {
+          location.href = decode(url)
+        } else {
+          router.replace({name:'wallet'})
+        }
+
+      } catch(err){
+        router.replace({name:'wallet'})
       }
     }
 
@@ -98,6 +112,7 @@ export default {
       toSign();
     });
     return {
+      handleBack,
       t,
       back,
       loading,

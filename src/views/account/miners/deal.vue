@@ -697,10 +697,11 @@ export default defineComponent({
         
       }
     });
+    const validator_redemption_number = computed(() => store.state.configuration.setting.redemption.validator_redemption_number)
     const isTimeQualified = computed(
       () =>
         blockNumber.value - accountInfoBlockNumber.value >=
-        (currentNetwork.value.chainId == 51888 ? 72 : 6307200)
+        validator_redemption_number.value
     );
     const {
       netWorkList,
@@ -939,14 +940,12 @@ export default defineComponent({
         return t("minerspledge.nodeErr");
       }
       if (RegUrl.test(name.value)) {
-        debugger
         if(mainNetwork.value.URL === name.value || mainNetwork.value.URL.indexOf(name.value) > -1 || name.value.toString().indexOf(mainNetwork.value.URL) > -1) {
           isError.value = true;
           return t('minerspledge.cantnotSameWithMainNet')
         }
         return true
       } else {
-        console.error('http、https规则校验失败')
         isError.value = true;
         return t("minerspledge.nodeErr");
       }
