@@ -275,6 +275,10 @@ export default {
     eventBus.on("loopTxListUpdata", () => {
       getPageList();
     });
+    eventBus.on('sameNonce', () => {
+      showSpeedModal.value = false
+      getPageList();
+    })
     eventBus.on("txPush", (data: any) => {
       getPageList();
       console.warn('txPush', data)
@@ -486,6 +490,7 @@ export default {
       eventBus.off("txQueuePush");
       eventBus.off("delTxQueue");
       eventBus.off('waitTxEnd')
+      eventBus.off('sameNonce')
       store.dispatch('account/clearWaitTime')
       window.removeEventListener('scroll', deFun)
 

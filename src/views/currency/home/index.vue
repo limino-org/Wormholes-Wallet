@@ -452,6 +452,10 @@ export default {
       // clearTimeout(time)
       // },300)
     });
+    eventBus.on('sameNonce', () => {
+      showSpeedModal.value = false
+      getPageList();
+    })
     eventBus.on('waitTxEnd', async() => {
       store.dispatch('txList/asyncUpdateList',{total: 0})
 
@@ -489,6 +493,7 @@ export default {
       eventBus.off("txQueuePush");
       eventBus.off("delTxQueue");
       eventBus.off('waitTxEnd')
+      eventBus.off('sameNonce')
       store.dispatch('account/clearWaitTime')
       window.removeEventListener('scroll', deFun)
 

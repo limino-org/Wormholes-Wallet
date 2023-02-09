@@ -208,12 +208,13 @@ export default defineComponent({
       const params = {
         ...props.data,
       };
+      let txData: any = null
       nextLoading.value = true;
       $tradeConfirm.open({
         disabled: [TradeStatus.pendding],
       });
       try {
-        const txData = await store.dispatch(
+        txData = await store.dispatch(
           value ? "account/transaction" : "account/tokenTransaction",
           params
         );
@@ -235,7 +236,7 @@ export default defineComponent({
         console.log('err:===', err)
         console.log('t("error.timeout")', t("error.timeout"))
         if (err.toString().indexOf("timeout") > -1) {
-          if(await store.dispatch('account/checkIsTxHash')) {
+          if(await store.dispatch('account/checkIsTxHash', txData.hash)) {
             $tradeConfirm.update({
               status: "warn",
               failMessage: t("error.timeout"),
