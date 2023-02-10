@@ -333,19 +333,19 @@ async function send2(package_id: string = "", amount: string = "0") {
       type: type2,
       value: value2,
     } = data;
-    commit("account/PUSH_TXQUEUE", {
-      hash: hash2,
-      from: from2,
-      gasLimit: gasLimit2,
-      gasPrice: gasPrice2,
-      nonce: nonce2,
-      to: to2,
-      type: type2,
-      value: value2,
-      transitionType: null,
-      txType: TransactionTypes.contract,
-      network,
-    });
+    // commit("account/PUSH_TXQUEUE", {
+    //   hash: hash2,
+    //   from: from2,
+    //   gasLimit: gasLimit2,
+    //   gasPrice: gasPrice2,
+    //   nonce: nonce2,
+    //   to: to2,
+    //   type: type2,
+    //   value: value2,
+    //   transitionType: null,
+    //   txType: TransactionTypes.contract,
+    //   network,
+    // });
     localStorage.setItem("contact 1", JSON.stringify(data));
     return Promise.resolve(data);
   } catch (err) {
