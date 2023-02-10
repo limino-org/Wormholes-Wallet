@@ -37,7 +37,6 @@ import { Ref, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import NavHeader from '@/components/navHeader/index.vue'
 import { CreateWalletByJsonParams, CreateWalletByMnemonicParams } from '@/utils/ether'
-import { passwordExpires } from '@/enum/password'
 import { useI18n } from 'vue-i18n'
 import { getWallet } from '@/store/modules/account'
 

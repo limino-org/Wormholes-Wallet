@@ -1,5 +1,5 @@
-import en from './en-US/index'
-import zh from './zh_CN/index'
+import en from './en/index'
+import zh from './zh/index'
 import { createI18n } from 'vue-i18n'
 import { useStore } from 'vuex';
 import { Locale } from 'vant';
