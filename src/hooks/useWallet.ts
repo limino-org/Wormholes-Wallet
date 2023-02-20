@@ -25,16 +25,18 @@ export const useWallet = () => {
             dispatch('account/getEthAccountInfo')
             eventBus.emit('walletReady', newwallet)
         } catch (err) {
+
             console.error('err', err)
             if(err && err.toString().indexOf('invalid password') > -1) {
                 router.replace({ name: 'withpassword', query })
                 return 
             }
+            const isDoc = location.href.indexOf('privacyNotice') > -1 || location.href.indexOf('termsOfUse') > -1 ? true : false
             if(hasAcc && !password) {
                router.replace({ name: 'withpassword', query })
                return
             }
-            if(!hasAcc && !password) {
+            if(!hasAcc && !password  && !isDoc) {
                 router.replace({ name: 'guidance' })
             }
         }
