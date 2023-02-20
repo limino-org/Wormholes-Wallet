@@ -328,12 +328,7 @@ router.beforeEach(async (to, form, next) => {
     next()
     return
   }
-  
-  // if(!auth && name == 'connectWallet' && !authFlag) {
-  //   // @ts-ignore
-  //   router.replace({name:"withpassword",query: {backUrl:'connectWallet',loginParams: {...query}}})
-  //   return
-  // }
+
   if (auth) {
     if (hasAccountFlag && authFlag) {
       next()
