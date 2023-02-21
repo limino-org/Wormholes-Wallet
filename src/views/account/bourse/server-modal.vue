@@ -165,6 +165,10 @@ export default defineComponent({
     days: {
       type: Number,
       default: 0
+    },
+    payAmount: {
+      type: String || Number,
+      default: '200'
     }
   },
   setup(props: any, context: SetupContext) {
@@ -192,8 +196,8 @@ export default defineComponent({
           const contract = await getContract();
           const gasPrice = await contract.provider.getGasPrice();
           const priceStr = ethers.utils.formatUnits(gasPrice,'wei')
-          const gasLimit = await contract.estimateGas.payForRenew({
-            value: ethers.utils.parseEther(200 + ""),
+          const gasLimit = await contract.estimateGas.pay('', {
+            value: ethers.utils.parseEther(props.payAmount + ""),
           });
           gasFee.value =  new Bignumber(
             ethers.utils.formatEther(gasLimit)
@@ -233,7 +237,7 @@ export default defineComponent({
         });
         try {
           show.value = false;
-          await sendTx2(200, () => {
+          await sendTx2(props.payAmount, props.exchangeName, () => {
             $tradeConfirm.update({ status: "approve" });
           });
           $tradeConfirm.update({ status: "success" });

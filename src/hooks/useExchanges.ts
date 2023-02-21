@@ -17,6 +17,8 @@ import {
   is_install
 } from "@/http/modules/common";
 const erbAbi = require("@/assets/json/erbAbi.json");
+const newErbAbi = require("@/assets/json/newErbAbi");
+
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import router from "@/router";
 import { useI18n } from "vue-i18n";
@@ -40,13 +42,18 @@ export const useExchanges = () => {
   const { dispatch, state, commit, getters } = useStore();
   const { toSign, sign } = useSign();
 
-  const sendTx2 = async (amount: any, callBack?: Function) => {
+  const sendTx2 = async (amount: any, exchange_name: string, callBack?: Function) => {
     try {
-      // @ts-ignore
-      const network = clone(store.state.account.currentNetwork)
       const wallet = await getWallet()
+      const { address } = wallet
       const contractWithSigner = await getContract();
-      const data = await contractWithSigner.functions.payForRenew({
+      const params = await generateSign(exchange_name);
+      const authData = await authExchange()
+      const hex1 =web3.utils.fromUtf8(JSON.stringify(params))
+      const hex2 = web3.utils.fromUtf8(JSON.stringify(authData))
+      const parHexStr = state.account.exchangeStatus.status != 2 ? `${hex1},${hex2}` : ''
+      
+      const data = await contractWithSigner.functions.pay(parHexStr,{
         value: ethers.utils.parseEther(amount + ''),
       });
 
@@ -58,10 +65,15 @@ export const useExchanges = () => {
       localStorage.setItem('receipt2', JSON.stringify(receipt))
       const { status } = receipt;
       if (status == 0) {
-        $tradeConfirm.update({ status: "fail" })
+        $tradeConfirm.update({ status: "fail", hash: data.hash })
         resetData();
         Toast(i18n.global.t("userexchange.transactionfailed"));
         return Promise.reject()
+      } else {
+        let time = setTimeout(() => {
+          $tradeConfirm.update({ status: "success", hash:data.hash  })
+          clearTimeout(time)
+        }, 30000)
       }
       dispatch("account/updateAllBalance");
       // commit("account/PUSH_TRANSACTION", rep);
@@ -100,10 +112,8 @@ export const useExchanges = () => {
       })
     }
 
-    const wallet = await getWallet()
-    const { address } = wallet
     try {
-      const receipt = await sendTx2(amount)
+      const receipt = await sendTx2(amount, exchange_name)
       const { status,transactionHash } = receipt;
       if (status == 0) {
         $tradeConfirm.update({ status: "fail" })
@@ -111,32 +121,32 @@ export const useExchanges = () => {
         Toast(i18n.global.t("userexchange.transactionfailed"));
         return;
       }
-      const params = await generateSign(exchange_name);
-      const sendData = {
-        address,
-        params: `'${JSON.stringify(params)}'`,
-      };
-      console.log(sendData)
-      const val: any = await createExchange(sendData);
-      if (val.code == "true") {
-        let time = setTimeout(async () => {
-          try {
-            const data = await authExchange();
-            ready.value = true;
-            $tradeConfirm.update({ status: "success" })
-            callBack ? callBack() : "";
-          } catch (err: any) {
-            $tradeConfirm.update({ status: "fail" })
-            resetData();
-          }
-          clearTimeout(time);
-        }, 8000);
-      } else {
-        resetData();
-        $tradeConfirm.update({ status: "fail" })
+      // const params = await generateSign(exchange_name);
+      // const sendData = {
+      //   address,
+      //   params: `'${JSON.stringify(params)}'`,
+      // };
+      // console.log(sendData)
+      // const val: any = await createExchange(sendData);
+      // if (val.code == "true") {
+      //   let time = setTimeout(async () => {
+      //     try {
+      //       const data = await authExchange();
+      //       ready.value = true;
+      //       $tradeConfirm.update({ status: "success" })
+      //       callBack ? callBack() : "";
+      //     } catch (err: any) {
+      //       $tradeConfirm.update({ status: "fail" })
+      //       resetData();
+      //     }
+      //     clearTimeout(time);
+      //   }, 8000);
+      // } else {
+      //   resetData();
+      //   $tradeConfirm.update({ status: "fail" })
 
-        return;
-      }
+      //   return;
+      // }
 
     } catch (err) {
       $tradeConfirm.update({ status: "fail" })
@@ -151,7 +161,8 @@ export const useExchanges = () => {
     const wallet = await getWallet();
     const blockNumber = await wallet.provider.getBlockNumber();
     const exchanger_owner: string = wallet.address;
-    const to: string = "0x7fBC8ad616177c6519228FCa4a7D9EC7d1804900";
+    const contractWithSigner = await getContract()
+    const to = await contractWithSigner.functions.getUserBackgroundAccount(wallet.address)
     const exchange_name: string = name
     // const block_number: number = blockNumber + 86400;
     // const sign_exchange_owner = await wallet.signMessage(exchange_owner);
@@ -184,20 +195,7 @@ export const useExchanges = () => {
 
   };
 
-  // Even contract, issue trade
-  const getContract = async () => {
-    const wallet = await getWallet();
-    const { URL } = state.account.currentNetwork;
-    let provider = ethers.getDefaultProvider(URL);
-    const { abi } = erbAbi;
-    const contractAddress = state.account.contractAddress
-    if (!contractAddress) {
-      throw new Error("error contractAddress cant't be null")
-    }
-    const contract = new ethers.Contract(contractAddress, abi, provider);
-    const contractWithSigner = contract.connect(wallet);
-    return contractWithSigner
-  };
+
 
 
 
@@ -375,8 +373,9 @@ export const useExchanges = () => {
         resolve(true)
       }, 30000)
     })
-    const d: any = await getSysParams(address);
-    const { exchangeraddr } = d.data;
+    // const d: any = await getSysParams(address);
+    // const { exchangeraddr } = d.data;
+    const exchangeraddr = '0x7fbc8ad616177c6519228fca4a7d9ec7d1804900'
     const newParams = {
       exchanger_owner: address,
       to: exchangeraddr,
@@ -392,13 +391,14 @@ export const useExchanges = () => {
         call: async (sigstr: string) => {
           const params = { ...newParams, sig: sigstr }
           sessionStorage.setItem('params', JSON.stringify(params))
-          setExchangeSig(wallet.address, params)
-            .then((res) => {
-              resolve(res);
-            })
-            .catch((err) => {
-              reject(err);
-            });
+          resolve(params)
+          // setExchangeSig(wallet.address, params)
+          //   .then((res) => {
+          //     resolve(res);
+          //   })
+          //   .catch((err) => {
+          //     reject(err);
+          //   });
         },
       });
     });
@@ -657,7 +657,17 @@ export const useExchanges = () => {
       return Promise.reject(err);
     }
   }
+
+  // get the fee paid for exchange service
+  const getServiceConst = async () => {
+    const contract = await getContract()
+    console.warn('contract', contract)
+    const cost = await contract.functions.exchangeFee()
+    return cost
+  }
+
   return {
+    getServiceConst,
     createExchanges,
     showCreateExchange,
     showExchange,
@@ -690,3 +700,19 @@ export function toHex(str: string) {
   }
   return hexCharCode.join("");
 }
+
+  // Even contract, issue trade
+ export const getContract = async () => {
+    const wallet = await getWallet();
+    const { URL } = store.state.account.currentNetwork;
+    let provider = ethers.getDefaultProvider(URL);
+    // const { abi } = erbAbi;
+    // const contractAddress = state.account.contractAddress
+    const { abi, address: contractAddress } = newErbAbi
+    if (!contractAddress) {
+      throw new Error("error contractAddress cant't be null")
+    }
+    const contract = new ethers.Contract(contractAddress, abi, provider);
+    const contractWithSigner = contract.connect(wallet);
+    return contractWithSigner
+  };

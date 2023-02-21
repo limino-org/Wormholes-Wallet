@@ -1,8 +1,7 @@
 
-const isProduct = process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'test' ? true : false
+const isProduct = process.env.VUE_APP_NODE_ENV == 'production' || process.env.VUE_APP_NODE_ENV == 'test' ? true : false
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const webpack = require('webpack')
-console.warn('isProduct', isProduct,process.env.NODE_ENV)
 module.exports = {
   productionSourceMap: !isProduct,
   publicPath: isProduct ? '/wallet/' : '',
@@ -45,7 +44,7 @@ module.exports = {
         }
       },
       '/contractApi': {
-        target: 'https://api.wormholesscan.com',
+        target: 'http://192.168.4.240:3001',
         changeOrigin: true,
         pathRewrite: {
           '^/contractApi': ''

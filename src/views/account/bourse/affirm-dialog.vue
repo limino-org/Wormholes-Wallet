@@ -199,19 +199,17 @@ export default {
           };
 
           gasFee.value = await getGasFee(tx1);
-          debugger
           const gas2 = ref();
           if (props.serverIndex == 1) {
             const contract = await getContract();
             const gasPrice = await contract.provider.getGasPrice();
-            const gasLimit = await contract.estimateGas.payForRenew({
+            const gasLimit = await contract.estimateGas.pay('', {
               value: ethers.utils.parseEther(200 + ""),
             });
-
+            console.log('gasLimit2',ethers.utils.formatEther(gasLimit))
             gas2.value = new BigNumber(ethers.utils.formatEther(gasLimit))
               .dividedBy(ethers.utils.formatEther(gasPrice))
               .toFixed(9);
-              debugger
           }
           totalGas.value = new BigNumber(gasFee.value)
             .plus(gas2.value || 0)

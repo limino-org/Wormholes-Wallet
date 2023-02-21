@@ -23,7 +23,7 @@ import { useStore, mapActions } from "vuex";
 import { Button, Dialog, Loading, Toast } from "vant";
 import { utils } from "ethers";
 
-import { useExchanges } from "@/hooks/useExchanges";
+import { getContract, useExchanges } from "@/hooks/useExchanges";
 import { useI18n } from "vue-i18n";
 import { getWallet, NetStatus, getGasFee } from "./store/modules/account";
 import { version } from "@/enum/version";
@@ -33,6 +33,7 @@ import { provide as appProvide } from "@/provides/app";
 import localforage, { clear } from "localforage";
 import eventBus from "./utils/bus";
 import { useWallet } from './hooks/useWallet';
+import { Console } from 'console';
 
 export default {
   components: {
@@ -81,8 +82,9 @@ export default {
         clearTimeout(time);
       }, 300);
     };
-    onMounted(() => {
+    onMounted(async() => {
       initWallet()
+     
       const { handleUpdate, broad } = useBroadCast();
       broad.onmessage = (e: any) => {
         const { data }: any = e;

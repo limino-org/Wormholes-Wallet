@@ -59,7 +59,7 @@
   <div class="flex center loading-page" v-else>
     <van-loading color="#037CD6" />
   </div>
-  <ServerModal v-model="showServerModal" :exchangeName="exchangeName" :days="days" :hours="hours"  @updateStatus="handleUpdateStatus"/>
+  <ServerModal v-model="showServerModal" :exchangeName="exchangeName" :days="days" :hours="hours" :payAmount="payAmount"  @updateStatus="handleUpdateStatus"/>
   <div class="guide-mask" @click.stop="closeGuide" v-if="showGuideMask">
     <div class="container">
       <div class="guide-header"></div>
@@ -109,6 +109,7 @@ import { ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
 import { useToast } from '@/plugins/toast';
 import { useExchanges } from '@/hooks/useExchanges'
+import { isProduct } from "@/http/modules/account";
 export default {
   name: "exchange-manage",
   components: {
@@ -128,14 +129,16 @@ export default {
       () =>
         exchangeStatus.value.exchanger_flag && exchangeStatus.value.status == 2
     );
+    
     const accountInfo = computed(() => state.account.accountInfo)
-    const {getContract} = useExchanges()
+    const {getContract,getServiceConst} = useExchanges()
     const back = () => {
       router.replace({ name: "wallet" });
     };
+
     const exchangeUrl = computed(() => {
       const add = state.account.accountInfo.address;
-      return `${VUE_APP_EXCHANGES_URL}/c${add.toLowerCase()}/#/`;
+      return `${ VUE_APP_EXCHANGES_URL }/c${add.toLowerCase()}/#/`;
     });
     const adminUrl = computed(() => {
       const add = state.account.accountInfo.address;
@@ -156,9 +159,11 @@ export default {
     const loading = ref(false);
     const initData = async () => {
       loading.value = true;
+       const [serviceCost] = await getServiceConst();
+      const needPayService = ethers.utils.formatUnits(serviceCost,'ether');
+      payAmount.value = needPayService
       await dispatch('account/getExchangeStatus')
             const {exchanger_flag,status} = exchangeStatus.value
-            debugger
       if (!state.account.exchangeGuidance && exchanger_flag) {
         showGuide.value = true;
         // commit("account/UPDATE_EXCHANGEGUIDANCE", true);
@@ -182,14 +187,15 @@ export default {
       }
       getServerExpiDate()
     };
-    
+    const payAmount = ref('200')
     const days:Ref<number> = ref(0)
     const hours:Ref<number> = ref(0)
     const hasEnableServe = ref(false)
     const getServerExpiDate = async() => {
       const contractWithSigner = await getContract()
-      const [date] = await contractWithSigner.functions.endTime(accountInfo.value.address)
-      debugger
+      const [date] = await contractWithSigner.functions.exchangeTimeLimit(accountInfo.value.address)
+      // const newdate = ethers.utils.formatEther()
+      console.warn('date.toNumber() ', date.toNumber() )
       const nowTime = new Date().getTime()
       const a = date.toNumber() > 0 ? date.toNumber() * 1000 : 0
       const b = nowTime
@@ -205,6 +211,7 @@ export default {
       days.value = day
       hours.value = hour
     }
+
     onMounted(initData);
     eventBus.on("walletReady", async () => {
       initData();
@@ -250,6 +257,7 @@ export default {
       handleAddModel,
       t,
       back,
+      payAmount,
       exchangeStatus,
       hasExchange,
       toAdmin,

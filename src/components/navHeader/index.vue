@@ -117,7 +117,6 @@
             <div
               class="setting-btn clickActive flex center-v"
               @click="oneClick"
-              v-if="network.id == 'wormholes-network-1'"
             >
               <i
                 class="iconfont icon-fangwujianzhuwugoujianbeifen"

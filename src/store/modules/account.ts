@@ -42,6 +42,7 @@ import Bignumber from 'bignumber.js'
 import { web3 } from "@/utils/web3";
 import { Console } from "console";
 import { getConverAmount, getInput } from "./txList";
+import { getContract, useExchanges } from "@/hooks/useExchanges";
 export interface State {
   mnemonic: Mnemonic;
   path: string;
@@ -127,6 +128,17 @@ export interface SendTokenParams {
   to: string;
   checkTxQueue?: boolean
   nonce?: number
+}
+
+export interface ContractParams {
+  value: any;
+  gasPrice: string;
+  gasLimit: number;
+  checkTxQueue?: boolean
+  nonce?: number
+  contractAddress: string
+  abi: any
+  method: string
 }
 
 export interface AddAccountParams {
@@ -1162,6 +1174,60 @@ export default {
         return Promise.reject(err)
       }
     },
+    // contract transaction
+    async contractTransaction({commit, dispatch, state}: any, params: ContractParams){
+      const { contractAddress, abi, value, nonce: sendNonce, checkTxQueue, gasPrice, gasLimit, method } = params
+      // Determine whether there are transactions in the current trading pool that have not returned transaction receipts, and if so, do not allow them to be sent
+      if (checkTxQueue && await dispatch('hasPendingTransactions')) {
+        return Promise.reject({ reason: i18n.global.t('common.sendTipPendding'), code: 500 })
+      }
+      try {
+        // Get contract token instance object
+        const { contractWithSigner, contract } = await dispatch(
+          "connectContractByAbi",
+          {
+            abi,
+            contractAddress
+          }
+        );
+
+        const gasp = Number(gasPrice) ? new BigNumber(gasPrice).dividedBy(1000000000).toFixed(12) : '0.0000000012';
+        const transferParams: any = {
+          gasLimit: gasLimit,
+          gasPrice: ethers.utils.parseEther(gasp),
+          value: ethers.utils.parseEther(value + ''),
+        };
+        if (typeof sendNonce != undefined) {
+          transferParams['nonce'] = sendNonce
+        }
+        console.log("transferParams", transferParams);
+        const data = await contractWithSigner[method]('', transferParams)
+        const { from, gasLimit: newLimit, gasPrice: newPrice, hash, nonce, type, value: newVal, to: toAddr } = data;
+        // await PUSH_TXQUEUE({
+        //   hash,
+        //   from,
+        //   gasLimit: gasLimit || utils.formatUnits(data.gasLimit, 'wei'),
+        //   gasPrice,
+        //   nonce,
+        //   to: toAddr,
+        //   type,
+        //   value: newVal,
+        //   transitionType: null,
+        //   txType: TransactionTypes.default,
+        //   network: clone(currentNetwork),
+        //   data: '',
+        //   sendStatus: TransactionSendStatus.pendding,
+        //   sendData: clone(data),
+        //   amount,
+        //   toAddress: to
+        // })
+        data.wallet = wallet
+        return data
+      } catch (err) {
+        return Promise.reject(err)
+      }
+    },
+    
     // send data
     // async sendTransaction({ commit, dispatch, state }: any, tx: any) {
     //   const { to, from, data, callBack, value: sendVal } = tx
@@ -1328,15 +1394,38 @@ export default {
         return Promise.reject(err);
       }
     },
+    async connectContractByAbi({ state, commit, dispatch }: any, {
+      abi,
+      contractAddress
+    }: any){
+      try {
+        const wallet = await getWallet();
+        const { URL } = state.currentNetwork;
+        const contract = new ethers.Contract(
+          contractAddress,
+          abi,
+          wallet.provider
+        );
+        const contractWithSigner = contract.connect(wallet);
+        return { contractWithSigner, contract }
+      } catch (err) {
+        console.error(err);
+        return Promise.reject(err);
+      }
+    },
     // Gets whether the exchange status is open
-    async getExchangeStatus({ commit, state }: any, call: Function = () => { }) {
-      const wallet = await getWallet();
-      const { address } = wallet;
-      return checkAuth(address).then((res: any) => {
-        commit("UPDATE_EXCHANGERSTATUS", res.data);
-        call(res.data);
-        return res.data;
-      });
+    async getExchangeStatus({ commit, state, dispatch }: any, call: Function = () => { }) {
+      const { ExchangerFlag } = await dispatch('getChainAccountInfo')
+      const contract = await getContract()
+      const [status]: any = await contract.functions.checkAuth(state.accountInfo.address)
+      // const intStatus = utils.formatUnits(serviceStatus, 'ether')
+      // debugger
+      const data = {
+        exchanger_flag: ExchangerFlag,
+        status
+      }
+      commit("UPDATE_EXCHANGERSTATUS", data);
+      return data
     },
     // Update current network, current address, current token list balance
     async updateTokensBalances({ commit, state, dispatch }: any) {
@@ -1399,8 +1488,10 @@ export default {
           "latest",
         ]);
         commit('UPDATE_CHAINACCOUNTINFO', accountInfo)
+        return accountInfo
       } catch (err) {
         commit('UPDATE_CHAINACCOUNTINFO', {})
+        return err
       }
     },
     //  Stop polling

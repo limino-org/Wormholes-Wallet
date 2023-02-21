@@ -236,7 +236,7 @@
               "
               @click="changeServerIndex(1)"
             >
-              <span class="t1 flex center">200ERB</span>
+              <span class="t1 flex center">{{serviceCostVal}}ERB</span>
 
               <span class="t2 flex center"
                 ><span>Best</span>
@@ -247,7 +247,7 @@
                 ></i
               ></span>
 
-              <span class="t1 flex center">{{toUsd(200,0)}}$</span>
+              <span class="t1 flex center">{{toUsd(serviceCostVal,0)}}$</span>
             </div>
           </template>
         </van-popover>
@@ -510,7 +510,7 @@ export default defineComponent({
     const accountInfoBlockNumber = ref(0);
     const { $wtoast } = useToast();
     const appProvide = inject("appProvide");
-
+    const serviceCostVal = ref(200);
     const marks = reactive<Marks>({
       10: "",
       20: "",
@@ -595,7 +595,7 @@ export default defineComponent({
       sendTo,
       closeExchanges,
       modifExchangeBalance,
-
+      getServiceConst,
       addExchangeBalance,
     } = useExchanges();
     const name = ref("");
@@ -616,7 +616,7 @@ export default defineComponent({
         } else {
           console.warn("name", name);
           console.warn("fee_rate", fee_rate);
-          await createExchanges(name, 200, fee_rate);
+          await createExchanges(name, serviceCostVal.value, fee_rate);
         }
       } catch (err) {
         console.error(err);
@@ -729,7 +729,12 @@ export default defineComponent({
     const addBalance = computed(() => {
       return new Bignumber(901).minus(accountInfo.value.amount).toFixed(6)
     })
-    onMounted(() => {
+    onMounted(async() => {
+      const [serviceCost] = await getServiceConst();
+      const needPayService = utils.formatUnits(serviceCost,'ether');
+      console.log('serviceCost', needPayService);
+      serviceCostVal.value = Number(needPayService);
+
       initPageData();
       if(insufficientMoney.value) {
         serverIndex.value = 0
@@ -930,6 +935,7 @@ export default defineComponent({
       addAmount,
       visible1,
       visible2,
+      serviceCostVal,
       addBalance,
       changeAdd,
       handleAdd,

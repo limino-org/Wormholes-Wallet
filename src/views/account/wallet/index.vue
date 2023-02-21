@@ -170,7 +170,7 @@ trigger="manual"
         </div>
       </Transition>
       <Transition name="slider">
-        <div class="btn-groups" v-if="currentNetwork.id == 'wormholes-network-1' && (!isSelect || active === 0)">
+        <div class="btn-groups" v-if=" (!isSelect || active === 0)">
           <div class="pl-20 pr-20 flex right center-v">
             <div
               :class="[
@@ -308,7 +308,7 @@ export default {
     const snft_cancel = ref(1);
     // const isWarning = ref(false);
     const { t } = useI18n();
-    const { generateSign, initExchangeData } = useExchanges();
+    // const { generateSign, initExchangeData } = useExchanges();
     const showGuideModal = ref(false);
     const router = useRouter();
     const active: Ref<number> = ref(0);
@@ -485,9 +485,9 @@ export default {
         console.warn("getExchangeStatus", res);
         autoexchange.value = res.status;
         autostat.value = res.exchanger_flag;
-        if (res.status == 2 && res.exchanger_flag) {
-          initExchangeData();
-        }
+        // if (res.status == 2 && res.exchanger_flag) {
+        //   initExchangeData();
+        // }
       });
       
       handleLoopBalance()
