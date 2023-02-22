@@ -16,7 +16,7 @@ import {
   setExchangeSig,
   is_install
 } from "@/http/modules/common";
-const erbAbi = require("@/assets/json/erbAbi.json");
+
 const newErbAbi = require("@/assets/json/newErbAbi");
 
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
@@ -42,28 +42,58 @@ export const useExchanges = () => {
   const { dispatch, state, commit, getters } = useStore();
   const { toSign, sign } = useSign();
 
-  const sendTx2 = async (amount: any, exchange_name: string, callBack?: Function) => {
+  const sendTx2 = async (exchange_name: string, callBack?: Function) => {
     try {
       const wallet = await getWallet()
       const { address } = wallet
       const contractWithSigner = await getContract();
-      const params = await generateSign(exchange_name);
-      const authData = await authExchange()
-      const hex1 =web3.utils.fromUtf8(JSON.stringify(params))
-      const hex2 = web3.utils.fromUtf8(JSON.stringify(authData))
-      const parHexStr = state.account.exchangeStatus.status != 2 ? `${hex1},${hex2}` : ''
-      
-      const data = await contractWithSigner.functions.pay(parHexStr,{
-        value: ethers.utils.parseEther(amount + ''),
+      const serviceCost = await getServiceConst()
+      const cost = utils.formatUnits(serviceCost, 'ether')
+      debugger
+      const data = await contractWithSigner.functions.pay({
+        value: ethers.utils.parseEther(cost + ''),
       });
+      const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000)
+      const myAddr = state.account.accountInfo.address
+      const [str] = await contractWithSigner.functions.exchangeStr(myAddr)
+      const [addr] = await contractWithSigner.functions.getUserBackgroundAccount(myAddr)
+      debugger
+      if(!str && addr == '0x0000000000000000000000000000000000000000') {
+        $tradeConfirm.update({ status: "approve" })
+        callBack ? callBack() : ''
+        const params = await generateSign(exchange_name);
+        const authData = await authExchange()
+        const hex1 = web3.utils.fromUtf8(JSON.stringify(params))
+        const hex2 = web3.utils.fromUtf8(JSON.stringify(authData))
+        const parHexStr = state.account.exchangeStatus.status != 2 ? `${hex1},${hex2}` : ''
+        const data2 = await contractWithSigner.functions.backgroundSig(parHexStr,{
+          value: ethers.utils.parseEther('0'),
+        });
+        const receipt2 = await wallet.provider.waitForTransaction(data2?.hash, null, 60000)
+        const { status: status2 } = receipt2;
+        localStorage.setItem('backgroundSig', JSON.stringify(receipt2))
+        if(status2 == 0) {
+          $tradeConfirm.update({ status: "fail", hash: data.hash })
+          resetData();
+          Toast(i18n.global.t("userexchange.transactionfailed"));
+          return Promise.reject()
+        }
+        let time = setTimeout(() => {
+          $tradeConfirm.update({ status: "success", hash:data.hash  })
+          clearTimeout(time)
+        }, 40000)
+        return Promise.resolve(receipt)
+      }
 
-      callBack ? callBack() : "";
       localStorage.setItem('tx2', JSON.stringify(data))
       // debugger
       $tradeConfirm.update({ status: "approve" })
-      const receipt = await wallet.provider.waitForTransaction(data.hash, null, 60000)
+  
+
+      callBack ? callBack() : "";
       localStorage.setItem('receipt2', JSON.stringify(receipt))
       const { status } = receipt;
+
       if (status == 0) {
         $tradeConfirm.update({ status: "fail", hash: data.hash })
         resetData();
@@ -99,7 +129,7 @@ export const useExchanges = () => {
     }
   }
 
-  const send2 = async (amount: number = 200, exchange_name: string, callBack = () => { }, isDialog = true) => {
+  const send2 = async (exchange_name: string, callBack = () => { }, isDialog = true) => {
     if (isDialog) {
       $tradeConfirm.open({
         approveMessage: i18n.global.t('createExchange.create_approve'),
@@ -111,9 +141,9 @@ export const useExchanges = () => {
         failBack: () => { router.replace({ name: "exchange-management" }) }
       })
     }
-
+    debugger
     try {
-      const receipt = await sendTx2(amount, exchange_name)
+      const receipt = await sendTx2(exchange_name)
       const { status,transactionHash } = receipt;
       if (status == 0) {
         $tradeConfirm.update({ status: "fail" })
@@ -162,7 +192,7 @@ export const useExchanges = () => {
     const blockNumber = await wallet.provider.getBlockNumber();
     const exchanger_owner: string = wallet.address;
     const contractWithSigner = await getContract()
-    const to = await contractWithSigner.functions.getUserBackgroundAccount(wallet.address)
+    const [to] = await contractWithSigner.functions.getUserBackgroundAccount(wallet.address)
     const exchange_name: string = name
     // const block_number: number = blockNumber + 86400;
     // const sign_exchange_owner = await wallet.signMessage(exchange_owner);
@@ -217,6 +247,7 @@ export const useExchanges = () => {
     } = exchangeStatus
     const { address } = wallet;
     // const baseName = encode(name);
+    debugger
     try {
       const rate_str: number = fee_rate ? new BigNumber(fee_rate).multipliedBy(10).toNumber() : 100
       const str = `wormholes:{"version": "0","type": 11,"fee_rate": ${rate_str},"name":"${name}","url":""}`;
@@ -250,7 +281,8 @@ export const useExchanges = () => {
           $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "exchange-management" }) } })
           return
         }
-        send2(200, name)
+
+        send2(name)
       }
     } catch (err: any) {
       if (!isServer) {
@@ -367,15 +399,12 @@ export const useExchanges = () => {
     const number = await wallet.provider.getBlockNumber();
     const block_number = utils.hexlify((number) + 6307200);
     const { address } = wallet;
-    // watting 30 s
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true)
-      }, 30000)
-    })
+
+    const contractWithSigner = await getContract()
+    const [to] = await contractWithSigner.functions.getUserBackgroundAccount(wallet.address)
     // const d: any = await getSysParams(address);
     // const { exchangeraddr } = d.data;
-    const exchangeraddr = '0x7fbc8ad616177c6519228fca4a7d9ec7d1804900'
+    const exchangeraddr = to
     const newParams = {
       exchanger_owner: address,
       to: exchangeraddr,
@@ -392,13 +421,6 @@ export const useExchanges = () => {
           const params = { ...newParams, sig: sigstr }
           sessionStorage.setItem('params', JSON.stringify(params))
           resolve(params)
-          // setExchangeSig(wallet.address, params)
-          //   .then((res) => {
-          //     resolve(res);
-          //   })
-          //   .catch((err) => {
-          //     reject(err);
-          //   });
         },
       });
     });
@@ -447,7 +469,7 @@ export const useExchanges = () => {
         wattingMessage: i18n.global.t('createExchange.create_success'),
         failMessage: i18n.global.t('createExchange.create_wrong')
       })
-      send2(200, name)
+      send2(name)
     }
     if (!exchanger_flag && status == 2) {
       sendTo(name, amount, false, fee_rate);
@@ -501,37 +523,58 @@ export const useExchanges = () => {
   // When both trades are successful, check whether the exchange was successfully generated, if not continue to follow the later process
   const initExchangeData = async () => {
     const wallet = await getWallet()
-    const { address } = wallet
-    console.warn('wallet', wallet)
-    const res = await wallet.provider.send('eth_getAccountInfo', [address, "latest"])
-    const { ExchangerName, BlockNumber } = res
-    let exchange_name = ExchangerName;
-    try {
-      // If the exchange is not successfully deployed, redeploy it
-      const installData = await is_install(address)
-      // Check whether setExchangeSig is successfully sent. If no setExchangeSig is sent, send it again
+    const contractWithSigner = await getContract();
+    const myAddr = state.account.accountInfo.address
+    const [str] = await contractWithSigner.functions.exchangeStr(myAddr)
+    const [addr] = await contractWithSigner.functions.getUserBackgroundAccount(myAddr)
+    if(!str && addr != '0x0000000000000000000000000000000000000000') {
+     const accountInfo = await wallet.provider.send("eth_getAccountInfo", [
+        myAddr,
+        "latest",
+      ]);
+      const params = await generateSign(accountInfo.ExchangerName);
+      const authData = await authExchange()
+      const hex1 = web3.utils.fromUtf8(JSON.stringify(params))
+      const hex2 = web3.utils.fromUtf8(JSON.stringify(authData))
+      const parHexStr = `${hex1},${hex2}`
 
-      const data = await getExchangeSig(address)
-      if (installData.code == 'true' && !data.data) {
-        sendAuthData(address)
-      }
-    } catch (err) {
-      // The exchange failed to deploy successfully, redeploy, and sign to the backend
-      const params = await generateSign(exchange_name);
-      // Send data to open an exchange
-      const sendData = {
-        address,
-        params: `'${JSON.stringify(params)}'`,
-      };
-      // Send to the one-click exchange interface
-      const val: any = await createExchange(sendData);
-      if (val.code == "true") {
-        let time = setTimeout(async () => {
-          sendAuthData(address)
-          clearTimeout(time);
-        }, 30000);
-      }
+      const res = await contractWithSigner.functions.backgroundSig(parHexStr)
+      sessionStorage.setItem('backgroundSig', JSON.stringify(res))
+      const receipt = await res.wait()
+      
     }
+    // const wallet = await getWallet()
+    // const { address } = wallet
+    // console.warn('wallet', wallet)
+    // const res = await wallet.provider.send('eth_getAccountInfo', [address, "latest"])
+    // const { ExchangerName, BlockNumber } = res
+    // let exchange_name = ExchangerName;
+    // try {
+    //   // If the exchange is not successfully deployed, redeploy it
+    //   const installData = await is_install(address)
+    //   // Check whether setExchangeSig is successfully sent. If no setExchangeSig is sent, send it again
+
+    //   const data = await getExchangeSig(address)
+    //   if (installData.code == 'true' && !data.data) {
+    //     sendAuthData(address)
+    //   }
+    // } catch (err) {
+    //   // The exchange failed to deploy successfully, redeploy, and sign to the backend
+    //   const params = await generateSign(exchange_name);
+    //   // Send data to open an exchange
+    //   const sendData = {
+    //     address,
+    //     params: `'${JSON.stringify(params)}'`,
+    //   };
+    //   // Send to the one-click exchange interface
+    //   const val: any = await createExchange(sendData);
+    //   if (val.code == "true") {
+    //     let time = setTimeout(async () => {
+    //       sendAuthData(address)
+    //       clearTimeout(time);
+    //     }, 30000);
+    //   }
+    // }
 
   }
 
@@ -542,7 +585,7 @@ export const useExchanges = () => {
   ) => {
     // Send the second hosting fee
     try {
-      await send2(200, name);
+      await send2( name);
     } catch (err) {
       return Promise.reject(err);
     }
@@ -662,7 +705,7 @@ export const useExchanges = () => {
   const getServiceConst = async () => {
     const contract = await getContract()
     console.warn('contract', contract)
-    const cost = await contract.functions.exchangeFee()
+    const [cost] = await contract.functions.exchangeFee()
     return cost
   }
 

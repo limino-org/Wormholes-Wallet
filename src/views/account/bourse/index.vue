@@ -730,7 +730,7 @@ export default defineComponent({
       return new Bignumber(901).minus(accountInfo.value.amount).toFixed(6)
     })
     onMounted(async() => {
-      const [serviceCost] = await getServiceConst();
+      const serviceCost = await getServiceConst();
       const needPayService = utils.formatUnits(serviceCost,'ether');
       console.log('serviceCost', needPayService);
       serviceCostVal.value = Number(needPayService);

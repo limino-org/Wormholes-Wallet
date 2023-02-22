@@ -24,7 +24,7 @@ export const useToggleAccount = () => {
   const toggleAccount = () => {
     showAccount.value = true;
   };
-  // const { initExchangeData } = useExchanges()
+  const { initExchangeData } = useExchanges()
   const options = computed(() => store.state.account.accountList)
   const accountLoading: Ref<boolean> = ref(false)
   const clickAccountIdx: Ref<number | null> = ref(null)
@@ -49,9 +49,9 @@ export const useToggleAccount = () => {
       dispatch('account/updateTokensBalances')
       dispatch("account/getProviderWallet");
       dispatch("account/getExchangeStatus").then(res => {
-        // if (res.status == 2 && res.exchanger_flag) {
-        //   initExchangeData()
-        // }
+        if (res.status == 2 && res.exchanger_flag) {
+          initExchangeData()
+        }
       })
 
       handleUpdate()

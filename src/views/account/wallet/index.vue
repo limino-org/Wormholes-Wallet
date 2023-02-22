@@ -308,7 +308,7 @@ export default {
     const snft_cancel = ref(1);
     // const isWarning = ref(false);
     const { t } = useI18n();
-    // const { generateSign, initExchangeData } = useExchanges();
+    const { generateSign, initExchangeData } = useExchanges();
     const showGuideModal = ref(false);
     const router = useRouter();
     const active: Ref<number> = ref(0);
@@ -485,9 +485,9 @@ export default {
         console.warn("getExchangeStatus", res);
         autoexchange.value = res.status;
         autostat.value = res.exchanger_flag;
-        // if (res.status == 2 && res.exchanger_flag) {
-        //   initExchangeData();
-        // }
+        if (res.status == 2 && res.exchanger_flag) {
+          initExchangeData();
+        }
       });
       
       handleLoopBalance()

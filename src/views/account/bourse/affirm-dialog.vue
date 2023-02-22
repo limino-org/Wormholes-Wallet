@@ -203,7 +203,7 @@ export default {
           if (props.serverIndex == 1) {
             const contract = await getContract();
             const gasPrice = await contract.provider.getGasPrice();
-            const gasLimit = await contract.estimateGas.pay('', {
+            const gasLimit = await contract.estimateGas.pay( {
               value: ethers.utils.parseEther(200 + ""),
             });
             console.log('gasLimit2',ethers.utils.formatEther(gasLimit))

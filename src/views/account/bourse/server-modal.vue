@@ -196,7 +196,7 @@ export default defineComponent({
           const contract = await getContract();
           const gasPrice = await contract.provider.getGasPrice();
           const priceStr = ethers.utils.formatUnits(gasPrice,'wei')
-          const gasLimit = await contract.estimateGas.pay('', {
+          const gasLimit = await contract.estimateGas.pay( {
             value: ethers.utils.parseEther(props.payAmount + ""),
           });
           gasFee.value =  new Bignumber(
@@ -237,7 +237,7 @@ export default defineComponent({
         });
         try {
           show.value = false;
-          await sendTx2(props.payAmount, props.exchangeName, () => {
+          await sendTx2(props.exchangeName, () => {
             $tradeConfirm.update({ status: "approve" });
           });
           $tradeConfirm.update({ status: "success" });
@@ -253,7 +253,7 @@ export default defineComponent({
           callBack: callBack,
           failBack: callBack
         });
-        send2(200, props.exchangeName,()=>{}, false);
+        send2(props.exchangeName,()=>{}, false);
       }
     };
     const showpop4 = ref(false);

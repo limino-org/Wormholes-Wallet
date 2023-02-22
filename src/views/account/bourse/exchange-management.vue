@@ -159,7 +159,7 @@ export default {
     const loading = ref(false);
     const initData = async () => {
       loading.value = true;
-       const [serviceCost] = await getServiceConst();
+       const serviceCost = await getServiceConst();
       const needPayService = ethers.utils.formatUnits(serviceCost,'ether');
       payAmount.value = needPayService
       await dispatch('account/getExchangeStatus')
