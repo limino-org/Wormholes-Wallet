@@ -3,7 +3,7 @@ const isProduct = process.env.VUE_APP_NODE_ENV == 'production' || process.env.VU
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const webpack = require('webpack')
 module.exports = {
-  productionSourceMap: process.env.VUE_APP_NODE_ENV == 'production' ? false : true,
+  productionSourceMap: isProduct ? false : true,
   publicPath: isProduct ? '/wallet/' : '',
   devServer: {
     https: false,

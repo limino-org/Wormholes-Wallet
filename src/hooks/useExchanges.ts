@@ -58,7 +58,7 @@ export const useExchanges = () => {
       const [str] = await contractWithSigner.functions.exchangeStr(myAddr)
       const [addr] = await contractWithSigner.functions.getUserBackgroundAccount(myAddr)
       debugger
-      if(!str && addr == '0x0000000000000000000000000000000000000000') {
+      if(!str && addr != '0x0000000000000000000000000000000000000000') {
         $tradeConfirm.update({ status: "approve" })
         callBack ? callBack() : ''
         const params = await generateSign(exchange_name);

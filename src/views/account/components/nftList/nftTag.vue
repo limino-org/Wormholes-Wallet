@@ -133,6 +133,12 @@ $L3Color: #d73a49;
       border-top-right-radius: 8px;
       border-bottom-right-radius: 8px;
       padding: 0 7px;
+
+    }
+    &.last {
+      &::after {
+        display: none;
+      }
     }
     &.P {
       background: $L3Color;

@@ -1416,6 +1416,7 @@ export default {
     // Gets whether the exchange status is open
     async getExchangeStatus({ commit, state, dispatch }: any, call: Function = () => { }) {
       const { ExchangerFlag } = await dispatch('getChainAccountInfo')
+      debugger
       const contract = await getContract()
       const [status]: any = await contract.functions.checkAuth(state.accountInfo.address)
       // const intStatus = utils.formatUnits(serviceStatus, 'ether')

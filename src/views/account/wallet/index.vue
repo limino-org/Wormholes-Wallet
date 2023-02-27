@@ -406,6 +406,7 @@ export default {
       Toast.loading({});
       try {
         const res = await dispatch("account/getExchangeStatus");
+        debugger
         const { exchanger_flag, status } = res;
         autoexchange.value = status;
         autostat.value = exchanger_flag;

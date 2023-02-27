@@ -1,6 +1,6 @@
 
 import { httpGet } from '../request'
-export const isProduct = process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'test' ? true : false
+export const isProduct = process.env.VUE_APP_NODE_ENV == 'production' || process.env.VUE_APP_NODE_ENV == 'test' ? true : false
 const contractApi = isProduct ? 'contractApi' : 'contractApi'
 interface GetTransitionsParams {
     page: string
