@@ -926,14 +926,16 @@ export default {
     },
     // Update balance for all accounts
     async updateAllBalance({ commit, state, dispatch }: any) {
-      const wallet = await getWallet()
+      // const wallet = await getWallet()
+      const {URL} = state.currentNetwork
+      const provider = ethers.getDefaultProvider(URL)
       try {
         const accountList = state.accountList;
         const list: Array<string> = accountList.map(
           (item: AccountInfo) => item.address
         );
         const asyncList = list.map((address) => {
-          return dispatch("getBalanceByAddress", {address,wallet});
+          return dispatch("getBalanceByAddress", {address,provider});
         });
         const data = await Promise.all(asyncList);
         const banList: any = {};
@@ -950,11 +952,11 @@ export default {
       // return Promise.resolve([])
     },
     // Returns the balance of the current address account
-    async getBalanceByAddress({ commit, state }: any, {address, wallet}: any) {
-      if (!address || !wallet) {
+    async getBalanceByAddress({ commit, state }: any, {address, provider}: any) {
+      if (!address || !provider) {
         return Promise.reject(i18n.global.t("common.cannotbeempty"));
       }
-      return wallet.provider.getBalance(address);
+      return provider.getBalance(address);
     },
     // Update the balance in the current account currency
     async updateBalance({ commit, state, dispatch }: any) {
@@ -1412,7 +1414,7 @@ export default {
       }
     },
     // The result of polling the transaction queue
-    async waitTxQueueResponse({ commit, state }: any, opt?: Object) {
+    async waitTxQueueResponse({ commit, state, dispatch }: any, opt?: Object) {
       console.warn('waitTxQueueResponse---')
       const _opt = {
         time: 60000,

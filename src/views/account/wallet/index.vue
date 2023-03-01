@@ -454,7 +454,7 @@ export default {
     const autostat = ref(false);
     eventBus.on('changeAccount', async() => {
      dispatch('account/getEthAccountInfo')
-     getWalletBalance()
+     dispatch("account/updateBalance");
     })
     eventBus.on('walletReady',() => {
       // dispatch("account/updateBalance");
@@ -465,7 +465,7 @@ export default {
 
     let time: any = null;
     const getWalletBalance = () => {
-      dispatch("account/updateBalance");
+      dispatch("account/updateAllBalance");
       dispatch("account/updateTokensBalances");
     }
     const handleLoopBalance = () => {
@@ -479,6 +479,7 @@ export default {
       eventBus.on('guideSnftModal', (n) => {
         active.value = n
       })
+      
       dispatch("transfer/clearTx");
       dispatch("account/updateBalance");
       dispatch("account/getExchangeStatus").then((res) => {
