@@ -44,7 +44,7 @@ module.exports = {
         }
       },
       '/contractApi': {
-        target: 'http://192.168.4.240:3001',
+        target: 'http://43.132.176.185:3001',
         changeOrigin: true,
         pathRewrite: {
           '^/contractApi': ''

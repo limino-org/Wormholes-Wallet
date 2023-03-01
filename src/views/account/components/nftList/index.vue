@@ -664,7 +664,7 @@ export default defineComponent({
           
           const reallen = item.address.length;
           let str = item.address;
-          const hexp = `0x${str.substr(37,2)}`
+          const hexp = `0x${str.substr(1,39)}`
           const hexc = `0x${str.substr(39,1)}`
           const hexn = `0x${str.substr(40,1)}`
           const hexf = `0x${str.substr(41,1)}`

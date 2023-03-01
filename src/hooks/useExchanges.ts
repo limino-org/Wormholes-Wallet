@@ -193,6 +193,7 @@ export const useExchanges = () => {
     const exchanger_owner: string = wallet.address;
     const contractWithSigner = await getContract()
     const [to] = await contractWithSigner.functions.getUserBackgroundAccount(wallet.address)
+    debugger
     const exchange_name: string = name
     // const block_number: number = blockNumber + 86400;
     // const sign_exchange_owner = await wallet.signMessage(exchange_owner);
@@ -402,6 +403,7 @@ export const useExchanges = () => {
 
     const contractWithSigner = await getContract()
     const [to] = await contractWithSigner.functions.getUserBackgroundAccount(wallet.address)
+    debugger
     // const d: any = await getSysParams(address);
     // const { exchangeraddr } = d.data;
     const exchangeraddr = to
