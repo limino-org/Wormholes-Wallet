@@ -69,6 +69,7 @@ export const useExchanges = () => {
         const data2 = await contractWithSigner.functions.backgroundSig(parHexStr,{
           value: ethers.utils.parseEther('0'),
         });
+        debugger
         const receipt2 = await wallet.provider.waitForTransaction(data2?.hash, null, 60000)
         const { status: status2 } = receipt2;
         localStorage.setItem('backgroundSig', JSON.stringify(receipt2))
