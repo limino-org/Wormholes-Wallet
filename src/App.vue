@@ -66,13 +66,13 @@ export default {
       dispatch('system/getChainVersion', newwallet);
     })
     window.onload = async () => {
-      // let time2 = setTimeout(function () {
-      //   commit("account/UPDATE_WORMHOLES_URL", {
-      //     URL: "https://api.wormholes.com",
-      //     browser: "https://www.wormholesscan.com/#/",
-      //   });
-      //   clearTimeout(time2);
-      // }, 1000);
+      let time2 = setTimeout(function () {
+        commit("account/UPDATE_WORMHOLES_URL", {
+          URL: "https://api.wormholes.com",
+          browser: "https://www.wormholesscan.com/#/",
+        });
+        clearTimeout(time2);
+      }, 1000);
       let time = setTimeout(() => {
         // @ts-ignore
         document.getElementById("loading-page-box").style.display = "none";
