@@ -185,7 +185,7 @@ export default defineComponent({
       return bigP.multipliedBy(bigU);
     });
     const view = () => {
-      window.open(`${VUE_APP_SCAN_URL}TradeDetail/${props.data.hash}`);
+      window.open(`${currentNetwork.value.browser}TradeDetail/${props.data.hash}`);
     };
     const cancel = () => {
       emit("handleClose");

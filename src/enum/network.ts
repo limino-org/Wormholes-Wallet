@@ -4,9 +4,8 @@ import { TransactionReceipt } from '@/store/modules/account'
 import { Token } from '@/utils/token'
 import i18n from "@/language/index";
 import { guid } from '@/utils';
-import { VUE_APP_NODE_WORM_URL } from './env';
+import { VUE_APP_NODE_WORM_URL, VUE_APP_SCAN_URL } from './env';
 const URL =  VUE_APP_NODE_WORM_URL
-
 
 
 export interface NetWorkData {
@@ -84,5 +83,5 @@ export const chessIcons = [
 
 
 export const netWorklist: Array<NetWorkData> = [
-    { value: 'Wormholes',color:'rgb(14, 126, 33)',icon: chessIcons[0], label: "Wormholes", select: true ,URL, chainId: 51888, currencySymbol: 'ERB', browser:'https://www.wormholesscan.com/',transactionList:{},tokens:{} ,id: 'wormholes-network-1', isMain: true },
+    { value: 'Wormholes',color:'rgb(14, 126, 33)',icon: chessIcons[0], label: "Wormholes", select: true ,URL, chainId: 51888, currencySymbol: 'ERB', browser: VUE_APP_SCAN_URL,transactionList:{},tokens:{} ,id: 'wormholes-network-1', isMain: true },
 ]

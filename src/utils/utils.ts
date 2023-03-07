@@ -100,14 +100,15 @@ export const viewTransactionByHash = (hash:string | null) => {
 
 export const viewAccountByAddress = (address:string ) => {
   if(address) {
+    const scanURL= store.state.account.currentNetwork.browser
     if(store.state.account.currentNetwork.id === 'wormholes-network-1') {
-      window.open(`${VUE_APP_SCAN_URL}AccountDetail/${address}`);
+      window.open(`${scanURL}AccountDetail/${address}`);
     } else {
       const defaultUrl = store.state.account.currentNetwork.browser
       if(defaultUrl) {
         window.open(`${defaultUrl}`);
       } else {
-        window.open(`${VUE_APP_SCAN_URL}AccountDetail/${address}`);
+        window.open(`${scanURL}AccountDetail/${address}`);
       }
     }
   } else {
