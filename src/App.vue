@@ -52,7 +52,7 @@ export default {
       time = setTimeout(async () => {
         await dispatch("account/waitTxQueueResponse");
         clearTimeout(time);
-      }, 5000);
+      }, 3000);
     };
     onBeforeMount(async () => {
       localStorage.setItem('connect-wallet-url', location.href)

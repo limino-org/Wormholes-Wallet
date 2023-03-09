@@ -207,7 +207,7 @@
         <Tip :message="t('common.converTip')" type="warn" />
         <i18n-t
           keypath="converSnft.tip"
-          v-if="tabIndex == 2"
+          v-if="Number(tabIndex) == 2"
           tag="div"
           class="dialog-warning-text"
         >
@@ -648,7 +648,6 @@ export default defineComponent({
           loading.value = false;
         }
         
-        // // 去重
         // const newlist = list.value.map((item: any) => item.address)
         // const newNftList = nftAddList.filter((item: any) => item.nft_address.toUpperCase())
         const metaDataList = await getSnftList(nftAddList, blockNumber)
@@ -661,13 +660,13 @@ export default defineComponent({
           if(tabIndex.value == '2' && item.pledge_number !== null) {
             item.hasUnfreeze = (blockNumber - Number(item.pledge_number)) > (network && network.chainId === 51888 ? 73 : 6307201)
           }
-          
           const reallen = item.address.length;
           let str = item.address;
-          const hexp = `0x${str.substr(1,39)}`
+          const hexp = `0x${str.substr(3,36)}`
           const hexc = `0x${str.substr(39,1)}`
           const hexn = `0x${str.substr(40,1)}`
           const hexf = `0x${str.substr(41,1)}`
+          console.log('hexp', hexp)
           switch (reallen) {
             case 39:
               item.tag = "P";
