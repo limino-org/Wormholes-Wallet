@@ -39,7 +39,6 @@
                 {
                     "indexed": true,
                     "internalType": "address",
-<<<<<<< HEAD
                     "name": "addr",
                     "type": "address"
                 },
@@ -59,8 +58,6 @@
                 {
                     "indexed": true,
                     "internalType": "address",
-=======
->>>>>>> dev
                     "name": "previousOwner",
                     "type": "address"
                 },
@@ -75,7 +72,6 @@
             "type": "event"
         },
         {
-<<<<<<< HEAD
             "inputs": [],
             "name": "pay",
             "outputs": [],
@@ -83,8 +79,6 @@
             "type": "function"
         },
         {
-=======
->>>>>>> dev
             "anonymous": false,
             "inputs": [
                 {
@@ -104,22 +98,12 @@
                     "internalType": "uint256",
                     "name": "endTime",
                     "type": "uint256"
-<<<<<<< HEAD
-=======
-                },
-                {
-                    "indexed": false,
-                    "internalType": "string",
-                    "name": "jsonStr",
-                    "type": "string"
->>>>>>> dev
                 }
             ],
             "name": "Pay",
             "type": "event"
         },
         {
-<<<<<<< HEAD
             "inputs": [],
             "name": "renounceOwnership",
             "outputs": [],
@@ -148,16 +132,6 @@
                 }
             ],
             "name": "transferOwnership",
-=======
-            "inputs": [
-                {
-                    "internalType": "address[]",
-                    "name": "addrs",
-                    "type": "address[]"
-                }
-            ],
-            "name": "addAccount",
->>>>>>> dev
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -214,7 +188,6 @@
             "type": "function"
         },
         {
-<<<<<<< HEAD
             "inputs": [
                 {
                     "internalType": "address",
@@ -234,8 +207,6 @@
             "type": "function"
         },
         {
-=======
->>>>>>> dev
             "inputs": [],
             "name": "exchangeFee",
             "outputs": [
@@ -319,22 +290,6 @@
             "type": "function"
         },
         {
-<<<<<<< HEAD
-=======
-            "inputs": [
-                {
-                    "internalType": "string",
-                    "name": "str",
-                    "type": "string"
-                }
-            ],
-            "name": "pay",
-            "outputs": [],
-            "stateMutability": "payable",
-            "type": "function"
-        },
-        {
->>>>>>> dev
             "inputs": [],
             "name": "remainAccount",
             "outputs": [
@@ -348,42 +303,6 @@
             "type": "function"
         },
         {
-<<<<<<< HEAD
-=======
-            "inputs": [],
-            "name": "renounceOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "fee",
-                    "type": "uint256"
-                }
-            ],
-            "name": "setFee",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "newOwner",
-                    "type": "address"
-                }
-            ],
-            "name": "transferOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
->>>>>>> dev
             "inputs": [
                 {
                     "internalType": "address",
