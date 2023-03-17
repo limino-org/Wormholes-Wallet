@@ -1,7 +1,7 @@
 <template>
   <div class="transaction-detail">
     <div class="title f-16 text-center">
-      {{ t("transactionDetails.transationHistoryDetails") }}
+      {{ title }}
     </div>
     <div class="tran-form mt-20">
       <div class="form-box ml-14 mr-14">
@@ -184,6 +184,10 @@ export default defineComponent({
       const bigU = new BigNumber(gasUsed).div(1000000000);
       return bigP.multipliedBy(bigU);
     });
+    const title = computed(() => {
+      return handleTxType(props.data)
+    })
+
     const view = () => {
       window.open(`${VUE_APP_SCAN_URL}TradeDetail/${props.data.hash}`);
     };
@@ -202,6 +206,7 @@ export default defineComponent({
       handleCancel,
       t,
       cancel,
+      title,
       view,
       handleClose,
       transactionTarget,

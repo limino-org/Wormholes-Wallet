@@ -207,10 +207,12 @@ export default {
     contractAddr: "Address of contract",
     converTip:"Tips: After the S-NFT exchange is successful, it will disappear from the wallet. You can view the exchange record in the wallet's transaction history or browser.",
     snftLabel:'S-NFTs Convert',
-    hsitory: "History",
+    hsitory: "Transaction history",
     viewInExchange:"Go to the exchange",
     viewInBrowser:"Go to the block browser",
-    noMore:"No more."
+    noMore:"No more.",
+    updateTip:"Upgrade maintenance!"
+
 
   },
   sidebar: {

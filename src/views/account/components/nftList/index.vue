@@ -866,6 +866,7 @@ export default defineComponent({
 
     const handleSubmit = async () => {
       const data: any = list.value.filter((f: any) => f.flag);
+      console.warn('data', data)
       if (data.length) {
         const count = data.length
         const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion

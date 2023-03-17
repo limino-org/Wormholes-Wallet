@@ -49,6 +49,7 @@
         </div>
       </div>
     </div>
+    <div class="tx-tit lh-30 pl-14 pr-14 mt-20">{{ t("common.hsitory") }}</div>
     <div class="swap-list" v-show="!loading">
       <CollectionCard
         @handleClick="handleView(item)"
@@ -772,6 +773,11 @@ export default {
     margin-top: 12px;
   }
 }
+.tx-tit {
+  height: 30px;
+  color: #848484;
+  background: #F1F3F4;
+}
 .fixed-bottom {
   height: 20px;
   width: 220px;
@@ -889,7 +895,7 @@ export default {
   }
 
   .swap-list {
-    margin-top: 20px;
+
     border-top: 1px solid #e4e7e8;
   }
 }

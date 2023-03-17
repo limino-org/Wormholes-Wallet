@@ -253,7 +253,8 @@ export default {
         hsitory: "交易历史",
         viewInExchange:"去交易所查看",
         viewInBrowser:"去区块浏览器查看",
-        noMore:"没有更多了"
+        noMore:"没有更多了",
+        updateTip:"升级维护中！"
 
 
 
