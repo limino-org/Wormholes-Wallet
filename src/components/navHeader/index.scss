@@ -82,6 +82,15 @@
 }
 
 .slider-con {
+  &.isExchange {
+    .slider-bg {
+      background: rgb(3, 125, 214);
+      color: #fff;
+      .addrName,.account-address ,.account-amount, i,.company-name{
+        color: #fff !important;
+      }
+    }
+  }
 
   .slider-bg {
     .company {
@@ -305,6 +314,114 @@
 .van-sticky--fixed {
   z-index: 10;
 }
+
+
+
+  .tag-list {
+    margin-left: 5px;
+    &.slider {
+      .tag-user {
+        min-width: 30px;
+        width: auto;
+  
+        .user {
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          position: absolute;
+          overflow: hidden;
+          left: -1px;
+          top: 0px;
+  
+          i {
+            font-size: 12px;
+          }
+  
+          .icon-Add {
+            font-size: 14px;
+          }
+        }
+  
+        .tag-label {
+          line-height: 18px;
+          border-radius: 9px;
+          padding-left: 18px;
+  
+          span {
+            font-size: 12PX;
+          }
+        }
+  
+      }
+  
+  
+    }
+  
+    .tag-user {
+      width: 20px;
+      height: 20px;
+  
+      .user {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+  
+        i {
+          font-size: 12px;
+        }
+  
+        .icon-Add {
+          font-size: 13px;
+        }
+      }
+  
+      .tag-label {
+        line-height: 16px;
+        border-radius: 8px;
+        padding-left: 17px;
+        padding-right: 5px;
+  
+        span {
+          font-size: 12px;
+          transform-origin: center center;
+          display: inline-block;
+          line-height: 18px;
+          height: 18px;
+        }
+      }
+  
+      &.type1 {
+  
+        // green
+        .user,
+        .tag-label {
+          background: linear-gradient(270deg, #93EBAD 0%, #52E374 100%);
+        }
+      }
+  
+      &.type2 {
+  
+        // orange
+        .user,
+        .tag-label {
+          background: linear-gradient(90deg, #D9B560 0%, #D3E492 100%);
+        }
+      }
+  
+      &.type3 {
+  
+        // exchange
+        .user,
+        .tag-label {
+          background: linear-gradient(270deg, #21245F 0%, #1E275A 100%);
+        }
+      }
+  
+    }
+  
+  }
+  
+
 @media screen and (max-width:750px) {
   .nav-header-slider-box {
     width: 75%;

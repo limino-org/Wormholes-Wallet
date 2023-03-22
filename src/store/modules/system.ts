@@ -224,7 +224,7 @@ export default {
         commit('UPDATE_TRANSFERUSDRATE', USD)
         commit('UPDATE_TRANSFERCNYRATE', CNY)
       })
-    }
+    },
   },
   getters: {
     // Whether the pop-up window guides the pop-up window

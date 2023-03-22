@@ -256,7 +256,12 @@ export default {
       choice.value ? (choice.value = false) : (choice.value = true);
     };
     const routerTo = (name: any) => {
-      router.push({name})
+      if(name == 'termsOfUse') {
+        window.open('https://limino.com/upload/tst.html')
+      }
+      if(name =='privacyNotice') {
+        window.open('https://limino.com/upload/pn.html')
+      }
     }
     const back = () => {
       router.back()

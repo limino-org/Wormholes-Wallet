@@ -74,7 +74,8 @@ module.exports = {
         pathRewrite: {
           '^/nftApi': ''
         }
-      }
+      },
+  
     }
   },
 

@@ -2,6 +2,8 @@ import { Toast, Notify } from "vant";
 import { ethers, utils } from "ethers";
 import BigNumber from "bignumber.js";
 import eventBus from "@/utils/bus";
+import { checkAuth, getAccountAddr, getCreator, getPeriodById } from "@/http/modules/common";
+
 // @ts-ignore
 window.utils = utils;
 import {
@@ -17,7 +19,6 @@ import { toRaw } from "vue";
 import { TransactionData, TransactionParams } from "./index";
 import { ETH, Token } from "@/utils/token";
 import { getPath } from "@/utils/ether";
-import { checkAuth } from "@/http/modules/common";
 import { useStore } from "vuex";
 import store from "@/store/index";
 import {
@@ -64,7 +65,8 @@ export interface State {
   tranactionList: Array<any>;
   minerTotalProfit: number;
   exchangeTotalProfit: number
-  ethAccountInfo: Object
+  ethAccountInfo: Object,
+  creatorStatus: Object | null
 
 }
 
@@ -241,7 +243,8 @@ export default {
     // miner total profit
     minerTotalProfit: 4856544,
     // exchange total profit
-    exchangeTotalProfit: 2522880
+    exchangeTotalProfit: 2522880,
+    creatorStatus: null
   },
   getters: {
     // The token of the current account
@@ -252,6 +255,9 @@ export default {
     },
   },
   mutations: {
+    UPDATE_CREATORSTATUS(state: State, val: any) {
+      state.creatorStatus = val
+    },
     UPDATE_ETHNETWORK(state: State, val: any) {
       state.ethNetwork = val
       if (val && val.chainId) {
@@ -294,6 +300,7 @@ export default {
     },
     // New account updated the URL of the Wormholes network
     UPDATE_WORMHOLES_URL(state: State, { URL, browser, chainId }: any) {
+      console.warn('URL', URL, browser)
       let flag = false
       if (state.currentNetwork.isMain) {
         if (state.currentNetwork.URL != URL || state.currentNetwork.browser != browser) {
@@ -304,24 +311,21 @@ export default {
       }
       state.netWorkList.forEach(item => {
         if (item.isMain) {
-          if (item.URL != URL || item.browser != browser) {
-            flag = true
-          }
           item.URL = URL;
           item.browser = browser;
         }
       })
-      if (flag) {
-        Toast.loading({
-          message: i18n.global.t('common.asyncData'),
-          duration: 0
-        })
-        setTimeout(() => {
-          if (flag) {
-            location.reload()
-          }
-        }, 1000)
-      }
+      // if (flag) {
+      //   Toast.loading({
+      //     message: i18n.global.t('common.asyncData'),
+      //     duration: 0
+      //   })
+      //   setTimeout(() => {
+      //     if (flag) {
+      //       location.reload()
+      //     }
+      //   },5000)
+      // }
 
 
     },
@@ -755,6 +759,22 @@ export default {
     }
   },
   actions: {
+    async getCreatorStatus({commit, state}: any, address: string) {
+      try {
+       const data = await getCreator(address)
+       const res = await getAccountAddr(address)
+       const provider = ethers.getDefaultProvider(state.currentNetwork.URL)
+       const block = await provider.getBlockNumber()
+       const weight = new BigNumber(block - data.lastNumber).multipliedBy(utils.formatEther(res.snftValue)).toString()
+       const rewardEth = utils.formatEther(data.reward)
+       const profitStr = utils.formatEther(data.profit)
+       const stateData = {...data, account: res, weight, rewardEth, profitStr}
+       console.warn('UPDATE_CREATORSTATUS', stateData)
+       commit('UPDATE_CREATORSTATUS', stateData)
+      }catch(err) {
+        commit('UPDATE_CREATORSTATUS', null)
+      }
+    },
     // Determine if there is an account with an address in the wallet
     hasAccountByAddress({ commit, dispatch, state }: any, address: string) {
       const accountList = toRaw(state.accountList);
@@ -1401,6 +1421,7 @@ export default {
           "latest",
         ]);
         commit('UPDATE_CHAINACCOUNTINFO', accountInfo)
+        return accountInfo
       } catch (err) {
         commit('UPDATE_CHAINACCOUNTINFO', {})
       }

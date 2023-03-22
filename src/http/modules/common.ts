@@ -6,6 +6,8 @@ const serviceApi = '/serviceApi'
 const wormholesApi = isProduct ? '' : '/wormholesApi'
 const exchangeApi = isProduct ?'':'/exchangeApi'
 const exchansApi = isProduct ? '' : '/exchans'
+// Test url
+export const snftUrl = isProduct ? '' : ''
 // Create an exchange with one click
 export const createExchange = (data: any) => {
     return httpGet(`${api}/install/do_conf`, data)
@@ -13,7 +15,7 @@ export const createExchange = (data: any) => {
 
 // Example Query whether the exchange is generated successfully
 export const is_install = (address: string) => {
-    return httpGet(`${api}/install/is_install`, { address: address.toLowerCase() },null,false)
+    return httpGet(`${api}/install/is_install`, { address: address.toLowerCase() },null)
 }
 
 
@@ -95,3 +97,28 @@ export const receiveuseraward = (params: any) => {
 }
 
 
+
+
+
+
+export interface CreatorData {
+    address: string
+    count: number
+    lastEpoch: string
+    lastNumber: number
+    lastTime: number
+    number: number
+    profit: string
+    reward: string
+    timestamp: number
+}
+// specifies the address to query the creator
+export const getCreator = (address: string): Promise<CreatorData> => {
+    return httpGet(`${contractApi}/creator/${address}`, {})
+}
+
+
+// specifies the ID to query the NFT period information of the system, including 16 collection information
+export const getPeriodById = (id: string): Promise<any> => {
+    return httpGet(`${snftUrl}/epoch/${id}`, {})
+}

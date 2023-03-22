@@ -262,7 +262,16 @@ const routes: Array<RouteRecordRaw> = [
             meta: {
               auth: true
             }
-          }
+          },
+          {
+            path: "/settings/snft-creator",
+            name: "snft-creator",
+            component: () => import("@/views/settings/snftCreator/index.vue"),
+            meta: {
+              auth: true,
+              tltle:'Snft Creator'
+            },
+          },
 
         ]
       },

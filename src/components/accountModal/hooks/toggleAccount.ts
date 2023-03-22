@@ -53,6 +53,7 @@ export const useToggleAccount = () => {
           initExchangeData()
         }
       })
+      dispatch('account/getCreatorStatus', wall.address)
 
       handleUpdate()
       return wall

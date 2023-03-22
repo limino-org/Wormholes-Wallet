@@ -9,343 +9,96 @@
 
   <div class="terms-content">
     <div class="f-14 paragraph lh-18 pt-20 pb-20">
-      [Wormholes Foundation/Wormholes Lab Inc.] (the “Company”, “we”, ‘’us‘’,
-      “our”), is committed to protecting and respecting your privacy. This
-      notice (together with our respective Terms of Service) sets out how we
-      will process and use any personal data we collect from you, or that you
-      provide to us. Please read the following carefully to understand how we
-      collect and process your personal information, how we define it, and how
-      we will handle it. By using any of our services, including but not limited
-      to our One-Click NFT Marketplace, Wormholes Digital Wallet, Wormholes
-      Blockchain Explorer, Wormholes Faucet or by purchasing Wormholes
-      blockchain's native ERB tokens (“Tokens”)(together “our Services”) or by
-      accessing our Website [www.wormholes.org/www.wormholes.com], you accept
-      and consent to the practices described in this notice. If you do not wish
-      for your personal information to be used in the manner described within
-      this Notice, you should not access our Services, Website or any subdomains
-      or otherwise provide us with your personal information.
-      <br />
-      The Company is the data controller of your personal information processed
-      in connection with the provision of our Services. In addition, our current
-      or future affiliated companies, their respective parent companies,
-      subsidiaries or joint ventures may also be provided with your data. This
-      Notice applies to the actions and responsibilities of all such entities
-      where they act as data controllers of your personal information.
-      References to we, us or our in this Notice are references to the relevant
-      company responsible for processing your personal information. In some
-      cases, our affiliated entities may operate as data processors on our
-      behalf, and we will ensure that such activities are subject to contractual
-      obligations on privacy, security and other matters in accordance with this
-      Notice. Please ensure that any relevant individuals are made aware of this
-      Notice and the individual rights and information it sets out, prior to
-      providing their information to us or our obtaining their information from
-      another source. If you, or anyone else on your behalf, has provided or
-      provides information on an individual connected to your business to us,
-      you or they must first ensure that you or they have the authority and
-      appropriate legal basis to do so. Please also note:
-      <br /><br />
-      • Unless otherwise defined in this Notice, terms used have the same
-      meaning as in the relevant Terms of Service. <br />
-      • The Notice does not address, and we are not responsible for, the privacy
-      practices of any other parties, or data publicly available on the
-      Wormholes Blockchain. <br />
-      • We do not knowingly collect or ask for data, including personal
-      information, from people under the age of 18 or who is considered a minor
-      according to their jurisdiction. If you are such a person, please do not
-      use our service or send us your data. We delete data that we learn is
-      collected from a person under the age of 18 or who is considered a minor
-      according to their jurisdiction without verified parental consent. <br />
-      The types of information we collect<br />
-      "Personal information" is any information that, either alone or in
-      combination with other data, enables you to be directly or indirectly
-      identified (for example, your name, email address, contact details, or any
-      unique identifier such as an internet protocol (‘IP’) address, device ID
-      or other online identifier). We collect your personal information when you
-      provide it to us. We may also automatically collect certain information
-      when you use, access, or interact with our Website and our Services.
-      <br />
-      Information you provide to us<br />
-      When you use our Services, we may collect the following personal
-      information from you:<br /><br />
-      • first and last name;<br />
-      • date of birth;<br />
-      • nationality and country of residence;<br />
-      • residential address;<br />
-      • email address;<br />
-      • passport number and issuing body; and<br />
-      • your wallet address, any other cryptocurrency wallet address or bank
-      account details and any related transaction details recorded by our
-      Services and/or the Wormholes Blockchain.<br />
-      We may also collect information that you voluntarily provide to us,
-      including when you communicate with us via email, on social media or other
-      channels, when you register for our updates and when you respond to our
-      communications or requests for information. The information you provide
-      may include your name, contact information, title and other personal
-      information about you. <br />
-      Information we may collect automatically through cookies and similar
-      technologies <br />
-      By accessing our Website we may also automatically collect certain data
-      from your browser, including server log information (such as login
-      details, IP address and details on the time spent on various pages of our
-      Website) and device and browser information (such as the type of device,
-      universally unique identifiers (‘UUID’), advertising identifiers (‘IDFA’),
-      type of browser, operating system, hardware and processor information,
-      plug-ins and add-ons).<br />
-      Similar to other websites, our Website may utilise browser cookies (small
-      text files stored on a user’s web browser when you visit a website), web
-      beacons and similar tracking technologies (collectively, Cookies) to
-      collect and store certain information when you use, access, or interact
-      with our Website. We may, for example, use Cookies to collect information
-      about the type of device you use to access the Website or our Services,
-      your browser type, your IP address or other identifier, your general
-      geographic location as indicated by your IP address, features you access
-      and whether and how you interact with content.<br />
-      We use Cookies to remember your preferences and settings, to remember
-      information that you may enter online, to generate aggregate statistics
-      about how people use our Website and Services, to help you share content
-      with others and to improve your experience of our Website and Services.<br />
-      You can choose how Cookies are handled by your device through your browser
-      or device settings, including refusing or deleting all Cookies. If you
-      choose not to receive Cookies at any time, websites may not function
-      properly and certain services may not be provided. Each browser and device
-      is different, so check the settings menu of the browser or device you are
-      using to learn how to change your advertising settings and Cookie
-      preferences. <br />
-      Information we may collect from third party sources <br />
-      We may receive information about you from other sources, including third
-      parties that help us update, expand, and analyse our records, prevent or
-      detect fraud or other suspicious activities and process payments. In
-      addition, our Services may also include integrated content or links to
-      content provided by third parties (such as live chat, social media
-      content, plug-ins and applications) – see the section entitled “Third
-      party services and content” below.<br />
-      How we use the information we collect<br />
-      We may use the information we collect:<br /><br />
-      • to conduct know-your-client and anti-money laundering and other
-      sanctions checks (or to verify those carried out by third party
-      sources);<br />
-      • to provide you with our Services and other services that you request
-      including, as applicable, processing your payment and any other services
-      to be provided to you;<br />
-      • to respond to your enquiries or to any problems that may arise (such as
-      navigating our Services or accessing certain services or features); <br />
-      • to inform you of important changes or developments to our Services or
-      policies and to provide you with technical, support or administrative
-      notifications;<br />
-      • to collect payments from you;<br />
-      • with your separate consent, to send you marketing communications, and
-      other information or materials that may be of interest you or which you
-      have expressed an interest in receiving (and subject to your ability to
-      opt-out from receiving those communications); <br />
-      • to maintain our list of contacts; <br />
-      • to understand how individuals use our Services, including by generating
-      and analysing statistics and user trends, and to evaluate, administer,
-      maintain and improve our Website and Services;<br />
-      • for internal development of new products or services;<br />
-      • for our internal business purposes, including data analysis, invoicing
-      and detecting, preventing, and responding to actual or potential fraud,
-      illegal activities, or intellectual property infringement; <br />
-      • to assess the effectiveness of our promotional campaigns and
-      publications; and<br />
-      • as we believe reasonably necessary, advisable or appropriate to comply
-      with our legal or regulatory obligations and to respond to legal,
-      regulatory, arbitration or government process or requests for information
-      issued by government authorities or other third parties or to protect
-      your, our, or others’ rights.<br /><br />
-      Further, we may aggregate personal and other data captured through our
-      Website so that the data is no longer capable of identifying an
-      individual. We reserve the right to use this aggregated information for
-      the purposes of improving and enhancing our services, generating insights,
-      for use in marketing to other users and current and potential partners and
-      otherwise for the purposes of our business. Provided that such aggregated
-      data does not directly or indirectly identify you as an individual, this
-      data is not considered to be personal information for the purpose of this
-      Notice.<br />
-      How we may share the information we collect<br />
-      We may share the personal information we collect with our current or
-      future affiliated entities, as explained at the beginning of this Notice.
-      <br />
-      We may also disclose information we collect:<br /><br />
-      • To our partners and third party service providers that perform services
-      on our behalf such as marketing companies, web-hosting companies,
-      analytics providers and information technology providers. In these
-      circumstances contractual and other technical and security safeguards will
-      be put in place with the partner or service provider, including to ensure
-      that your personal information is processed only in accordance with this
-      Notice.<br />
-      • To law enforcement, other government authorities, or third parties
-      (within or outside the jurisdiction in which you reside) as may be
-      permitted or required by the laws of any jurisdiction that may apply to
-      us, as provided for under contract, as we deem reasonably necessary to
-      provide legal services or if we believe your actions are inconsistent with
-      our agreements and policies. In these circumstances, we will take
-      reasonable efforts to notify you before we disclose information that may
-      reasonably identify you or your organisation, unless prior notice is
-      prohibited by applicable law or is not possible or reasonable in the
-      circumstances. <br />
-      • To service providers, advisors, potential transactional partners, or
-      other third parties in connection with the consideration, negotiation, or
-      completion of a transaction in which we are acquired by or merged with
-      another company or we sell, liquidate, or transfer all or a portion of our
-      assets. Upon completion of such a transaction, your personal information
-      will continue to be processed in accordance with this Notice, except as
-      otherwise agreed by you or permitted by applicable law.<br />
-      • To partners, financial institutions or service providers who may request
-      such information in connection with providing services to us, including
-      banking services, and only where we enter into an agreement with such
-      institutions to limit their use and handling of personal information in
-      accordance with this Notice.<br />
-      • To our employees where required or necessary for the performance of
-      their duties and in line with the reasons for processing. Our employees
-      are required to keep that information confidential and are not permitted
-      to use it for any purposes other than to enable you to use the Services or
-      to deal with requests which you submit to us.<br />
-      We do not sell, rent, or otherwise share personal information that
-      reasonably identifies you or your organisation with unaffiliated entities
-      for their independent use except as expressly described in this Notice or
-      with your prior permission. We may share information that does not
-      reasonably identify you or your organisation as permitted by applicable
-      law.<br />
-      When you voluntarily make your personal information available online in an
-      environment shared by third parties (for example, on messaging
-      applications, social media, message boards, web logs, or emails), that
-      personal information may be viewed, saved, collected, heard, used and/or
-      shared by others. We are not responsible for any unauthorised third party
-      use of information provided in these contexts. Please be mindful whenever
-      you share any information in such environments. <br />
-      Grounds for using your personal information<br />
-      We rely on the following legal grounds to process your personal
-      information, namely:<br /><br />
-      • Necessity for performance of a contract – We may need to collect and use
-      your personal information to enter into a contract with you or to perform
-      a contract that you have with us, for example, when you provide personal
-      information to us to use our Services;<br />
-      • Legal obligation – We may process your personal information as may be
-      required to comply with any legal or regulatory obligations that may apply
-      to us, for instance under anti-money laundering and sanctions regimes;<br />
-      • Legitimate interests – We may use your personal information for our
-      legitimate interests to improve our Services. Consistent with our
-      legitimate interests and any consents that may be required under
-      applicable laws, we may use technical information as described in this
-      Notice and use personal information for our marketing purposes provided
-      that those interests are not outweighed by your interests, rights and
-      freedoms.<br />
-      • Consent - To withdraw your consent to such use, you can contact
-      [dataprivacy@wormholes.org/dataprivacy@wormholes.com]. The electronic
-      marketing communications we send to you also contain opt-out mechanisms
-      that allow you to opt-out from receiving those communications, update your
-      contact information or change your preferences at any time. You may be
-      able to disable the sharing of location information in your browser
-      settings. Where required by applicable laws, we will rely on your consent
-      for direct marketing and to collect information from your device or
-      computer.
-      <br /><br />
-      Third party services and content<br />
-      Our Website and Services may include integrated content or links to
-      content provided by third parties (such as video materials, social media
-      content, plug-ins and applications). <br />
-      Please note that the websites, applications and services of third parties
-      (including affiliates, partners, sponsors, advertisers or other persons)
-      will be governed by the privacy settings, policies, and/or procedures of
-      the third party, which may differ from this Notice. This Notice does not
-      address, and we are not responsible for or able to control, the privacy,
-      security, or other practices of such third parties. <br />
-      Protection and storage of the information we collect<br />
-      We deploy administrative, technical and physical safeguards designed to
-      comply with applicable legal requirements and to safeguard the information
-      that we collect. This includes, when required or appropriate and feasible,
-      obtaining written assurances from third parties that may access your
-      personal information that they will protect the information with
-      safeguards designed to provide a level of protection equivalent to that
-      adopted by us.
-      <br />
-      However, no information system can be 100% secure. So, we cannot guarantee
-      the absolute security of your information. Moreover, we are not
-      responsible for the security of information you transmit to us over
-      networks that we do not control, including the internet and wireless
-      networks.<br />
-      We may store the information we collect in on our servers both cloud based
-      or in servers located in countries where we or our service providers have
-      facilities. Therefore, we may transfer information to countries outside of
-      your country of residence which may have data protection laws and
-      regulations that differ from those in your country. <br />
-      We retain the information we collect for no longer than is reasonably
-      necessary to fulfil the purposes for which we collect the information and
-      to comply with our legal obligations. <br />
-      Your choices and rights<br />
-      To withdraw your consent to the use of your information as described in
-      this Notice you can contact us through the methods stated below. Please
-      note that in some circumstances this may mean that we can no longer
-      provide our Services to you. <br />
-      If you no longer wish to receive marketing communications from us, you can
-      also let us know via through the methods stated below. The electronic
-      marketing communications we send to you also contain opt-out mechanisms
-      that allow you to opt-out from receiving those communications, update your
-      contact information or change your preferences at any time. We will honour
-      your choice and refrain from sending you such announcements. You may also
-      opt back in to receive those communications at any time. <br />
-      Under local law, you may have certain rights regarding your personal
-      information that we have collected, including that EU residents have the
-      right to request: (i) access to your personal information, (ii)
-      rectification or erasure of personal information, (iii) restriction of
-      processing concerning you, (iv) objection to processing that is based upon
-      our legitimate interests, and (v) data portability to other service
-      providers. Your ability to exercise these rights will depend on a number
-      of factors and, in some instances, we will not be able to comply with your
-      request, for example because we have legitimate grounds for not doing so
-      or where the right doesn’t apply to the particular information we hold on
-      you. Where so entitled to access to your personal information, you will
-      not have to pay a fee unless your request is clearly unfounded, repetitive
-      or excessive (upon which we may charge a reasonable fee or refuse to
-      comply with your request). If you would like to discuss or exercise the
-      rights you may have, you can contact us through the methods stated below.
-      <br />
-      It is important that any personal information we hold about you is
-      accurate and current<br />
-      Please keep us informed if your personal information changes whilst we
-      continue to retain such information. We encourage you to contact us to
-      update or correct your information if it changes or if you believe that
-      any information that we have collected about you is inaccurate or out of
-      date. You can also ask us to see what personal information we hold about
-      you and to erase your personal information if it is no longer required.
-      You may also tell us if you object to our use of your personal
-      information.<br />
-      How to contact us<br />
-      We welcome your enquiries and comments. <br />
-      If you would like to contact us regarding this Notice or to withdraw your
-      consent to this Notice or any aspect of it, please send us an email at
-      dataprivacy@wormholes.org/dataprivacy@wormholes.com.<br />
-      We try to respond to all legitimate enquiries within 30 days. Occasionally
-      it may take us longer if your request is particularly complex or you have
-      made a number of requests. In this case, we will notify you and keep you
-      updated.<br />
-      Complaints<br />
-      We are committed to working with you to obtain a fair resolution of any
-      complaint or concern about your privacy. If you would like to contact us,
-      please use the methods stated above.<br />
-      If, however, you believe that we have not been able to assist with your
-      complaint or concern, you may have the right to complain to the data
-      protection authority/regulator, as applicable, in your jurisdiction.
-      <br />
-      Changes to this Notice<br />
-      We may update this Notice from time to time and we encourage you to
-      periodically review this Notice. If we make any material changes to this
-      Notice regarding the way we collect, use, and/or share the personal
-      information that you have provided, we will notify you by posting notice
-      of the changes in a clear and conspicuous manner on our Website or, if we
-      hold your email address, by email.<br />
-      The use of certain of our Services may also be governed by other
-      applicable terms and policies regarding privacy and the sharing of
-      personal information, which supplement, and should be reviewed alongside,
-      this Notice.<br />
-      Governing Law & Dispute Resolution<br />
-      This Notice shall be governed by, and construed, in accordance with the
-      laws of British Virgin Islands, without regard to any conflict of law’s
-      provisions. In the event of any disputes, controversies, or differences
-      arising out of or in connection with this Notice (hereinafter, "Dispute"),
-      the Dispute shall be submitted to the non-exclusive jurisdiction of the
-      courts of British Virgin Islands.<br />
-      <br />
+     <div class="text-center text-bold"> Terms Of Service</div>
+These terms of service (hereinafter, "Terms") create a legally binding agreement between you, as an end user of our services and Wormholes Lab Inc. (together, the "Company"). You will be referred to through second-person pronouns such as "you", "your" and "yours". If you accept or agree to the Terms on behalf of a company, organisation or other legal entity (a “Legal Entity”), you represent and warrant that you have the authority to bind that Legal Entity to the Terms and, in such event “you”, “your” and “yours” will refer and apply to that company or other legal entity. We or the Company will be referred to with pronouns such as "us," "our" and "ours". Collectively, you and the Company may be referred to as the "Parties" and individually as "Party". <br>
+These Terms govern the access and use of the Wormholes administration portal Digital Wallet 1.0, Wormholes Blockchain Explorer, and Wormholes Faucet (together, the “Services”) and the website: www.wormholes.com and associated sub-domains (together, the “Websites”) (The Services and Websites together, the “Applications”).<br>
+Upon accessing, downloading, installing, or otherwise using any of the Applications, these Terms become effective and you agree to comply with and be bound by these Terms and also to comply with all laws, rules and regulations applicable to your access and use of the Applications. You hereby represent and warrant that you (i) are lawfully able to enter into a binding contract; (ii) have not previously been suspended or removed from using the Applications and (iii) have sufficient power and authority to enter into these Terms and in doing so will not breach any other agreement or obligation to which you are a party. If you are using the Applications for a legal entity, you also represent and warrant that (a) such legal entity is duly incorporated and existing under the laws of the jurisdiction in which it is incorporated; and (b) you have the authority to act for and bind that legal entity. If you do not agree or cannot make the above representations or warranties, you must cease the use of the Applications immediately.<br>
+1. LICENSE: When you lawfully access the Applications, we grant you, subject to these Terms, a non-exclusive, non-transferable, limited, revocable license to use the Applications ("License") for their intended purpose. This License may not be transferred to any third parties without express, written permission from the Company. This License shall be applicable to all lawful users of the Applications unless a separate written agreement has been executed between the user and the Company.<br>
+In your use of any testnet within the Applications you may accumulate “testnet tokens” or tokens with similar name and nature, which are not, and shall never convert to or accrue to become "mainnet tokens" of the Wormholes Blockchain developed by Wormholes Lab Pte. Ltd. or any other tokens, virtual currency or virtual asset. Testnet tokens are virtual items with no monetary value. Testnet tokens do not constitute any currency or property of any type and are not redeemable, refundable or eligible for any fiat or virtual currency, virtual asset or anything else of value. The testnet tokens are not transferable between users outside of the testnet, and you may not attempt to sell, trade or transfer any testnet tokens outside of the testnet, or obtain any manner of credit using any testnet tokens. Any attempt to sell, trade or transfer any testnet tokens outside of the testnet will be null and void. The Company may, in its sole discretion, decide to delete, wipe or otherwise remove the testnet at any time without notice, including, without limitation, the change of the presence, amounts or any other conditions applicable to the testnet tokens, without any liability to you or other testnet users. The Company does not guarantee that testnet tokens will continue to be offered indefinitely or for a specific length of time and you may not rely upon the continued availability of any testnet tokens. If the testnet expires or the Company decides to remove it, you acknowledge and agree that your access to and use of your testnet tokens will be removed, and all accrued testnet tokens will be deleted from the testnet. Testnet tokens will not be converted into any future rewards, tokens or assets of any form offered by the Company or the Applications. <br>
+2. DATA PROTECTION: You acknowledge and agree that to the extent the Company collects, holds or processes any personal information through your use of the Applications, we are acting as the data controller for the purposes of applicable data privacy laws. Additional terms related to data processing are included in our Privacy Notice that also form part of these Terms. You must obtain all necessary consents from the relevant individual to enable us to collect, use, hold and process that information in accordance with these Terms and the Privacy Notice
+3. INTELLECTUAL PROPERTY: You agree that the Applications and all deliverables provided under the Terms (including all customisations, updates, upgrades, modifications, derivative work, any sales, marketing and promotional materials relating thereto and all documents and other copies and tangible embodiments of all of the foregoing) are the property of the Company or the Company has been granted licences to use the same, including all the underlying copyrights, trademarks (including our logos, our product or service names or our slogans), trade secrets, patents, and other intellectual property rights thereto (hereinafter, "Company IP"). You agree that the Company owns all rights, title and interests in and to the Company IP and that you will not use the Company IP for any other purpose except the intended purpose. You agree not to reproduce, imitate or distribute the Company IP in any way, in whole or in part, including electronically or via registration of any new trademarks, trade names, service marks, patents, copyrights or uniform resource locators (URLs) in connection with the Company IP, without prior express written permission from the Company. 
+All rights, title, benefits and interests in and to any data collected by us from your use of the Applications shall be and remain the property of the Company.<br>
+Except for rights expressly granted under these Terms nothing in these Terms shall be construed to assign or grant to you, and you shall not claim, any rights, title, ownership or interest in and to the Applications, and/or any services and deliverables provided under the Terms, including all modifications, upgrades, derivative works and all intellectual property relating thereto, or any sales, marketing and promotional materials relating thereto.<br>
+Your use of the Applications and any other services may be subject to additional restrictions as set out in the relevant terms applicable to such services, if any.<br>
+The Company shall have a royalty-free, worldwide, irrevocable, perpetual licence to use and incorporate into the Applications and its services any suggestions, enhancement requests, recommendation or other feedback provided by you relating to the Applications.<br>
+4. ACCEPTABLE USE:  You agree not to, and not to permit any person to, use the Applications for any other purpose or any purpose prohibited under this clause. You agree not to use the Applications in any way that could cause loss or damage to the Company’s website, software, services, servers or the general business of the Company. The information or services provided by the Applications is not intended for distribution or use by any person or entity in any jurisdiction or country where such distribution or use would be contrary to laws or regulations or which would subject us to any registration requirement within such jurisdiction or country. Accordingly, any persons who choose to access or use the Applications from other locations do so on their own initiative and are solely responsible for compliance with local laws and regulations, if and to the extent local laws and regulations are applicable.<br>
+You further agree not to, and not to permit any person to, use or access the Applications:<br>
+i) To harass, abuse, annoy or threaten others or otherwise violate any person's or entity’s legal rights with or without using any information obtained from the Applications;<br>
+ii) To harass, abuse, annoy or threaten any of our employees or agents engaged by us in providing any part of the services of the Applications to you;<br>
+iii) To violate any intellectual property rights, including, but not limited to, patent, trademark, trade secret, copyright, of the Company, the Applications or any third party;<br>
+iv) To upload, transmit or otherwise disseminate any computer viruses, trojan horses, worms, logic booms or other software that may harm, or cause loss or damage to the property of the Company or another;<br>
+v) To interfere with, disrupt or create an undue burden on the Applications or services provided by the Applications;<br>
+vi) To engage in any automated use of the Applications such as using scripts to send comments or messages, or using any data mining, robots or similar data gathering and extraction tools;<br>
+vii) To copy, reverse engineer, decompile, disassemble, attempt to derive the source code of, modify, create derivative works of, re-post or re-publish to other applications or websites, change, or distribute, license, sub-license, transfer, reproduce, distribute, publicly perform or publicly display or otherwise make available to any third party any aspect of the Applications and the Company IP in any manner, except as expressly permitted by the Company;<br>
+viii) To modify the Applications, remove any proprietary rights notices or markings, or otherwise make any derivative works based upon the Applications;<br>
+ix) To gain or attempt to gain unauthorized access to, interfere with, damage, or disrupt any parts of the Applications, the server(s) on which the Applications are stored, or any server, computer or database connected to the Applications;<br>
+x) To trick, defraud or mislead us or other users, especially in any illegal or authorized attempt to learn or get sensitive account information such as user passwords;<br>
+xi) To engage in or create any unlawful gambling, sweepstakes, or pyramid scheme;<br>
+xii) To publish or distribute any explicit, obscene or defamatory material;
+xiii) For the purpose of exploiting, harming, or attempting to exploit or harm minors in any way by exposing them to inappropriate content;<br>
+xiv) To publish or distribute any material that incites violence, hate, or discrimination towards any group;<br>
+xv) To violate any applicable laws, rules or regulations (including any laws regarding the export of data or software to and from the United States or other countries), any contract, or commit a tort;<br>
+xvi) To use the Applications in any manner that could disable, overburden, damage, or impair the Applications or interfere with any other party’s use of the Applications, including their ability to engage in real time activities through the Applications;<br>
+xvii) To use the Applications or any of Company's services for transmitting or procuring advertising or promotional material without our prior written consent, or illegal spam activities, including gathering email addresses and personal information from others or sending any mass advertising, commercial or promotional emails.<br>
+xviii) To circumvent, disable or otherwise interfere with security-related features of the Applications, including features that prevent or restrict the use or copying of any content or enforce limitations on the use of the Applications and/or the content contained therein;
+xix) To send, knowingly receive, upload, download, use, or re-use any material which does not comply with these Terms;<br>
+xx) To impersonate or attempt to impersonate the Company or any of the Websites, any of its employee, another user, or any other person or entity (including, without limitation, by using e-mail addresses or screen names associated with any of the foregoing) without proper authorization; 
+xxi) To make improper use of our support services or submit false reports of abuse or misconduct; <br>
+xxii) To access or use any part or component of the Applications in any way that could damage the reputation of the Company or its affiliates or the goodwill or other rights associated with the Applications; and<br>
+xxiii) to use any of the Company IP or any materials incidental thereto to develop any products or services (including any software, hardware or firmware) that is competitive with the Applications. Any such modifications shall immediately become the sole and exclusive property of the Company, and the Company shall own all right, title and interests to such modified products, and any and all copyrights, patents and trade secrets related thereto.
+
+By accessing and using the Applications, you agree that the Company shall have the right to unilaterally determine whether you have violated any of the above covenants and take actions to apply relevant rules without receiving your consent or giving prior notice to you. Such actions that the Company may take include but are not limited to:
+Freezing, suspending or closing your account<br>
+reporting the incident(s) to authorities<br>
+publishing the alleged violations and actions that have been taken<br>
+5. REVERSE ENGINEERING & SECURITY: You agree not to undertake any of the following actions:<br>
+a) Reverse engineer, or attempt to reverse engineer or disassemble the Applications or any code within or related to the Applications;<br>
+b) Violate the security of our software products or any code within or related to the Applications through any unauthorized access, circumvention of encryption or other security tools, data mining or interference to any host, user or network;<br>
+c) Copy or otherwise distribute copies of our software products or any code within or related to the Applications unlawfully, such as through any peer-to-peer network or other intellectual property circumvention tool.<br>
+6. MAINTENANCE: The Company may find the need from time to time to make available to all license holders updates for the Applications. The License extends to software updates for the purpose of maintenance and support.<br>
+7. ADDITIONAL TERMS: There may be other written agreements governing your relationship with us. Nothing contained herein is intended to restrict the terms of any other written agreement. Instead, all relevant documents shall be construed as broadly as possible.<br>
+8. TERMINATION: The Company shall have the right, in its sole discretion, to immediately modify, suspend or terminate, temporarily or permanently, your right to use and access the Applications at any time for any or no reasons with or without prior notice without any liability to you, including but not limited to the following situations: (i) you are in material breach of any provision of these Terms, (ii) you are in actual or potential breach of any legal or regulatory requirements, or (iii) you have provided false, incorrect or misleading information, or otherwise withheld information, in either case which is material to the performance of your obligations hereunder.  If you breach these Terms at any time, you will become legally liable and the Company shall have the right to immediately suspend or terminate your right to use and access the Applications without any notice being given. After any termination of these Terms, sections 2, 3, 4, 5, 8, 11, 12 and 13 of these Terms shall remain in effect and shall survive termination. Upon termination of these Terms, You MUST destroy any and all copies of our software products or any code within or related to the Applications.
+9. SERVICE WITHDRAWAL OR INTERRUPTIONS: The Company reserves the right to withdraw or amend the Applications from time to time, and any service or material we provide on the Applications, in our sole discretion without notice. The Company may need to interrupt your access to the Applications to perform maintenance or emergency services on a scheduled or unscheduled basis. We do not guarantee that the Applications or any content on them will always be available or not be interrupted. You agree that your access to the Applications may be affected by our withdrawal or unanticipated or unscheduled downtime of the Applications, for any reason, but that the Company shall have no liability to you for any damage or loss caused as a result of such withdrawal or downtime. 
+10. THIRD PARTY WEBSITES OR RESOURCES
+The Applications may contain links to third-party websites or resources. We provide these links only as a convenience and we are not responsible for the content, products, or services on or available from those websites or resources, or links displayed on such websites. To the extent permitted under applicable law, you acknowledge sole responsibility for and assume all risk arising from, your use of any third-party websites or resources, we do not endorse or support any third-party website content nor are we responsible for what is contained on such third party websites.
+Through the use of web services and APIs, the Applications may interact with a range of third-party service features. We do not make any warranty or representation on the availability or performance of those features. If a third-party feature provider ceases to provide that feature or creases to make that feature available on reasonable terms, we may cease to make that feature available to you. If we exercise our right to cease the availability of a third-party feature, you are not entitled to any refund, discount, or other compensation.
+11. WARRANTIES, LIABILITY AND DISCLAIMERS
+TO THE EXTENT PERMITTED UNDER APPLICABLE LAW, THE APPLICATIONS ARE PROVIDED ON AN “AS IS” AND “AS AVAILABLE” BASIS, WITHOUT WARRANTY OR REPRESENTATION OF ANY KIND TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE DISCLAIM AND EXCLUDE ALL IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTIES OF NON-INFRINGEMENT, AND DO NOT WARRANT THAT THE APPLICATIONS WILL BE:
+UNINTERRUPTED, SECURE, OR ERROR-FREE (INCLUDING FREE FROM VIRUSES OR OTHER MALICIOUS CODE);
+CAPABLE OF QUIET ENJOYMENT, OF MERCHANTABLE QUALITY, FIT FOR A PARTICULAR PURPOSE, OR NON-INFRINGING; OR
+COMPATIBLE WITH YOUR DEVICE.
+TO THE FULLEST EXTENT PERMITTED BY LAW, WE ARE NOT LIABLE FOR ANY LOSS, LOST PROFITS, LOSS OF DATA, LOSS OF GOODWILL, COSTS, COSTS OF SUBSTITUTE SERVICES, LIABILITY, EXPENSES (INCLUDING REASONABLE ATTORNEY/CLIENT FEES) OR DAMAGES (INCLUDING DIRECT OR INDIRECT, INCIDENTAL, SPECIAL, PUNITIVE, EXEMPLARY OR CONSEQUENTIAL) ARISING FROM OR IN RELATION TO:
+YOUR ACCESS TO OR USE OF (OR INABILITY TO ACCESS OR USE) OUR APPLICATIONS;
+ANY COMMUNICATIONS, INTERACTIONS, OR MEETINGS WITH OTHER USERS OF OUR APPLICATIONS OR PERSONS WITH WHOM YOU COMMUNICATE OR INTERACT AS A RESULT OF YOUR USE OF OUR APPLICATIONS;
+A SUSPENSION OR OTHER ACTION TAKEN WITH RESPECT TO YOUR ACCOUNT;
+ANY ACT OR OMISSION OF A THIRD PARTY, INCLUDING NEGLIGENT, MALICIOUS OR WILFUL ACTS OR OMISSIONS;
+TELECOMMUNICATIONS UNAVAILABILITY, INTERRUPTION, DELAY, FAILURE, OR FAULT;
+OUR DECISION TO CHANGE, MODIFY, SUSPEND OR DISCONTINUE ANY OF THE APPLICATIONS;
+MAINTENANCE OR REPAIRS CARRIED OUT BY US OR ANY THIRD PARTY SERVICE PROVIDER IN RESPECT OF ANY SYSTEMS USED IN CONNECTION WITH THE PROVISION OF THE APPLICATIONS, WHETHER THESE LEAD TO DELAYS OR DISRUPTIONS IN THE APPLICATIONS OR NOT; OR
+ANY FORCE MAJEURE EVENT,
+WHETHER BASED ON WARRANTY, CONTRACT, TORT (INCLUDING NEGLIGENCE), PRODUCT LIABILITY, OR ANY OTHER LEGAL THEORY, AND WHETHER OR NOT WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, EVEN IF A LIMITED REMEDY SET FORTH HEREIN IS FOUND TO HAVE FAILED OF ITS ESSENTIAL PURPOSE. SHOULD A COURT NOT ALLOW THE EXCLUSION OR LIMITATION OF LIABILITY IN THESE TERMS, THE FOREGOING LIMITATION OF LIABILITY SHALL APPLY TO THE FULLEST EXTENT PERMITTED BY LAW.
+YOU ASSUME ALL RISKS RELATING TO YOUR USE OF THE APPLICATIONS WHICH INCLUDES THE RISKS GENERALLY LINKED TO THE USE OF THE INTERNET, MOBILE OR DESKTOP APPS, BLOCKCHAIN TECHNOLOGY, CYBERSECURITY, LICENSES, MARKETPLACES, REGULATION, AND YOUR ONLINE OR OFFLINE COMMUNICATIONS AND INTERACTIONS WITH OTHER USERS OF THE APPLICATIONS AND WITH OTHER PERSONS WITH WHOM YOU COMMUNICATE OR INTERACT AS A RESULT OF YOUR USE OF THE APPLICATIONS. YOU UNDERSTAND THAT WE DO NOT SCREEN OR INQUIRE INTO THE BACKGROUND OF ANY USERS OF THE APPLICATIONS. WE MAKE NO REPRESENTATIONS OR WARRANTIES AS TO THE CONDUCT OF USERS OF THE APPLICATIONS. YOU AGREE TO TAKE REASONABLE PRECAUTIONS IN ALL COMMUNICATIONS AND INTERACTIONS WITH OTHER USERS OF THE APPLICATIONS AND WITH OTHER PERSONS WITH WHOM YOU COMMUNICATE OR INTERACT AS A RESULT OF YOUR USE OF THE APPLICATIONS, PARTICULARLY IF YOU DECIDE TO MEET OFFLINE OR IN PERSON.
+EXCEPT TO THE EXTENT PERMITTED BY LAW, NOTHING IN THESE TERMS OF SERVICE HAS THE EFFECT OF CONTRACTING OUT OF ANY CONSUMER PROTECTION LAW THAT CANNOT BE EXCLUDED. TO THE EXTENT OUR LIABILITY CANNOT BE EXCLUDED BUT CAN BE LIMITED, OUR LIABILITY WILL BE LIMITED TO US$100.
+NOTWITHSTANDING ANYTHING TO THE CONTRARY CONTAINED HEREIN, IN NO EVENT SHALL THE MAXIMUM AGGREGATE LIABILITY OF WORMHOLES ARISING OUT OF OR IN ANY WAY RELATED TO THESE TERMS OF SERVICE, EXCEED THE GREATER OF (A) US$100 OR (B) THE AMOUNT RECEIVED BY WORMHOLES FOR ITS SERVICES DIRECTLY RELATING TO THE ITEMS THAT ARE THE SUBJECT OF THE CLAIM. THE FOREGOING LIMITATIONS WILL APPLY EVEN IF THE ABOVE STATED REMEDY FAILS OF ITS ESSENTIAL PURPOSE.
+12. INDEMNITY
+TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW YOU INDEMNIFY US AND OUR RESPECTIVE PAST, PRESENT AND FUTURE EMPLOYEES, OFFICERS, DIRECTORS EQUITY HOLDERS AND ASSIGNS FROM AND AGAINST ALL ACTUAL OR ALLEGED CLAIMS, DAMAGES, AWARDS, JUDGMENTS, LOSSES, LIABILITIES, OBLIGATIONS, PENALTIES, INTEREST, FEES, EXPENSES (INCLUDING, WITHOUT LIMITATION, ATTORNEYS’ FEES AND EXPENSES), AND COSTS (INCLUDING, WITHOUT LIMITATION, COURT COSTS, COSTS OF SETTLEMENT, AND COSTS OF PURSUING INDEMNIFICATION AND INSURANCE), OF EVERY KIND AND NATURE WHATSOEVER WE SUFFER OR INCUR AS A DIRECT OR INDIRECT RESULT OF:
+YOUR ACCESS AND USE OF THE APPLICATIONS;
+YOUR BREACH OF THESE TERMS; AND
+ANY USER CONTENT YOU MAY PROVIDE. 
+13. GENERAL
+These Terms constitute the entire and exclusive understanding and agreement between us and you in respect to any matter raised in these Terms, and these Terms supersede and replace any and all prior oral or written understandings or agreements between us and you with respect to any matter raised in these Terms.
+You may not assign or transfer any of your rights under these Terms without our prior written permission. Any attempt by you to assign or transfer these Terms without such permission, will be null and void. We may freely assign or transfer these Terms including any right or obligation set out in these Terms without restriction, and the transferor or assignor shall not remain jointly and severally liable. Subject to the foregoing, these Terms will bind and inure to the benefit of the parties, their successors and permitted assigns.
+If any part of these Terms is, or becomes, legally invalid or unenforceable, that provision will be enforced to the maximum extent permissible and the other provisions of these Terms will remain in full force and effect.
+If we do not exercise or enforce any rights available to us under these Terms that does not constitute a waiver of those rights. The waiver of any such right or provision will be effective only if in writing and signed by a duly authorised representative of us. Except as expressly set forth in these Terms, the exercise by either party of any of its remedies under these Terms will be without prejudice to its other remedies under these Terms or otherwise.
+Our shareholders, subsidiaries, affiliates, officers, directors, agents, subsidiaries, joint ventures, and employees will have the benefit of our rights, powers and protections in these Terms and any one of them can enforce any of our rights, powers and protections as if they were a party to these Terms.
+Nothing in these Terms shall be deemed or is intended to be deemed, nor shall it cause, either you or us to be treated as partners, joint ventures or as the agent of the other.
+Neither us, nor any other party involved in creating, producing, or delivering the Applications shall be liable for any failure to perform its obligations under these Terms to the extent caused by Force Majeure provided that the affected party:
+notifies the other party as soon as practicable;
+uses best efforts to overcome the Force Majeure; and
+continues to perform its obligations to the extent practicable.
+These Terms (and any Dispute) shall be governed by and construed in accordance with, in all respects including as to validity, interpretation and effect, the laws of the British Virgin Islands. Questions about the Terms should be sent to support@wormholes.com.
+In relation to any dispute, controversy or claim arising out of, relating to, or in connection with these Terms or the Applications including with respect to applicability, breach, termination, validity or enforceability thereof (each a Dispute) the parties irrevocably submit to the exclusive jurisdiction of the courts of the British Virgin Islands and waive any objections to such Dispute being heard in such courts on the grounds of venue or on the grounds that the Dispute has been brought in an inconvenient forum. 
+Last Updated: 16 August 2022
     </div>
   </div>
 </template>

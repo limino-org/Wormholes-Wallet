@@ -54,6 +54,7 @@ export default {
       }, 3000);
     };
     onBeforeMount(async () => {
+
       localStorage.setItem('connect-wallet-url', location.href)
       sessionStorage.setItem('connect-wallet-url', location.href)
       commit("system/UPDATE_TRANSFERUSDRATE", 0.5);
@@ -72,7 +73,7 @@ export default {
           browser: "https://www.wormholesscan.com/#/",
         });
         clearTimeout(time2);
-      }, 1000);
+      },0);
       let time = setTimeout(() => {
         // @ts-ignore
         document.getElementById("loading-page-box").style.display = "none";

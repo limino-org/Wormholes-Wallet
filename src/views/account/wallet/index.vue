@@ -479,7 +479,7 @@ export default {
       eventBus.on('guideSnftModal', (n) => {
         active.value = n
       })
-      
+      dispatch('account/getEthAccountInfo')
       dispatch("transfer/clearTx");
       dispatch("account/updateBalance");
       dispatch("account/getExchangeStatus").then((res) => {

@@ -1,14 +1,18 @@
 import axios, { Method } from 'axios'
 import { Toast } from 'vant'
 const service = axios.create({
+    // Set the baseur address. If you cross domains through proxy, you can directly fill in the base address
     baseURL: '/',
+    // Define unified request headers
     headers: {
        "Content-Type": "application/json; charset=UTF-8"
     },
-    timeout: 10000, 
-
+    // Configure request timeout
+    timeout: 60000, 
+    // If jsonp is used, this parameter can be configured to bring cookie credentials. If it is proxy or CORS, it does not need to be set
+    // withCredentials: true
 })
-
+// Request interception
 service.interceptors.request.use(config => {
     return config
 })
@@ -23,23 +27,23 @@ service.interceptors.response.use(
       }
     },
     error => {
-      console.log('error-----', error.message)
-      Toast(error.message || `Fail code:${error.code}`)
+      console.error('request: ', JSON.stringify(error))
+      // Toast(error.message || `Request Error code:${error.code}`)
       return Promise.reject(error)
     }
   )
   
 /**
- * The core function that handles all the requested data and scales horizontally
- * @param {url} Request the address
- * @param {params} required parameter
- * @param {options} Request configuration, for the current request
+ * Core function, which can handle all request data and make horizontal expansion
+ * @param {url} Request address
+ * @param {params} Request parameters
+ * @param {options} Request configuration for the current request；
  */
- export function request(url: string,params: any,method: Method, headers:Headers,hasToast:Boolean = true){
+ export function request(url: string,params: any,method: Method, headers:Headers){
     let data = {}
-        // Get requests use the PARAMS field
+        // Get request uses params field
         if(method =='get')data = {params}
-        // Post requests use the data field
+        // Use data field for post request
         if(method =='post')data = {data:params}
         const newParams: any = {
             url,
@@ -52,15 +56,15 @@ service.interceptors.response.use(
           if(code == '200' || code == 'true' || code == 'false' || code == true || !code) {
             return Promise.resolve(res)
           }
-          hasToast ? Toast(msg || 'Fail'):''
+          Toast(msg || 'Interface request failed')
           return Promise.reject(res)
         })
 }
-// GET
-export function httpGet(url:string,params: any = {}, headers: any = null, hasToast = true){
-    return request(url,params,'get',headers,hasToast)
+// Encapsulate get request
+export function httpGet(url:string,params: any = {}, headers: any = null){
+    return request(url,params,'get',headers)
 }
-// POST
-export function httpPost(url: string,params: any = {}, headers: any = null, hasToast = true){
-    return request(url,params,'post',headers,hasToast)
+// Encapsulate post request
+export function httpPost(url: string,params: any = {}, headers: any = null){
+    return request(url,params,'post',headers)
 }

@@ -211,10 +211,29 @@ export default {
     viewInExchange:"Go to the exchange",
     viewInBrowser:"Go to the block browser",
     noMore:"No more.",
-    updateTip:"Upgrade maintenance!"
+    updateTip:"Upgrade maintenance!",
+		marketplace:"Marketplace",
+    validator:"Validator",
 
 
   },
+  creatorSnft:{
+		totalPeriod:"As the sum of the successful creation period of Creator",
+		totalProfit:"Creator continuously receives 10% of the total amount of the royalty trading quota",
+		totalTimes:"The total number of times you were successfully elected as Creator",
+		totalAward:"Creator, as the initiator of the transaction, directly gets the sum of the rewards in each period",
+		totalWeight:"Current block height * S-NFT value.",
+		labelPeriod:"Create the total number of phases",
+		labelProfit:"Total revenue of elected Creator",
+		labelTimes:"Total number of times that you have been elected Creator",
+		labelAward:"Total reward for being elected Crator",
+		labelWeight:"Creator Withhold name weight",
+		tip:"Buy S-NFT through the {link1} to increase the weight to becomeing Creator, Go to the {link2} to see more details",
+		exchange:"Exchange",
+		browser:"Browser",
+		creator:"Creator"
+
+	},
   sidebar: {
     imported: 'Imported',
     send: 'Send',
@@ -235,7 +254,8 @@ export default {
     minerspledge: 'Become a Validator',
     aboutAs: "Wormholes Official Website",
     receiveAward: "receive award",
-    help: 'Help Center'
+    help: 'Help Center',
+    snftCreator:"S-NFT Creator"
 
   },
   copy: {
@@ -673,7 +693,7 @@ export default {
     useface: "Sign in with Face ID ?",
     userAgreement:
       "I have read and accept Wormholes the Terms of Service",
-    termsofuse: 'Terms of Use',
+    termsofuse: 'Terms Of Service',
     and: 'and',
     privacyPolicy: 'Privacy Notice ',
     create: "Creat an Password",
@@ -706,7 +726,7 @@ export default {
     recoMne: "Recovery Phrase",
     mneWarn: "Not in the correct format",
     yinsi: "I have read and accept Wormholes the Terms of Service",
-    terms: "Terms of Use",
+    terms: "Terms Of Service",
     service: 'Terms of Service',
     privacy: "Privacy Notice ",
     continue: "Continue",
@@ -717,8 +737,11 @@ export default {
     isServiceandPrivacyNotice: "Please make sure to checkmthe Terms of Service and Privacy Notice ",
     isServiceandPrivacyNotices: "Please check the user agreement ",
     pwdTip: "By proceeding, you agree to Wormholes's {br} {link1} & {link2}",
-    link1: "Terms of Use",
-    link2: "Privacy Notice"
+    link1: "Terms Of Service",
+    link2: "Privacy Notice",
+    pwdTip2: "By proceeding, you agree to Wormholes's {br} {link1}",
+
+    link3:"Token Staking Terms For Marketplace Operator"
   },
   closeexchange: {
     closeexchange: 'CLOSE THE EXCHANGE',

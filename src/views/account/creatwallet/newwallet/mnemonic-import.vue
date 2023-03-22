@@ -137,7 +137,12 @@ export default {
     const { handleUpdate } = useBroadCast()
 
     const routerTo = (name: any) => {
-      router.push({name})
+      if(name == 'termsOfUse') {
+        window.open('https://limino.com/upload/tst.html')
+      }
+      if(name =='privacyNotice') {
+        window.open('https://limino.com/upload/pn.html')
+      }
     }
     const onSubmit = async (value: object) => {
       console.log('submit', value)

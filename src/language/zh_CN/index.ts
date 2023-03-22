@@ -61,8 +61,10 @@ export default {
         isServiceandPrivacyNotice: "请务必检查服务条款和隐私政策 ",
         isServiceandPrivacyNotices: "请务必勾选用户协议 ",
         pwdTip: "通过继续，您同意 Wormholes 的 {br} {link1}&{link2}",
-        link1: "Terms of Use",
-        link2: "Privacy Notice"
+        link1: "Terms Of Service",
+        link2: "Privacy Notice",
+        pwdTip2: "通过继续，您同意 Wormholes 的 {br} {link1}",
+        link3:"市场运营商的代币权益条款"
 
     },
     // 引导窗口
@@ -254,8 +256,9 @@ export default {
         viewInExchange:"去交易所查看",
         viewInBrowser:"去区块浏览器查看",
         noMore:"没有更多了",
-        updateTip:"升级维护中！"
-
+        updateTip:"升级维护中！",
+		marketplace:"交易所",
+        validator:"矿工",
 
 
 
@@ -264,6 +267,22 @@ export default {
 
 
     },
+    creatorSnft:{
+		totalPeriod:"作为Creator成功创建期的总和",
+		totalProfit:"Creator持续获得版税 交易额度的10%的总和",
+		totalTimes:"成功当选Creator次数的总和",
+		totalAward:"Creator作为交易发起者, 每期直接获得奖励的总和",
+		totalWeight:"当前块高度* S-NFT值。",
+		labelPeriod:"创建总期数",
+		labelProfit:"当选Creator总收益",
+		labelTimes:"当选Creator总次数",
+		labelAward:"当选Crator总奖励",
+		labelWeight:"Creator预提名权重",
+		tip:"通过 {link1} 购买S-NFT以增加成为Creator的权重，请到 {link2} 查看更多详细信息",
+		exchange:"交易所",
+		browser:"区块浏览器",
+		creator:"创建者"
+	},
     //侧边栏 
     sidebar: {
         imported: '导入',
@@ -285,7 +304,9 @@ export default {
         minerspledge: '成为验证者',
         aboutAs: "虫洞官网",
         receiveAward: "领取奖励",
-        help: '使用帮助'
+        help: '使用帮助',
+        snftCreator:"S-NFT创造者"
+
 
 
     },
