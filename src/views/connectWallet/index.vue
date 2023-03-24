@@ -148,7 +148,9 @@ export default {
       Toast.clear();
     };
 
-    handleInitData();
+    onMounted(() => {
+      handleInitData();
+    })
 
     function addNetwork() {
       router.replace({

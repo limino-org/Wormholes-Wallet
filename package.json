@@ -13,6 +13,7 @@
     "@walletconnect/client": "^1.7.8",
     "@walletconnect/qrcode-modal": "^1.7.8",
     "axios": "^0.25.0",
+    "babel-polyfill": "^6.26.0",
     "bignumber.js": "^9.0.2",
     "crypto-js": "^4.1.1",
     "element-plus": "^2.2.9",
@@ -62,7 +63,9 @@
   },
   "browserslist": [
     "> 1%",
-    "last 2 versions",
-    "not dead"
+    "last 5 versions",
+    "not dead",
+    "IOS >= 7",
+    "Android >= 4"
   ]
 }

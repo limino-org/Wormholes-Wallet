@@ -27,8 +27,9 @@
       </div>
     </div>
   </van-sticky>
-  <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
-    <div :class="`snft-list-box ${!loading && list.length ? 'pb-80' : ''}`">
+  <div :class="`${!loading && list.length ? 'pb-80' : ''}`">
+  <van-list v-model:loading="loading" :finished="finished" @load="onLoad"  :finished-text="t('common.noMore')">
+    <div :class="`snft-list-box `">
       <div class="flex " v-for="(item) in list" :key="item.nft_address" >
         <div :class="`checkbox_img flex center-v pr-10 right pl-14 ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" v-show="isSelectComputed">
             <i
@@ -97,7 +98,7 @@
 
       </div> -->
       <div v-if="finished && !list.length">
-        <NoData />
+        <NoData :hasText="false" />
       </div>
       <!-- <i18n-t
         tag="div"
@@ -111,6 +112,7 @@
       </i18n-t> -->
     </div>
   </van-list>
+</div>
   </div>
 
   <!-- <van-pull-refresh v-model="loading2" @refresh="onRefresh">
@@ -594,6 +596,7 @@ export default defineComponent({
       page: "1",
       page_size: "20",
       status: "3",
+      sort:"1"
     };
     
     const getSnftList = async(snftlist: Array<any>, blockNumber: number)=> {
@@ -1223,6 +1226,11 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+:deep(){
+  .van-list__finished-text {
+    padding-bottom: 20px;
+  }
+}
 .snft-list-box {
   // padding-bottom:70px;
 }

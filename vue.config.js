@@ -1,11 +1,13 @@
 
-const isProduct = process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'test' ? true : false
+const isProduct = process.env.VUE_APP_NODE_ENV == 'production'  ? true : false
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const webpack = require('webpack')
 console.warn('isProduct', isProduct,process.env.NODE_ENV)
+
 module.exports = {
   productionSourceMap: !isProduct,
-  publicPath: isProduct ? '/wallet/' : '',
+  transpileDependencies: [/node_modules/],
+  publicPath: isProduct ? '/wallet/' : './',
   devServer: {
     https: false,
     proxy: {
@@ -80,7 +82,13 @@ module.exports = {
   },
 
   configureWebpack: config => {
-    if (isProduct) {
+    if(process.env.VUE_APP_NODE_ENV == 'test') {
+      config.plugins.push(new UglifyJsPlugin({
+         sourceMap: false,
+         parallel: false
+      }))
+    }
+    if (process.env.VUE_APP_NODE_ENV == 'production') {
       config.plugins.push(new UglifyJsPlugin({
         uglifyOptions: {
            compress: {
@@ -92,13 +100,6 @@ module.exports = {
          sourceMap: false,
          parallel: false
       }))
-      // config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
-      // config.optimization.minimizer[0].options.terserOptions.compress.warnings = false;
-      // config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = true;
-      // config.optimization.minimizer[0].options.terserOptions.compress.pure_funcs = [
-      //   "console.log"
-      // ];
-
     }
     config.optimization.splitChunks = {
       chunks: 'all',

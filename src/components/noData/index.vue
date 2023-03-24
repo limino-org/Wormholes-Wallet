@@ -2,8 +2,8 @@
   <div class="flex center no-list pt-30">
     <i class="iconfont icon-empty"></i>
   </div>
-  <div class="flex center msg f-12 mt-10">
-      {{t('common.no_data')}}
+  <div class="flex center msg f-12 mt-10" v-show="hasText">
+      {{ text ? text : t('common.no_data') }}
   </div>
 </template>
 <script>
@@ -15,7 +15,11 @@ export default defineComponent({
   props:{
       text: {
           type: String,
-          default:'no-data'
+          default: ''
+      },
+      hasText: {
+        type: Boolean,
+        default: true
       }
   },
   setup() {

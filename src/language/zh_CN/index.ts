@@ -62,7 +62,7 @@ export default {
         isServiceandPrivacyNotices: "请务必勾选用户协议 ",
         pwdTip: "通过继续，您同意 Wormholes 的 {br} {link1}&{link2}",
         link1: "Terms Of Service",
-        link2: "Privacy Notice",
+        link2: "Privacy Notice.",
         pwdTip2: "通过继续，您同意 Wormholes 的 {br} {link1}",
         link3:"市场运营商的代币权益条款"
 
@@ -543,14 +543,14 @@ export default {
         tips: "如果您在使用钱包之前不进行备份，您的资金将面临风险。 确保立即备份。",
         yourRecoveryPhrase: "你的恢复短语",
         yourRecoveryPhraseTitle:
-            "在任何情况下,WormHoles 都不会要求您提供恢复短语。保护您的资金，不要与任何人分享您的恢复短语。",
+            "在任何情况下,Wormholes 都不会要求您提供恢复短语。保护您的资金，不要与任何人分享您的恢复短语。",
         remindMeLater: "稍后提醒我",
         backUp: "备份",
         hint1: "以正确的顺序写下或复制这些单词并将它们保存在安全的地方。",
         suggest: "建议您将它们写下来。",
         getStarted: "让我们开始吧",
         saveTips:
-            "将您的密钥存储在安全的位置。这是找回钱包的唯一方法。WormHoles不保留副本。",
+            "将您的密钥存储在安全的位置。这是找回钱包的唯一方法。Wormholes不保留副本。",
         continue: "继续",
         verifyMnemonicPhrase: "验证助记词",
         protectYourFunds: "保护您的资金，不要与任何人分享您的恢复短语。",

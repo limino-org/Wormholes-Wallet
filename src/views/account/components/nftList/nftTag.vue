@@ -119,65 +119,28 @@ $L3Color: #d73a49;
 //     display: block;
 //   }
   .tag-circle {
-    min-width: 16px;
+    width: 25px;
+    text-align: center;
     height: 16px;
     // font-family: KenneyPixel;
     font-size: 14px;
     color: #fff;
-    padding: 0 14px 0 7px;
     border-radius: 3px;
     // transform: translateX(7px);
-    margin-right: -7px;
+    margin-right: 3px;
     position: relative;
     &.last {
-      border-top-right-radius: 8px;
-      border-bottom-right-radius: 8px;
-      padding: 0 7px;
+
     }
     &.P {
       background: $L3Color;
-      &::after {
-        content: "";
-        display: block;
-        width: 4px;
-        height: 4px;
-        border-radius: 2px;
-        background: $L3Color;
-        position: absolute;
-        right: 5px;
-        z-index: 1;
-        top: 6px;
-      }
     }
     &.C {
       background: $L2Color;
-      &::after {
-        content: "";
-        display: block;
-        width: 4px;
-        height: 4px;
-        border-radius: 2px;
-        background: $L2Color;
-        position: absolute;
-        right: 5px;
-        z-index: 1;
-        top: 6px;
-      }
     }
     &.N {
       background: $L1Color;
-      &::after {
-        content: "";
-        display: block;
-        width: 4px;
-        height: 4px;
-        border-radius: 2px;
-        background: $L1Color;
-        position: absolute;
-        right: 5px;
-        z-index: 1;
-        top: 6px;
-      }
+
     }
     &.F {
       background: $L0Color;

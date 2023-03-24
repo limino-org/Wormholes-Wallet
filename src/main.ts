@@ -1,8 +1,7 @@
 
 
-
-
 // @ts-nocheck
+import 'babel-polyfill';
 import { encode, decode } from 'js-base64';
 window.encode = encode
 window.decode = decode
@@ -11,7 +10,8 @@ import 'vant/lib/index.css'
 import '@/utils/unorm.js'
 import '@/utils/ether'
 // import VConsole from 'vconsole'
-// if(!isProduct) {
+
+// if(process.env.VUE_APP_NODE_ENV != 'production') {
 //   new VConsole()
 // }
 import { createApp } from 'vue'
