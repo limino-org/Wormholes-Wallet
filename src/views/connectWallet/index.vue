@@ -148,10 +148,8 @@ export default {
       Toast.clear();
     };
 
-    onMounted(() => {
-      handleInitData();
-    })
-
+    handleInitData();
+                                                                                                                                                                                                                                                                                                                                                                          
     function addNetwork() {
       router.replace({
         name:'addNetwork',
@@ -226,7 +224,7 @@ export default {
    
       const accountInfo = computed(() => state.account.accountInfo);
       const { address } = accountInfo.value;
-      debugger
+   
       let netWork: any = {
         chainId: 51888
       }
