@@ -43,6 +43,7 @@ import Bignumber from 'bignumber.js'
 import { web3 } from "@/utils/web3";
 import { Console } from "console";
 import { getConverAmount, getInput } from "./txList";
+import storeObj from '@/store/index'
 export interface State {
   mnemonic: Mnemonic;
   path: string;
@@ -164,6 +165,7 @@ export enum TransactionSendStatus {
 export let wallet: any = null;
 export const getWallet = () => {
   if (!wallet || !wallet.provider) {
+    console.warn('init wallet', wallet)
     return createWallet()
   }
   return Promise.resolve(wallet);
@@ -171,6 +173,13 @@ export const getWallet = () => {
 const createWallet = async () => {
   const wal: any = await store.dispatch('account/getProviderWallet')
   return wal
+}
+
+let provider: any = null
+export const getProvider = async () => {
+  const { dispatch } = storeObj;
+  const pro = await dispatch('account/getProvider')
+  return pro
 }
 // clear wallet
 export const clearWallet = () => {
@@ -291,7 +300,6 @@ export default {
     },
     // Update the purse
     UPDATE_WALLET(state: State, value: any) {
-      console.log('value', value)
       wallet = value;
     },
     // The new account
@@ -759,19 +767,26 @@ export default {
     }
   },
   actions: {
-    async getCreatorStatus({commit, state}: any, address: string) {
+    getProvider({ state }: any) {
+      const { URL } = state.currentNetwork;
+      if (!provider || !provider.connection || provider.connection.url.toUpperCase() != URL.toUpperCase()) {
+        provider = ethers.getDefaultProvider(URL)
+      }
+      return provider || {}
+    },
+    async getCreatorStatus({ commit, state }: any, address: string) {
       try {
-       const data = await getCreator(address)
-       const res = await getAccountAddr(address)
-       const provider = ethers.getDefaultProvider(state.currentNetwork.URL)
-       const block = await provider.getBlockNumber()
-       const weight = new BigNumber(block - data.lastNumber).multipliedBy(utils.formatEther(res.snftValue)).toString()
-       const rewardEth = utils.formatEther(data.reward)
-       const profitStr = utils.formatEther(data.profit)
-       const stateData = {...data, account: res, weight, rewardEth, profitStr}
-       console.warn('UPDATE_CREATORSTATUS', stateData)
-       commit('UPDATE_CREATORSTATUS', stateData)
-      }catch(err) {
+        const data = await getCreator(address)
+        const res = await getAccountAddr(address)
+        const provider = ethers.getDefaultProvider(state.currentNetwork.URL)
+        const block = await provider.getBlockNumber()
+        const weight = new BigNumber(block - data.lastNumber).multipliedBy(utils.formatEther(res.snftValue)).toString()
+        const rewardEth = utils.formatEther(data.reward)
+        const profitStr = utils.formatEther(data.profit)
+        const stateData = { ...data, account: res, weight, rewardEth, profitStr }
+        console.warn('UPDATE_CREATORSTATUS', stateData)
+        commit('UPDATE_CREATORSTATUS', stateData)
+      } catch (err) {
         commit('UPDATE_CREATORSTATUS', null)
       }
     },
@@ -853,7 +868,7 @@ export default {
     // Gets the balance of the current wallet
     async getBalance({ commit, state, dispatch }: any) {
       try {
-        const newwallet = wallet && wallet.provider && wallet.provider.connection.url === state.currentNetwork.URL ? wallet : await dispatch("getProviderWallet");
+        const newwallet = await dispatch("getProviderWallet");
         const balance = await newwallet.getBalance();
         const amount = ethers.utils.formatEther(balance);
         return amount;
@@ -867,7 +882,7 @@ export default {
     },
     //Switch account
     async updateAccount({ commit, state, dispatch }: any) {
-      const newwallet = wallet && wallet.provider && wallet.provider.connection.url === state.currentNetwork.URL ? wallet : await dispatch("getProviderWallet");
+      const newwallet = await dispatch("getProviderWallet");
       const balance = await newwallet.getBalance();
       const amount = ethers.utils.formatEther(balance);
       const address = newwallet.address;
@@ -947,7 +962,7 @@ export default {
     // Update balance for all accounts
     async updateAllBalance({ commit, state, dispatch }: any) {
       // const wallet = await getWallet()
-      const {URL} = state.currentNetwork
+      const { URL } = state.currentNetwork
       const provider = ethers.getDefaultProvider(URL)
       try {
         const accountList = state.accountList;
@@ -955,7 +970,7 @@ export default {
           (item: AccountInfo) => item.address
         );
         const asyncList = list.map((address) => {
-          return dispatch("getBalanceByAddress", {address,provider});
+          return dispatch("getBalanceByAddress", { address, provider });
         });
         const data = await Promise.all(asyncList);
         const banList: any = {};
@@ -972,7 +987,7 @@ export default {
       // return Promise.resolve([])
     },
     // Returns the balance of the current address account
-    async getBalanceByAddress({ commit, state }: any, {address, provider}: any) {
+    async getBalanceByAddress({ commit, state }: any, { address, provider }: any) {
       if (!address || !provider) {
         return Promise.reject(i18n.global.t("common.cannotbeempty"));
       }
@@ -980,7 +995,7 @@ export default {
     },
     // Update the balance in the current account currency
     async updateBalance({ commit, state, dispatch }: any) {
-      const newwallet = wallet && wallet.provider && wallet.provider.connection.url === state.currentNetwork.URL ? wallet : await dispatch("getProviderWallet");
+      const newwallet = await dispatch("getProviderWallet");
       try {
         if (newwallet) {
           const balance = await newwallet.getBalance();
@@ -997,22 +1012,24 @@ export default {
     },
     // Link to the current network provider wallet instance
     async getProviderWallet({ commit, state, dispatch }: any) {
-      let provider = null
+
       const { URL } = state.currentNetwork;
-      if(wallet && wallet.provider && (wallet.provider.connection.url == URL)){
+      if (wallet && wallet.provider && (wallet.provider.connection.url == URL)) {
         return wallet
       }
-      if (!wallet || !wallet.provider || (wallet.provider.connection.url != URL)) {
-        provider = ethers.getDefaultProvider(URL)
-      }
+      // if (!wallet || !wallet.provider || (wallet.provider.connection.url != URL)) {
+      //   console.warn('init provider')
+      //   provider = ethers.getDefaultProvider(URL)
+      // }
       try {
         if (!wallet) {
+          const newprovider: any = await getProvider()
           const { accountInfo } = state;
           const { keyStore } = accountInfo;
           const json = toRaw(keyStore)
           const password: string = getCookies("password") || "";
           const wall = await dispatch("createWalletByJson", { password, json });
-          const newWallet = wall.connect(provider)
+          const newWallet = wall.connect(newprovider)
           const res = await newWallet.provider.getNetwork()
           commit('UPDATE_ETHNETWORK', res)
           commit('UPDATE_NETSTATUS', NetStatus.success)
@@ -1022,7 +1039,8 @@ export default {
         if (wallet && wallet.provider) {
           const { connection: { url } } = wallet.provider
           if (URL != url) {
-            const newWallet = wallet.connect(provider)
+            const newprovider: any = await getProvider()
+            const newWallet = wallet.connect(newprovider)
             const res = await newWallet.provider.getNetwork()
             commit('UPDATE_NETSTATUS', NetStatus.success)
             commit("UPDATE_WALLET", newWallet);
@@ -1037,7 +1055,9 @@ export default {
 
         }
         if (wallet && !wallet.provider) {
-          const newWallet = wallet.connect(provider)
+          console.warn('getProviderWallet 2', wallet)
+          const newprovider: any = await getProvider()
+          const newWallet = wallet.connect(newprovider)
           const res = await newWallet.provider.getNetwork()
           commit('UPDATE_ETHNETWORK', res)
 
@@ -1368,7 +1388,7 @@ export default {
       const tokens = currentNetwork.tokens[address];
       if (tokens && tokens.length) {
         const plist = tokens.map((item: any) =>
-          dispatch("updateTokenBalance", {tokenAddress:item.tokenContractAddress, wallet})
+          dispatch("updateTokenBalance", { tokenAddress: item.tokenContractAddress, wallet })
         );
         Promise.all(plist).then((result) => {
           for (let i = 0; i < tokens.length; i++) {
@@ -1381,7 +1401,7 @@ export default {
     // Gets the balance of a token
     async updateTokenBalance(
       { commit, state, dispatch }: any,
-      {tokenAddress, wallet}: any
+      { tokenAddress, wallet }: any
     ) {
       // Check the address
       if (!tokenAddress || !wallet || !wallet.provider) {
@@ -1427,11 +1447,11 @@ export default {
       }
     },
     //  Stop polling
-    clearWaitTime(){
+    clearWaitTime() {
       clearTimeout(waitTime)
       waitTime = null
-      if(wallet && wallet.provider) {
-         wallet.provider.removeAllListeners()
+      if (wallet && wallet.provider) {
+        wallet.provider.removeAllListeners()
       }
     },
     // The result of polling the transaction queue
@@ -1515,12 +1535,12 @@ export default {
                 date,
                 value
               }
-              if(id === 'wormholes-network-1') {
+              if (id === 'wormholes-network-1') {
                 await UPDATE_TRANSACTION(newtx)
-              }else {
-                await PUSH_TRANSACTION({...newtx, txId: guid()})
+              } else {
+                await PUSH_TRANSACTION({ ...newtx, txId: guid() })
               }
-              
+
             }
             eventBus.emit('waitTxEnd')
             resolve(receiptList)
@@ -1547,12 +1567,12 @@ export default {
       });
     },
     // Indicates that the current transaction exists in the transaction queue
-    async checkIsTxHash({commit, state}: any, hash: string) {
+    async checkIsTxHash({ commit, state }: any, hash: string) {
       const { id } = state.currentNetwork
       const from = state.accountInfo.address
       const queuekey = `txQueue-${id}-${state.ethNetwork.chainId}-${from.toUpperCase()}`
       const list: any = await localforage.getItem(queuekey)
-      if(!list || !list.length) {
+      if (!list || !list.length) {
         return false
       }
       return list.some((item: any) => item.hash.toUpperCase() == hash.toUpperCase())
@@ -1735,7 +1755,7 @@ export const PUSH_TXQUEUE = async (tx: any) => {
 
 export const DEL_TXQUEUE = async (tx: any) => {
   const { network: { id, chainId }, txId, from } = tx
-  if(id && chainId && txId && from) {
+  if (id && chainId && txId && from) {
     // @ts-ignore
     let queueKey = `txQueue-${id}-${chainId}-${from.toUpperCase()}`
     const list: any = await localforage.getItem(queueKey)
@@ -1826,7 +1846,7 @@ export const PUSH_TRANSACTION = async (da: any) => {
   if (state.currentNetwork.id == 'wormholes-network-1') {
     if (txList && txList.list.length) {
       const tx = txList.list.find((item: any) => item.txId.toUpperCase() == newReceipt.txId.toUpperCase())
-      if(!tx) {
+      if (!tx) {
         txList.list.unshift(clone(newReceipt))
       }
     } else {
@@ -1835,7 +1855,7 @@ export const PUSH_TRANSACTION = async (da: any) => {
   } else {
     if (txList && txList.length) {
       const tx = txList.find((item: any) => item.txId.toUpperCase() == newReceipt.txId.toUpperCase())
-      if(!tx) {
+      if (!tx) {
         txList.unshift(clone(newReceipt))
       }
     } else {
@@ -1852,7 +1872,7 @@ export const PUSH_TRANSACTION = async (da: any) => {
 }
 
 
-export const UPDATE_TRANSACTION = async( da: any) => {
+export const UPDATE_TRANSACTION = async (da: any) => {
   const state = store.state.account
   const { receipt, sendData, network, txId, value, date } = da
   const { id, currencySymbol } = network
