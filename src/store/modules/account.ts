@@ -1060,9 +1060,8 @@ export default {
           const newWallet = wallet.connect(newprovider)
           const res = await newWallet.provider.getNetwork()
           commit('UPDATE_ETHNETWORK', res)
-
-          commit('UPDATE_NETSTATUS', NetStatus.success)
           commit("UPDATE_WALLET", newWallet);
+          commit('UPDATE_NETSTATUS', NetStatus.success)
           return newWallet
         }
       } catch (err: any) {

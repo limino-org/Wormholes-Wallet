@@ -11,9 +11,9 @@ import '@/utils/unorm.js'
 import '@/utils/ether'
 import VConsole from 'vconsole'
 
-if(process.env.VUE_APP_NODE_ENV != 'production') {
-  new VConsole()
-}
+// if(process.env.VUE_APP_NODE_ENV != 'production') {
+//   new VConsole()
+// }
 import { createApp } from 'vue'
 import i18n from '@/language/index'
 import App from './App.vue'
