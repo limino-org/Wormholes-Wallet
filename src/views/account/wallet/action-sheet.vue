@@ -321,7 +321,7 @@ export default defineComponent({
       border: 1px solid rgba(133, 141, 151, 1);
       text-align: center;
       border-radius: 10px;
-      font-size: 10px;
+      font-size: 12px;
       color: rgba(154, 161, 168, 1);
     }
   }

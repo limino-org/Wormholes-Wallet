@@ -119,9 +119,11 @@ $L3Color: #d73a49;
 //     display: block;
 //   }
   .tag-circle {
-    width: 25px;
+    width: 30px;
+    padding:0 4px;
     text-align: center;
     height: 16px;
+    line-height: 16px;
     // font-family: KenneyPixel;
     font-size: 14px;
     color: #fff;

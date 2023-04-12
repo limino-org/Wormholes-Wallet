@@ -287,7 +287,7 @@ export default {
         font-size: 12px;
       }
       .userbalance {
-        font-size: 10px;
+        font-size: 12px;
         color: rgba(132, 140, 150, 1);
       }
     }
@@ -339,7 +339,7 @@ export default {
     border: 1px solid rgba(216, 216, 216, 1);
     height: 28px;
     line-height: 28px;
-    font-size: 10px;
+    font-size: 12px;
     color: rgba(121, 121, 121, 1);
     padding-left: 15px;
   }
@@ -361,7 +361,7 @@ export default {
     }
     .recent-address {
       margin-top: 5px;
-      font-size: 10px;
+      font-size: 12px;
     }
   }
 }
@@ -372,7 +372,7 @@ export default {
     border: 1px solid rgba(216, 216, 216, 1);
     height: 28px;
     line-height: 28px;
-    font-size: 10px;
+    font-size: 12px;
     color: rgba(121, 121, 121, 1);
     padding-left: 15px;
   }
@@ -394,7 +394,7 @@ export default {
     }
     .myself-address {
       margin-top: 5px;
-      font-size: 10px;
+      font-size: 12px;
     }
   }
 }

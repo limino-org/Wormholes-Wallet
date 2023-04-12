@@ -69,7 +69,7 @@ export default defineComponent({
         line-height: 12px;
       }
       .address {
-        font-size: 10px;
+        font-size: 12px;
         line-height: 10px;
         color: rgba(121, 121, 121, 1);
       }

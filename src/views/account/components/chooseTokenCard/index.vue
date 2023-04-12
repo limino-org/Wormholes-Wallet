@@ -74,7 +74,7 @@ export default defineComponent({
         line-height: 16px;
       }
       .amount {
-        font-size: 10px;
+        font-size: 12px;
         line-height: 12px;
         color: rgba(119, 119, 119, 1);
       }

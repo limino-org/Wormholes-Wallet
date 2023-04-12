@@ -1405,7 +1405,7 @@ background: rgb(215, 58, 73);
     bottom: 2px;
     right: 3px;
     padding: 2px;
-    font-size: 10px;
+    font-size: 12px;
     min-width: 15px;
     line-height: 15px;
     text-align: center;

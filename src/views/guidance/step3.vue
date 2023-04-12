@@ -67,7 +67,7 @@ export default defineComponent({
         pidx: 9,
         cidx: 88,
         nidx:110,
-        fidx: 5555
+        fidx: 220
       },
       {
         nft_address:'0x1232',
@@ -351,7 +351,7 @@ align-items: center;
   bottom: 2px;
   right: 3px;
   padding: 2px;
-  font-size: 10px;
+  font-size: 12px;
   min-width: 15px;
   line-height: 15px;
   text-align: center;

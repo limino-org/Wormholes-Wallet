@@ -109,7 +109,7 @@ export default defineComponent({
 
   .tit {
     color: #797979;
-    font-size: 10px;
+    font-size: 12px;
     margin-top: 16px;
   }
   .balance {
@@ -155,7 +155,7 @@ export default defineComponent({
         }
         .value {
           color: rgba(101, 102, 113, 1);
-          font-size: 10px;
+          font-size: 12px;
           min-width: 20vw;
         }
       }
@@ -187,7 +187,7 @@ export default defineComponent({
           min-width: 36vw;
         }
         div:nth-of-type(2) {
-          font-size: 10px;
+          font-size: 12px;
           min-width: 32vw;
         }
       }

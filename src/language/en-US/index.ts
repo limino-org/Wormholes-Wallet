@@ -47,7 +47,7 @@ export default {
 
 
 
-    conver_approve: "The request is approved.The covert tansaction will be started.Please wait for seconds.",
+    conver_approve: "The request is approved.The convert tansaction will be started.Please wait for seconds.",
     conver_waiting: "{count} <span style='color:#037CD6;'>S-NFT{countstr}</span> are being exchanged. You will receive {amount}<span style='color:#037CD6;'>ERB</span> if you are successfully exchanged. You can also check the exchange details in the history of the Personal Center",
     conver_success: "{count} <span style='color:#037CD6;'>S-NFT</span> have been successfully exchanged and you have obtained {amount}<span style='color:#037CD6;'>ERB</span>. You can also check the exchange details in the history of the Personal center",
     conver_wrong: "{count} S-NFT failed to exchange, you can check the exchange details in the Personal center history",
@@ -118,7 +118,7 @@ export default {
     create: "Create an Account",
   },
   converSnft: {
-    converTit: "Covert to ERB",
+    converTit: "Convert to ERB",
     select: "Select",
     amount: "Amount",
     tip: "You can also {link} at the exchange",
@@ -189,12 +189,12 @@ export default {
     switchNet: "Switch Network",
     helpCenter: "Help Center",
     all: "All",
-    conver: "Covert",
+    conver: "Convert",
     copyAddr: "Address Hash Copied",
     confirmExit: "Confirm Exit",
     guideBtnTip: "Your digital wallet data is only saved on your browser's local storage; be sure to create a backup to avoid potential permanent losses. Uninstalling your browser and/or clearing your browser data will also potentially result in permanent losses!",
     asyncData: "Data synchronization, please wait.",
-    convertAmount: "Covert amount",
+    convertAmount: "Convert amount",
     loadingWait: "Loading, please wait!",
     noMoney: "Your account is short of assets. Please make sure you have enough money in your wallet",
     recovery: "Recovery",
@@ -206,7 +206,7 @@ export default {
     contrctTx: "Transaction of contract",
     contractAddr: "Address of contract",
     converTip:"Tips: After the S-NFT exchange is successful, it will disappear from the wallet. You can view the exchange record in the wallet's transaction history or browser.",
-    snftLabel:'Covert S-NFTs ',
+    snftLabel:'Convert S-NFTs ',
     hsitory: "Transaction history",
     viewInExchange:"Go to the exchange",
     viewInBrowser:"Go to the block browser",
@@ -676,8 +676,8 @@ export default {
     serveTip3: "This is the using time of our server you bought for this transaction",
     addStaking: "The transaction will help you stake addtional ERBs into your accounts.Your chance of getting rewards will be increased.Your additional ERBs will also can be redeemed after months。",
     redeem: "This is the amount of ERB you want to redeem",
-    convert: "Covert",
-    desc3: "This the button that you can covert your S-NFT to ERB with Wormholes Blockchain.",
+    convert: "Convert",
+    desc3: "This the button that you can convert your S-NFT to ERB with Wormholes Blockchain.",
     insufficientMoney:"After staking ,your balance will be less than 201 ERB wihich is not enough to set up your market on our server.You will need to get extra {value} ERB."
 
 
@@ -722,7 +722,7 @@ export default {
     inconsistentPwd: "The entered passwords are inconsistent",
     mnemonicBtn: "Secret Recovery Phrase",
     mneTit: "Import by Recovery Phrase",
-    iptMne: "Please enter Secret Recover",
+    iptMne: "Please enter Secret Recovery Phrase.",
     recoMne: "Recovery Phrase",
     mneWarn: "Not in the correct format",
     yinsi: "I have read and accept Wormholes the Terms of Service",

@@ -130,7 +130,7 @@ export default defineComponent({
         text-align: right;
       }
       .amount {
-        font-size: 10px;
+        font-size: 12px;
         line-height: 12px;
         color: rgba(119, 119, 119, 1);
         margin-top: 8px;

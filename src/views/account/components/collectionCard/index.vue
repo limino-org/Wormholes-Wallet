@@ -209,7 +209,7 @@ export default defineComponent({
         }
       }
       .amount {
-        font-size: 10px;
+        font-size: 12px;
         line-height: 12px;
         color: #9a9a9a;
         span {
