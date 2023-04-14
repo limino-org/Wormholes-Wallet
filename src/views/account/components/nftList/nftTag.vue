@@ -86,7 +86,7 @@ const props = defineProps({
   },
 });
 
-// S-NFT L0 、S-NFT L1、L2、L3
+// SNFT L0 、SNFT L1、L2、L3
 const text = computed(() => {
   switch (props.tag) {
     case "F":

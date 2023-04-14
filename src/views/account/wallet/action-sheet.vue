@@ -73,15 +73,16 @@
       </div>
     </div>
     <div v-if="hasBtn" class="btn-box">
-      <div class="create hover">
+      <div class="create hover" @click.stop="createAccount">
         <van-button
           block
           plain
           :loading="createLoading"
-          @click="createAccount"
+          @click="handleCreateAccount"
         >
           {{ t("account.createaccount") }}</van-button
         >
+
       </div>
       <div class="import hoverx">
         <van-button plain block @click="toImport">{{
@@ -152,7 +153,7 @@ export default defineComponent({
       createAccount,
       accountLoading,
       clickAccountIdx,
-      createLoading,
+      createLoading ,
       listDom,
     } = useToggleAccount();
     const show = ref(false);
@@ -207,6 +208,16 @@ export default defineComponent({
       })
     };
 
+    // const handleCreateAccount = async() => {
+    //   if(createLoading.value){
+    //     return
+    //   }
+    //   createLoading.value = true
+    //   nextTick(async() => {
+    //   createAccount()
+    //   createLoading.value = false
+    //   })
+    // }
     return {
       t,
       options,
@@ -236,7 +247,8 @@ export default defineComponent({
     border:none;
     background: none;
     border-radius: 0;
-    &:nth-of-type(1){
+    .create {
+      line-height: 58px;
       border-bottom: 1px solid #ECEDEF;
     }
    }
@@ -348,7 +360,10 @@ export default defineComponent({
 .create {
   text-align: center;
   font-size: 12px;
+  line-height: 58px;
+  box-sizing: border-box;
   color: #037dd6;
+  border-bottom: 1px solid #ECEDEF;
    i {
     color: #037dd6;
    }

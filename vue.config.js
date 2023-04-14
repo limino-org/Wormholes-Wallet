@@ -3,7 +3,28 @@ const isProduct = process.env.VUE_APP_NODE_ENV == 'production'  ? true : false
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const webpack = require('webpack')
 console.warn('isProduct', isProduct,process.env.NODE_ENV)
+const needCdn = process.env.VUE_APP_NODE_ENV == 'production' || process.env.VUE_APP_NODE_ENV == 'test' ? true : false
+const htmlWebpackPlugin = require('html-webpack-plugin')
+const cdn = {
+  css:[
+    // 'https://cdnjs.cloudflare.com/ajax/libs/element-plus/2.2.9/index.min.css',
+    // 'https://cdnjs.cloudflare.com/ajax/libs/vant/3.4.2/index.min.css'
+  ],
+  js:[
+    // 'https://cdnjs.cloudflare.com/ajax/libs/ethers/6.3.0/ethers.umd.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.1/web3.min.js',
+    // 'https://cdnjs.cloudflare.com/ajax/libs/element-plus/2.2.9/index.full.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'
 
+  ]
+}
+const externals = {
+  //  ethers:'ethers',
+   web3:'Web3',
+   moment:'moment',
+  //  element_plus:'element_plus',
+}
+const newCdns =  needCdn ? cdn : {css:[],js:[]}
 module.exports = {
   productionSourceMap: !isProduct,
   transpileDependencies: [/node_modules/],
@@ -80,8 +101,17 @@ module.exports = {
   
     }
   },
-
   configureWebpack: config => {
+    if(process.env.VUE_APP_NODE_ENV != 'development') {
+      config.externals = externals
+    }
+    // if(process.env.VUE_APP_NODE_ENV == 'development') {
+    //   config.plugins.push(new htmlWebpackPlugin({
+    //     template: path.join(__dirname,'./src/public/index.html'),
+    //     filename:'index.html'
+    //   }))
+    // }
+    config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
     if(process.env.VUE_APP_NODE_ENV == 'test') {
       config.plugins.push(new UglifyJsPlugin({
          sourceMap: false,
@@ -121,41 +151,54 @@ module.exports = {
           priority: 0,
           reuseExistingChunk: true
         },
+        vue: {
+          name: 'vue',
+          priority: 20,
+          test: /[\\/]node_modules[\\/]vue[\\/]/
+        },
+        vuex: {
+          name: 'vuex',
+          priority: 20,
+          test: /[\\/]node_modules[\\/]vuex[\\/]/
+        },
         vant: {
-          name: 'vant',
+          name(){
+            return 'vant'
+          },
           priority: 20,
           test: /[\\/]node_modules[\\/]vant[\\/]/
         },
         ethers: {
-          name: 'ethers',
+          name(){
+            return 'ethers'
+          },
           priority: 20,
           test: /[\\/]node_modules[\\/]ethers[\\/]/
         },
-        moment: {
-          name: 'moment',
-          priority: 20,
-          test: /[\\/]node_modules[\\/]moment[\\/]/
-        },
         element_plus: {
-          name: 'element_plus',
+          name(){
+            return 'element_plus'
+          },
           priority: 20,
           test: /[\\/]node_modules[\\/]element-plus[\\/]/
         },
-        web3: {
-          name: 'web3',
-          priority: 20,
-          test: /[\\/]node_modules[\\/]web3[\\/]/
-        },
-        vuex_persistedstate:{
+        'vuex-persistedstate':{
           name:"vuex-persistedstate",
           priority: 20,
           test: /[\\/]node_modules[\\/]vuex-persistedstate[\\/]/
         },
-        ethereumjs:{
-          name: "ethereumjs",
+        'crypto-js':{
+          name(){
+            return 'crypto-js'
+          },
           priority: 20,
-          test: /[\\/]node_modules[\\/]@ethereumjs[\\/]/
-        }
+          test: /[\\/]node_modules[\\/]crypto-js[\\/]/
+        },
+        'localStorage':{
+          name:"localStorage",
+          priority: 20,
+          test: /[\\/]node_modules[\\/]localStorage[\\/]/
+        },
         
       }
     }
@@ -164,4 +207,11 @@ module.exports = {
     }),)
 
   },
+  chainWebpack: config => {
+    config.plugin("html").tap(args => {
+      console.log(JSON.stringify(newCdns))
+      args[0].jsCDN = newCdns
+      return args
+    })
+  }
 }

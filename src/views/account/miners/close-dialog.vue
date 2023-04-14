@@ -13,7 +13,7 @@
         {{t('minerspledge.select')}}
       </div>
       <van-cell-group :border="false">
-        <van-cell title="S-NFT" @click="select = 0" class="hover">
+        <van-cell title="SNFT" @click="select = 0" class="hover">
           <template #icon>
             <img
               src="@/assets/token/yuan-active.png"

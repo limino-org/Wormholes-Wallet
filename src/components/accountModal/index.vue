@@ -67,7 +67,7 @@
       </div>
     </div>
     <div v-if="hasBtn" class="btn-box">
-      <div class="create hover pt-12 pb-12">
+      <div class="create hover">
         <van-button
           block
           plain
@@ -75,7 +75,8 @@
           @click="createAccount"
         >
           {{ t("account.createaccount") }}</van-button
-        >
+        > 
+
       </div>
       <div class="import hover pt-12 pb-12">
         <van-button plain block @click="toImport">{{
@@ -144,9 +145,9 @@ export default defineComponent({
       toggleAccount,
       handleAccount,
       createAccount,
+      createLoading,
       accountLoading,
       clickAccountIdx,
-      createLoading,
       listDom,
     } = useToggleAccount();
     const show = ref(false);
@@ -202,11 +203,13 @@ export default defineComponent({
     };
 
     // const createLoading = ref(false)
-    // const handleCreateAccount = () => {
+    // const handleCreateAccount = async() => {
+    //   if(createLoading.value){
+    //     return
+    //   }
     //   createLoading.value = true
-    //   createAccount(() => {
-    //     createLoading.value = false
-    //   })
+    //   await createAccount()
+    //   createLoading.value = false
     // }
     return {
       t,
@@ -214,12 +217,12 @@ export default defineComponent({
       toggleAccount,
       handleAccount,
       handleSelect,
-      createAccount,
       listDom,
       createLoading,
       accountLoading,
       clickAccountIdx,
       currentNetwork,
+      createAccount,
       toImport,
       showModal,
       decimal,
@@ -337,7 +340,10 @@ export default defineComponent({
 .create {
   text-align: center;
   font-size: 12px;
+  box-sizing: border-box;
+  line-height: 58px;
   color: #037dd6;
+  border-bottom: 1px solid #ECEDEF;
 }
 .import {
   text-align: center;
