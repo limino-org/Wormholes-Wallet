@@ -59,11 +59,11 @@ export const setExchangeSig = (address: string, params = {}) => {
 
 // Get the smart contract address
 export const getContractAddress = () => {
-    return httpGet(`https://www.wormholes.com/upload/ERBPay.json?${new Date().getTime()}`)
+    return httpGet(`https://www.limino.com/upload/ERBPay.json?${new Date().getTime()}`)
 }
 
 export const getConfiguration = () => {
-    return httpGet(`https://www.wormholes.com/upload/configuration.json?${new Date().getTime()}`)
+    return httpGet(`https://www.limino.com/upload/configuration.json?${new Date().getTime()}`)
 }
 
 

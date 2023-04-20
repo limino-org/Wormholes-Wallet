@@ -136,6 +136,7 @@ $L3Color: #d73a49;
     }
     &.P {
       background: $L3Color;
+      width: auto;
     }
     &.C {
       background: $L2Color;
