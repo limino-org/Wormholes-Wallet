@@ -1216,7 +1216,7 @@ export default {
     tipadd: "This is the additional amount of ERB you want to stake.",
     closeTip: "Sorry, you need to wait 365 days to close your marketplace and redeem your stake.",
     sendProxyExchange: "Send proxy exchange trading",
-
+    periodAdd: "Additional Server Period ",
   },
   guidePopup: {
     tip1: "Account, Assets, Address, and Transactions",

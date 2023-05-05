@@ -1238,7 +1238,7 @@ export default {
         addTit:"追加质押",
         serverFee:"服务器费",
         period:"服务器剩余时间",
-        periodAdd:"服务器期附加",
+        periodAdd:"服务器时间追加",
         addServeAmount:"您可以租用我们的服务器进行交易所，每年需要支付200ERB。支付后，您就可以在我们的服务器上设置您的交易所。",
         minusStaking:"您必须至少质押 700ERB 才能保持您的交易所开放。而且，在您的交易所关闭后，您将没有机会在创建新区块时获得奖励。",
         tipname:"这是您的 NFT 交易所的名称。",
