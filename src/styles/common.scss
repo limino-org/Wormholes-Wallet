@@ -99,6 +99,16 @@ body {
     // margin: 0 auto;
     // transform: translateY(-50%);
   }
+  .van-dialog__footer {
+    button {
+      color: #000;
+      border: none;
+    }
+    button:hover {
+      border: none;
+      color: #037CD6;
+    }
+  }
 }
 .van-button--danger {
   // background-color: #D73A49;
@@ -106,14 +116,7 @@ body {
 .van-button--primary:hover {
   background: #1198ec;
 }
-.van-dialog__footer {
-  button {
-    color: #000;
-  }
-  button:hover {
-    border: none;
-  }
-}
+
 .van-button--plain.van-button--primary:hover {
   color: #ffff;
 }

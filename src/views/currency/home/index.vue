@@ -16,7 +16,7 @@
     >
       {{ decimal(pageData.data.balance) }} {{ pageData.data.symbol }}
     </div>
-    <div class="text-center lh-16 f-12 mb-20 amount2">
+    <div class="text-center lh-16 f-12 mb-20 amount2" v-if="!pageData.data.tokenContractAddress">
       ≈ $ {{ toUsd(pageData.data.balance, 2) }}
     </div>
     <div class="flex center">

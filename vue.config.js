@@ -7,21 +7,15 @@ const needCdn = process.env.VUE_APP_NODE_ENV == 'production' || process.env.VUE_
 const htmlWebpackPlugin = require('html-webpack-plugin')
 const cdn = {
   css:[
-    // 'https://cdnjs.cloudflare.com/ajax/libs/element-plus/2.2.9/index.min.css',
-    // 'https://cdnjs.cloudflare.com/ajax/libs/vant/3.4.2/index.min.css'
+
   ],
   js:[
-    // 'https://cdnjs.cloudflare.com/ajax/libs/ethers/6.3.0/ethers.umd.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.1/web3.min.js',
-    // 'https://cdnjs.cloudflare.com/ajax/libs/element-plus/2.2.9/index.full.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'
-
   ]
 }
 const externals = {
   //  ethers:'ethers',
-   web3:'Web3',
-   moment:'moment',
+  //  web3:'Web3',
+  //  moment:'moment',
   //  element_plus:'element_plus',
 }
 const newCdns =  needCdn ? cdn : {css:[],js:[]}
@@ -152,32 +146,46 @@ module.exports = {
           reuseExistingChunk: true
         },
         vue: {
-          name: 'vue',
+          name: 'module_1',
           priority: 20,
           test: /[\\/]node_modules[\\/]vue[\\/]/
         },
         vuex: {
-          name: 'vuex',
+          name: 'module_2',
           priority: 20,
           test: /[\\/]node_modules[\\/]vuex[\\/]/
         },
         vant: {
           name(){
-            return 'vant'
+            return 'module_3'
           },
           priority: 20,
           test: /[\\/]node_modules[\\/]vant[\\/]/
         },
         ethers: {
           name(){
-            return 'ethers'
+            return 'module_4'
           },
           priority: 20,
           test: /[\\/]node_modules[\\/]ethers[\\/]/
         },
+        web3: {
+          name(){
+            return 'module_5'
+          },
+          priority: 20,
+          test: /[\\/]node_modules[\\/]web3[\\/]/
+        },
+        moment: {
+          name(){
+            return 'module_6'
+          },
+          priority: 20,
+          test: /[\\/]node_modules[\\/]moment[\\/]/
+        },
         element_plus: {
           name(){
-            return 'element_plus'
+            return 'module_7'
           },
           priority: 20,
           test: /[\\/]node_modules[\\/]element-plus[\\/]/
@@ -189,13 +197,13 @@ module.exports = {
         },
         'crypto-js':{
           name(){
-            return 'crypto-js'
+            return 'module_8'
           },
           priority: 20,
           test: /[\\/]node_modules[\\/]crypto-js[\\/]/
         },
         'localStorage':{
-          name:"localStorage",
+          name:"module_9",
           priority: 20,
           test: /[\\/]node_modules[\\/]localStorage[\\/]/
         },

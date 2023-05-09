@@ -600,7 +600,7 @@ export default {
         );
         const am = (amount.value || 1) + ''
         console.log('am---1', am)
-        const amountWei = web3.utils.toWei(am,'ether')
+        const amountWei = amount.value ? amount.value.toString() : '1'
         console.log('amountWei---1', amountWei)
 
         contractWithSigner.estimateGas

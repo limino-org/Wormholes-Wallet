@@ -1156,7 +1156,7 @@ export default {
         return Promise.reject({ reason: i18n.global.t('common.sendTipPendding'), code: 500 })
       }
       try {
-        const { currentNetwork } = state
+        const { currentNetwork, accountInfo } = state
         // Update recent contacts
         commit("PUSH_RECENTLIST", to);
         debugger
@@ -1165,7 +1165,8 @@ export default {
           "connectConstract",
           tokenAddress
         );
-        const amountWei = web3.utils.toWei((amount || 0) + '', 'ether')
+        const { precision } = currentNetwork.tokens[accountInfo.address.toUpperCase()].find((item: any) => item.tokenContractAddress.toUpperCase() == tokenAddress.toUpperCase())
+        const amountWei = utils.parseUnits(amount?.toString() || '0', precision).toString()
         console.log(" contract.estimate", contract, contractWithSigner);
         const gasp = Number(gasPrice) ? new BigNumber(gasPrice).dividedBy(1000000000).toFixed(12) : '0.0000000012';
         const transferParams: any = {
@@ -1311,7 +1312,8 @@ export default {
       const logoUrl = "eth.jpg";
       let balance = "0";
       try {
-        balance = utils.formatEther(await contactObj.contractWithSigner.balanceOf(wallet.address));
+        const ban = await contactObj.contractWithSigner.balanceOf(wallet.address);
+        balance = utils.formatUnits(ban.toString(), decimal);
       } catch (err: any) {
         // Toast(i18n.global.t("account.importerror"));
         return Promise.reject(i18n.global.t("common.importerror"));
@@ -1319,7 +1321,7 @@ export default {
       console.log("connectConstract", contactObj.contractWithSigner, contactObj.contract);
       // Link to the contract
       if (hasAddress) {
-        console.log("balance.toString()", balance.toString(), balance);
+        console.log("balance.toString()", balance);
         // If it does not exist, add it
         const token = {
           symbol,
@@ -1327,7 +1329,7 @@ export default {
           logoUrl,
           precision: decimal,
           tokenContractAddress,
-          balance: balance.toString(),
+          balance,
         }
         network.tokens[key].push(token);
         commit("UPDATE_NETWORK", network);
@@ -1341,7 +1343,7 @@ export default {
           logoUrl,
           precision: decimal,
           tokenContractAddress,
-          balance: balance.toString(),
+          balance,
         }
         network.tokens[key].push(token);
         commit("UPDATE_NETWORK", network);
@@ -1407,6 +1409,8 @@ export default {
         return Promise.reject("Address cannot be empty!");
       }
       try {
+        const addr = state.accountInfo.address.toUpperCase()
+        const { precision } = state.currentNetwork.tokens[addr].find((item: any) => item.tokenContractAddress.toUpperCase() == tokenAddress.toUpperCase())
         const contract = new ethers.Contract(
           tokenAddress,
           erc20Abi,
@@ -1414,9 +1418,8 @@ export default {
         );
         const contractWithSigner = contract.connect(wallet);
         const amount = await contractWithSigner.balanceOf(wallet.address)
-        return Promise.resolve(
-          utils.formatEther(amount)
-        );
+        const newban = utils.formatUnits(amount.toString() || '0', precision)
+        return newban
       } catch (err) {
         return Promise.reject(err);
       }

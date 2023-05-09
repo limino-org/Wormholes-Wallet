@@ -16,7 +16,7 @@
         <div class="token-name">{{data.name}}</div>
         <div>
           <div class="name">{{ decimal(data.balance) }} {{ data.symbol }}</div>
-          <div class="amount text-right">${{ toUsd(data.balance, 6) }}</div>
+          <div class="amount text-right" v-if="!data.tokenContractAddress">${{ toUsd(data.balance, 6) }}</div>
         </div>
       </div>
     </div>
