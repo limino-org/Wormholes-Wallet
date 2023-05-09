@@ -29,6 +29,7 @@
             <van-field
               :disabled="isExchanger_flag"
               maxlength="20"
+              readonly
               validate-trigger="onSubmit"
               v-model="name"
               :class="`text ${nameError ? 'error' : ''}`"
@@ -103,7 +104,7 @@
       <div class="bourse-container-slider" v-if="!isExchanger_flag">
         <el-slider
           v-model="money"
-          :disabled="isExchanger_flag"
+          :disabled="true"
           :min="10"
           :max="100"
           :marks="marks"
@@ -111,6 +112,7 @@
         />
         <van-field
           :disabled="isExchanger_flag"
+          readonly
           v-model="money2"
           class="slider-ipt"
           type="number"
@@ -163,95 +165,96 @@
       //     <van-field type="number" v-model="addAmount" @change="handleAdd" />
       //   </div>
       // </div>
-      -->
-      <div class="bourse-container-meaning bt mt-14" v-if="!isExchanger_flag">
-        <span>{{ t("bourse.marketServer") }} </span>
-        <el-tooltip
-          popper-class="tooltip3"
-          class="box-item"
-          effect="dark"
-          :content="t('bourse.tip4')"
-          placement="right"
-          trigger="hover"
-        >
-          <van-icon name="question" class="ml-4" color="#9A9A9A" />
-        </el-tooltip>
-      </div>
-      <p v-show="insufficientMoney && !isExchanger_flag" class="insufficientMoney-tip">{{ insufficientMoney ? t('createExchange.insufficientMoney', {value: addBalance}) : '' }}</p>
+      
+      // <div class="bourse-container-meaning bt mt-14" v-if="!isExchanger_flag">
+      //   <span>{{ t("bourse.marketServer") }} </span>
+      //   <el-tooltip
+      //     popper-class="tooltip3"
+      //     class="box-item"
+      //     effect="dark"
+      //     :content="t('bourse.tip4')"
+      //     placement="right"
+      //     trigger="hover"
+      //   >
+      //     <van-icon name="question" class="ml-4" color="#9A9A9A" />
+      //   </el-tooltip>
+      // </div>
+      // <p v-show="insufficientMoney && !isExchanger_flag" class="insufficientMoney-tip">{{ insufficientMoney ? t('createExchange.insufficientMoney', {value: addBalance}) : '' }}</p>
 
-      <div
-        v-if="!isExchanger_flag"
-        :class="[
-          'bourse-container-server',
-          isExchanger_flag ? 'bourse-container-server-b' : '',
-        ]"
-      >
-        <van-popover
-          v-model:show="visible1"
-          placement="bottom-start"
-          :class="`${isExchangeStatusStatus ? 'appendtobear' : 'appendto1'}`"
-          v-if="!isExchanger_flag"
-        >
-          <div>
-            {{ t("bourse.tip13") }}
-          </div>
-          <template #reference>
-            <div
-              :class="`${
-                serverIndex === 0 && !isExchangeStatusStatus
-                  ? 'active'
-                  : !isExchangeStatusStatus
-                  ? 'active-d'
-                  : ''
-              }`"
-              @click="changeServerIndex(0)"
-            >
-              <span class="t1 flex center">0ERB</span>
-              <span class="t2 flex center"
-                ><span class="flex right">None</span>
-                <i
-                  :class="`iconfont ${
-                    serverIndex == 0 ? 'icon-duigouxiao' : 'icon-dui'
-                  }`"
-                ></i
-              ></span>
-              <span class="t1 flex center">0$</span>
-            </div>
-          </template>
-        </van-popover>
-        <van-popover
-          v-model:show="visible2"
-          placement="bottom-end"
-          :class="isExchangeStatusStatus ? 'appendtobear' : 'appendto2'"
-        >
-          <span>{{ t("bourse.tip14") }}</span>
-          <template #reference>
-            <div
-              :class="
-                serverIndex === 1 && !isExchangeStatusStatus
-                  ? 'active'
-                  : (isExchangeStatusStatus
-                  ? 'active-d'
-                  : '') + (insufficientMoney === true ? 'disabled' : '')
-              "
-              @click="changeServerIndex(1)"
-            >
-              <span class="t1 flex center">200ERB</span>
+      // <div
+      //   v-if="!isExchanger_flag"
+      //   :class="[
+      //     'bourse-container-server',
+      //     isExchanger_flag ? 'bourse-container-server-b' : '',
+      //   ]"
+      // >
+      //   <van-popover
+      //     v-model:show="visible1"
+      //     placement="bottom-start"
+      //     :class="`${isExchangeStatusStatus ? 'appendtobear' : 'appendto1'}`"
+      //     v-if="!isExchanger_flag"
+      //   >
+      //     <div>
+      //       {{ t("bourse.tip13") }}
+      //     </div>
+      //     <template #reference>
+      //       <div
+      //         :class="`${
+      //           serverIndex === 0 && !isExchangeStatusStatus
+      //             ? 'active'
+      //             : !isExchangeStatusStatus
+      //             ? 'active-d'
+      //             : ''
+      //         }`"
+      //         @click="changeServerIndex(0)"
+      //       >
+      //         <span class="t1 flex center">0ERB</span>
+      //         <span class="t2 flex center"
+      //           ><span class="flex right">None</span>
+      //           <i
+      //             :class="`iconfont ${
+      //               serverIndex == 0 ? 'icon-duigouxiao' : 'icon-dui'
+      //             }`"
+      //           ></i
+      //         ></span>
+      //         <span class="t1 flex center">0$</span>
+      //       </div>
+      //     </template>
+      //   </van-popover>
+      //   <van-popover
+      //     v-model:show="visible2"
+      //     placement="bottom-end"
+      //     :class="isExchangeStatusStatus ? 'appendtobear' : 'appendto2'"
+      //   >
+      //     <span>{{ t("bourse.tip14") }}</span>
+      //     <template #reference>
+      //       <div
+      //         :class="
+      //           serverIndex === 1 && !isExchangeStatusStatus
+      //             ? 'active'
+      //             : (isExchangeStatusStatus
+      //             ? 'active-d'
+      //             : '') + (insufficientMoney === true ? 'disabled' : '')
+      //         "
+      //         @click="changeServerIndex(1)"
+      //       >
+      //         <span class="t1 flex center">200ERB</span>
 
-              <span class="t2 flex center"
-                ><span>Best</span>
-                <i
-                  :class="`iconfont ${
-                    serverIndex == 1 ? 'icon-duigouxiao' : 'icon-dui'
-                  }`"
-                ></i
-              ></span>
+      //         <span class="t2 flex center"
+      //           ><span>Best</span>
+      //           <i
+      //             :class="`iconfont ${
+      //               serverIndex == 1 ? 'icon-duigouxiao' : 'icon-dui'
+      //             }`"
+      //           ></i
+      //         ></span>
 
-              <span class="t1 flex center">{{toUsd(200,0)}}$</span>
-            </div>
-          </template>
-        </van-popover>
-      </div>
+      //         <span class="t1 flex center">{{toUsd(200,0)}}$</span>
+      //       </div>
+      //     </template>
+      //   </van-popover>
+      // </div>
+    -->
       <div class="bourse-container-warning" v-if="isWarning">
         <van-icon name="warning" color="#F7BF03" size="20" />
         <span>{{ t("bourse.tip15") }}</span>
@@ -604,7 +607,7 @@ export default defineComponent({
 
       addExchangeBalance,
     } = useExchanges();
-    const name = ref("");
+    const name = ref("Exchanger");
     const store = useStore();
     const { dispatch } = store;
     const amount = ref(700);
@@ -651,7 +654,7 @@ export default defineComponent({
       showAcount.value = true;
     };
     // Server selection
-    let serverIndex = ref(1);
+    let serverIndex = ref(0);
     const changeServerIndex = (value: number) => {
       if(value && insufficientMoney.value) {
         return

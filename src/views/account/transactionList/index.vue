@@ -64,6 +64,7 @@
     :showCancelButton="false"
     :showConfirmButton="false"
     closeOnClickOverlay
+    class="transfer-detail-modal"
   >
     <TransactionDetail
       @handleClose="handleClose"

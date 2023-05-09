@@ -43,7 +43,7 @@
                   <NetIcon
                     :index="currentNetwork.icon.index"
                     :color="netColor"
-                    size="15"
+                    size="18"
                   />
                 </div>
               </el-tooltip>
@@ -261,7 +261,6 @@
             >
               <i
                 class="iconfont icon-fangwujianzhuwugoujianbeifen"
-                style="font-size: 16px"
               ></i>
               <span v-if="!exchangeStatus.exchanger_flag">{{
                 t("sidebar.openexchange")
@@ -281,7 +280,7 @@
               class="setting-btn clickActive flex center-v"
               @click="routerTo('transactionList')"
             >
-              <i class="iconfont icon-liulanlishi" style="font-size: 20px"></i>
+              <i class="iconfont icon-liulanlishi"></i>
               <span>{{ t("sidebar.transationjhistory") }}</span>
             </div>
 
@@ -319,7 +318,6 @@
             >
               <i
                 class="iconfont icon-dengchu-xuanting"
-                style="font-size: 18px"
               ></i>
               <span>{{ t("sidebar.logout") }}</span>
             </div>
@@ -920,9 +918,22 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  lang="scss">
+.icon-liulanlishi {
+  font-size: 22px !important;
+}
+.icon-bangzhuzhongxin31 {
+  font-size: 18px !important
+}
+.van-icon-setting-o {
+  font-size: 18px !important;
+}
+.icon-dengchu-xuanting {
+  font-size: 19px  !important;
+}
 @import "./index.scss";
 .c {
   color: #79797a;
   transform: rotate(-90deg);
 }
+
 </style>

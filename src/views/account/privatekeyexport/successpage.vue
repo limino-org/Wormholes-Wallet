@@ -329,6 +329,19 @@ export default {
     word-wrap: break-word;
     padding: 16px;
     font-size: 12px;
+    position: relative;
+    &::after {
+      content:"";
+      display: block;
+      background:#7ebdeb;
+      filter: blur(4px); 
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 5px;
+    }
     .copy-function {
       height: 30px;
       border-top: 1px solid rgba(104, 113, 123, 1);

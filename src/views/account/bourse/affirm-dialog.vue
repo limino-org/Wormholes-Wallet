@@ -50,7 +50,7 @@
             <!-- <div class="exchange">{{money * 10}} ERB(≈$20)</div> -->
             <div class="exchange">700 ERB(≈${{ toUsd(700, 2) }})</div>
           </div>
-          <div class="bourse-container-meaning bt">
+          <!-- <div class="bourse-container-meaning bt">
             <span class="c1">{{ t("bourse.marketServer") }} </span>
             <el-tooltip
               popper-class="tooltip2-abc"
@@ -67,8 +67,8 @@
                 serverIndex != 0 ? toUsd(200, 0) : 0
               }})
             </div>
-          </div>
-          <div
+          </div> -->
+          <!-- <div
             class="bourse-container-meaning bt"
             v-if="!exchangeStatus.exchanger_flag && exchangeStatus.status == 0"
           >
@@ -88,7 +88,7 @@
                 toUsd(serverIndex == 0 ? 700 : 900, 0)
               }})
             </div>
-          </div>
+          </div> -->
           <div class="">
             <span class="c1">{{ t("bourse.gasFee") }} </span>
             <el-tooltip

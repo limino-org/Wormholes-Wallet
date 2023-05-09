@@ -17,7 +17,7 @@ body {
 }
 
 .container {
-  max-width: 750px;
+  max-width: 900px;
   margin: 0 auto;
   position: relative;
 }
@@ -293,25 +293,34 @@ body {
   height: 600px;
 }
 .transfer-modal {
-  min-height: 368px;
+  max-height: 626PX;
+}
+.transaction-detail-modal {
+
 }
 .toggle-snft-modal {
   height: 248px;
 }
-.transfer-detail-modal .van-dialog__content{
-  height: 436px;
+.transfer-detail-modal{
+  max-height: 600PX;
+}
+.send-confirm-modal{
+  height: 490PX;
+}
+.select-accounts-modal{
+  max-height: 500PX;
 }
 .server-modal {
   height: 510px;
 }
 .techniqueAssistant-modal {
-  height: 318px;
+  height: 440PX;
 }
 .minus-pledge-dialog {
   height: 374px;
 }
 .startGuideModal {
-  height: 324px;
+  height: 440PX;
 }
 .del-net-modal {
   button {
@@ -347,7 +356,7 @@ body {
 
 @media screen and (min-width: 750px) {
   html {
-    font-size: 40PX !important; // ignored
+    font-size: 52PX !important; // ignored
   }
   .el-popper,.van-popover {
     max-width: 220px;
@@ -360,6 +369,21 @@ body {
   }
   .miner-account-list-modal {
     max-height: 326px;
+  }
+  .transfer-detail-modal{
+    max-height: 420PX;
+  }
+  .send-confirm-modal{
+    height: 340PX;
+  }
+  .select-accounts-modal {
+    max-height: 500PX;
+  }
+  .techniqueAssistant-modal {
+    height: 310PX;
+  }
+  .startGuideModal {
+    height: 310PX;
   }
 }
 

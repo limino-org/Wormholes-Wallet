@@ -1,5 +1,5 @@
 <template>
-  <div class="page-box" id="page-box">
+  <div class="page-box container" id="page-box">
     <div class="van-safe-area-top"></div>
     <div class="container" id="container">
       <router-view />
@@ -143,7 +143,6 @@ export default {
 .page-box {
   transition: transform 0.35s, opacity 0.35s;
   position: relative;
-  max-width: 750px;
   margin: 0 auto;
   min-height: 100vh;
   background: #fff;

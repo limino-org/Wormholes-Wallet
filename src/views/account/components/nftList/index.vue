@@ -125,7 +125,7 @@
     </div>
   </Transition>
   <Transition name="slider">
-    <div class="snft_bottom" v-if="isSelectComputed">
+    <div class="snft_bottom container" v-if="isSelectComputed">
       <div class="snft_bottom-left">
         <div class="checkbox_img" v-if="isSelectComputed">
           <i
@@ -1509,7 +1509,6 @@ background: rgb(215, 58, 73);
   bottom: 0px;
   height: 65px;
   width: 100%;
-  max-width: 750px;
   z-index: 1;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   background-color: #fff;
@@ -1602,6 +1601,9 @@ background: rgb(215, 58, 73);
   justify-content: space-between;
   padding: 0 50px;
   margin-top: 20px;
+  button {
+    min-width: 38%;
+  }
   div {
     padding: 25px;
     text-align: center;

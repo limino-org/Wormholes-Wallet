@@ -117,7 +117,7 @@ export default defineComponent({
   z-index: 100000;
 }
 .custom-popover-header {
-  height: 308px;
+  height: 290px;
   background-color: rgba(0, 0, 0, .7);
 }
 .custom-popover-container {

@@ -166,13 +166,13 @@ export default defineComponent({
   z-index: 100000;
 }
 .custom-popover-header {
-  height: 308px;
+  height: 290px;
   background-color: rgba(0, 0, 0, .7);
   position: relative;
 }
 .custom-popover-container {
   padding-top: 80px;
-  height: 348px;
+  height: 345px;
   img {
       width: 100%;
   }
@@ -227,7 +227,7 @@ export default defineComponent({
 
 .custom-popover-footer {
   position: relative;
-  height: calc(100vh - 308px - 348px);
+  height: calc(100vh - 290px - 345px);
   background-color: rgba(0, 0, 0, .7);
 }
 .footer-btns {

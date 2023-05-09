@@ -221,13 +221,13 @@ export default {
 
     }
     .icon {
-      width: 23px;
-      height: 23px;
-      line-height: 23px;
+      width: 22px;
+      height: 22px;
+      // line-height: 23px;
       position: absolute;
       left: -1px;
-      top: -1px;
-      bottom: 1px;
+      top: 0px;
+
     }
     .word {
      width: 100%;

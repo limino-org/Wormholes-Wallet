@@ -19,7 +19,7 @@ import i18n from '@/language/index'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-
+import 'amfe-flexible'
 import './styles/index.scss'
 import '@/utils/web3.ts'
 import '@/assets/icon/iconfont.css'
@@ -31,7 +31,6 @@ import Dialog from './plugins/dialog/dialog'
 import CancelBtn from '@/components/cancelBtn/index.vue'
 import VueCookies from 'vue-cookies'
 import '@/assets/font/KenneyPixel.css'
-import { isProduct } from './http/modules/common';
 const app = createApp(App)
 app.component('no-data',NoData)
 app.component('cancel-btn',CancelBtn)

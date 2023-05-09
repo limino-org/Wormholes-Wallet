@@ -1,5 +1,5 @@
 <template>
-  <div class="send-confirm-modal">
+  <div>
     <van-dialog
       v-model:show="showModal"
       teleport="#page-box"
@@ -7,6 +7,7 @@
       :showCancelButton="false"
       closeOnClickOverlay
       :title="''"
+      class="send-confirm-modal"
     >
       <div class="title text-center f-16 bold van-hairline--bottom">
         {{ $t("send.sendConfirm") }}

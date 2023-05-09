@@ -15,7 +15,7 @@
     </div>
     <!-- <Tip v-else :message="t('createExchange.pageTip')" /> -->
     <div class="list">
-      <div class="card flex between" v-if="hasExchange" @click="toConsole">
+      <!-- <div class="card flex between" v-if="hasExchange" @click="toConsole">
         <div class="info">
           <div class="label">{{ t("createExchange.exchange") }}</div>
           <div class="desc">{{ t("createExchange.exchangeDesc") }}</div>
@@ -23,9 +23,9 @@
         <div class="flex center">
           <van-icon name="arrow" />
         </div>
-      </div>
+      </div> -->
 
-      <div class="card flex between" v-if="hasExchange" @click="toAdmin">
+      <!-- <div class="card flex between" v-if="hasExchange" @click="toAdmin">
         <div class="info">
           <div class="label">{{ t("createExchange.console") }}</div>
           <div class="desc">{{ t("createExchange.consoleDesc") }}</div>
@@ -33,7 +33,7 @@
         <div class="flex center">
           <van-icon name="arrow" />
         </div>
-      </div>
+      </div> -->
 
       <div class="card flex between" @click="openExchange">
         <div class="info">
@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <div class="card flex between" @click="handleAddModel">
+      <!-- <div class="card flex between" @click="handleAddModel">
         <div class="info">
           <div class="label">{{ t("createExchange.server") }}</div>
           <div class="desc">{{ t("createExchange.serverDesc",{days,hours}) }}</div>
@@ -53,7 +53,7 @@
         <div class="flex center">
           <van-icon name="arrow" />
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
   <div class="flex center loading-page" v-else>
@@ -68,18 +68,18 @@
           <div class="guide-text">
             {{ t("guidePopup.createExchangGuideTip1") }}
           </div>
-          <div class="line-box"></div>
-          <div class="line-circle"></div>
+          <!-- <div class="line-box"></div>
+          <div class="line-circle"></div> -->
         </div>
         <!-- <div class="guide-con-1 mask" v-if></div> -->
-        <div class="guide-con-2" v-if="showGuide">
+        <!-- <div class="guide-con-2" v-if="showGuide">
           <div class="guide-text">
             {{ t("guidePopup.createExchangGuideTip2") }}
           </div>
           <div class="line-box"></div>
           <div class="line-box"></div>
           <div class="line-circle"></div>
-        </div>
+        </div> -->
       </div>
       <div class="guide-footer"></div>
       <div class="guide-card" v-if="(showGuide && !showServer)  || (showServer && !showGuide)"></div>
@@ -282,7 +282,7 @@ export default {
     background: rgba(0, 0, 0, 0.7);
   }
   .guide-footer {
-    height: calc(100vh - 180px - 316px);
+    height: calc(100vh  - 260px);
     background: rgba(0, 0, 0, 0.7);
   }
   .guide-con-1 {
@@ -345,7 +345,7 @@ export default {
   }
   .guide-con-1,
   .guide-con-2 {
-    height: 158px;
+    height: 80px;
     position: relative;
     &.mask {
       background: rgba(0, 0, 0, 0.7);

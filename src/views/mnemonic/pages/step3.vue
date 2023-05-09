@@ -242,6 +242,7 @@ export default {
       height: 24px;
       background: #037cd6;
       border-radius: 50%;
+
       color: #fff;
       &.error {
         background: #d73a49;
