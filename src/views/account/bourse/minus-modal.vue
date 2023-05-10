@@ -9,7 +9,7 @@
   >
     <div class="title text-center">{{ t("bourse.minusTit") }}</div>
     <div class="form-box">
-      <div class="card">
+      <!-- <div class="card">
         <div class="label lh-16 mb-2">
           {{ t("createExchange.name") }}
 
@@ -32,7 +32,7 @@
           </van-popover>
         </div>
         <div class="value lh-16">{{ name }}</div>
-      </div>
+      </div> -->
       <div class="card">
         <div class="label lh-16 mb-2">
           {{ t("bourse.stakingFee") }}
@@ -55,7 +55,7 @@
             </template>
           </van-popover>
         </div>
-        <div class="value lh-16">{{ fee }} ERB({{ toUsd(fee, 2) }})</div>
+        <div class="value lh-16">{{ fee }} ERB(${{ toUsd(fee, 2) }})</div>
       </div>
       <div class="card">
         <div class="label lh-16 mb-2">

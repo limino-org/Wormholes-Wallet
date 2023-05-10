@@ -333,8 +333,8 @@ export default {
     &::after {
       content:"";
       display: block;
-      background:#7ebdeb;
-      filter: blur(4px); 
+      // background:#7ebdeb;
+      // filter: blur(4px); 
       position: absolute;
       left: 0;
       top: 0;

@@ -6,7 +6,7 @@
       </div>
       <div class="miners-container flex column between">
         <div class="miners-container-item">
-          <div class="bourse-container-meaning bt">
+          <!-- <div class="bourse-container-meaning bt">
             <span class="c1">{{ t("bourse.marketName") }} </span>
             <el-tooltip
               popper-class="tooltip2-abc"
@@ -20,8 +20,8 @@
               <van-icon name="question" color="#9A9A9A" />
             </el-tooltip>
             <div class="exchange">{{ name }}</div>
-          </div>
-          <div class="bourse-container-meaning bt">
+          </div> -->
+          <!-- <div class="bourse-container-meaning bt">
             <span class="c1">{{ t("bourse.marketCom") }} </span>
             <el-tooltip
               popper-class="tooltip2-abc"
@@ -34,7 +34,7 @@
               <van-icon name="question" color="#9A9A9A" />
             </el-tooltip>
             <div class="exchange">{{ money }}%</div>
-          </div>
+          </div> -->
           <div class="bourse-container-meaning bt">
             <span class="c1">{{ t("bourse.stakingFee") }} </span>
             <el-tooltip

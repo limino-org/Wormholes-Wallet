@@ -4,7 +4,7 @@
     v-model:show="show"
     show-cancel-button
     teleport="#page-box"
-    class="select-accounts-modal"
+    :class="`select-accounts-modal ${hasBtn ? 'hasBtn' : ''}`"
     :showConfirmButton="false"
     :showCancelButton="false"
     closeOnClickOverlay

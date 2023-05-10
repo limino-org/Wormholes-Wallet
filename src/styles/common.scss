@@ -293,7 +293,7 @@ body {
   height: 600px;
 }
 .transfer-modal {
-  max-height: 626PX;
+  max-height: 650PX;
 }
 .transaction-detail-modal {
 
@@ -309,6 +309,9 @@ body {
 }
 .select-accounts-modal{
   max-height: 500PX;
+  &.hasBtn {
+    max-height: 660PX;
+  }
 }
 .server-modal {
   height: 510px;
@@ -371,13 +374,16 @@ body {
     max-height: 326px;
   }
   .transfer-detail-modal{
-    max-height: 420PX;
+    max-height: 434PX;
   }
   .send-confirm-modal{
-    height: 340PX;
+    height: 360PX;
   }
   .select-accounts-modal {
-    max-height: 500PX;
+    max-height: 360PX;
+    &.hasBtn {
+      max-height: 476PX;
+    }
   }
   .techniqueAssistant-modal {
     height: 310PX;

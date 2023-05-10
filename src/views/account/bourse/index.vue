@@ -9,13 +9,14 @@
       </template>
     </NavHeader>
     <div class="bourse-container" id="bourse-page" v-if="!loading">
-      <div class="bourse-container-name">
+
+      <div class="bourse-container-name" v-if="false">
         <span>{{ t("bourse.name") }} ({{ name.length }}/20)</span>
         <el-tooltip
           popper-class="tooltip4"
           class="box-item"
           effect="dark"
-          :content="t('bourse.tip5')"
+          :content="t('bourse.tip20')"
           placement="right"
           trigger="hover"
         >
@@ -23,7 +24,7 @@
         </el-tooltip>
       </div>
 
-      <div class="create-new-password" v-show="!isExchanger_flag">
+      <div class="create-new-password" v-show="false">
         <van-form @submit="onSubmit" ref="formDom">
           <div>
             <van-field
@@ -43,11 +44,11 @@
           </div>
         </van-form>
       </div>
-      <div v-show="isExchanger_flag" class="f-12 text-bold mt-8">
+      <div v-show="false" class="f-12 text-bold mt-8">
         {{ name }}
       </div>
 
-      <div class="bourse-container-name bt mt-14 pt-10" v-if="isExchanger_flag">
+      <div class="bourse-container-name bt mt-14 pt-10" v-if="false">
         <span class="mt-8">{{ t("createExchange.formCharge") }}</span>
         <el-tooltip
           popper-class="tooltip4"
@@ -60,11 +61,11 @@
           <van-icon class="ml-6" name="question" color="#9A9A9A" />
         </el-tooltip>
       </div>
-      <div v-if="isExchanger_flag" class="f-14 text-bold mt-8">
+      <div v-if="false" class="f-14 text-bold mt-8">
         {{ money / 10 }}%
       </div>
 
-      <div v-if="isExchanger_flag" class="bourse-container-name bt mt-14 pt-10 ">
+      <div v-if="isExchanger_flag" class="bourse-container-name  pt-10 ">
         <span class="mt-8">{{ t("bourse.stakingFee") }}</span>
         <el-tooltip
           popper-class="tooltip4"
@@ -82,7 +83,7 @@
         <span>≈${{ toUsd(exchangerBalance, 2) }}</span>
       </div>
     
-      <div class="bourse-container-meaning bt mt-14" v-if="!isExchanger_flag">
+      <div class="bourse-container-meaning bt mt-14" v-if="false">
         <span>{{ t("bourse.marketCom") }}</span>
         <el-tooltip
           popper-class="tooltip1"
@@ -95,13 +96,13 @@
           <van-icon class="ml-4" name="question" color="#9A9A9A" />
         </el-tooltip>
       </div>
-      <div class="bourse-container-pull" v-if="!isExchanger_flag">
+      <div class="bourse-container-pull" v-if="false">
         <div>
           <span class="hundred">{{ money / 10 }}%</span>
           <span>（{{ t("bourse.tip12") }}）</span>
         </div>
       </div>
-      <div class="bourse-container-slider" v-if="!isExchanger_flag">
+      <div class="bourse-container-slider" v-if="false">
         <el-slider
           v-model="money"
           :disabled="true"
@@ -120,7 +121,7 @@
         />
       </div>
    
-      <div class="bourse-container-meaning bt mt-14" v-if="!isExchanger_flag">
+      <div class="bourse-container-meaning" v-if="!isExchanger_flag">
         <span>{{ t("bourse.stakingFee") }}</span>
         <el-tooltip
           popper-class="tooltip2"
@@ -287,7 +288,7 @@
                 v-if="!isTimeQualified"
                 theme="dark"
                 :close-on-click-outside="false"
-                placement="top"
+                placement="top-end"
                 trigger="manual"
                 class="popover-btn-tip"
               >

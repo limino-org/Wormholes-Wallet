@@ -64,7 +64,7 @@ export default {
         link1: "Terms Of Service",
         link2: "Privacy Notice.",
         pwdTip2: "通过继续，您同意 Wormholes 的 {br} {link1}",
-        link3:"市场运营商的代币权益条款"
+        link3:"质押者的SNFT权益条款"
 
     },
     // 引导窗口
@@ -91,7 +91,7 @@ export default {
         sNFTs: "SNFTs",
         sNFTsMessage: "查看、添加、转移、交换 SNFT",
         exchange: "交易所",
-        exchangeMessage: "自动开设交易所",
+        exchangeMessage: "成为质押者",
         identifier: "标识符",
         identifierMessage: "身份展示ID(验证者&交易所)",
         setUp: "设置",
@@ -130,7 +130,7 @@ export default {
         loading: '加载中...',
         transactionRecord: '已提交交易，正在等待确认',
         wrongpassword: '密码有误',
-        suspensionText: '一键开设交易所',
+        suspensionText: '成为质押者',
         wormHoles: "虫洞",
         account: "账户",
         recive: "接收",
@@ -138,8 +138,8 @@ export default {
         NFTs: "收藏品",
         SNFTs: "SNFTs",
         importToken: "导入代币",
-        createAnExchange: "一键开设交易所",
-        autoexchange: "一键创建交易所",
+        createAnExchange: "成为质押者",
+        autoexchange: "成为质押者",
         autoNFTexchange: "一键创建NFT交易所",
         autoNFTExchangeSetting: "一键创建NFT交易所设置",
         settingsbar: "质押&服务器&关闭交易所",
@@ -290,16 +290,16 @@ export default {
         add: '接收',
         browser: '虫洞浏览器',
         backstage: '后台',
-        autoNFTexchange: '一键开设交易所',
+        autoNFTexchange: '成为质押者',
         wallet: '钱包',
         transationjhistory: '交易历史',
         setting: '设置',
         logout: '登出',
         sendtransaction: '发交易',
-        myexchange: '交易所管理',
-        openexchange: '开设交易所',
-        exchange: '我的交易所',
-        exchangemanagement: '我的交易所',
+        myexchange: '质押者管理',
+        openexchange: '成为质押者',
+        exchange: '质押者管理',
+        exchangemanagement: '质押者管理',
         closeexchange: '关闭交易所',
         minerspledge: '成为验证者',
         aboutAs: "虫洞官网",
@@ -648,9 +648,9 @@ export default {
     // 创建交易所界面
     createExchange: {
         wattingTitle: "配置",
-        headerTitle: "一键交易所",
-        openexchange: '开启交易所',
-        exchangemanagement: '交易所管理',
+        headerTitle: "成为质押者",
+        openexchange: '成为质押者',
+        exchangemanagement: '质押者管理',
         pledgeamount: '请调整您的质押金额',
         hi: '你好',
         anto_exchange: '自动 NFT 交易所',
@@ -693,9 +693,9 @@ export default {
         congratulations: '恭喜，修改成功',
         dialogTextManagement: '修改质押金额',
         dialogTextExchange: '开设交易所',
-        create_approve: "正在通过开启交易所的请求，您也可以通过交易历史查看请求的详情",
-        create_waiting: "正在开启您的交易所，此过程将可能花费数十秒，请耐心等待",
-        create_success: "已成功为您开启交易所！",
+        create_approve: "正在发送成为质押者的请求，您也可以通过交易历史查看请求的详情",
+        create_waiting: "正在成为质押者，此过程将可能花费数十秒，请耐心等待",
+        create_success: "您将获得SNFT奖励。",
         create_wrong: "非常抱歉，因为某些意外，操作失败，您可以去交易历史里查看交易的具体信息",
         formCharge: "佣金",
 
@@ -704,15 +704,15 @@ export default {
         ispoor: "请确保余额充足",
         addPl: "追加质押",
         pledgeRed: "质押赎回",
-        addTips: "抱歉，交易所预计关闭时间为 1 年。",
+        addTips: "抱歉，质押赎回预计时间为 1 年。",
         redemption: "赎回",
         snft: "SNFT",
         desc1: "您可以质押您的 SNFT，并有机会在创建新区块时获得奖励。",
         desc2: "单击此按钮，您可以赎回您的 SNFTs。",
-        exchange: "交易所",
+        exchange: "质押者",
         exchangeDesc: "卖，买，铸造",
         console: "控制台",
-        consoleDesc: "交易所管理",
+        consoleDesc: "质押者管理",
         staking: "质押 & 赎回",
         stakingDesc: "添加质押或赎回您的质押",
         server: "服务器",
@@ -832,25 +832,13 @@ export default {
         closeTip: "如果你做赎回。你的收入会减少。",
         addzhiya: "追加质押",
         stackFee: "质押金额",
-        tip7: "阈值是指您仍然可以作为验证者的情况下可以赎回的最大ERB 数量。如果您输入的金额大于此数量，您将赎回您的所有 ERB。",
+        tip7: "阈值是指您仍然可以作为质押者时可以兑换的ERB的最大金额。如果您输入的金额大于此金额，您将兑换所有ERB。",
         redemingAmount: "赎回金额",
         redemingAmountTip: "赎回金额",
         minus_approve: "我们正在批准您的股份赎回请求。您可能需要等待几秒钟。您也可以在交易记录中找到详细信息。",
         minus_waiting: "我们正在进行股权赎回。请稍等。",
         minus_success: "您的股份赎回已完成。您可以在交易记录中找到详细信息。",
         minus_wrong: "非常抱歉，由于一些意外，操作失败，您可以到交易记录查看交易的具体信息",
-
-
-
-
-
-
-
-
-
-
-
-
     },
     // 创建矿工节点
     createminerspledge: {
@@ -1194,7 +1182,7 @@ export default {
         tip1: "为您的市场选择名称。",
         tip2: "这是%的费用，你的市场将收取谁在你的市场交易的卖家。",
         stakingFee: "质押费",
-        tip3: "这是您将质押的 ERB 数量以打开您的市场并收到质押问候；质押更多以获得更高的奖励机会。 ",
+        tip3: "这是您将质押的 ERB 数量以成为质押者并收到质押问候；质押更多以获得更高的奖励机会。 ",
         marketServer: "交易所服务器",
         tip4: "该服务将自动化市场托管服务，让您立即上线您的市场！",
         totalAmount: "总金额 ",
@@ -1210,9 +1198,10 @@ export default {
         closeTit: "关闭交易所 ",
         tip9: "交易所关闭后所有数据将被清除",
         tip10: "成功关闭 感谢您的陪伴",
+        tip20: "交易所名称",
         toHomePage: "回首页",
         congraTit: "恭喜 ",
-        openSuccess: "成功开启",
+        openSuccess: "已经成为质押者！",
         wormExchange: "虫洞交易所",
         wormConsole: "虫洞交易所控制台",
         tip11: "直接点击箭头即可访问！复制此链接或与能够访问该链接的朋友分享。",
@@ -1220,7 +1209,7 @@ export default {
         visiteType: "直接点击箭头即可访问 ",
         copyLink: "将此链接复制给朋友",
         whoWillVisite: "谁将能够访问它",
-        tip12: "设置后无法更改",
+        tip12: "无法更改",
         custom: "设置",
         tip13: "如果您不使用我们的服务，在质押您的 ERB 以打开 NFT 市场后，您需要按照 wiki 说明在您自己的服务器上设置您的 NFT 市场。",
         tip14: "支付 200 ERB 服务器费用后，您的 NFT Marketplace 将立即上线。",
@@ -1240,14 +1229,14 @@ export default {
         period:"服务器剩余时间",
         periodAdd:"服务器时间追加",
         addServeAmount:"您可以租用我们的服务器进行交易所，每年需要支付200ERB。支付后，您就可以在我们的服务器上设置您的交易所。",
-        minusStaking:"您必须至少质押 700ERB 才能保持您的交易所开放。而且，在您的交易所关闭后，您将没有机会在创建新区块时获得奖励。",
+        minusStaking:"在您撤销700 ERB质押后，您将没有机会再次获得SNFT奖励。",
         tipname:"这是您的 NFT 交易所的名称。",
         tipstake:"这是您质押的 ERB 总量。",
         tipre:"这是您要赎回的ERB数量。",
         tipprofit:"这是您通过质押获得的总利润。",
         tipincome:"这是您在赎回后将获得的估计年度利润。",
         tipadd:"这是您想要质押的额外 ERB 数量。",
-        closeTip:"抱歉，交易所预计关闭时间为 1 年。",
+        closeTip:"抱歉，质押预计赎回时间为 1 年。",
         sendProxyExchange:"发送代理交易所交易",
 
 

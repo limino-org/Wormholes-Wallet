@@ -476,6 +476,7 @@ export default {
       }
     };
     onMounted(async() => {
+      dispatch('account/waitTxQueueResponse')
       // const wallet = await getWallet()
       // const res = await wallet.provider.send('eth_call', [{
       //   to:'0x6FCBf98129d354A0f3403C6E418BD7c991cc7c8f',data: '0x4b165090'
