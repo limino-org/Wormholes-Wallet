@@ -8,7 +8,6 @@
         <van-icon size="41" color="#037CD6" name="warning" />
       </div>
       <div class="flex center">
-        <!-- <span class="text-s">Are you sure you want to shut it down?You will be refunded the ${{Number(toUsd(100)).toFixed(2)}} pledge.</span> -->
         <span class="text-s">{{$t('closeexchange.shutitdown',{ data: screenBancle(exchangeStatus.exchanger_balance)})}}</span>
       </div>
       <div class="container-btn flex center">
@@ -31,7 +30,7 @@ import { Button, Overlay, Field, Icon } from 'vant'
 import { ref, SetupContext, computed, ComputedRef } from 'vue'
 import { useExchanges } from '@/hooks/useExchanges'
 import { useI18n } from 'vue-i18n'
-import { formatEther, toUsd, scientificToNumber } from '@/utils/filters'
+import { scientificToNumber } from '@/utils/filters'
 import { ExchangeStatus } from '@/store/modules/account'
 import { useStore, mapState } from 'vuex'
 import { ethers, utils } from 'ethers'
@@ -100,7 +99,6 @@ export default {
       isTimeOut,
       submit,
       isLoading,
-      toUsd,
       screenBancle,
       exchangeStatus
     }

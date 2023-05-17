@@ -75,7 +75,6 @@ import {
   ComponentInternalInstance,
 } from "vue";
 import { Dialog, Button, Field, NumberKeyboard, Toast, Icon } from "vant";
-import { toUsd } from "@/utils/filters";
 import { useI18n } from "vue-i18n";
 import BigNumber from "bignumber.js";
 import { useRoute, useRouter } from "vue-router";
@@ -211,7 +210,6 @@ export default defineComponent({
       handleComfirm,
       ipt,
       handleFocus,
-      toUsd,
     };
   },
 });

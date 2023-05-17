@@ -33,7 +33,7 @@
               <van-icon name="question" color="#9A9A9A" />
             </el-tooltip>
             <div class="exchange">
-              {{ amount }} ERB(≈${{ toUsd(amount, 2) }})
+              {{ amount }} ERB
             </div>
           </div>
           <!-- Historical total income -->
@@ -51,7 +51,7 @@
               <van-icon name="question" color="#9A9A9A" />
             </el-tooltip>
             <div class="exchange">
-              {{ minusNumber }} ERB(≈${{ toUsd(minusNumber, 2) }})
+              {{ minusNumber }} ERB
             </div>
           </div>
           <div class="bourse-container-meaning bt">
@@ -66,7 +66,7 @@
             >
               <van-icon name="question" color="#9A9A9A" />
             </el-tooltip>
-            <div class="exchange">≈{{ historyProfit }} ERB(≈ $ {{toUsd(historyProfit,5)}})</div>
+            <div class="exchange">≈{{ historyProfit }} ERB</div>
           </div>
           <!-- <div class="bourse-container-meaning bt">
             <span class="c1">{{ t("minerspledge.stackingIncome") }} </span>
@@ -97,7 +97,7 @@
             </el-tooltip>
             <div class="exchange exchange-z">
               <span>≈ </span>
-              <span class="c2"> {{ gasFee }} ERB(≈$1)</span>
+              <span class="c2"> {{ gasFee }}</span>
             </div>
           </div>
         </div>
@@ -131,7 +131,6 @@
 import { Button, Overlay, Field, Toast, Icon } from "vant";
 import { ref, SetupContext, computed, nextTick, watch, Ref } from "vue";
 import { ethers, utils } from "ethers";
-import { formatEther, toUsd, transactionStatus } from "@/utils/filters";
 import { useI18n } from "vue-i18n";
 import { ElTooltip } from "element-plus";
 import store from "@/store";
@@ -159,7 +158,7 @@ export default {
     ElTooltip,
     [Icon.name]: Icon,
   },
-  props: ["show", "minusNumber"],
+  props: ["show", "minusNumber","amount"],
   setup(props: any, context: SetupContext) {
     const { t } = useI18n();
     const store = useStore();
@@ -291,7 +290,6 @@ export default {
       myprofit,
       historyProfit,
       currentNetwork,
-      toUsd,
       accountInfo,
       gasFee,
     };

@@ -80,7 +80,7 @@
       </div>
       <div v-if="isExchanger_flag" class="f-14 text-bold mt-8">
         {{ exchangerBalance }} ERB
-        <span>≈${{ toUsd(exchangerBalance, 2) }}</span>
+        
       </div>
     
       <div class="bourse-container-meaning bt mt-14" v-if="false">
@@ -135,7 +135,7 @@
         </el-tooltip>
       </div>
       <div class="t3" v-if="!isExchanger_flag">
-        700ERB <span>(≈${{ toUsd(700, 2) }})</span>
+        700ERB 
       </div>
 
      <!--
@@ -447,9 +447,6 @@ import AmountView from "@/views/account/exchange/amount.vue";
 import AgreementView from "@/views/account/exchange/agreement.vue";
 import success from "@/views/account/exchange/success.vue";
 import {
-  formatEther,
-  toUsd,
-  decimalCopy,
   scientificToNumber,
 } from "@/utils/filters";
 import AddModal from "./add-modal.vue";
@@ -975,7 +972,6 @@ export default defineComponent({
       handleAddAmount,
       appProvide,
       t,
-      toUsd,
       value,
       showCreateExchange,
       name,

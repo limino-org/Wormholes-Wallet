@@ -78,26 +78,21 @@ body {
   color: #037CD6;
 }
 .van-dialog {
-  overflow: hidden;
-  top: 45%;
-    // width: var(--van-dialog-width);
-    // overflow: hidden;
-    // font-size: var(--van-dialog-font-size);
-    // border-radius: var(--van-dialog-radius);
-    // backface-visibility: hidden;
-    // transition: var(--van-dialog-transition);
-    // transition-property: transform,opacity;
+  overflow: scroll;
+  -webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+width: 420px;
     backface-visibility: hidden;
   .van-dialog__content {
-    border-radius: 10px;
-    overflow-x: hidden;
+
+
   }
   &.van-popup--center {
-    // left: 0;
-    // right: 0;
-    // max-width: calc(100vw - var(--van-padding-md) * 2);
-    // margin: 0 auto;
-    // transform: translateY(-50%);
+    left: 50%;
+    transform: none;
+    top: 80px;
+    margin-left: -210px;
+   
   }
   .van-dialog__footer {
     button {
@@ -122,6 +117,9 @@ body {
 }
 .van-button:before {
   // transform: inherit;
+}
+.minus-miner-stack-dialog {
+  top: 0;
 }
 .minus-pledge-dialog {
   overflow: inherit;
@@ -181,6 +179,7 @@ body {
 
 .el-popper {
   z-index: 100 !important;
+  max-width: 200px;
 }
 
 .van-icon-question {
@@ -212,7 +211,9 @@ body {
   }
 }
 
-
+.van-popover {
+  max-width: 250px;
+}
 .tooltip2 {
   z-index: 1000;
 }
@@ -220,6 +221,7 @@ body {
 .smilebox {
   max-width: 140px;
 }
+
 .appendto1,.appendto2 {
   &.van-popover {
     max-width: 343px;
@@ -289,42 +291,6 @@ body {
     color: #037CD6;
   }
 }
-.transactionDetailsModal {
-  height: 600px;
-}
-.transfer-modal {
-  max-height: 650PX;
-}
-.transaction-detail-modal {
-
-}
-.toggle-snft-modal {
-  height: 248px;
-}
-.transfer-detail-modal{
-  max-height: 600PX;
-}
-.send-confirm-modal{
-  height: 490PX;
-}
-.select-accounts-modal{
-  max-height: 500PX;
-  &.hasBtn {
-    max-height: 660PX;
-  }
-}
-.server-modal {
-  height: 510px;
-}
-.techniqueAssistant-modal {
-  height: 440PX;
-}
-.minus-pledge-dialog {
-  height: 374px;
-}
-.startGuideModal {
-  height: 440PX;
-}
 .del-net-modal {
   button {
     border: none;
@@ -357,40 +323,52 @@ body {
 }
 
 
-@media screen and (min-width: 750px) {
+@media  screen and (min-width: 750px) and (max-width: 1281px){
   html {
-    font-size: 52PX !important; // ignored
+    font-size: 40PX !important; // ignored
   }
-  .el-popper,.van-popover {
-    max-width: 220px;
+  .container {
+    max-width: 800PX;
+  }
+  .van-dialog {
+    width:360px;
+    &.van-popup--center{
+      margin-left: -180px;
+      top: 60px;
+    }
   }
 }
 
-@media screen and (max-width: 750px) {
-  .el-popper,.van-popover {
-    max-width: 160px;
+@media screen and (min-width: 1281px) {
+  html {
+    font-size: 52PX !important; // ignored
   }
-  .miner-account-list-modal {
-    max-height: 326px;
+  .container {
+    max-width: 800px;
   }
-  .transfer-detail-modal{
-    max-height: 434PX;
-  }
-  .send-confirm-modal{
-    height: 360PX;
-  }
-  .select-accounts-modal {
-    max-height: 360PX;
-    &.hasBtn {
-      max-height: 476PX;
+  .van-dialog {
+    width:360px;
+    &.van-popup--center{
+      margin-left: -180px;
+      top: 40px;
+    }
+    & .van-dialog__content {
+      // max-width: 90%;
     }
   }
-  .techniqueAssistant-modal {
-    height: 310PX;
+}
+@media screen and (max-width: 750px) {
+  .van-dialog {
+    width: 90vw;
+    &.van-popup--center{
+      margin-left: -45vw;
+      top: 40px;
+    }
+    & .van-dialog__content {
+      // max-width: 90%;
+    }
   }
-  .startGuideModal {
-    height: 310PX;
-  }
+
 }
 
 // .van-dialog-bounce-enter-from {

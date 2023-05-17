@@ -48,7 +48,7 @@
               <van-icon name="question" color="#9A9A9A" />
             </el-tooltip>
             <!-- <div class="exchange">{{money * 10}} ERB(≈$20)</div> -->
-            <div class="exchange">700 ERB(≈${{ toUsd(700, 2) }})</div>
+            <div class="exchange">700 ERB</div>
           </div>
           <!-- <div class="bourse-container-meaning bt">
             <span class="c1">{{ t("bourse.marketServer") }} </span>
@@ -104,7 +104,7 @@
             <div class="exchange exchange-z">
               <span class="c2">≈ </span>
               <span class="gasfee">
-                {{ totalGas }} ERB(≈${{ toUsd(totalGas, 8) }})</span
+                {{ totalGas }} ERB</span
               >
             </div>
           </div>
@@ -133,7 +133,6 @@
 import { Button, Overlay, Field, Toast, Icon } from "vant";
 import { ref, SetupContext, computed, nextTick, watch } from "vue";
 import { ethers, utils } from "ethers";
-import { formatEther, toUsd } from "@/utils/filters";
 import { useI18n } from "vue-i18n";
 import { ElTooltip } from "element-plus";
 import { useStore } from "vuex";
@@ -253,7 +252,6 @@ export default {
       submit,
       screentNumber,
       exchangeStatus,
-      toUsd,
       totalGas,
     };
   },

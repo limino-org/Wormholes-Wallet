@@ -12,7 +12,6 @@
   <div class="text-center lh-16 f-12 tit mt-30">{{t('receive.transfer')}}</div>
   <div class="text-center lh-24 flex center" v-show="amount > 0">
     <span class="f-18">{{amount}} {{chooseToken.name}}</span>
-    <span class="f-12 meiyuan">≈ ${{toUsd(amount,2)}}</span>
   </div>
   <div class="flex center">
     <div class="code-box flex center mt-16">
@@ -52,7 +51,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import CustomExchangeModal from '@/components/customExchangeModal/index.vue'
 import { useI18n } from 'vue-i18n'
-import { toUsd } from '@/utils/filters'
 import NavHeader from '@/components/navHeader/index.vue'
 
 export default {
@@ -123,7 +121,6 @@ export default {
       amount,
       handleSetAmount,
       setAmountModal,
-      toUsd,
       handleConfirm,
       appProvide
     }

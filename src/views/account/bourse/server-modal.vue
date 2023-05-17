@@ -102,7 +102,7 @@
           </van-popover>
         </div>
         <div class="value lh-16 gas">
-          ≈ {{ gasFee }} ERB (≈ ${{ toUsd(gasFee, 8) }})
+          ≈ {{ gasFee }} ERB
         </div>
       </div>
     </div>
@@ -127,7 +127,6 @@ import {
 import { watch } from "vue";
 import { Dialog, Icon, Button, Popover } from "vant";
 import { useI18n } from "vue-i18n";
-import { toUsd } from "@/utils/filters";
 import Bignumber from "bignumber.js";
 import { useExchanges } from "@/hooks/useExchanges";
 import Tip from "@/components/tip/index.vue";
@@ -263,7 +262,6 @@ export default defineComponent({
       showpop2,
       showpop1,
       t,
-      toUsd,
       submit,
       gasFee,
     };

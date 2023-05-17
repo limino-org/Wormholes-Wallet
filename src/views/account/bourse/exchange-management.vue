@@ -163,7 +163,7 @@ export default {
         showGuide.value = true;
         // commit("account/UPDATE_EXCHANGEGUIDANCE", true);
       }
-      if (!state.account.exchangeServer && status == 2) {
+      if (!state.account.exchangeServer) {
         showServer.value = true;
         // commit("account/UPDATE_EXCHANGESERVER", true);
       }

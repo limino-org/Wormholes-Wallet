@@ -146,7 +146,9 @@
           <div class="total">
             {{ sumP }}(L3)/{{ sumC }}(L2)/{{ sumN }}(L1)/{{ sumF }}(L0)
           </div>
-          <div class="usd">{{ sumAll }}ERB <span>( ≈${{toUsd( sumAll,4)}})</span></div>
+          <div class="usd">{{ sumAll }}ERB 
+            <!-- <span>( ≈${{toUsd( sumAll,4)}})</span> -->
+          </div>
         </div>
       </div>
       <div class="snft_bottom-right hover" @click="showTime">
@@ -180,7 +182,7 @@
               <span>{{ t("converSnft.amount") }}</span>
         
             </div>
-            <div class="card-value ">{{ sumAll }}ERB ≈${{toUsd(sumAll,2)}}</div>
+            <div class="card-value ">{{ sumAll }}ERB</div>
           </div>
           <div class="card">
             <div class="card-label gasfee">
@@ -203,7 +205,7 @@
                 </template>
               </van-popover>
             </div>
-            <div class="card-value gasfee">≈{{gasFee}} ERB(≈ $ {{toUsd(gasFee, 8)}})</div>
+            <div class="card-value gasfee">≈{{gasFee}} ERB</div>
           </div>
         </div>
         <Tip :message="t('common.converTip')" type="warn" />
@@ -444,7 +446,6 @@ import { VUE_APP_EXCHANGES_URL, VUE_APP_OFFICIAL_EXCHANGE } from "@/enum/env";
 import SnftModal from "./snftModal.vue";
 import { getRandomColor } from "@/utils";
 import { web3 } from "@/utils/web3";
-import { toUsd } from "@/utils/filters";
 import { ethers } from "ethers";
 import { TransactionTypes } from "@/store/modules/account";
 import Tip from '@/components/tip/index.vue'
@@ -1197,7 +1198,6 @@ export default defineComponent({
       layoutType,
       isSelectAll,
       sumN,
-      toUsd,
       t,
       sumC,
       sumP,

@@ -54,7 +54,7 @@
             </template>
           </van-popover>
         </div>
-        <div class="value lh-16">{{ fee }} ERB(≈${{ toUsd(fee, 2) }})</div>
+        <div class="value lh-16">{{ fee }} ERB</div>
       </div>
       <div class="card">
         <div class="label lh-16 mb-2">
@@ -77,7 +77,7 @@
             </template>
           </van-popover>
         </div>
-        <div class="value lh-16">{{ amount }}ERB(≈${{ toUsd(amount, 2) }})</div>
+        <div class="value lh-16">{{ amount }}ERB</div>
       </div>
       <div class="card">
         <div class="label lh-16 mb-2">
@@ -101,7 +101,7 @@
           </van-popover>
         </div>
         <div class="value lh-16">
-          ≈{{ historyProfit }} ERB(≈${{ toUsd(historyProfit, 2) }})
+          ≈{{ historyProfit }} ERB
         </div>
       </div>
       <div class="card">
@@ -126,7 +126,7 @@
           </van-popover>
         </div>
         <div class="value lh-16">
-          ≈{{ myprofit }} ERB(≈${{ toUsd(myprofit, 2) }})
+          ≈{{ myprofit }} ERB
         </div>
       </div>
       <div class="card">
@@ -151,7 +151,7 @@
           </van-popover>
         </div>
         <div class="value lh-16 gasFee">
-          ≈{{ gasFee }} ERB(≈${{ toUsd(gasFee, 8) }})
+          ≈{{ gasFee }} ERB
         </div>
       </div>
     </div>
@@ -178,7 +178,7 @@ import { getAccountAddr } from '@/http/modules/common';
 import { watch } from "vue";
 import { Dialog, Icon, Button, Popover } from "vant";
 import { useI18n } from "vue-i18n";
-import { toUsd } from "@/utils/filters";
+
 import Bignumber, { BigNumber } from "bignumber.js";
 import { toHex, useExchanges } from "@/hooks/useExchanges";
 import Tip from "@/components/tip/index.vue";
@@ -306,7 +306,6 @@ export default defineComponent({
       showTip5,
       showTip6,
       t,
-      toUsd,
       submit,
       gasFee,
     };

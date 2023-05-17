@@ -16,7 +16,6 @@
         <div class="token-name">{{data.name}}</div>
         <div>
           <div class="name">{{ decimal(data.balance) }} {{ data.symbol }}</div>
-          <div class="amount text-right" v-if="!data.tokenContractAddress">${{ toUsd(data.balance, 6) }}</div>
         </div>
       </div>
     </div>
@@ -37,7 +36,7 @@ import {
 } from "vue";
 import { Icon,Image } from "vant";
 import { useRouter } from "vue-router";
-import { decimal, toUsd } from "@/utils/filters";
+import { decimal } from "@/utils/filters";
 import { useStore } from "vuex";
 
 export default defineComponent({
@@ -82,7 +81,6 @@ export default defineComponent({
       decimal,
       currentNetwork,
       hover,
-      toUsd
     };
   },
 });

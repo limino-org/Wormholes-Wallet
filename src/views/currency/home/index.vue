@@ -16,9 +16,7 @@
     >
       {{ decimal(pageData.data.balance) }} {{ pageData.data.symbol }}
     </div>
-    <div class="text-center lh-16 f-12 mb-20 amount2" v-if="!pageData.data.tokenContractAddress">
-      ≈ $ {{ toUsd(pageData.data.balance, 2) }}
-    </div>
+
     <div class="flex center">
       <div class="actions-list flex evenly">
         <div class="actions-list-card">
@@ -194,7 +192,7 @@ import {
 } from "vue";
 import { Icon, Popup, Empty, Dialog, Button, Toast, Skeleton, List } from "vant";
 import CollectionCard from "@/views/account/components/collectionCard/index.vue";
-import { addressMask, decimal, toUsd } from "@/utils/filters";
+import { addressMask, decimal } from "@/utils/filters";
 import AcceptCode from "@/views/account/components/acceptCode/index.vue";
 import TransactionDetail from "@/views/account/components/transactionDetail/index.vue";
 import { useRoute, useRouter } from "vue-router";
@@ -759,7 +757,6 @@ export default {
       transactionList,
       loading,
       pageData,
-      toUsd,
       VUE_APP_SCAN_URL,
       viewAccountByAddress,
       txList,
