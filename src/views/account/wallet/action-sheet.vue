@@ -2,15 +2,14 @@
 <template>
   <van-dialog
     v-model:show="show"
-    show-cancel-button
     teleport="#page-box"
     :class="`select-accounts-modal ${hasBtn ? 'hasBtn' : ''}`"
     :showConfirmButton="false"
-    :showCancelButton="false"
+    :show-cancel-button="false"
     closeOnClickOverlay
   >
     <!-- <van-action-sheet v-model:show="show" class="account-action-sheet" teleport="#page-box"> -->
-    <div class="sheet-header">
+    <div class="sheet-header van-hairline--bottom">
       {{ t("wallet.account") }}
     </div>
     <div class="account-container">
@@ -66,7 +65,7 @@
                   clickAccountIdx != null &&
                   clickAccountIdx == index
                 "
-                color="#1989fa"
+                color="#9F54BA"
               />
             </div>
           </div>
@@ -78,7 +77,6 @@
         <van-button
           block
           plain
-          :loading="createLoading"
           @click="handleCreateAccount"
         >
           {{ t("account.createaccount") }}</van-button
@@ -107,7 +105,7 @@ import {
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useToggleAccount } from "@/components/accountModal/hooks/toggleAccount";
-import { Icon, Dialog, Button, Loading, ActionSheet } from "vant";
+import { Icon, Dialog, Button, Loading, ActionSheet, Toast } from "vant";
 import AccountIcon from "@/components/accountIcon/index.vue";
 import { decimal } from "@/utils/filters";
 import { useStore } from "vuex";
@@ -209,16 +207,15 @@ export default defineComponent({
       })
     };
 
-    // const handleCreateAccount = async() => {
-    //   if(createLoading.value){
-    //     return
-    //   }
-    //   createLoading.value = true
-    //   nextTick(async() => {
-    //   createAccount()
-    //   createLoading.value = false
-    //   })
-    // }
+    const handleCreateAccount = async () => {
+      Toast.loading({
+        message: t("userexchange.loading"),
+        forbidClick: true,
+        loadingType: "spinner",
+      });
+      console.log("loading");
+      createAccount();
+    };
     return {
       t,
       options,
@@ -231,6 +228,7 @@ export default defineComponent({
       accountLoading,
       clickAccountIdx,
       currentNetwork,
+      handleCreateAccount,
       toImport,
       showModal,
       decimal,
@@ -264,7 +262,7 @@ export default defineComponent({
     font-size: 20px;
   }
   i.icon-xuanzhong1 {
-    color: #037dd6;
+    color: #9F54BA;
   }
 }
 .imported {
@@ -276,7 +274,7 @@ export default defineComponent({
 }
 .account-groups {
   .createBtn {
-    color: rgba(3, 125, 214, 1);
+    color: #9F54BA;
     font-size: 12px;
     line-height: 50px;
     border: none !important;
@@ -284,7 +282,7 @@ export default defineComponent({
   }
 
   .acc-btn {
-    color: rgba(3, 125, 214, 1);
+    color: #9F54BA;
     font-size: 12px;
     line-height: 50px;
   }
@@ -295,7 +293,7 @@ export default defineComponent({
   transition: ease 0.3s;
   &:hover {
     .account-value,.account-name {
-      color: #037dd6;
+      color: #9F54BA;
     }
   }
   .account-icon-s {
@@ -352,9 +350,9 @@ export default defineComponent({
   max-height: 45vh;
   overflow-y: scroll;
   .bt.select {
-    color: #037dd6;
+    color: #9F54BA;
     .account-value {
-      color: #037dd6;
+      color: #9F54BA;
     }
   }
 }
@@ -363,16 +361,16 @@ export default defineComponent({
   font-size: 12px;
   line-height: 58px;
   box-sizing: border-box;
-  color: #037dd6;
+  color: #9F54BA;
   border-bottom: 1px solid #ECEDEF;
    i {
-    color: #037dd6;
+    color: #9F54BA;
    }
 }
 .import {
   text-align: center;
   font-size: 12px;
-  color: #037dd6;
+  color: #9F54BA;
 }
 .bt {
   border-bottom: 1px solid #ecedef;
@@ -383,7 +381,7 @@ export default defineComponent({
   text-align: center;
   align-items: center;
   justify-content: center;
-  background: #f8fcff;
+  background: #FBF8FB;
   font-size: 15px;
   font-weight: bold;
   // border-radius: 20px 20px 0px 0px;

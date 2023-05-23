@@ -14,6 +14,7 @@ import '@/utils/ether'
 // if(process.env.VUE_APP_NODE_ENV != 'production') {
 //   new VConsole()
 // }
+import '@vant/touch-emulator';
 import { createApp } from 'vue'
 import i18n from '@/language/index'
 import App from './App.vue'

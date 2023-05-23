@@ -357,7 +357,7 @@ async function send2(package_id: string = "", amount: string = "0") {
 </script>
 <style lang="scss" scoped>
 .back {
-  color: #037cd6;
+  color: #9F54BA;
   font-size: 12px;
 }
 
@@ -375,12 +375,12 @@ async function send2(package_id: string = "", amount: string = "0") {
   }
 
   .sign-bg {
-    background: #f4faff;
+    background: #F8F3F9;
     height: 135px;
 
     &-icon {
       font-size: 40px;
-      color: #037cd6;
+      color: #9F54BA;
     }
 
     &-tit {
@@ -418,7 +418,7 @@ async function send2(package_id: string = "", amount: string = "0") {
       line-height: 14px;
 
       // &.select {
-      //   background: #1989fa;
+      //   background: #9F54BA;
       //   color:#fff;
       // }
       &:nth-of-type(1) {

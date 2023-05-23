@@ -176,7 +176,7 @@ export default {
   :deep(.van-field__body) {
     margin-bottom: 10px;
     &:hover {
-      border: 1PX solid #1989fa;
+      border: 1PX solid #9F54BA;
     }
   }
 }

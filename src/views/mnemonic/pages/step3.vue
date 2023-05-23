@@ -179,7 +179,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .mnemonic-bg {
-  background: rgba(244, 250, 255, 1);
+  background: #F8F3F9;
   .tit-big {
     line-height: 21px;
   }
@@ -188,7 +188,7 @@ export default {
     color: rgba(132, 132, 132, 1);
   }
   .color-p {
-    color: #037cd6;
+    color: #9F54BA;
   }
 }
 .icon-box {
@@ -215,8 +215,8 @@ export default {
   }
   &-card {
     width: 90px;
-    background: #f4faff;
-    color: #037cd6;
+    background: #F8F3F9;
+    color: #9F54BA;
     transition: ease 0.3s;
     border-radius: 12px;
     &:hover {
@@ -240,7 +240,7 @@ export default {
     .icon {
       width: 24px;
       height: 24px;
-      background: #037cd6;
+      background: #9F54BA;
       border-radius: 50%;
 
       color: #fff;
@@ -253,7 +253,7 @@ export default {
     }
     &:after,
     .icon:after {
-      border-color: #037cd6;
+      border-color: #9F54BA;
       border-radius: 45px;
     }
   }

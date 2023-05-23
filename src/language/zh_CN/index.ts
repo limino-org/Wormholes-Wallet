@@ -155,8 +155,8 @@ export default {
         findMore: "寻找更多",
         snftUnfree: "该质押的SNFT还未解冻！",
         conver_approve: "请求被批准了。转换事务将被启动。请稍等。",
-        conver_waiting: "{count}<span style='color:#037CD6;'>个S-NFT{countstr}</span>正在兑换，兑换成功，将获得{amount}<span style='color:#037CD6;'>ERB</span>，您也可以在个人中心的历史记录查看兑换详情",
-        conver_success: "{count}<span style='color:#037CD6;'>个S-NFT</span>兑换成功，已获得{amount}<span style='color:#037CD6;'>ERB</span>，您也可以在个人中心的历史记录查看兑换详情",
+        conver_waiting: "{count}<span style='color:#9F54BA;'>个S-NFT{countstr}</span>正在兑换，兑换成功，将获得{amount}<span style='color:#9F54BA;'>ERB</span>，您也可以在个人中心的历史记录查看兑换详情",
+        conver_success: "{count}<span style='color:#9F54BA;'>个S-NFT</span>兑换成功，已获得{amount}<span style='color:#9F54BA;'>ERB</span>，您也可以在个人中心的历史记录查看兑换详情",
         conver_wrong: "{count}个S-NFT兑换失败，您可以在个人中心历史记录查看兑换详情",
 
 
@@ -176,6 +176,8 @@ export default {
 
     },
     common: {
+        importerror: '导入失败',
+
         clearCanche:"清除缓存",
         clearCancheSuccess:"缓存清除成功",
         days:"天",
@@ -276,7 +278,7 @@ export default {
 		labelPeriod:"创建总期数",
 		labelProfit:"当选Creator总收益",
 		labelTimes:"当选Creator总次数",
-		labelAward:"当选Crator总奖励",
+		labelAward:"当选Creator总奖励",
 		labelWeight:"Creator预提名权重",
 		tip:"通过 {link1} 购买S-NFT以增加成为Creator的权重，请到 {link2} 查看更多详细信息",
 		exchange:"质押者",

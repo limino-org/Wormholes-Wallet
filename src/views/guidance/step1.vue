@@ -141,7 +141,7 @@ export default defineComponent({
         margin-right: 40px;
       }
       &:last-child {
-        background-color: #037cd6;
+        background-color: #9F54BA;
       }
     }
     }
@@ -165,7 +165,7 @@ export default defineComponent({
         display: inline-block;
         z-index: 999999;
         transform: rotate(90deg);
-        border-top: 1px dotted #037cd6;
+        border-top: 1px dotted #9F54BA;
       }
       &:after {
       content: "";
@@ -174,7 +174,7 @@ export default defineComponent({
       left: 106px;
       width: 4px;
       height: 4px;
-      background-color: #037CD6;
+      background-color: #9F54BA;
       border-radius: 50%;
       display: inline-block;
       z-index: 999999;
@@ -193,7 +193,7 @@ export default defineComponent({
     padding-right: 14px;
     font-size: 12px;
     .left {
-      color: #037cd6;
+      color: #9F54BA;
     }
   }
   .tip2 {

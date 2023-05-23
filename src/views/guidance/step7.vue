@@ -132,7 +132,7 @@ export default defineComponent({
   //     width: 70px;
   //     display: inline-block;
   //     z-index: 999999;
-  //     border-top: 1px dotted #037cd6;
+  //     border-top: 1px dotted #9F54BA;
   //   }
   //   &:after {
   //     content: "";
@@ -143,7 +143,7 @@ export default defineComponent({
   //     display: inline-block;
   //     z-index: 999999;
   //     transform: rotate(90deg);
-  //     border-top: 1px dotted #037cd6;
+  //     border-top: 1px dotted #9F54BA;
   //   }
   // }
   // .header-right {
@@ -169,7 +169,7 @@ export default defineComponent({
   }
   .line {
       width: 0;
-      border-right: 1px solid #037cd6;
+      border-right: 1px solid #9F54BA;
       height: 75px;
       position: absolute;
       right: 48px;
@@ -179,7 +179,7 @@ export default defineComponent({
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #037cd6;
+    background: #9F54BA;
     position: absolute;
     right: 45px;
     top: -80px;
@@ -216,7 +216,7 @@ export default defineComponent({
       box-sizing: border-box;
 
       &:last-child {
-        background-color: #037cd6;
+        background-color: #9F54BA;
       }
     }
   }
@@ -237,7 +237,7 @@ export default defineComponent({
   .dot {
     width: 4px;
     height: 4px;
-    background-color: #037cd6;
+    background-color: #9F54BA;
     border-radius: 50%;
   }
 }
@@ -253,7 +253,7 @@ export default defineComponent({
     font-size: 12px;
     font-size: 12px;
     .left {
-      color: #037cd6;
+      color: #9F54BA;
     }
   }
   .title {

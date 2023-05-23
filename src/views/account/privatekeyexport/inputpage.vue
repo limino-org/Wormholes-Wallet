@@ -259,12 +259,12 @@ export default {
     color: #bbc0c5;
   }
   .right {
-    color: #037cd6;
+    color: #9F54BA;
     text-decoration: underline;
   }
 
   .icon-yanjing {
-    color: #037dd6;
+    color: #9F54BA;
   }
   :deep(.van-field__label) {
     display: none;
@@ -281,7 +281,7 @@ export default {
   :deep(.van-field__body) {
     margin-bottom: 10px;
     &:hover {
-      border: 1px solid #1989fa;
+      border: 1px solid #9F54BA;
     }
   }
 }
@@ -392,14 +392,14 @@ export default {
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      background: #f4faff;
+      background: #F8F3F9;
       border-radius: 7.5px;
       box-sizing: border-box;
     }
     .active {
-      border: 1px solid #037cd6;
+      border: 1px solid #9F54BA;
       span {
-        color: #037cd6;
+        color: #9F54BA;
       }
     }
     .t1 {
@@ -435,7 +435,7 @@ export default {
   .bourse-container-error {
     margin: 0 15px 25px 15px;
     height: 56.5px;
-    background: #F4FAFF;
+    background: #F8F3F9;
     border-radius: 7.5px;
     display: flex;
     align-items: center;
@@ -447,7 +447,7 @@ export default {
   }
   .t1 {
     font-size: 14px;
-    color: #037cd6;
+    color: #9F54BA;
   }
   .t3 {
     font-size: 18px;
@@ -469,11 +469,11 @@ export default {
       color: #848484;
     }
     .right {
-      color: #037cd6;
+      color: #9F54BA;
       text-decoration: underline;
     }
     .icon-yanjing {
-      color: #037dd6;
+      color: #9F54BA;
     }
     :deep(.van-field__label) {
       display: none;
@@ -490,7 +490,7 @@ export default {
     :deep(.van-field__body) {
       margin-bottom: 10px;
       &:hover {
-        border: 1px solid #1989fa;
+        border: 1px solid #9F54BA;
       }
     }
     .error-field {
@@ -500,11 +500,11 @@ export default {
     }
     .success-field {
       :deep(.van-field__body) {
-      border: 1px solid #1989fa !important;
+      border: 1px solid #9F54BA !important;
       }
     }
     .tool {
-      color: #037cd6;
+      color: #9F54BA;
     }
     .pointer {
       cursor: pointer;
@@ -519,7 +519,7 @@ export default {
 }
 .bourse-img {
   height: 135px;
-  background-color: #F4FAFF;
+  background-color: #F8F3F9;
   display: flex;
   align-items: center;
   justify-content: center;

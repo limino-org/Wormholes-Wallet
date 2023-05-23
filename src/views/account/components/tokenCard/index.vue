@@ -96,9 +96,9 @@ export default defineComponent({
     transition: ease .3s;
     cursor: pointer;
 
-    color: #037DD6;
+    color: #9F54BA;
     .token-info .amount {
-      color: #037DD6;
+      color: #9F54BA;
     }
   }
   &-left {

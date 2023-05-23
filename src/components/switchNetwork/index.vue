@@ -93,7 +93,7 @@ export default defineComponent({
   color: #000;
   font-size: 15px;
   line-height: 62px;
-  background: #f8fcff;
+  background: #FBF8FB;
 }
 .main-tit {
   font-size: 12px;

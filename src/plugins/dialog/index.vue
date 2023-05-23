@@ -167,7 +167,7 @@ defineExpose({
   .title {
     line-height: 60px;
     text-align: center;
-    background: #F8FCFF;
+    background: #FBF8FB;
     font-weight: bold;
     font-size: 15px;
     box-shadow: 0 1px 1px rgb(135 134 134 / 10%);

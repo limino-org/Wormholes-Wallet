@@ -48,8 +48,8 @@ export default {
 
 
     conver_approve: "The request is approved.The convert tansaction will be started.Please wait for seconds.",
-    conver_waiting: "{count} <span style='color:#037CD6;'>SNFT{countstr}</span> are being exchanged. You will receive {amount}<span style='color:#037CD6;'>ERB</span> if you are successfully exchanged. You can also check the exchange details in the history of the Personal Center",
-    conver_success: "{count} <span style='color:#037CD6;'>SNFT</span> have been successfully exchanged and you have obtained {amount}<span style='color:#037CD6;'>ERB</span>. You can also check the exchange details in the history of the Personal center",
+    conver_waiting: "{count} <span style='color:#9F54BA;'>SNFT{countstr}</span> are being exchanged. You will receive {amount}<span style='color:#9F54BA;'>ERB</span> if you are successfully exchanged. You can also check the exchange details in the history of the Personal Center",
+    conver_success: "{count} <span style='color:#9F54BA;'>SNFT</span> have been successfully exchanged and you have obtained {amount}<span style='color:#9F54BA;'>ERB</span>. You can also check the exchange details in the history of the Personal center",
     conver_wrong: "{count} SNFT failed to exchange, you can check the exchange details in the Personal center history",
 
 
@@ -226,7 +226,7 @@ export default {
 		labelPeriod:"Create the total number of phases",
 		labelProfit:"Total revenue of elected Creator",
 		labelTimes:"Total number of times that you have been elected Creator",
-		labelAward:"Total reward for being elected Crator",
+		labelAward:"Total reward for being elected Creator",
 		labelWeight:"Creator Withhold name weight",
 		tip:"Buy SNFT through the {link1} to increase the weight to becomeing Creator, Go to the {link2} to see more details",
 		exchange:"Exchange",
@@ -238,7 +238,7 @@ export default {
     imported: 'Imported',
     send: 'Send',
     add: 'Receive',
-    browser: 'Wormholes Blockchain Explorer',
+    browser: 'Blockchain Explorer',
     backstage: 'Backstage',
     autoNFTexchange: 'AutoNFTexchange',
     wallet: 'Wallet ',
@@ -252,7 +252,7 @@ export default {
     exchangemanagement: 'Staker Management',
     closeexchange: 'Close the exchange',
     minerspledge: 'Become a Validator',
-    aboutAs: "Wormholes Official Website",
+    aboutAs: "Official Website",
     receiveAward: "receive award",
     help: 'Help Center',
     snftCreator:"SNFT Creator"

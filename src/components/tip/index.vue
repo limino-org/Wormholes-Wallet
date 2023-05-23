@@ -36,9 +36,9 @@ export default defineComponent({
     margin: 15px;
     border-radius: 5px;
     &.primary {
-      background: #F4FAFF;
+      background: #F8F3F9;
       .icon i {
-        color: #037CD6;
+        color: #9F54BA;
       }
     }
     &.warn {

@@ -71,7 +71,7 @@ export default {
   font-weight: bold;
 }
 .loading-bg {
-  background: rgba(244, 250, 255, 1);
+  background: #F8F3F9;
   height: 90px;
   .tit-big {
     line-height: 21px;

@@ -170,7 +170,7 @@ export default {
     border: 1px solid #e4e7e8;
     margin: 22px 27px;
     .tit {
-      color: #037cd6;
+      color: #9F54BA;
       height: 80px;
       line-height: 80px;
       padding-right: 15px;

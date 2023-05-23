@@ -790,7 +790,7 @@ export default {
   }
 }
 .view-history {
-  color: #037cd6;
+  color: #9F54BA;
   &:hover {
     text-decoration: underline;
   }
@@ -828,7 +828,7 @@ export default {
     margin-top: 40px;
     span {
       margin-left: 3px;
-      color: #037cd6;
+      color: #9F54BA;
       cursor: pointer;
       &:hover {
         text-decoration: underline;
@@ -871,7 +871,7 @@ export default {
       &-icon {
         height: 32px;
         width: 32px;
-        background: rgba(3, 125, 214, 1);
+        background: #9F54BA;
         border-radius: 32px;
         transition: ease 0.3s;
         i {
@@ -884,7 +884,7 @@ export default {
       }
       &-label {
         line-height: 16px;
-        color: rgba(3, 125, 214, 1);
+        color: #9F54BA;
         font-size: 12px;
         margin-top: 7px;
       }

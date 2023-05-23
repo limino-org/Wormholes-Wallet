@@ -204,7 +204,7 @@ export default {
     width: 20px;
   }
 .icon-yanjing1 {
-  color: #037cd6;
+  color: #9F54BA;
 }
 .logo {
   width: 20px !important;
@@ -235,9 +235,9 @@ export default {
   .ipt {
     width: 89px;
     height: 25px;
-    background: #f4faff;
+    background: #F8F3F9;
     border-radius: 25px;
-    border: 1PX solid #037cd6;
+    border: 1PX solid #9F54BA;
     position: relative;
     margin-right: 10px;
     margin-bottom: 10px;
@@ -258,7 +258,7 @@ export default {
       width: 24px;
       line-height: 24px;
       height: 24px;
-      background: #037cd6;
+      background: #9F54BA;
       border-radius: 12px;
       position: absolute;
       left: -0.5px;
@@ -271,7 +271,7 @@ export default {
       width: 65px;
       border: none;
       text-align: center;
-      color: #037cd6;
+      color: #9F54BA;
       border-radius: 25px;
       font-size: 12px;
       margin-right: 2px;
@@ -284,12 +284,12 @@ export default {
   flex-wrap: wrap;
   .card {
     line-height: 25px;
-    background: #f4faff;
+    background: #F8F3F9;
     border-radius: 12.5px;
     padding: 0 13px;
     margin-right: 10px;
     margin-bottom: 10px;
-    color: #037cd6;
+    color: #9F54BA;
   }
 }
 .warning {
@@ -299,7 +299,7 @@ export default {
   margin-top: 12px;
 }
 .link {
-  color: #037cd6;
+  color: #9F54BA;
 }
 :deep() {
   .van-checkbox__icon {

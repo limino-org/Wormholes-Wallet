@@ -116,7 +116,7 @@ export default defineComponent({
   padding: 0;
 }
 :deep(.van-index-bar__index--active) {
-  background: #037cd6;
+  background: #9F54BA;
   color: #fff;
   border-radius: 9px;
 }
@@ -127,7 +127,7 @@ export default defineComponent({
   border-bottom: 1px solid #E4E7E8;
   &:hover {
     cursor: pointer;
-    background: #E9F5FE;
+    background: #F8F3F9;
   }
   .contact-icon {
     &-box {
@@ -136,8 +136,6 @@ export default defineComponent({
   }
   .contact-info {
     padding: 2px 0;
-    &-name {
-    }
     &-address {
       color: #909090;
     }

@@ -187,7 +187,7 @@
   .creatorTip {
       color: #B3B3B3;
       .link {
-          color: #037CD6;
+          color: #9F54BA;
           text-decoration: underline;
           display: inline-block;
       }

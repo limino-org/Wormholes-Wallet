@@ -780,7 +780,7 @@ export default {
 
 <style lang="scss" scoped>
 .back {
-  color: #037cd6;
+  color: #9F54BA;
   font-size: 12px;
 }
 .title {
@@ -799,7 +799,7 @@ export default {
   margin-bottom: 0;
 }
 .gasfee-icon i {
-  color: #037cd6;
+  color: #9F54BA;
   font-size: 24px;
 }
 .page-container {
@@ -852,7 +852,7 @@ export default {
       width: 17.5px;
       height: 17.5px;
       border-radius: 50%;
-      border: 1px solid #037cd6;
+      border: 1px solid #9F54BA;
       cursor: pointer;
       &.disabled {
         border: 1px solid #ccc;
@@ -863,7 +863,7 @@ export default {
       }
       i {
         font-size: 12px;
-        color: #037cd6;
+        color: #9F54BA;
         font-weight: bold;
       }
     }
@@ -924,7 +924,7 @@ export default {
       background: #f1f3f4;
       z-index: 1;
       &.active {
-        background: #1989fa;
+        background: #9F54BA;
       }
     }
 
@@ -969,7 +969,7 @@ export default {
   }
   .clearAddress {
     font-size: 16px;
-    color: #037cd6;
+    color: #9F54BA;
   }
   .slider-box.amount-info {
     .value {
@@ -979,7 +979,7 @@ export default {
   }
   .cancel {
     font-size: 11px;
-    color: #037cd6;
+    color: #9F54BA;
   }
   .up-down-box {
     i {
@@ -988,13 +988,13 @@ export default {
     span {
       word-break: keep-all;
 
-      color: #037cd6;
+      color: #9F54BA;
     }
     .line-box::after {
       border-color: #6e7276 !important;
     }
     font-size: 12px;
-    color: #037cd6;
+    color: #9F54BA;
   }
   :deep(input) {
     font-size: 12px;
@@ -1024,7 +1024,7 @@ export default {
   .to-btns {
     // width: 66px;
     i {
-      color: #037cd6;
+      color: #9F54BA;
       font-size: 20px;
     }
   }
@@ -1077,7 +1077,7 @@ export default {
       }
       &:hover {
         transition: ease 0.3s;
-        background-color: rgba(3, 125, 214, 0.1);
+        background-color: #F8F3F9;
       }
       .closeIcon {
         position: absolute;

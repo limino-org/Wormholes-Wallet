@@ -42,7 +42,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .back {
-  color: #037CD6;
+  color: #9F54BA;
   font-size: 12px;
 }
 .title {

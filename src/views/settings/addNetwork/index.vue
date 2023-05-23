@@ -400,12 +400,12 @@ export default {
     font-size: 12px;
   }
   .w-tips {
-    // background: #f4faff;
+    // background: #F8F3F9;
     border-radius: 7px;
     // margin: 15px 0;
     .icon {
       width: 28px;
-      color: #037cd6;
+      color: #9F54BA;
       font-size: 18px;
     }
     .text {
@@ -448,7 +448,7 @@ export default {
   :deep(.van-field__body) {
     margin-bottom: 20px;
     &:hover {
-      border: 1px solid #1989fa;
+      border: 1px solid #9F54BA;
     }
   }
 }

@@ -206,7 +206,7 @@ export default {
 .introduce {
   width: 100%;
   min-height: 150px;
-  background-color: #F4FAFF;
+  background-color: #F8F3F9;
   .close-icon {
     position: absolute;
     top: 20px;
@@ -286,7 +286,7 @@ export default {
     width: 325px;
     height: 45px;
     margin: 20px 25px;
-    background: #037cd6;
+    background: #9F54BA;
     border-radius: 24px;
   }
 }

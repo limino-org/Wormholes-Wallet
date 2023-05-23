@@ -147,7 +147,7 @@ trigger="manual"
       </van-tabs>
     </div>
     <div class="loading-box flex center" v-else>
-      <van-loading size="24px" color="#1989fa">
+      <van-loading size="24px" color="#9F54BA">
         {{ t("wallet.loading") }}
       </van-loading>
     </div>

@@ -6,10 +6,9 @@
     teleport="#page-box"
     class="toggle-snft-modal"
     :showConfirmButton="false"
-    :showCancelButton="false"
     closeOnClickOverlay
   >
-    <div class="sheet-header">
+    <div class="sheet-header van-hairline--bottom">
       {{ t("createExchange.snft") }}
     </div>
     <div class="account-container">
@@ -135,8 +134,8 @@ export default defineComponent({
 .btn-box {
   padding: 12px 45px;
   button:hover {
-    border: 1px solid #037dd6;
-    color: #037dd6;
+    border: 1px solid #9F54BA;
+    color: #9F54BA;
     background: none;
   }
 }
@@ -150,7 +149,7 @@ export default defineComponent({
     font-size: 20px;
   }
   i.icon-xuanzhong1 {
-    color: #037dd6;
+    color: #9F54BA;
   }
 }
 
@@ -160,7 +159,7 @@ export default defineComponent({
   text-align: center;
   align-items: center;
   justify-content: center;
-  background: #f8fcff;
+  background: #FBF8FB;
   font-size: 15px;
   font-weight: bold;
 }
@@ -171,22 +170,22 @@ export default defineComponent({
   border: 1px solid #848484;
   cursor: pointer;
   &:hover {
-    color: #037dd6;
+    color: #9F54BA;
     .desc,
     i {
-      color: #037dd6;
+      color: #9F54BA;
     }
   }
   .info {
     padding-right: 10px;
   }
   &.active {
-    color: #037dd6;
-    border: 1px solid #037dd6;
-    background: #f4faff;
+    color: #9F54BA;
+    border: 1px solid #9F54BA;
+    background: #F8F3F9;
     .desc,
     i {
-      color: #037dd6;
+      color: #9F54BA;
     }
   }
   .label {

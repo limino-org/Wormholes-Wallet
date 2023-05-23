@@ -15,7 +15,7 @@
       <div :class="`flex center-v ${!hasSelect ? 'between full' : ''} ${select? 'select' : ''}`">
         <div class="flex">
           <div class="flex center mr-6" style="margin-top:-2px;">
-            <NetIcon :index="data.icon.index" size="15"  :color="select && hasSelect ? '#037CD6' : '#000'" />
+            <NetIcon :index="data.icon.index" size="15"  :color="select && hasSelect ? '#9F54BA' : '#000'" />
         </div>
         <span>{{ data.label }} {{ t("networklist.network") }}</span>
         </div>
@@ -105,13 +105,13 @@ export default defineComponent({
     width: 100%;
   }
   &:hover {
-    background: rgb(244, 247, 250);
+    background: #F8F3F9;
   }
   .net-status {
     width: 20px;
     color: #ccc;
     i {
-      color: #037DD6;
+      color: #9F54BA;
       font-size: 16px;
     }
     i.icon-xuanzhong1 {
@@ -123,7 +123,7 @@ export default defineComponent({
     width: 100%;
     font-size: 12px;
     & .select {
-      color: #037DD6;
+      color: #9F54BA;
     }
     i {
       color: #bababa;

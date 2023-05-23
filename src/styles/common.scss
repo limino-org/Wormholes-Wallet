@@ -41,7 +41,7 @@ body {
 
 // click stream
 .clickActive:active {
-  background: rgba($color: #cccccc, $alpha: .2);
+  background: #F8F3F9;
 }
 
 .van-toast__text {
@@ -52,7 +52,6 @@ body {
 .hover {
   cursor: pointer;
 }
-
 .cancel,
 .menu,
 .actions-btn,
@@ -74,8 +73,8 @@ body {
   color: rgb(134, 133, 133);
 }
 .van-button--plain:hover,.van-button--default:hover {
-  border: 1px solid #037CD6;
-  color: #037CD6;
+  border: 1px solid #9F54BA;
+  color: #9F54BA;
 }
 .van-dialog {
   overflow: scroll;
@@ -83,10 +82,6 @@ body {
 -moz-osx-font-smoothing: grayscale;
 width: 420px;
     backface-visibility: hidden;
-  .van-dialog__content {
-
-
-  }
   &.van-popup--center {
     left: 50%;
     transform: none;
@@ -101,23 +96,19 @@ width: 420px;
     }
     button:hover {
       border: none;
-      color: #037CD6;
+      color: #9F54BA;
     }
   }
 }
-.van-button--danger {
-  // background-color: #D73A49;
-}
+
 .van-button--primary:hover {
-  background: #1198ec;
+  background: #9643b4;
 }
 
 .van-button--plain.van-button--primary:hover {
   color: #ffff;
 }
-.van-button:before {
-  // transform: inherit;
-}
+
 .minus-miner-stack-dialog {
   top: 0;
 }
@@ -148,7 +139,7 @@ width: 420px;
   transition: ease 0.3s;
   font-size: 12px;
   &:hover {
-    border-color: #037CD6;
+    border-color: #9F54BA;
   }
 }
 .van-field__error-message {
@@ -173,7 +164,7 @@ width: 420px;
 
 
 .back {
-  color: #037CD6;
+  color: #9F54BA;
   font-size: 12px;
 }
 
@@ -228,10 +219,10 @@ width: 420px;
   }
   border-radius: 4px;
   .van-popover__arrow {
-    color: #037CD6;
+    color: #9F54BA;
   }
   .van-popover__content {
-    background: #037CD6;
+    background: #9F54BA;
     color: #fff;
     padding: 10px;
     line-height: 16px;
@@ -284,11 +275,11 @@ width: 420px;
 
 .popover-blue {
   .van-popover__content {
-    background: #037CD6;
+    background: #9F54BA;
 
   }
   .van-popover__arrow {
-    color: #037CD6;
+    color: #9F54BA;
   }
 }
 .del-net-modal {
@@ -306,7 +297,7 @@ width: 420px;
   animation: slider-in 0.3s reverse ease-in-out;
 }
 .el-slider__button,.van-slider__button {
-  background: #037CD6 !important;
+  background: #9F54BA !important;
 }
 
 
@@ -352,9 +343,6 @@ width: 420px;
       margin-left: -180px;
       top: 40px;
     }
-    & .van-dialog__content {
-      // max-width: 90%;
-    }
   }
 }
 @media screen and (max-width: 750px) {
@@ -363,9 +351,6 @@ width: 420px;
     &.van-popup--center{
       margin-left: -45vw;
       top: 40px;
-    }
-    & .van-dialog__content {
-      // max-width: 90%;
     }
   }
 

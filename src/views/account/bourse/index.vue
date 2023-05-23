@@ -339,7 +339,7 @@
       </div>
     </div>
     <div class="flex center loading-page" v-else>
-    <van-loading color="#037CD6" />
+    <van-loading color="#9F54BA" />
     </div>
     <CustomExchangeModal
       v-model="showAcount"

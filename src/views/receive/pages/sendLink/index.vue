@@ -131,12 +131,12 @@ const isWarning = ref(false);
     font-weight: bold;
 }
 .link-bg {
-  background: #F4FAFF;
+  background: #F8F3F9;
   height: 150px;
   padding-top: 25px;
   .icon-con {
     i {
-      color: #037cd6;
+      color: #9F54BA;
       font-size: 28px;
     }
   }
@@ -152,7 +152,7 @@ const isWarning = ref(false);
   text-align: center;
 }
 .send-link-a {
-  color: #037cd6;
+  color: #9F54BA;
   font-size: 12px;
   margin-top: 22px;
   text-align: center;

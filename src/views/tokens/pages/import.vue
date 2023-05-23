@@ -332,7 +332,7 @@ export default {
   }
 }
 .wormholeslink {
-  color: #037cd6;
+  color: #9F54BA;
 }
 .list {
   height: calc(100vh - 48px - 16px);
@@ -356,7 +356,7 @@ export default {
   padding: 0;
 }
 :deep(.van-index-bar__index--active) {
-  background: #037cd6;
+  background: #9F54BA;
   color: #fff;
   border-radius: 9px;
 }
@@ -366,9 +366,9 @@ export default {
 .tabs {
   width: 200px;
   // border-radius: 20px;
-  // border: 1PX solid #037cd6;
+  // border: 1PX solid #9F54BA;
   &::after {
-    border-color: #037cd6;
+    border-color: #9F54BA;
     border-radius: 26px;
   }
   .tab {
@@ -377,21 +377,21 @@ export default {
     border-radius: 12px;
     font-size: 12px;
     &.active {
-      background: #037cd6;
-      // border: 1PX solid #037cd6;
+      background: #9F54BA;
+      // border: 1PX solid #9F54BA;
       color: #fff;
     }
   }
 }
 .title {
   text-align: center;
-  background: #f4faff;
+  background: #F8F3F9;
   margin-top: 25px;
   .left {
     width: 20px;
     i {
       font-size: 16px;
-      color: #037cd6;
+      color: #9F54BA;
     }
   }
   .right {
@@ -399,7 +399,7 @@ export default {
     padding-left: 3px;
     a {
       text-decoration: underline;
-      color: #037cd6;
+      color: #9F54BA;
     }
   }
 }
@@ -423,7 +423,7 @@ export default {
 .ipt-box {
   width: 96%;
   i {
-    color: #037cd6;
+    color: #9F54BA;
     font-size: 22px;
   }
   :deep(.van-field__body) {
@@ -440,7 +440,7 @@ export default {
   width: 30px;
   i {
     font-size: 16px;
-    color: #037cd6;
+    color: #9F54BA;
   }
 }
 .icon-right-box {
@@ -448,7 +448,7 @@ export default {
     font-size: 18px;
   }
   .icon-add {
-    color: #037cd6;
+    color: #9F54BA;
   }
   .icon-minus {
   }
@@ -480,7 +480,7 @@ export default {
   margin-bottom: 10px;
 
   &:hover {
-    border: 1px solid #1989fa;
+    border: 1px solid #9F54BA;
   }
 }
 

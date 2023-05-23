@@ -859,10 +859,9 @@ export default {
         const { phrase, pathIndex } = params;
         wallet = await createWalletByMnemonic({ phrase, pathIndex });
         return wallet;
-      } catch ({ reason }) {
+      } catch (err: any) {
         // Toast(`i18n.global.t("import.empty")}${reason}`);
         Toast(i18n.global.t("common.failedtoload"));
-        console.error(reason)
       }
     },
     // Gets the balance of the current wallet
@@ -1323,32 +1322,21 @@ export default {
       if (hasAddress) {
         console.log("balance.toString()", balance);
         // If it does not exist, add it
-        const token = {
-          symbol,
-          name,
-          logoUrl,
-          precision: decimal,
-          tokenContractAddress,
-          balance,
-        }
-        network.tokens[key].push(token);
-        commit("UPDATE_NETWORK", network);
-        return token;
       } else {
         // Current Network The current address has no token
         network.tokens[key] = [];
-        const token = {
-          symbol,
-          name,
-          logoUrl,
-          precision: decimal,
-          tokenContractAddress,
-          balance,
-        }
-        network.tokens[key].push(token);
-        commit("UPDATE_NETWORK", network);
-        return token;
       }
+      const token = {
+        symbol,
+        name,
+        logoUrl,
+        precision: decimal,
+        tokenContractAddress,
+        balance,
+      }
+      network.tokens[key].push(token);
+      commit("UPDATE_NETWORK", network);
+      return token;
     },
     // Link token contract
     async connectConstract(

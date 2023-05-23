@@ -24,7 +24,7 @@
           name="add"
           class="hover"
           @click="toAdd"
-          color="#037CD6"
+          color="#9F54BA"
           size="20"
         />
       </div>
@@ -179,9 +179,9 @@ export default {
 }
 :deep(.netword-card.selected) {
   .net-name {
-    color: #037cd6;
+    color: #9F54BA;
     svg {
-      fill: #037cd6;
+      fill: #9F54BA;
       margin-top: -2px;
     }
   }

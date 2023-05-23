@@ -175,7 +175,7 @@ export default defineComponent({
 }
 .title {
   line-height: 62px;
-  background: #f8fcff;
+  background: #FBF8FB;
   font-weight: bold;
 }
 .tip {
@@ -187,9 +187,9 @@ export default defineComponent({
 }
 .savebtn {
   width: 250px;
-  background: #f4faff;
+  background: #F8F3F9;
   border-radius: 30px;
-  color: #037cd6;
+  color: #9F54BA;
   i {
     font-size: 12px;
   }

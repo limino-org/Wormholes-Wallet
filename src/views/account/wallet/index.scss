@@ -52,8 +52,8 @@
       }
 
       &:hover {
-        border: 1px solid #037DD6;
-        color: #037DD6;
+        border: 1px solid #9F54BA;
+        color: #9F54BA;
       }
     }
 
@@ -67,19 +67,12 @@
       width: 48px;
 
       &:hover {
-        border: 1px solid #037DD6;
-        color: #037DD6;
+        border: 1px solid #9F54BA;
+        color: #9F54BA;
       }
     }
-
-    .zhuanhuan-switch:hover {
-      // background-color: #177FD2;
-      // color:#fff;
-      // border:1px solid #177FD2;
-    }
-
     &:hover i {
-      color: rgba(3, 125, 214, 1);
+      color: #9F54BA;
     }
 
 
@@ -93,7 +86,7 @@
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    border: 1px solid rgba(3, 125, 214, 1);
+    border: 1px solid #9F54BA;
     background: rgba(234, 234, 234, 1);
     overflow: hidden;
     display: flex;
@@ -138,8 +131,8 @@
     transition: ease .3s;
 
     &:hover {
-      background: #E9F5FE;
-      color: #037DD6;
+      background: #F8F3F9;
+      color: #9F54BA;
     }
   }
 
@@ -148,8 +141,8 @@
 
     &-btn:hover {
       .action-icon {
-        background: rgb(4, 110, 190);
-        box-shadow: 0 3px 4px rgb(166, 213, 248);
+        background: #9F54BA;
+        box-shadow: 0 3px 4px #e4d9e7;
       }
     }
 
@@ -181,7 +174,7 @@
         width: 37px;
         height: 37px;
         border-radius: 50%;
-        background: rgba(3, 125, 214, 1);
+        background: #9F54BA;
         margin: 0 auto;
 
         i {
@@ -192,7 +185,7 @@
 
       .action-name {
         line-height: 16px;
-        color: rgba(3, 125, 214, 1);
+        color: #9F54BA;
         font-size: 12px;
         margin-top: 7px;
       }
@@ -209,7 +202,7 @@
     }
 
     .tip2 {
-      color: rgba(3, 125, 214, 1);
+      color: #9F54BA;
       font-size: 12px;
       line-height: 15px;
     }
@@ -229,11 +222,11 @@
     height: 2px;
     bottom: 0px;
     z-index: 1;
-    background: rgba(3, 125, 214, 1);
+    background: #9F54BA;
   }
 
   .van-tab--active {
-    color: rgba(3, 125, 214, 1);
+    color: #9F54BA;
   }
 
   .van-tabs--line .van-tabs__wrap {
@@ -255,7 +248,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    background: #037DD6;
+    background: #9F54BA;
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
 
     span {
@@ -269,7 +262,7 @@
       position: absolute;
       bottom: 9px;
       right: -10px;
-      border-left: 7px solid #037DD6;
+      border-left: 7px solid #9F54BA;
       border-right: 7px solid transparent;
       border-top: 7px solid transparent;
       border-bottom: 7px solid transparent;
@@ -297,7 +290,7 @@
       
       i {
         font-size: 22px;
-        color: #037DD6;
+        color: #9F54BA;
 
       }
 
@@ -312,8 +305,8 @@
       right: 83px;
       top: 10px;
       text-align: center;
-      color: #037DD6;
-
+      color: #9F54BA;
+      background: #fff;
       &:after {
         content: ' ';
         position: absolute;
@@ -336,7 +329,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background: #037DD6;
+    background: #9F54BA;
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1), 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
 
     i {

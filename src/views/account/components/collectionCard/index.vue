@@ -163,18 +163,18 @@ export default defineComponent({
   cursor: pointer;
   transition: ease .3s;
   &.active {
-    background: #E9F5FE;
+    background: #F8F3F9;
     padding-left: 20px;
   }
   &:hover {
-    background: #E9F5FE;
+    background: #F8F3F9;
     padding-left: 20px;
   }
   &-left {
     .token-icon {
       width: 30px;
       height: 100%;
-      color: rgba(3, 125, 214, 1);
+      color: #9F54BA;
       &-box {
         width: 28px;
         height: 28px;

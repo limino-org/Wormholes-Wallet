@@ -202,7 +202,7 @@ export default {
       line-height: 62px;
       text-align: center;
       font-weight: bold;
-      background: #f8fcff;
+      background: #FBF8FB;
       font-size: 14px;
       color: #0f0f0f;
     }
@@ -264,7 +264,7 @@ export default {
           -webkit-text-fill-color: #232323 !important;
         }
         ::v-deep .van-field__control {
-          font-size: 10px !important;
+          font-size: 12px !important;
         }
         ::-webkit-input-placeholder {
           color: #232323;
@@ -322,7 +322,7 @@ export default {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #f4faff;
+            background: #F8F3F9;
             border-radius: 7px 7px 7px 7px;
             &:first-child {
               padding: 0 18px;
@@ -330,8 +330,8 @@ export default {
           }
           .ipt-server-i-active {
             color: #0287db;
-            background: #f4faff;
-            border: 1px solid #037cd6;
+            background: #F8F3F9;
+            border: 1px solid #9F54BA;
             span {
               color: #0287db;
             }

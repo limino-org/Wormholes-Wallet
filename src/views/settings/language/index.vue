@@ -90,10 +90,10 @@ export default {
     box-sizing: border-box;
     transition: ease 0.2s;
     &:hover {
-      color: #1989fa;
+      color: #9F54BA;
     }
     &.active {
-      border: 1px solid #1989fa;
+      border: 1px solid #9F54BA;
     }
     .tit {
       font-size: 12px;

@@ -257,7 +257,7 @@ export default {
   line-height: 62px;
   text-align: center;
   font-size: 15px;
-  background: #f8fcff;
+  background: #FBF8FB;
   color: #000;
   font-weight: bold;
 }
@@ -271,7 +271,7 @@ export default {
   padding: 0 15px;
   margin-top: 30px;
   font-size: 12px;
-  color: #037cd6;
+  color: #9F54BA;
 }
 .footer-btns {
   display: flex;

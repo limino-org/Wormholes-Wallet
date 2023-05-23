@@ -141,11 +141,11 @@ export default {
     border-bottom: 1px solid #e6e6e6;
     &:hover {
       // background: rgb(244, 247, 250);
-      color: #037cd6;
+      color: #9F54BA;
       i,
       .desc,
       .label {
-        color: #037cd6;
+        color: #9F54BA;
       }
     }
     .title {

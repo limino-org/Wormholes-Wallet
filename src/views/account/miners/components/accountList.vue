@@ -89,7 +89,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .title {
   line-height: 60px;
-  background: #f8fcff;
+  background: #FBF8FB;
   font-size: 15px;
   font-weight: bold;
   text-align: center;
@@ -104,7 +104,7 @@ onMounted(async () => {
       .acc-info {
         .name,
         .address {
-          color: #037dd6;
+          color: #9F54BA;
         }
       }
     }
@@ -112,7 +112,7 @@ onMounted(async () => {
       .acc-info {
         .name,
         .address {
-          color: #037dd6;
+          color: #9F54BA;
         }
       }
     }

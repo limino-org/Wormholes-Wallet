@@ -56,7 +56,7 @@ export default defineComponent({
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      border: 1px solid #037dd6;
+      border: 1px solid #9F54BA;
       overflow: hidden;
     }
     .info {

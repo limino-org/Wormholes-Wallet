@@ -57,7 +57,7 @@
     </div>
   </div>
   <div class="flex center loading-page" v-else>
-    <van-loading color="#037CD6" />
+    <van-loading color="#9F54BA" />
   </div>
   <ServerModal v-model="showServerModal" :exchangeName="exchangeName" :days="days" :hours="hours"  @updateStatus="handleUpdateStatus"/>
   <div class="guide-mask" @click.stop="closeGuide" v-if="showGuideMask">
@@ -298,7 +298,7 @@ export default {
     .line-box {
       height: 75px;
       width: 0;
-      border-right: 1px dotted #037cd6;
+      border-right: 1px dotted #9F54BA;
       position: absolute;
       left: 50%;
       top: -62px;
@@ -306,7 +306,7 @@ export default {
     .line-circle {
       width: 6px;
       height: 6px;
-      background: #037cd6;
+      background: #9F54BA;
       border-radius: 3px;
       position: absolute;
       left: 50%;
@@ -327,7 +327,7 @@ export default {
     .line-box {
       height: 75px;
       width: 0;
-      border-right: 1px dotted #037cd6;
+      border-right: 1px dotted #9F54BA;
       position: absolute;
       left: 50%;
       bottom: -62px;
@@ -335,7 +335,7 @@ export default {
     .line-circle {
       width: 6px;
       height: 6px;
-      background: #037cd6;
+      background: #9F54BA;
       border-radius: 3px;
       position: absolute;
       left: 50%;
@@ -361,7 +361,7 @@ export default {
       right: 7.5px;
       top: 11.5px;
       bottom: 13px;
-      border: 1px dotted #037cd6;
+      border: 1px dotted #9F54BA;
       border-radius: 5px;
     }
   }
@@ -373,7 +373,7 @@ export default {
 }
 .bourse-img {
   height: 135px;
-  background-color: #f4faff;
+  background-color: #F8F3F9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -420,7 +420,7 @@ export default {
       .label,
       .desc,
       i {
-        color: #037cd6;
+        color: #9F54BA;
       }
     }
   }

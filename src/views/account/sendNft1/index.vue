@@ -267,10 +267,10 @@ export default {
 .send-nft1 {
   .back {
     font-size: 18px;
-    color: rgba(3, 125, 214, 1);
+    color: #9F54BA;
   }
   .close {
-    color: rgba(3, 125, 214, 1);
+    color: #9F54BA;
     font-size: 12px;
   }
   .code-box {
@@ -327,7 +327,7 @@ export default {
           height: 30px;
           border-radius: 50%;
           overflow: hidden;
-          border: 1px solid rgba(3, 125, 214, 1);
+          border: 1px solid #9F54BA;
         }
         .desc {
           padding: 6px 0;
@@ -343,7 +343,7 @@ export default {
         }
       }
       .select {
-        color: #1989fa;
+        color: #9F54BA;
         font-size: 18px;
       }
     }
@@ -356,7 +356,7 @@ export default {
         margin-right: 20px;
       }
       i {
-        color: rgba(3, 125, 214, 1);
+        color: #9F54BA;
         position: absolute;
         right: 0;
         top: 14px;
@@ -384,7 +384,7 @@ export default {
     }
   }
   :deep(.van-tab--active) {
-    color: rgba(3, 125, 214, 1);
+    color: #9F54BA;
   }
   :deep(.van-tabs__line) {
     display: none;

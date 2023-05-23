@@ -915,7 +915,7 @@ export default defineComponent({
         show.value = false;
         $tradeConfirm.open({
           approveMessage: t("wallet.conver_approve"),
-          wattingMessage: t("wallet.conver_waiting",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount.toNumber()}</span>`,countstr:numstr }),
+          wattingMessage: t("wallet.conver_waiting",{count:`<span style='color:#9F54BA;'>${count}</span>`,amount:`<span style='color:#9F54BA;'>${amount.toNumber()}</span>`,countstr:numstr }),
           wattingMessageType:"html",
           disabled: [TradeStatus.pendding],
           callBack: () => {
@@ -968,7 +968,7 @@ export default defineComponent({
           if(successList.length === count) {
           $tradeConfirm.update({
             status: "success",
-            successMessage: t("wallet.conver_success",{count:`<span style='color:#037CD6;'>${count}</span>`,amount:`<span style='color:#037CD6;'>${amount.toNumber()}</span>`}),
+            successMessage: t("wallet.conver_success",{count:`<span style='color:#9F54BA;'>${count}</span>`,amount:`<span style='color:#9F54BA;'>${amount.toNumber()}</span>`}),
             successMessageType:'html',
             historyCallBack
           });
@@ -1271,7 +1271,7 @@ text-align: center;
     border-radius: 5px;
    }
   a {
-    color: #037cd6;
+    color: #9F54BA;
   }
 }
 .nft-p {
@@ -1312,7 +1312,7 @@ background: rgb(215, 58, 73);
   width: 200px;
   height: 26px;
   border-radius: 26px;
-  border: 1px solid #037cd6;
+  border: 1px solid #9F54BA;
   .tab-card {
     line-height: 24px;
     padding: 0 1px;
@@ -1320,7 +1320,7 @@ background: rgb(215, 58, 73);
     width: 50%;
     border-radius: 24px;
     &.active {
-      background: #037cd6;
+      background: #9F54BA;
       color: #fff;
     }
   }
@@ -1329,7 +1329,7 @@ background: rgb(215, 58, 73);
   margin-top: 21px;
   color: #848484;
   span {
-    color: #037cd6;
+    color: #9F54BA;
     cursor: pointer;
   }
 }
@@ -1383,7 +1383,7 @@ background: rgb(215, 58, 73);
       font-size: 18px;
       color: #858585;
       &.icon-xuanzhong2 {
-        color: #037cd6;
+        color: #9F54BA;
       }
       &.icon-xuanzhong {
         font-size: 20px;
@@ -1410,7 +1410,7 @@ background: rgb(215, 58, 73);
     line-height: 15px;
     text-align: center;
     min-height: 15px;
-    background-color: #037cd6;
+    background-color: #9F54BA;
     border-radius: 10px;
     color: #fff;
   }
@@ -1468,12 +1468,12 @@ background: rgb(215, 58, 73);
   width: 100%;
   &:hover {
     cursor: pointer;
-    color: #037cd6;
+    color: #9F54BA;
     .snftmiddle .snftmiddle-text {
-      color: #037cd6;
+      color: #9F54BA;
     }
     .snftmiddle .snftName i{
-      color: #037cd6;
+      color: #9F54BA;
     }
   }
 }
@@ -1494,7 +1494,7 @@ background: rgb(215, 58, 73);
     color: #858585;
 
     &.icon-xuanzhong2 {
-      color: #037cd6;
+      color: #9F54BA;
     }
     &.icon-xuanzhong {
       font-size: 20px;
@@ -1529,7 +1529,7 @@ background: rgb(215, 58, 73);
     color: #b3b3b3;
   }
   span.select {
-    color: #037cd6;
+    color: #9F54BA;
   }
   .snft_bottom-left-text {
     .total {
@@ -1538,7 +1538,7 @@ background: rgb(215, 58, 73);
       letter-spacing: 0.4px;
     }
     .usd {
-      color: #037cd6;
+      color: #9F54BA;
       font-size: 14px;
       font-weight: bold;
       span {
@@ -1551,7 +1551,7 @@ background: rgb(215, 58, 73);
   display: flex;
   align-items: center;
   // width: 75px;
-  background-color: #037cd6;
+  background-color: #9F54BA;
   color: #fff;
   border-radius: 15px;
   height: 30px;
@@ -1582,7 +1582,7 @@ background: rgb(215, 58, 73);
   text-align: center;
   font-size: 15px;
   color: #000;
-  background: #f8fcff;
+  background: #FBF8FB;
   font-weight: bold;
 }
 .warning-icon-c {
@@ -1633,7 +1633,7 @@ background: rgb(215, 58, 73);
   margin-top: 21px;
   line-height: 16px;
   a {
-    color: #037cd6;
+    color: #9F54BA;
     &:hover {
       text-decoration: underline;
     }

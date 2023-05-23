@@ -1,6 +1,6 @@
 <template>
   <div class="guide-page">
-    <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#39a9ed">
+    <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#9F54BA">
       <van-swipe-item>
         <div>
           <WormTransition>
@@ -218,9 +218,7 @@ export default {
       width: 49%;
     }
   }
-:deep(.van-swipe__indicators) {
-  // margin-top: 200px;
-}
+
 .guide-page {
   width: 375px;
   margin: 0 auto;
@@ -258,7 +256,7 @@ export default {
 
       img {
         display: block;
-        width: 175px;
+        width: 80px;
       }
     }
   }
@@ -291,8 +289,6 @@ export default {
     padding: 0;
     margin:20px;
   }
-  button:nth-of-type(1) {
-    // margin-right: 20px;
-  }
+
 }
 </style>

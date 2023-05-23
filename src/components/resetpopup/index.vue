@@ -160,7 +160,7 @@ export default defineComponent({
 .title {
 font-weight: bold;
   line-height: 62px;
-  background: #f8fcff;
+  background: #FBF8FB;
 }
 .warn {
   margin: 26px auto 8px;

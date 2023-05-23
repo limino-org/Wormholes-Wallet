@@ -139,7 +139,7 @@ export default defineComponent({
 
 
 <style lang="scss" scoped>
-$L0Color: #037DD6;
+$L0Color: #9F54BA;
 $L1Color: #3AAE55;
 $L2Color: #F7BF03;
 $L3Color: #D73A49;

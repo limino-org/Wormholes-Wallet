@@ -709,7 +709,7 @@ export default defineComponent({
           color = "#3ea757";
           break;
         case NetStatus.success:
-          color = "#037CD6";
+          color = "#9F54BA";
           break;
         case NetStatus.fail:
           color = "#ce4051";

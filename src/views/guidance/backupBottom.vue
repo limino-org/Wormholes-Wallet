@@ -110,7 +110,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .backup-box {
-  background: #f4faff;
+  background: #F8F3F9;
   padding-bottom: 24px;
 }
 .title {

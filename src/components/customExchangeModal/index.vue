@@ -221,7 +221,7 @@ export default defineComponent({
 .title {
   color: #b3b3b3;
   line-height: 62px;
-  background: #f8fcff;
+  background: #FBF8FB;
 }
 .van-cell:after {
   display: none;
@@ -290,7 +290,7 @@ export default defineComponent({
     }
   }
   i {
-    color: #037cd6;
+    color: #9F54BA;
     font-size: 15px;
   }
   .token-name {

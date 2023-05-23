@@ -5,7 +5,7 @@
         <span>{{$t('closeexchange.closeexchange')}}</span>
       </div>
       <div class="flex center miners-icons">
-        <van-icon size="41" color="#037CD6" name="warning" />
+        <van-icon size="41" color="#9F54BA" name="warning" />
       </div>
       <div class="flex center">
         <span class="text-s">{{$t('closeexchange.shutitdown',{ data: screenBancle(exchangeStatus.exchanger_balance)})}}</span>
@@ -134,7 +134,7 @@ export default {
       line-height: 62px;
       text-align: center;
       font-weight: bold;
-      background: #f8fcff;
+      background: #FBF8FB;
       font-size: 14px;
       color: #0f0f0f;
     }

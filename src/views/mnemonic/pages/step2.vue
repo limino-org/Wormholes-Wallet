@@ -169,14 +169,14 @@ export default {
     }
   }
   .tip-card {
-    border: 1px solid #037cd6;
+    border: 1px solid #9F54BA;
     .icon {
-      border: 1px solid #037cd6;
+      border: 1px solid #9F54BA;
       border-radius: 50%;
     }
   }
 .mnemonic-bg {
-  background: rgba(244, 250, 255, 1);
+  background: #F8F3F9;
   .tit-big {
     line-height: 21px;
   }
@@ -185,7 +185,7 @@ export default {
     color: rgba(132, 132, 132, 1);
   }
   .color-p {
-    color: #037cd6;
+    color: #9F54BA;
   }
 }
 .icon-box {
@@ -211,12 +211,12 @@ export default {
     width: 90px;
     height: 23px;
     line-height: 23px !important;
-    background: #f4faff;
-    color: #037cd6;
+    background: #F8F3F9;
+    color: #9F54BA;
     position: relative;
     border-radius: 12px;
     &:hover {
-      background: #037cd6;
+      background: #9F54BA;
       color: #fff;
 
     }
@@ -236,7 +236,7 @@ export default {
     }
     &:after,
     .icon:after {
-      border-color: #037cd6;
+      border-color: #9F54BA;
       border-radius: 45px;
     }
   }

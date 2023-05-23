@@ -2,7 +2,7 @@
 .pay-success {
   text-align: center;
   font-size: 20px;
-  color: rgba(5, 126, 214, 1);
+  color: #9F54BA;
 }
 .code,.nav-icon {
   width: 56.69px;
@@ -14,12 +14,12 @@
 
 .circle-success-text {
   font-size: 16px;
-  color: rgba(5, 126, 214, 1);
+  color: #9F54BA;
 }
 
 .to-exchanges {
   a {
-    color: rgba(5, 126, 214, 1);
+    color: #9F54BA;
     font-size: 12px;
     display: inline-block;
     text-decoration: underline;
@@ -48,7 +48,7 @@
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: rgba(5, 126, 214, 1);
+    background: #9F54BA;
     margin-right: 4px;
   }
 
@@ -73,7 +73,7 @@
       height: 20px;
 
       i {
-        color: rgba(3, 125, 214, 1);
+        color: #9F54BA;
         font-size: 16px;
       }
     }
@@ -83,7 +83,7 @@
 .slider-con {
   &.isExchange {
     .slider-bg {
-      background: rgb(3, 125, 214);
+      background: #9F54BA;
       color: #fff;
       .addrName,.account-address ,.account-amount, i,.company-name{
         color: #fff !important;
@@ -139,7 +139,7 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        border: 1px solid rgba(3, 125, 214, 1);
+        border: 1px solid #9F54BA;
         background: rgba(234, 234, 234, 1);
         overflow: hidden;
         display: flex;
@@ -203,13 +203,12 @@
         font-size: 15px;
         line-height: 39px;
         color: rgba(133, 141, 150, 1);
-        transition: ease .3s;
+        transition: ease .2s;
         &:hover {
-          background: #E9F5FE;
-          color: #037CD6;
-          padding-left: 20px;
+          color: #9F54BA;
+          background: #F8F3F9;
           i {
-            color: #037CD6;
+            color: #9F54BA;
           }
         }
         i {
@@ -219,10 +218,10 @@
         }
 
         &.active {
-          background: #E9F5FE;
+          background: #E4E7E8;
           border-top-right-radius: 19px;
           border-bottom-right-radius: 19px;
-          color: #037CD6;
+          color: #9F54BA;
         }
         span {
           word-break: keep-all;
@@ -240,7 +239,7 @@
       }
 
       .title-active {
-        color: #037CD6;
+        color: #9F54BA;
       }
 
       .setting-btn-img-i {
@@ -251,7 +250,7 @@
       .setting-btn-img-i-active {
         // margin-left: 13px;
         float: right;
-        color: #037CD6;
+        color: #9F54BA;
       }
 
       .send {
@@ -265,7 +264,7 @@
       }
 
       .sends-active {
-        color: #037CD6 !important;
+        color: #9F54BA !important;
       }
     }
   }
@@ -412,7 +411,7 @@
         // exchange
         .user,
         .tag-label {
-          background: linear-gradient(270deg, #21245F 0%, #1E275A 100%);
+          background: linear-gradient(270deg, #BB68D9 0%, #b139dd 100%);
         }
       }
   

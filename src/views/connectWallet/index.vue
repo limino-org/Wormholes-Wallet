@@ -335,9 +335,8 @@ export function handleConnectBackUrl(params: URLParams) {
 </script>
 <style lang="scss" scoped>
 .back {
-  color: #037cd6;
+  color: #9F54BA;
   font-size: 12px;
 }
 
-.connect-wallet {}
 </style>

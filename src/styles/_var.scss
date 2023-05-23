@@ -1,21 +1,22 @@
 :root {
+    --van-primary-color: #9F54BA;
     // Popup window rounded corners
     --van-dialog-border-radius: 10px;
     // Popup window width
     --van-dialog-width: 350px;
     // Popover confirm button color
-    --van-dialog-confirm-button-text-color:rgba(3, 125, 214, 1);
+    --van-dialog-confirm-button-text-color:#9F54BA;
     // Popover button font
     --van-font-size-lg: 12px;
     // Button border color
-    --van-button-primary-border-color: rgba(2, 136, 219, 1);
+    --van-button-primary-border-color: #9F54BA;
     // Button font size
     --van-button-default-font-size: 16px;
     // Button with rounded corners
     --van-button-border-radius: 30PX;
 
     // Button rounded default button font color
-    --van-button-primary-background-color:rgba(3, 125, 214, 1);
+    --van-button-primary-background-color:#9F54BA;
     // The border color
     --van-border-color:#E4E7E8;
     // Button default height
@@ -28,7 +29,7 @@
     --van-border-width-base:1px;
     --van-sticky-z-index: 1;
     // --van-radius-md: 22px;
-    // --van-blue: #037DD6;
+    // --van-blue: #9F54BA;
     --van-switch-node-box-shadow: 0 3px 1px 0 rgba(#c7c5c5, .05), 0 2px 2px 0 rgba(#c7c5c5, .1), 0 3px 3px 0 rgba(#c7c5c5, .05);
     --van-switch-background-color: #c7c5c5;
 }

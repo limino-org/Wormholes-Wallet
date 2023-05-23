@@ -17,7 +17,7 @@ const backHome = () => {
     .cancel-btn {
         span {
             font-size: 12px;
-            color: #037CD6;
+            color: #9F54BA;
         }
     }
 </style>

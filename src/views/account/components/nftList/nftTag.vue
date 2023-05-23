@@ -106,7 +106,7 @@ const showPopover2 = ref(false);
 const showPopover3 = ref(false);
 </script>
 <style lang="scss" scoped>
-$L0Color: #037dd6;
+$L0Color: #9F54BA;
 $L1Color: #3aae55;
 $L2Color: #f7bf03;
 $L3Color: #d73a49;

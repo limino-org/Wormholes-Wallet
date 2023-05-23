@@ -146,7 +146,7 @@ const handlerNext = () => {
       border-radius: 17.5px;
       background: #f1f3f4;
        i {
-        color: #037CD6;
+        color: #9F54BA;
         font-size: 16px;
        }
        .token-name {

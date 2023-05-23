@@ -236,7 +236,7 @@ export default {
 <style lang="scss" scoped>
 .cancel {
   font-size: 11px;
-  color: #037cd6;
+  color: #9F54BA;
 }
 .btn-group {
   padding: 0 15px;
@@ -279,7 +279,7 @@ export default {
       height: 34px;
       border-radius: 50%;
       overflow: hidden;
-      border: 1px solid rgba(3, 125, 214, 1);
+      border: 1px solid #9F54BA;
     }
     .userinformation {
       height: 34px;

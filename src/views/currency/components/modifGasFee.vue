@@ -357,15 +357,15 @@ export default defineComponent({
   height: 248px;
 }
 .back {
-  color: #037cd6;
+  color: #9F54BA;
   font-size: 12px;
 }
 .slider-box {
   &:hover {
-    border: 1px solid #037cd6 !important;
+    border: 1px solid #9F54BA !important;
     .van-hairline--bottom {
       &:after {
-        border-color: #037cd6;
+        border-color: #9F54BA;
       }
     }
   }
@@ -497,7 +497,7 @@ export default defineComponent({
       width: 17.5px;
       height: 17.5px;
       border-radius: 50%;
-      border: 1px solid #037cd6;
+      border: 1px solid #9F54BA;
       cursor: pointer;
       &.disabled {
         border: 1px solid #ccc;
@@ -508,7 +508,7 @@ export default defineComponent({
       }
       i {
         font-size: 12px;
-        color: #037cd6;
+        color: #9F54BA;
         font-weight: bold;
       }
     }

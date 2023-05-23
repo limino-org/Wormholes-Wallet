@@ -135,7 +135,7 @@ export default {
       line-height: 62px;
       padding-left: 15px;
       font-weight: bold;
-      background: #f8fcff;
+      background: #FBF8FB;
       font-size: 14px;
       color: #0f0f0f;
       span {

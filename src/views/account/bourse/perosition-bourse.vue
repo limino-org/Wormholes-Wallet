@@ -6,7 +6,7 @@
     </NavHeader>
   <div class="bourse">
     <div class="bourse-container-error">
-      <van-icon name="warning" color="#037CD6" />
+      <van-icon name="warning" color="#9F54BA" />
       <span>{{t('bourse.tip17')}}</span>
     </div>
     <van-cell-group :border="false">
@@ -242,14 +242,14 @@ export default defineComponent({
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      background: #f4faff;
+      background: #F8F3F9;
       border-radius: 7.5px;
       box-sizing: border-box;
     }
     .active {
-      border: 1px solid #037cd6;
+      border: 1px solid #9F54BA;
       span {
-        color: #037cd6;
+        color: #9F54BA;
       }
     }
     .t1 {
@@ -285,7 +285,7 @@ export default defineComponent({
   .bourse-container-error {
     margin: 0 15px 25px 15px;
     height: 56.5px;
-    background: #F4FAFF;
+    background: #F8F3F9;
     border-radius: 7.5px;
     display: flex;
     align-items: center;
@@ -297,7 +297,7 @@ export default defineComponent({
   }
   .t1 {
     font-size: 14px;
-    color: #037cd6;
+    color: #9F54BA;
   }
   .t3 {
     font-size: 18px;
@@ -319,11 +319,11 @@ export default defineComponent({
       color: #848484;
     }
     .right {
-      color: #037cd6;
+      color: #9F54BA;
       text-decoration: underline;
     }
     .icon-yanjing {
-      color: #037dd6;
+      color: #9F54BA;
     }
     :deep(.van-field__label) {
       display: none;
@@ -343,7 +343,7 @@ export default defineComponent({
       transition: ease 0.3s;
       font-size: 12px;
       &:hover {
-        border: 1px solid #1989fa;
+        border: 1px solid #9F54BA;
       }
     }
     .error-field {
@@ -353,11 +353,11 @@ export default defineComponent({
     }
     .success-field {
       :deep(.van-field__body) {
-      border: 1px solid #1989fa !important;
+      border: 1px solid #9F54BA !important;
       }
     }
     .tool {
-      color: #037cd6;
+      color: #9F54BA;
     }
     .pointer {
       cursor: pointer;
@@ -372,7 +372,7 @@ export default defineComponent({
 }
 .bourse-img {
   height: 135px;
-  background-color: #F4FAFF;
+  background-color: #F8F3F9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -441,7 +441,7 @@ export default defineComponent({
             display: inline-block;
             z-index: 999999;
             transform: rotate(90deg);
-            border-top: 1px dotted #037cd6;
+            border-top: 1px dotted #9F54BA;
           }
           &:after {
           content: "";
@@ -450,7 +450,7 @@ export default defineComponent({
           left: 120.5px;
           width: 4px;
           height: 4px;
-          background-color: #037CD6;
+          background-color: #9F54BA;
           border-radius: 50%;
           display: inline-block;
           z-index: 999999;
@@ -490,7 +490,7 @@ export default defineComponent({
         margin-right: 40px;
       }
       &:last-child {
-        background-color: #037cd6;
+        background-color: #9F54BA;
       }
     }
     }
@@ -511,7 +511,7 @@ export default defineComponent({
         display: inline-block;
         z-index: 999999;
         transform: rotate(90deg);
-        border-top: 1px dotted #037cd6;
+        border-top: 1px dotted #9F54BA;
       }
       &:after {
       content: "";
@@ -520,7 +520,7 @@ export default defineComponent({
       left: 121.5px;
       width: 4px;
       height: 4px;
-      background-color: #037CD6;
+      background-color: #9F54BA;
       border-radius: 50%;
       display: inline-block;
       z-index: 999999;
@@ -539,7 +539,7 @@ export default defineComponent({
     padding-right: 14px;
     font-size: 12px;
     .left {
-      color: #037cd6;
+      color: #9F54BA;
     }
   }
   .tip2 {

@@ -100,33 +100,41 @@ export const useToggleAccount = () => {
   }
 
   const createAccount = () => {
+    if(createLoading.value) {
+      return
+    }
     createLoading.value = true
+    return new Promise((resolve, reject) => {
     let time = setTimeout(() => {
       const password: string = getCookies('password') || ''
       if (!password) {
         router.replace({ name: 'withpassword' })
       }
-      createWalletByPath((wallet: any, mnemonic: Mnemonic) => {
+
+        createWalletByPath((wallet: any, mnemonic: Mnemonic) => {
         
-        eventBus.emit('beforeChangeAccount')
-        const { privateKey, address } = wallet
-        const params: EncryptPrivateKeyParams = {
-          privateKey,
-          password
-        }
-        const keyStore = encryptPrivateKey(params)
-        dispatch('account/addAccount', { keyStore, mnemonic, address }).then(() => {
-          eventBus.emit('changeAccount', address)
-          clearTimeout(time)
-          handleUpdate()
-          dispatch("account/getExchangeStatus")
-          nextTick(() => {
-            listDom.value.scrollTop = listDom.value.scrollHeight
+          eventBus.emit('beforeChangeAccount')
+          const { privateKey, address } = wallet
+          const params: EncryptPrivateKeyParams = {
+            privateKey,
+            password
+          }
+          const keyStore = encryptPrivateKey(params)
+          dispatch('account/addAccount', { keyStore, mnemonic, address }).then(() => {
+            eventBus.emit('changeAccount', address)
+            resolve(wallet)
+            clearTimeout(time)
+            handleUpdate()
+            dispatch("account/getExchangeStatus")
+            nextTick(() => {
+              listDom.value.scrollTop = listDom.value.scrollHeight
+            })
+          }).finally(() => {
+            createLoading.value = false
           })
-        }).finally(() => {
-          createLoading.value = false
         })
       })
+
     })
 
 

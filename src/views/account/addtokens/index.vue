@@ -138,7 +138,7 @@ export default {
     .title {
       width: 345px;
       height: 56px;
-      background-color: #f4faff;
+      background-color: #F8F3F9;
       margin: 0 auto;
       font-size: 14px;
       align-items: center;

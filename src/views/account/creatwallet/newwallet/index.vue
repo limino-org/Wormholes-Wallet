@@ -172,7 +172,7 @@ export default {
   font-size: 16px;
 }
 .back-icon {
-  color: rgba(3, 125, 214, 1);
+  color: #9F54BA;
   font-size: 22px;
   margin-left: -6px;
 }
