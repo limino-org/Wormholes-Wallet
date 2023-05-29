@@ -123,7 +123,9 @@ export default {
     const { t } = useI18n()
     const router = useRouter()
     const route = useRoute()
-    const mnemonic = decodeURIComponent(route.query.mnemonic?.toString() || '')
+    console.warn('params', history.state.params)
+    const mnemonic = decodeURIComponent(history.state.params ? history.state.params.mnemonic?.toString() : '')
+    console.warn('mnemonic', mnemonic)
     const store = useStore()
     const { commit, dispatch } = store
     const password: Ref<string> = ref('')
@@ -255,6 +257,12 @@ export default {
     }
     const modal1 = ref(false);
     const modal2 = ref(false);
+
+    onMounted(() => {
+      if(!mnemonic) {
+        router.back()
+      }
+    })
     return {
       t,
       password2,

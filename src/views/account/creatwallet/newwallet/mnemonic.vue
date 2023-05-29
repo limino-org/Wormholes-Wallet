@@ -144,7 +144,7 @@ export default {
       search({ target: { value: list.value[i].value } })
     }
 
-    const handleSelect = (str: string,idx: number) => {
+    const handleSelect = (str: string) => {
       list.value[iptIdx.value].value = str
       searchList.value = []
       handleBlur(str,iptIdx.value)
@@ -162,7 +162,8 @@ export default {
       }
       try {
         ethers.Wallet.fromMnemonic(mnemonic, "m/44'/60'/0'/0/0")
-        router.push({ name: "mnemonic-import", query: { mnemonic: encodeURIComponent(mnemonic) } })
+        console.warn('to mnemonic', mnemonic)
+        router.push({ name: "mnemonic-import", state: { params: {mnemonic} } })
       }catch(err){
         console.error(err.toString())
         $wtoast.warn(t('importByMnemonic.errorMonic'))

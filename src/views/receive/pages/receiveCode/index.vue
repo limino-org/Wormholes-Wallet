@@ -111,6 +111,7 @@ export default {
             name
           }
     })
+    const replaceBackUrl = ""
     return {
       code,
       t,
@@ -122,7 +123,8 @@ export default {
       handleSetAmount,
       setAmountModal,
       handleConfirm,
-      appProvide
+      appProvide,
+      replaceBackUrl
     }
   }
 }
