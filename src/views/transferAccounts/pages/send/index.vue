@@ -66,7 +66,7 @@
             </div>
           </div>
           <div class="information p-14 flex between" v-show="hasChooseAddress">
-            <div class="flex">
+            <div class="flex wd-100">
               <div class="avatar flex center">
                 <AccountIcon :data="account.data.icon" />
               </div>
@@ -779,6 +779,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.wd-100 {
+  width: 100%;
+}
 .back {
   color: #9F54BA;
   font-size: 12px;
@@ -1108,6 +1111,7 @@ export default {
       }
       .userinformation {
         margin-left: 5px;
+        max-width: 88%;
         .username {
           font-size: 12px;
           line-height: 14px;

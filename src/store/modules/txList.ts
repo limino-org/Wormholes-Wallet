@@ -39,14 +39,14 @@ export default {
     actions: {
         async updateRecordPage({ commit, state }: any, { transactions: list, total, chainId, hasRecord }) {
             const typerec = typeof hasRecord
-            console.warn('typeof hasRecord', typeof hasRecord, typeof typerec)
+            console.warn('typeof hasRecord', typeof hasRecord, typeof typerec, list)
             const wallet = await getWallet()
             const addr = store.state.account.accountInfo.address.toUpperCase()
             const { id } = store.state.account.currentNetwork
             const asyncRecordKey = `async-${id}-${chainId}-${addr}`
             let txInfo = await localforage.getItem(asyncRecordKey)
             if (list && list.length) {
-                const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
+                const realList = txInfo && txInfo.list.length ? txInfo.list.filter(item => !item.sendType) : []
                 if ((txInfo && total >= realList.length) || !txInfo) {
                     try {
                         for await (const item of list) {
@@ -60,7 +60,7 @@ export default {
             }
             console.log('txInfo', txInfo)
             if (txInfo) {
-                const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
+                const realList = txInfo && txInfo.list.length ? txInfo.list.filter(item => !item.sendType) : []
                 if (total <= realList.length) {
                     if (time && typeof hasRecord == 'undefined') {
                         clearInterval(time)
@@ -72,6 +72,8 @@ export default {
                 }
                 const newList = unRepet(txInfo.list, list).sort((a, b) => b.blockNumber - a.blockNumber)
                 console.log('newList', newList)
+                console.log('txInfo.list',txInfo.list)
+                console.log('list',list)
                 txInfo.list = txInfo.list && txInfo.list.length ? newList : [...list].sort((a, b) => b.blockNumber - a.blockNumber)
                 txInfo.total = total
             } else {
@@ -83,7 +85,7 @@ export default {
             }
             await localforage.setItem(asyncRecordKey, txInfo)
             eventBus.emit('loopTxListUpdata', txInfo.list)
-            const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
+            const realList = txInfo && txInfo.list.length ? txInfo.list.filter(item => !item.sendType) : []
             if (!list || realList.length < page_size_int && typeof hasRecord == 'undefined') {
                 if (time) {
                     clearInterval(time)
@@ -136,14 +138,14 @@ export default {
                     page: txInfo.page
                 }
                 const { total, transactions } = await getTransitionsPage(params)
-                if(transactions && transactions.length) {
+                if (transactions && transactions.length) {
                     transactions.forEach((item) => {
                         item.txId = guid()
-                        if(item.input == '0x') {
+                        if (item.input == '0x') {
                             item.txType = 'normal'
                         } else {
                             const json = getInput(item.input)
-                            if(json) {
+                            if (json) {
                                 item.txType = 'wormholes'
                                 item.jsonData = json
                             } else {
@@ -152,13 +154,13 @@ export default {
                         }
                     })
                 }
-                    
+
                 if (transactions && transactions.length > page_size_int) {
                     txInfo.page = page_size_int + 1 + '                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          '
                 }
                 await localforage.setItem(asyncRecordKey, txInfo)
                 await dispatch('updateRecordPage', { transactions, total, chainId })
-                return { total, chainId, asyncRecordKey, transactions,...params,txInfo }
+                return { total, chainId, asyncRecordKey, transactions, ...params, txInfo }
             }
             return null
         },
@@ -174,15 +176,15 @@ export default {
             const txInfo = await localforage.getItem(asyncRecordKey)
             // const totalPage = Math.ceil(total/10)
             // const listTotalPage = Math.ceil(txInfo.list.length/10)
-            const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
-            return new Promise(async(resolve) => {
+            const realList = txInfo && txInfo.list.length ? txInfo.list.filter(item => !item.sendType) : []
+            return new Promise(async (resolve) => {
                 if (total !== realList.length) {
                     const hasRecord1 = await handleUpdateList()
                     console.warn('hasRecord1', hasRecord1)
                     if (!hasRecord1) {
                         resolve()
                         clearInterval(time2)
-                        return 
+                        return
                     }
                     time2 = setInterval(async () => {
                         const hasRecord = await handleUpdateList()
@@ -190,7 +192,7 @@ export default {
                         if (!hasRecord) {
                             resolve()
                             clearInterval(time2)
-                        } 
+                        }
                     }, timeOut2)
                 } else {
                     resolve()
@@ -206,44 +208,44 @@ export default {
                 const txInfo = await localforage.getItem(asyncRecordKey)
                 const hashList = txInfo.list.map(item => item.hash.toUpperCase())
                 const { total, transactions } = await getTransitionsPage(params)
-                if(!total && txInfo.list && txInfo.list.length) {
+                if (!total && txInfo.list && txInfo.list.length) {
                     const addr = store.state.account.accountInfo.address.toUpperCase()
                     const { id, chainId } = store.state.account.currentNetwork
                     // Clear the transaction history of the current account
                     const qstr1 = `async-${id}-${chainId}-${addr.toUpperCase()}`
                     const qstr2 = `txQueue-${id}-${chainId}-${addr.toUpperCase()}`
-                    await localforage.iterate(async(value, key, iterationNumber) => {
+                    await localforage.iterate(async (value, key, iterationNumber) => {
                         console.log('clear cancel', key)
                         if (key !== "vuex") {
-                            if(key == qstr1 || key == qstr2) {
+                            if (key == qstr1 || key == qstr2) {
                                 console.log('clear cancel', key)
-                               await localforage.removeItem(key);
+                                await localforage.removeItem(key);
                             }
                         } else {
-                          [key, value]
+                            [key, value]
                         }
                     });
                     return false
                 }
-                if(transactions && transactions.length) {
+                if (transactions && transactions.length) {
                     transactions.forEach((item) => {
                         item.txId = guid()
-                        if(item.input == '0x') {
+                        if (item.input == '0x') {
                             item.txType = 'normal'
                         } else {
                             const json = getInput(item.input)
-                            if(json) {
+                            if (json) {
                                 item.txType = 'wormholes'
                                 item.jsonData = json
                             } else {
                                 item.txType = 'contract'
                             }
                         }
-                        
+
                     })
                 }
                 let newList = []
-                if(transactions && transactions.length) {
+                if (transactions && transactions.length) {
                     newList = transactions.filter(item => !hashList.includes(item.hash.toUpperCase()))
                 }
                 console.warn('newList', newList)
@@ -259,7 +261,7 @@ export default {
                 } else {
                     hasRecord = false
                 }
-                
+
                 await dispatch('updateRecordPage', { transactions: newList, total, chainId, hasRecord })
                 return hasRecord
             }
@@ -269,25 +271,25 @@ export default {
             const network = store.state.account.currentNetwork
             const wallet = await getWallet()
             // When you are currently on a wormholes network, synchronize transaction records from the block browser
-            return new Promise(async(resolve) => {
+            return new Promise(async (resolve) => {
                 if (network.id === 'wormholes-network-1') {
-                    
+
                     try {
                         const res = await dispatch('asyncAddrRecord')
                         console.warn('res', res)
-                    const txInfo = await localforage.getItem(res.asyncRecordKey)
-                    const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
-                    if(realList.length === res.total) {
-                        resolve({total:res.total,asyncRecordKey: res.asyncRecordKey})
-                    }
-                    if(res){
-                        const { asyncRecordKey, total } = res
+                        const txInfo = await localforage.getItem(res.asyncRecordKey)
+                        const realList = txInfo && txInfo.list.length ? txInfo.list.filter(item => !item.sendType) : []
+                        if (realList.length === res.total) {
+                            resolve({ total: res.total, asyncRecordKey: res.asyncRecordKey })
+                        }
+                        if (res) {
+                            const { asyncRecordKey, total } = res
                             time = setInterval(async () => {
                                 const txInfo = await localforage.getItem(asyncRecordKey)
-                                const realList = txInfo && txInfo.list.length ?  txInfo.list.filter(item => !item.sendType) : []
+                                const realList = txInfo && txInfo.list.length ? txInfo.list.filter(item => !item.sendType) : []
                                 if (res && realList.length < total) {
                                     const info = await dispatch('asyncAddrRecord')
-                                    if(info.total === info.txInfo.list.length) {
+                                    if (info.total === info.txInfo.list.length) {
                                         resolve({ total: info.total, asyncRecordKey })
                                         clearInterval(time)
                                     }
@@ -295,18 +297,18 @@ export default {
                                     resolve({ total, asyncRecordKey })
                                     clearInterval(time)
                                 }
-                               
+
                             }, timeOut)
-                            
-                    } else {
-                        resolve({ total: 0, asyncRecordKey: '' })
-                        clearInterval(time)
-                    }
-                    } catch(err){
+
+                        } else {
+                            resolve({ total: 0, asyncRecordKey: '' })
+                            clearInterval(time)
+                        }
+                    } catch (err) {
                         console.error(err)
                     }
                 }
-                resolve({total:0, asyncRecordKey:''}) 
+                resolve({ total: 0, asyncRecordKey: '' })
             })
 
         },
@@ -342,6 +344,9 @@ function unRepet(list, list2) {
             list2.forEach(item => {
                 if (!hashList.includes(item.hash.toUpperCase())) {
                     newList.unshift(item)
+                } else {
+                    console.warn('repeat data list2:', item)
+                    console.warn('repeat data list1:', list.find(child => child.hash.toUpperCase() == item.hash.toUpperCase()))
                 }
             })
             return newList
@@ -359,7 +364,7 @@ export async function getConverAmount(wallet, data) {
     const { input, blockNumber } = data
     if (input && blockNumber) {
         let jsonData = getInput(input)
-        if(jsonData) {
+        if (jsonData) {
             const { type, nft_address } = jsonData
             console.log('input data---', jsonData)
             if (type && type == 6 && nft_address) {
@@ -384,7 +389,7 @@ export async function getConverAmount(wallet, data) {
                 const { MergeLevel, MergeNumber } = nftAccountInfo
                 //  @ts-ignore
                 const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion
-    
+
                 let convertAmount = 0
                 if (MergeLevel === 0) {
                     convertAmount = new BigNumber(MergeNumber).multipliedBy(t0).toNumber()
@@ -407,8 +412,8 @@ export async function getConverAmount(wallet, data) {
 
 function clone(params = {}) {
     return JSON.parse(JSON.stringify(params))
-  }
-  
+}
+
 export const stopLoop = () => {
     clearInterval(time)
     clearInterval(time2)

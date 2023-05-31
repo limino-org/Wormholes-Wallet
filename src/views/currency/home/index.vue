@@ -49,14 +49,30 @@
     </div>
     <div class="tx-tit lh-30 pl-14 pr-14 mt-20">{{ t("common.hsitory") }}</div>
     <div class="swap-list" v-show="!loading">
-      <CollectionCard
+      <DynamicScroller
+    class="scroller"
+    :items="txList"
+    minItemSize="30"
+    keyField="txId"
+    pageMode
+  >
+  <template v-slot="{ item, active, index}">
+    <DynamicScrollerItem
+        :item="item"
+        :active="active"
+        :data-index="index"
+      >
+    <CollectionCard
         @handleClick="handleView(item)"
         @handleSend="handleSend"
         @handleCancel="handleCancel"
-        v-for="item in txList"
-        :key="item.address"
         :data="item"
       />
+      </DynamicScrollerItem>
+  </template>
+
+</DynamicScroller>
+
       <NoData v-if="!txList.length" :message="$t('wallet.no')" />
       <!-- <i18n-t
         tag="div"
@@ -105,8 +121,7 @@
             @click="viewAccountByAddress(accountInfo.address)"
             class="f-12 view-history hover"
             rel="noopener noreferrer"
-            >{{ t("wallet.scanLink") }}</span
-          >
+            >{{ t("wallet.scanLink") }}</span>
         </template>
       </i18n-t>
   </Transition>
@@ -218,6 +233,11 @@ import { web3 } from "@/utils/web3";
 import { useDialog } from "@/plugins/dialog";
 import eventBus from "@/utils/bus";
 import { stopLoop } from '@/store/modules/txList';
+import { RecycleScroller,DynamicScroller,DynamicScrollerItem } from 'vue-virtual-scroller'
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+type SendTx = {
+  [key: string]: any
+}
 
 export default {
   components: {
@@ -234,6 +254,8 @@ export default {
     NoData,
     CommonModal,
     ModifGasFee,
+    DynamicScrollerItem,
+    DynamicScroller
   },
   setup() {
     const { t } = useI18n();
@@ -370,7 +392,7 @@ export default {
       showTransactionModal.value = false;
     };
     const showSpeedModal = ref(false);
-    const sendTx = ref({});
+    const sendTx:Ref<SendTx> = ref({});
     // 1 speed up  2 cancel
     const sendTxType = ref(1);
     const handleSend = (data: any) => {
@@ -660,7 +682,6 @@ export default {
             cumulativeGasUsed: { type: "BigNumber", hex: "0x0" },
             effectiveGasPrice: { type: "BigNumber", hex: "0x0" },
             gasUsed: { type: "BigNumber", hex: "0x0" },
-                 // @ts-ignore
             transactionHash: sendTx.value.hash,
             from,
             to,
@@ -765,6 +786,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.scroller {
+  overflow-y: scroll;
+  flex: auto 1 1;
+}
 :deep() {
   .van-skeleton__avatar--round {
     margin-top: 12px;
@@ -878,8 +903,7 @@ export default {
           font-size: 18px;
         }
         &:hover {
-          background: rgb(4, 110, 190);
-          box-shadow: 0 3px 4px rgb(166, 213, 248);
+          background: #9643b4;
         }
       }
       &-label {

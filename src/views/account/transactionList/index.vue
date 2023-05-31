@@ -20,19 +20,36 @@
       </div>
     </van-sticky> -->
     <div class="all" v-show="!loading">
-      <div v-if="transactionList.length">
-        <CollectionCard
-        :id="item.hash"
-          @handleClick="handleView(item)"
-          v-for="item in transactionList"
-          :key="item.to"
-          :data="item"
-          @handleSend="handleSend"
-          @handleCancel="handleCancel"
-          :active="route.query.hash?.toString() === item.hash"
-        />
-      </div>
-      <no-data v-else />
+
+
+        <DynamicScroller
+    class="scroller"
+    :items="transactionList"
+    minItemSize="30"
+    keyField="txId"
+    :pageMode="true"
+  >
+  <template v-slot="{ item, active, index}">
+    <DynamicScrollerItem
+        :item="item"
+        :active="active"
+        :data-index="index"
+      >
+    <CollectionCard
+        @handleClick="handleView(item)"
+        @handleSend="handleSend"
+        @handleCancel="handleCancel"
+        :data="item"
+        :active="route.query.hash?.toString() === item.hash"
+      />
+      </DynamicScrollerItem>
+  </template>
+</DynamicScroller>
+<div v-show="!transactionList.length">
+  <no-data />
+</div>
+ 
+  
     </div>
     <div class="loading-list-con" v-show="loading">
       <div class="loading-list-card" v-for="item in 16" :key="item">
@@ -206,6 +223,9 @@ import { web3 } from "@/utils/web3";
 import eventBus from "@/utils/bus";
 import { utils } from 'ethers';
 import { stopLoop } from '@/store/modules/txList';
+import { RecycleScroller,DynamicScroller,DynamicScrollerItem } from 'vue-virtual-scroller'
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+
 export default {
   name: "transaction-history",
   components: {
@@ -226,6 +246,8 @@ export default {
     ElTableV2,
     ModifGasFee,
     CommonModal,
+    DynamicScrollerItem,
+    DynamicScroller
   },
   setup() {
     const appProvide = inject("appProvide");
@@ -785,6 +807,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.scroller {
+  overflow-y: scroll;
+  flex: auto 1 1;
+}
 .fixed-bottom {
   height: 20px;
   width: 220px;
@@ -835,7 +861,7 @@ export default {
   }
 }
 .transaction-history {
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 }
 .tabs-box {
   background: #fff;

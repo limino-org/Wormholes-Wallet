@@ -160,6 +160,7 @@ export default defineComponent({
   padding-bottom: 20px;
   transition: ease 0.3s;
   border-bottom: 1px solid #E4E7E8;
+  box-sizing: border-box;
   cursor: pointer;
   transition: ease .3s;
   &.active {
