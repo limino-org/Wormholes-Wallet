@@ -109,12 +109,11 @@
       </div>
     </div>
   </div>
-  <Transition name="slider">
-      <i18n-t
+  <SliderBottom >
+    <i18n-t
         tag="div"
-        v-if="showBuyTip"
         keypath="wallet.toBrowser"
-        :class="`flex center scan-link fixed-bottom ${bugTipClass}`"
+        class="flex center scan-link"
       >
         <template v-slot:link>
           <span
@@ -124,7 +123,10 @@
             >{{ t("wallet.scanLink") }}</span>
         </template>
       </i18n-t>
-  </Transition>
+  </SliderBottom>
+  <!-- <Transition name="slider">
+
+  </Transition> -->
   <CommonModal
     v-model="showSpeedModal"
     :title="
@@ -235,6 +237,8 @@ import eventBus from "@/utils/bus";
 import { stopLoop } from '@/store/modules/txList';
 import { RecycleScroller,DynamicScroller,DynamicScrollerItem } from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+import SliderBottom from '@/components/sliderBottom/index.vue'
+
 type SendTx = {
   [key: string]: any
 }
@@ -253,6 +257,7 @@ export default {
     TransactionDetail,
     NoData,
     CommonModal,
+    SliderBottom,
     ModifGasFee,
     DynamicScrollerItem,
     DynamicScroller
@@ -374,7 +379,6 @@ export default {
       store.dispatch("account/waitTxQueueResponse", {
         time: null
       });
-      window.addEventListener('scroll', deFun)
 
     });
     const toSend = () => {
@@ -511,7 +515,7 @@ export default {
       eventBus.off("delTxQueue");
       eventBus.off('waitTxEnd')
       store.dispatch('account/clearWaitTime')
-      window.removeEventListener('scroll', deFun)
+
 
 
     });
@@ -717,44 +721,7 @@ export default {
     };
 
 
-    const showBuyTip = ref(true)
-    const bugTipClass = ref('')
-    const watchList = (val: any) => {
-      if(val && val.length >= 10) {
-        !bugTipClass.value ? bugTipClass.value = 'fixed' : ''
-      } else {
-        bugTipClass.value ? bugTipClass.value = '' :''
-      }
-    }
-    
-    watch(()=> txList.value, watchList , {
-      deep: true,
-      immediate: true
-    })
-    let oldScrollTop = 0
-    const scrolling = () => {
-      if(txList.value.length < 10) {
-        return
-      }
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      let scrollStep = scrollTop - oldScrollTop;
-      oldScrollTop = scrollTop;
-      if (scrollStep < 0) {
-        console.log("scroll up.")
-        if(!showBuyTip.value)showBuyTip.value = true
-
-
-      } else {
-        if(showBuyTip.value)showBuyTip.value = false
-        console.log("scroll down.")
-      }
-    }
-    
-    const deFun = debounce(scrolling, 300)
-
     return {
-      showBuyTip,
-      bugTipClass,
       showSpeedModal,
       sendTxType,
       handleGasChange,
@@ -850,7 +817,6 @@ export default {
 .currency {
   .scan-link {
     color: #848484;
-    margin-top: 40px;
     span {
       margin-left: 3px;
       color: #9F54BA;

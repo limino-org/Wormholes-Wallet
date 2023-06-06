@@ -234,6 +234,58 @@ export default {
 		creator:"Creator"
 
 	},
+  "castingnft": {
+		"createNFT": "Create NFT",
+		"upload": "Upload",
+		"information": "Information",
+		"done": "Done",
+		"imageTips": "Click upper area to upload Recommended size: 500px * 500px Supported format: PNG, size: within 1m",
+		"next": "Next",
+		"collectibleName": "Collectible Name",
+		"collectibleNamePlaceholder": "4-60 characters, Chinese. English. Numbers. Underscore",
+		"collectionIntroduction": "Collection Introduction",
+		"collectionIntroductionPlaceholder": "4-60 characters, Chinese. English. Numbers. Underscore",
+		"royalty": "Royalty",
+		"royaltyPlaceholder": "Enter Royalties",
+		"category": "Category",
+		"categoryPlaceholder": "Selection",
+		"return": "Return",
+		"congratulations": "Congratulations",
+		"successfullyCreated": "Successfully created  Go to the homepage to view NFT",
+		"backHome": "Back Home",
+		"metaUrl": "Upload",
+		"metaUrlPlaceholder": "Enter Meta Url",
+		"success": "Collection cast successfully",
+		"royaltyTip": "Royalties cannot be zero",
+		"errorEntered": "Entered is not in the correct format",
+		"numbersof": "Numbers of 0-10",
+		"selectaCollectionCategory": "Select a Collection Category",
+		"urlpopover": "Please Enter the nftMeta.SourceUrl",
+		"urlpopover2": "nftMeta.SourceUrl = 'ipfs' + SourceUrl",
+		"namepopover": "can trigger key associations and enrich the audience experience~",
+		"namepopover2": "A good name ",
+		"descpopover": "Introduce your work, let more people understand the value of TA~",
+		"royaltypopover": "Add Royalty~",
+		"categorypopover": "Select Category~"
+	},
+  "snftclassificationcategory": {
+		"art": "Art",
+		"music": "Music",
+		"domainNames": "Domain Names",
+		"virtualWorlds": "Virtual Worlds",
+		"tradingCards": "Trading Cards",
+		"collectibles": "NFTs",
+		"sports": "Sports",
+		"utility": "Utility"
+	},
+  createNft: {
+		createNFTs: "NFTs Create",
+		findMore: "Find More",
+		pullagain: "Failed to pull data, please pull again",
+		retry: "Retry",
+		converttoERB: "SNFTs",
+		cancel: "Cancel"
+	},
   sidebar: {
     imported: 'Imported',
     send: 'Send',
@@ -1003,10 +1055,12 @@ export default {
     cancel: 'Cancel',
     to: 'To',
     send: 'Send',
-    title: 'Please check whether the receiving address is correct and retype it.'
+    title: 'Please check whether the receiving address is correct and retype it.',
+    nftAddr:"Nft Address"
+
   },
   sendNFT: {
-    sendNFT: "sendNFT",
+    sendNFT: "SendNFT",
     name: "Name",
     address: "Address",
     amount: "Amount",

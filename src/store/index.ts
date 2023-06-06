@@ -9,6 +9,7 @@ import configuration from './modules/configuration'
 import mnemonic from './modules/mnemonic'
 import { clone } from 'pouchdb-utils';
 import transfer  from './modules/transfer'
+import nft  from './modules/nft'
 import VuexPersistence from 'vuex-persist';
 import localforage from 'localforage';
 
@@ -122,7 +123,7 @@ const vuexLocal = new VuexPersistence({
         lastDelayTime,
       },
       configuration,
-      txList
+      txList,
     }))
   },
 });
@@ -142,8 +143,8 @@ const store = createStore({
     transfer,
     mnemonic,
     configuration,
-    txList
-
+    txList,
+    nft
   },
   plugins: [
     vuexLocal.plugin

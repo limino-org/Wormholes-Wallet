@@ -261,13 +261,58 @@ export default {
         updateTip:"升级维护中！",
 		marketplace:"质押者",
         validator:"矿工",
-
-
-
-
-
-
-
+    },
+    "snftclassificationcategory": {
+        "art": "艺术",
+        "music": "音乐",
+        "domainNames": "域名",
+        "virtualWorlds": "虚拟世界",
+        "tradingCards": "集换式卡牌",
+        "collectibles": "收藏品",
+        "sports": "体育",
+        "utility": "实用"
+    },
+    "castingnft": {
+        "createNFT": "创建 NFT",
+        "upload": "上传",
+        "information": "信息",
+        "done": "完成",
+        "imageTips": "点击上方区域上传推荐尺寸:500px * 500px<br />支持格式:PNG,尺寸:1m以内",
+        "next": "下一步",
+        "collectibleName": "收藏品名称",
+        "collectibleNamePlaceholder": "4-60个字符,中文.英文.数字.下划线",
+        "collectionIntroduction": "收藏品介绍",
+        "collectionIntroductionPlaceholder": "4-60个字符,中文.英文.数字.下划线",
+        "royalty": "版税",
+        "royaltyPlaceholder": "输入版税",
+        "category": "类型",
+        "categoryPlaceholder": "选择",
+        "return": "返回",
+        "congratulations": "恭喜",
+        "successfullyCreated": "成功创建{br}并去首页查看",
+        "backHome": "回到首页",
+        "metaUrl": "上传元网址",
+        "metaUrlPlaceholder": "输入元网址",
+        "success": "收藏品铸造成功",
+        "royaltyTip": "版税不能为0",
+        "errorEntered": "输入的格式不正确",
+        "numbersof": "版税为0-10 的数字",
+        "selectaCollectionCategory": "选择一个集合类别",
+        "urlpopover": "请输入 nft元.来源网址",
+        "urlpopover2": "nft元.来源网址 = 'ipfs' + 来源网址",
+        "namepopover": "可以触发关键关联丰富观众体验~",
+        "namepopover2": "一个好名字",
+        "descpopover": "介绍你的藏品,让更多人了解TA的价值~",
+        "royaltypopover": "添加版税~",
+        "categorypopover": "选择类别~"
+    },
+    createNft: {
+        createNFTs: "创造收藏品",
+        findMore: "寻找更多",
+        pullagain: "拉取数据失败请重新拉取",
+        retry: "重试",
+        converttoERB: "SNFTs",
+        cancel: "取消"
     },
     creatorSnft:{
 		totalPeriod:"作为Creator成功创建期的总和",
@@ -1029,6 +1074,7 @@ export default {
         to: '到',
         send: '发送',
         title: '请检查地址是否正确，然后重新输入。',
+        nftAddr:"收藏品地址"
 
     },
     // sendNFT

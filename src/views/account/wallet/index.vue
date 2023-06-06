@@ -109,7 +109,18 @@ trigger="manual"
         </div>
       </div>
       <van-tabs v-model:active="active" sticky :offset-top="48" @click-tab="onClickTab" >
-
+        <div class="listType" v-show="active == 1">
+          <i
+            class="iconfont icon-fenlei2"
+            @click="handleSetListType1(1)"
+            v-if="layoutType == 'list'"
+          ></i>
+          <i
+            class="iconfont icon-liebiao"
+            @click="handleSetListType1(2)"
+            v-else
+          ></i>
+        </div>
         <van-tab :title="$t('wallet.token')">
           <TokenCard :data="myToken" :networkIcon="false" />
           <TokenCard
@@ -128,15 +139,18 @@ trigger="manual"
             </div>
           </div>
         </van-tab>
-        <van-tab :title="$t('wallet.collection')">
+        <van-tab :title="$t('wallet.NFTs')">
+          <NftList v-if="active === 1" />
+        </van-tab>
+        <van-tab :title="$t('wallet.SNFTs')">
 
           <van-list :finished="finished" v-model:error="nftErr">
             <div>
-              <NftList
+              <SNftList
                 @success="isSelect = false"
                 v-model:isSelect="isSelect"
                 :active="active"
-                v-if="active === 1"
+                v-if="active === 2"
                 @updateLength="handleLength"
                 @showSwitch="handleShowSwitch"
               />
@@ -242,6 +256,7 @@ import NavHeader from "@/components/navHeader/index.vue";
 import TokenCard from "../components/tokenCard/index.vue";
 import CollectionCard from "../components/collectionCard/index.vue";
 import TransactionDetail from "../components/transactionDetail/index.vue";
+import SNftList from "../components/snftList/index.vue";
 import NftList from "../components/nftList/index.vue";
 import AccountIcon from "@/components/accountIcon/index.vue";
 import AcceptCode from "../components/acceptCode/index.vue";
@@ -292,6 +307,7 @@ export default {
     NavHeader,
     AccountIcon,
     NftList,
+    SNftList,
     AccountModal,
     [GuideModal.name]: GuideModal,
     "guide-one": GuideModal1,
@@ -566,8 +582,13 @@ export default {
         isSelect.value = false
       }
     }
-  
+      // Control nft
+      const handleSetListType1 = (type: number) => {
+      dispatch("system/setListLayout", type == 1 ? "card" : "list");
+    };
+
     return {
+      handleSetListType1,
       onClickTab,
       handleShowSwitch,
       ethAccountInfo,

@@ -26,7 +26,6 @@
         </div>
       </div> -->
       <van-tabs
-        v-model:active="active"
         class="mt-10"
         shrink
         sticky

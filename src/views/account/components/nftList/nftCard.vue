@@ -1,215 +1,190 @@
 <template>
-  <div class="snft-card flex between">
-    <div class="snft-card-l flex">
-      <div :class="`level flex center-v ${select ? '' : 'pl-14'}`">
-        <div :class="`icon flex center-h ${data.tagName.toLowerCase()}`"> 
-          <!-- {{ data.tagName }} -->
-          <span>L</span><span>{{ data.tagIdx }}</span>
-        
-        </div>
+  <div
+    @click="toDetail"
+    :class="`nft-card  clickActive  ${
+      layoutType == 'list'
+        ? ' flex between'
+        : 'van-hairline--surround'
+    } ${layoutType}`"
+  >
+    <div :class="`info  ${layoutType == 'list' ? 'flex between' : ''}`">
+      <div class="icon flex center">
+        <van-image :src="data.info.meta_url" fit="cover" />
       </div>
-      <div class="flex center-v tag-box">
-        <NftTag :data="data" :tag="data.tag" />
-      </div>
-    </div>
-    <div class="snft-card-r" v-show="!select">
-      <div class="flex right center-v link-icons">
-        <van-popover
-        v-model:show="showPopover2"
-        placement="top"
-        class="nft-tag-popover"
-      >
-        <div class="lh-16 text-center">{{ t('common.viewInExchange') }}</div>
-        <template #reference>
-          <i class="iconfont icon-fangwujianzhuwugoujianbeifen" @click.stop="toNftExchange"  @mouseover="showPopover2 = true" @mouseout="showPopover2 = false"></i>
-        </template>
-      </van-popover>
-      <van-popover
-        v-model:show="showPopover"
-        placement="top"
-        class="nft-tag-popover"
-      >
-        <div class="lh-16 text-center">{{ t('common.viewInBrowser') }}</div>
-        <template #reference>
-          <i class="iconfont icon-network" @click.stop="toBrowser"  @mouseover="showPopover = true" @mouseout="showPopover = false"></i>
-        </template>
-      </van-popover>
-        
-    
+      <div class="address flex column between">
+        <div class="name">{{ (data.info.name) }}</div>
+        <div class="add">{{ addressMask(data.address) }}</div>
       </div>
     </div>
-
+    <div class="amount flex center-v" v-if="layoutType == 'list' && amountType != 'mask'">
+      <div class="val">{{ data.info.royalty }} {{ currentNetwork.currencySymbol }}</div>
+      <!-- <div class="usd">≈ ${{ data.to_doller }}</div> -->
+    </div>
+    <div class="flex right center-v f-12" v-if="amountType == 'mask' && layoutType =='list'">********</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/runtime-core";
-import { addressMask, decimal } from "@/utils/filters";
-import { useStore } from "vuex";
-import { computed } from "vue";
-import { Popover } from "vant";
-import {
-  queryArraySnft,
-  snft_com_page,
-  tokenIdByNftaddr
-} from "@/http/modules/nft";
-import { useRoute, useRouter } from "vue-router";
-import NftTag from './nftTag.vue'
-import { useI18n } from "vue-i18n";
+import { defineComponent, ref, reactive, getCurrentInstance } from 'vue'
+import { addressMask, decimal } from '@/utils/filters'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
+import { Image } from 'vant'
+import { useRoute, useRouter } from 'vue-router'
+import { web3 } from '@/utils/web3'
 export default defineComponent({
-  name: "nft-card",
+  name: 'nft-card',
   components: {
-    [Popover.name]:Popover,
-    NftTag
+    [Image.name]: Image
   },
   props: {
     data: {
       type: Object,
-      default: {},
-    },
-    select: {
-      type: Boolean,
-      default: false
+      default: {}
     }
   },
   setup(props: any) {
-    const store = useStore();
-    const currentNetwork = computed(() => store.state.account.currentNetwork);
-    const layoutType = computed(() => store.state.system.layoutType);
-    const {t} = useI18n()
-    const router = useRouter();
+    const store = useStore()
+    const currentNetwork = computed(() => store.state.account.currentNetwork)
+    const layoutType = computed(() => store.state.system.layoutType)
+    const router = useRouter()
+    const datab: any = getCurrentInstance()
+    const nftname = (value: string) => {
+      web3.utils.hexToUtf8('0x' + value)
+    }
+    async function getdata() {
+      let info = datab.data
+      console.log(info)
+    }
     const toDetail = () => {
-      router.push({ name: "nft-detail", query: props.data });
-    };
-    
-    const toNftExchange = async() => {
-      const { tag, nft_address,source_url, metaData } = props.data
-      let tokenidmm = ''
-      switch(nft_address.length){
-        case 42:
-          tokenidmm = nft_address
-          break;
-        case 41:
-        tokenidmm = `${nft_address}m`
-          break;
-        case 40:
-        tokenidmm = `${nft_address}mm`
-          break;
-        case 39:
-        tokenidmm = `${nft_address}mmm`
-          break;
-      }
-      const {data: nft_token_id} = await tokenIdByNftaddr(tokenidmm)
-      const { nft_contract_addr } = metaData
-      const domain = currentNetwork.value && currentNetwork.value.chainId === 51888 ? 'http://192.168.1.235:9006/c0x5051580802283c7b053d234d124b199045ead750/#' : 'https://hub.wormholes.com/c0x97807fd98c40e0237aa1f13cf3e7cedc5f37f23b/#'
-      let str = '/assets/detail'
-      if(tag == 'P' || tag == 'C' || tag == 'N') {
-        str += `?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}`
-      } else if(tag == 'F') {
-        str += `?nft_contract_addr=${nft_contract_addr}&nft_token_id=${nft_token_id}&source_url=${source_url}`
-      }
-      const newUrl = `${domain}${str}`
-      window.open(newUrl)
+      sessionStorage.setItem('nftInfo',JSON.stringify(props.data))
+      router.push({ name: 'sendNft-step1'})
     }
-
-    const toBrowser = () => {
-      const { tag, nft_address,source_url, metaData } = props.data
-      const domain = 'https://www.wormholesscan.com/#/SNFT/SNFTDetails'
-      const str = `?snftid=${nft_address}`
-      const newUrl = `${domain}${str}`
-      window.open(newUrl)
-    }
-    
-    const showPopover2 = ref(false)
-    const showPopover= ref(false)
+    // Balance display type
+    const amountType = computed(() => store.state.system.amountType)
+    // let info = item.data.raw_met.a_url
     return {
       addressMask,
       currentNetwork,
-      toBrowser,
       layoutType,
       toDetail,
-      toNftExchange,
-      showPopover2,
-      t,
-      showPopover
-    };
-  },
-});
+      amountType,
+      getdata,
+      nftname
+    }
+  }
+})
 </script>
-
-
 <style lang="scss" scoped>
-$L0Color: #9F54BA;
-$L1Color: #3AAE55;
-$L2Color: #F7BF03;
-$L3Color: #D73A49;
-.snft-card {
-  flex: 1;
-  height: 67px;
-  border-bottom: 1px solid #E4E7E8;
-  &-l {
-    width: 70%;
-    .level {
-      padding-right: 10px;
-      height: 100%;
+.nft-card {
+  transition: 0.3s ease-in-out;
+  &.card:hover {
+    cursor: pointer;
+    box-shadow: 0px 2px 14px rgba($color: #ccc, $alpha: 0.4);
+    /* background:#F8F3F9; */
+    color:#9F54BA;
+    .usd,.address .add {
+      color:#9F54BA;
+    }
+  }
+  &.list:hover {
+    background:#F8F3F9;
+    color:#9F54BA;
+    .usd,.address .add {
+      color:#9F54BA !important;
+    }
+  }
+  &.list {
+    padding: 15px;
+    overflow: hidden;
+    border-bottom:1px solid #E4E7E8;
+    .info {
       .icon {
         width: 40px;
         height: 40px;
-        border-radius: 50%;
-        font-weight: bold;
-        color: #fff;
-        line-height: 40px;
-        text-align: center;
-        letter-spacing: 1px;
-          //       font-size: 32px;
-          // font-family: KenneyPixel;
-        span:nth-of-type(1) {
-          font-size: 22px;
-          font-weight: normal;
-          // font-family: KenneyPixel;
+        /* background: #9F54BA; */
+        border-radius: 6px;
+        margin-right: 15px;
+        overflow: hidden;
+        .van-image {
+          width: 1.06667rem;
+          height: 1.06667rem;
+
         }
-        span:nth-of-type(2) {
-          font-size:15px;
-          line-height: 15px;
-          font-weight: normal;
-          margin-top: 14px;
+        img {
+          width: 40px;
+          height: 40px;
+          object-fit: cover;
+          display: block;
         }
-        &.l3 {
-          background: $L3Color;
-        }
-        &.l2 {
-          background: $L2Color;
-        }
-        &.l1 {
-          background: $L1Color;
-        }
-        &.l0 {
-          background: $L0Color;
+      }
+      .address {
+        .add {
+          color: rgba(154, 154, 154, 1);
         }
       }
     }
-    .tag-box {
-      height: 100%;
+    .name {
+      width: 220px;
+      overflow: hidden;
+      white-space: nowrap;
     }
   }
-  &-r {
-    width: 30%;
-    .link-icons {
-      height: 100%;
-      padding-right: 15px;
+  &.card {
+    width: calc(50vw - 15px - 7.5px);
+    margin-bottom: 15px;
+    &:after {
+      border-radius: 12px;
     }
-    :deep(){
-      .van-popover__wrapper {
-      &:nth-of-type(2){
-        margin-left: 15px;
+    .info {
+      padding: 7.5px 7.5px 0 7.5px;
+      border-radius: 6px;
+      .icon {
+        width: 100%;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        .van-image {
+          width: 100%;
+          height: 100%;
+          border-radius:6px;
+          overflow: hidden;
+        }
       }
     }
+    .add {
+      color: rgba(154, 154, 154, 1);
+      margin: 5px 0;
     }
-    i {
-      cursor: pointer;
-      font-size: 18px;
+    .name {
+      margin-top: 5px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
 
+  .name,
+  .add,
+  .val,
+  .usd {
+    font-size: 12px;
+    line-height: 16px;
+  }
+  .amount {
+    .usd {
+      color: rgba(154, 154, 154, 1);
     }
+    .val,
+    .usd {
+      text-align: right;
+    }
+  }
+}
+
+@media screen and (min-width: 756px) {
+  .nft-card.card {
+    width: 49%;
+    margin-right: 0 !important;
   }
 }
 </style>

@@ -218,7 +218,7 @@
   }
 
   .van-tabs__line {
-    width: 50%;
+    width: 33.333%;
     height: 2px;
     bottom: 0px;
     z-index: 1;
@@ -238,7 +238,24 @@
     font-size: 11px;
   }
 
-
+  .listType {
+    position: absolute;
+    right: 0px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    top: 4px;
+    padding: 10px;
+    &:hover i {
+      color: #9F54BA;
+    }
+    i {
+      color: #9a9a9a;
+      font-size: 16px;
+    }
+  }
   .wallet-hint {
     min-width: 122px;
     max-width: 170px;

@@ -17,8 +17,8 @@ import connectWallet from '@/views/connectWallet/route'
 import { pwdKey } from '@/utils/jsCookie';
 import doc from '@/views/doc/index'
 import mnemonic from '@/views/mnemonic/route'
-import { debug } from 'console';
-
+import createNft from '@/views/createNft/route'
+import sendNft from '@/views/sendNft/route'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -298,7 +298,10 @@ const routes: Array<RouteRecordRaw> = [
       contacts,
       connectWallet,
       mnemonic,
-      doc
+      doc,
+      createNft,
+      sendNft
+
     ]
   },
 
