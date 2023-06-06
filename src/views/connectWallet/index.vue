@@ -31,7 +31,7 @@ export enum Actions {
   getAccount = "getAccount",
   sigMessage = "sigMessage",
   sendTransaction = "sendTransaction",
-  sendOpenExchangeTransaction = 'sendOpenExchangeTransaction'
+  sendOpenExchangeTransaction = 'sendOpenExchangeTransaction',
 }
 type URLParams = {
   action: Actions;
@@ -289,6 +289,7 @@ export default {
     }
 
 
+
     const back = () => {
       router.replace({ name: "wallet" });
     };
@@ -329,8 +330,7 @@ export default {
 export function handleConnectBackUrl(params: URLParams) {
   const { action, data, backUrl } = params;
   const back = decode(backUrl);
-  return `${back}${back.indexOf("?") > -1 ? "&" : "?"
-    }action=${action}&data=${encodeURIComponent(JSON.stringify(data))}`;
+  return `${back}${back.indexOf("?") > -1 ? "&" : "?"}action=${action}&data=${encodeURIComponent(JSON.stringify(data))}`;
 }
 </script>
 <style lang="scss" scoped>
