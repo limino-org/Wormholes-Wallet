@@ -352,10 +352,26 @@ export default {
         aboutAs: "虫洞官网",
         receiveAward: "领取奖励",
         help: '使用帮助',
-        snftCreator:"S-NFT创造者"
+        snftCreator:"S-NFT创造者",
+        generateNFT:"AI生成NFT",
 
 
 
+    },
+    generateNFT: {
+        title:"AI生成NFT",
+        promptWord:"提示词",
+        placeholder:"请输入文字描述图片，例如:按照维米尔的《戴珍珠耳环的女孩》的风格画一幅海唐",
+        promptWordErr:"最多可输入75个单词，仅支持英语俚语和特殊符号",
+        promptWordNotNull:"提示词不能为空",
+        creativeMode:"创造模式",
+        AIDrawing:"AI绘画",
+        emailAddr:"邮箱地址",
+        emailNotNull:"邮箱地址不能为空",
+        placeEmail:"请输入电子邮件地址",
+        emailError:"该地址不符合电子邮箱地址规则",
+        geneateComfirm:"生成NFT确认",
+        drawVal:"AI绘画费用",
     },
     // 复制弹窗
     copy: {

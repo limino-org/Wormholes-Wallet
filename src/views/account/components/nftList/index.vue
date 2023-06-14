@@ -7,7 +7,14 @@
   >
     <van-sticky offset-top="91">
       <div class="flex between center-v create-box">
-        <span class="f-12 text-bold label">{{ t('createNft.createNFTs') }}</span>
+
+        <span class="f-12 text-bold label">
+          <van-popover v-model:show="showPopover" :actions="actions" @select="onSelect" placement="bottom-start">
+            <template #reference>
+              <span class="hover flex center">{{ sortVal.text }} <i :class="`iconfont ${showPopover ? 'icon-shangla' : 'icon-xiala'}`"></i> </span>
+            </template>
+          </van-popover>
+          </span>
         <span class="add flex center" @click="toCreate"><van-icon name="plus" /></span>
       </div>
     </van-sticky>
@@ -30,7 +37,7 @@
         <div class="text-center tip1">
           {{ t("wallet.notoken", { type: "NFT" }) }}
           <span class="toCreate hover mr-4" @click="toCreate">{{
-            t("createNft.createNFTs")
+           sortVal.text
           }}</span>
           <span class="tip2 disabled">{{ t("createNft.findMore") }}</span>
         </div>
@@ -65,7 +72,7 @@ import {
   SetupContext,
 } from "vue";
 import { useStore } from "vuex";
-import { List, Toast, Button, PullRefresh, Sticky, Icon } from "vant";
+import { List, Toast, Button, PullRefresh, Sticky, Icon, Popover } from "vant";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useToast } from "@/plugins/toast";
@@ -81,6 +88,7 @@ export default defineComponent({
     [PullRefresh.name]: PullRefresh,
     [Sticky.name]: Sticky,
     [Icon.name]: Icon,
+    [Popover.name]: Popover,
     NoData,
     SliderBottom
   },
@@ -91,7 +99,7 @@ export default defineComponent({
     const router = useRouter();
     const layoutType = computed(() => store.state.system.layoutType);
     const accountInfo = computed(() => store.state.account.accountInfo);
-    const pageData = reactive({ nftList: [] });
+    const pageData: any = reactive({ nftList: [] });
     const { $wtoast } = useToast();
     // nft load
     const loadNft: Ref<boolean> = ref(false);
@@ -156,7 +164,12 @@ export default defineComponent({
         $wtoast.warn(t("wallet.haveNoMoney"));
         return false;
       }
-      router.push({ path: "/createNft/step2" });
+      if(sortVal.value == 0) {
+        router.push({ path: "/createNft/step2" });
+      }
+      if(sortVal.value == 1) {
+        router.push({ name: "generateNFT" });
+      }
     };
 
     // The drop-down load
@@ -164,7 +177,24 @@ export default defineComponent({
       reLoading();
     };
 
+    const showPopover = ref(false)
+    const sortVal = reactive({
+      text: t('castingnft.createNFT'), value:0
+    })
+    const actions = [
+      { text: t('castingnft.createNFT'), value:0,className:'hoverMenuItem' },
+      { text: t('generateNFT.title'),value:1 ,className:'hoverMenuItem'},
+    ];
+    const onSelect = ({text, value}: any) => {
+      sortVal.text = text
+      sortVal.value = value
+    };
+
     return {
+      sortVal,
+      onSelect,
+      actions,
+      showPopover,
       toCreate,
       layoutType,
       handleOnLoad,
@@ -181,10 +211,15 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+
+.icon-shangla {
+  font-size: 18px;
+}
 .create-box {
   background: #f1f3f4;
   height: 30px;
   padding: 0 15px;
+  position: relative;
   .label {
     color: #848484;
   }

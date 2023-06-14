@@ -281,7 +281,10 @@ export default defineComponent({
   padding: 0 15px;
   transition: ease 0.3s;
   &:hover {
-    background: rgb(244, 247, 250);
+    background: #F8F3F9;
+    .account-value,.account-name {
+      color: #9F54BA;
+    }
   }
   .account-icon-s {
     padding: 0 10px 0 0;

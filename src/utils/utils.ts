@@ -1,8 +1,14 @@
 import { defaultAbiCoder } from 'ethers/lib/utils'
 import { VUE_APP_SCAN_URL } from "@/enum/env";
 import useClipboard from 'vue-clipboard3'
+import { v4 as uuidv4 } from 'uuid';
 import store from '@/store';
 const { toClipboard } = useClipboard()
+
+export const createUUID = () => {
+  return uuidv4()
+}
+
 // Copy to clipboard
 export const copy = async (v: string) => {
   try {

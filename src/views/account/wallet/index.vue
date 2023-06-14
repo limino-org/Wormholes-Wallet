@@ -143,9 +143,6 @@ trigger="manual"
           <NftList v-if="active === 1" />
         </van-tab>
         <van-tab :title="$t('wallet.SNFTs')">
-
-          <van-list :finished="finished" v-model:error="nftErr">
-            <div>
               <SNftList
                 @success="isSelect = false"
                 v-model:isSelect="isSelect"
@@ -154,9 +151,6 @@ trigger="manual"
                 @updateLength="handleLength"
                 @showSwitch="handleShowSwitch"
               />
-            </div>
-            <!-- <van-empty v-else :description="$t('wallet.no')" /> -->
-          </van-list>
         </van-tab>
       </van-tabs>
     </div>
@@ -578,7 +572,7 @@ export default {
 
     const onClickTab = ({name}: any) => {
       console.warn('onClickTab', name)
-      if(!name) {
+      if(name != 2) {
         isSelect.value = false
       }
     }

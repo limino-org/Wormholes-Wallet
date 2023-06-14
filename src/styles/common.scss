@@ -47,7 +47,17 @@ body {
 .van-toast__text {
   word-break: break-word;
 }
+.hoverMenuItem {
+  .van-popover__action-text {
+    text-align: left;
+    display: block;
+    line-height: 33px;
+  }
+  &:hover{
+    color: #9643b4;
+  }
 
+}
 // hovering
 .hover {
   cursor: pointer;
@@ -93,6 +103,7 @@ width: 420px;
     button {
       color: #000;
       border: none;
+      border-radius: 0;
     }
     button:hover {
       border: none;
@@ -130,7 +141,12 @@ width: 420px;
     color: #333 !important;
   }
 }
-
+.van-field.error {
+  .van-field__body{
+    border-color: #D73A49;
+    background-color: #FBF2F3;
+  }
+}
 .van-cell .van-field__body {
   height: 44px;
   border: 1px solid #B3B3B3;

@@ -165,7 +165,7 @@
                 theme="dark"
                 placement="right"
               >
-                <p class="p-10">{{ t("sendto.gastit") }}</p>
+                <p class="pl-10 pr-10">{{ t("sendto.gastit") }}</p>
                 <template #reference>
                   <van-icon
                     name="question hover"

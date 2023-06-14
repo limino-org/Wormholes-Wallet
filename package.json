@@ -26,6 +26,7 @@
     "postcss-px2rem": "^0.3.0",
     "qrcode.vue": "^3.3.3",
     "tslib": "^2.4.0",
+    "uuid": "^9.0.0",
     "vant": "^3.4.2",
     "vconsole": "^3.13.0",
     "vue": "^3.0.0",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.7.6",
+    "@types/uuid": "^9.0.2",
     "@vant/touch-emulator": "^1.4.0",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",

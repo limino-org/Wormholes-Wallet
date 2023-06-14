@@ -124,7 +124,14 @@
 </SliderBottom>
   <!-- <Transition name="slider">
 
+<van-loading type="spinner" color="#1989fa" />
+
   </Transition> -->
+  <Transition name="slider">
+      <div class="load-tip flex center" v-if="isSelectComputed && loading">
+        <div class="load-tip-con flex-1 flex center"><van-loading color="#9F54BA"  size="13"/> <span class="ml-4">{{ t('common.loading') }}</span></div>
+      </div>
+  </Transition>
   <Transition name="slider">
     <div class="snft_bottom container" v-if="isSelectComputed">
       <div class="snft_bottom-left">
@@ -434,7 +441,8 @@ import {
   Popover,
   Switch,
   ListInstance,
-  PullRefresh 
+  PullRefresh,
+  Loading
 } from "vant";
 import eventBus from "@/utils/bus";
 import { useI18n } from "vue-i18n";
@@ -476,6 +484,7 @@ export default defineComponent({
     [Button.name]: Button,
     [Popover.name]: Popover,
     [PullRefresh.name] : PullRefresh,
+    [Loading.name]:Loading,
     "dialog-warning": dialogWarning,
     [Sticky.name]: Sticky,
     [Dialog.Component.name]: Dialog.Component,
@@ -615,39 +624,35 @@ export default defineComponent({
       return obj
     }
 
+
     const onLoad = async () => {
-      let blockNumber = 0
-      let network: any = null
+
       params2.status = tabIndex.value;
       loading.value = true;
       try {
-        if(tabIndex.value == '2'){
-          wallet = await getWallet()
-          blockNumber = await wallet.provider.getBlockNumber();
-          network = await wallet.provider.getNetwork()
-        }        
+        // if(tabIndex.value == '2'){
+        //   wallet = await getWallet()
+        //   blockNumber = await wallet.provider.getBlockNumber();
+        //   network = await wallet.provider.getNetwork()
+        // }        
         let { nfts } = await snft_com_page(params2);
         nfts = nfts && nfts.length ? nfts : [];
-        const nftsAddr = nfts && nfts.length ? nfts.map((item: any) => item.address.toUpperCase()) : ''
+        const nftsAddr = nfts && nfts.length ? nfts.map((item: any) =>item.address.toUpperCase()) : ''
         let copyList = JSON.parse(JSON.stringify(list.value))
         copyList = copyList.filter((item: any) => !nftsAddr.includes(item.address.toUpperCase()))
         const nftAddList = nfts.map((item: any) => {
-          const len = item.address.length;
-          let str = item.address;
-          switch (len) {
-            case 39:
-              str = str + "000";
-              break;
-            case 40:
-              str = str + "00";
-              break;
-            case 41:
-              str = str + "0";
-              break;
+          const addr = item.address.toUpperCase()
+          const addrLen = addr.length
+          switch(addrLen){
             case 42:
-              break;
+              return `${addr}`
+            case 41:
+            return `${addr}m`
+            case 40:
+            return `${addr}mm`
+            case 39:
+            return `${addr}mmm`
           }
-          return str;
         }) ;
         if (!nfts || !nfts.length) {
           finished.value = true;
@@ -656,21 +661,19 @@ export default defineComponent({
         
         // const newlist = list.value.map((item: any) => item.address)
         // const newNftList = nftAddList.filter((item: any) => item.nft_address.toUpperCase())
-        const metaDataList = await getSnftList(nftAddList, blockNumber)
+        // const metaDataList = await getSnftList(nftAddList, blockNumber)
         const { data: nftInfoList } = await queryArraySnft({
           array: `${JSON.stringify(nftAddList)}`,
         });
 
         console.warn('nftInfoList', nftInfoList)
         nfts.forEach((item: any) => {
-          if(tabIndex.value == '2' && item.pledge_number !== null) {
-            item.hasUnfreeze = (blockNumber - Number(item.pledge_number)) > (network && network.chainId === 51888 ? 73 : 6307201)
-          }
+          // if(tabIndex.value == '2' && item.pledge_number !== null) {
+          //   item.hasUnfreeze = (blockNumber - Number(item.pledge_number)) > (network && network.chainId === 51888 ? 73 : 6307201)
+          // }
           const reallen = item.address.length;
           let str = item.address;
           const hexp = `0x${str.substr(3,36)}`
-          console.warn('str.substr(3,39)',str,str.substr(3,36), hexp, web3.utils.hexToNumber(hexp))
-
           const hexc = `0x${str.substr(39,1)}`
           const hexn = `0x${str.substr(40,1)}`
           const hexf = `0x${str.substr(41,1)}`
@@ -728,10 +731,12 @@ export default defineComponent({
 
           nftInfoList.forEach((child: any) => {
             if (
-              item.realAddr.toUpperCase() == child.nft_address.toUpperCase()
+              item.realAddr.toUpperCase() == child.nft_address.replaceAll('m','0').toUpperCase()
             ) {
-              const {MergeLevel,MergeNumber} = metaDataList[child.nft_address.toString().toUpperCase()]
-              item.metaData = {...child,MergeLevel,MergeNumber};
+              // const {MergeLevel,MergeNumber} = metaDataList[child.nft_address.toString().toUpperCase()]
+              const {nft_address,mergelevel,mergenumber} = child
+              const realNftAddr = nft_address.replaceAll('m','')
+              item.metaData = {...child,MergeNumber:mergenumber,MergeLevel:mergelevel,nft_address: realNftAddr};
               item.source_url = child.source_url;
               item.collections = child.name;
             }
@@ -752,6 +757,7 @@ export default defineComponent({
         loading.value = false;
       }
     };
+
 
     // const 
     let wallet: any = null
@@ -1441,6 +1447,21 @@ background: rgb(215, 58, 73);
 </style>
 
 <style lang="scss" scoped>
+.load-tip {
+  position: fixed;
+  bottom: 75px;
+  width: 100px;
+  left: 50%;
+  margin-left: -50px;
+  padding: 3px 5px;
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  background: #fff;
+  color: #9F54BA;
+  &-con {
+   
+  }
+}
 .snft_bottom {
   position: fixed;
   bottom: 0px;

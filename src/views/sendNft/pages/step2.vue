@@ -717,7 +717,7 @@ export default {
     .avatar {
       overflow: hidden;
       border-radius: 50%;
-      min-width: 35px;
+      min-width: 31px;
     }
 
     .userinformation {

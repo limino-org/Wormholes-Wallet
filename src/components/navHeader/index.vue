@@ -270,6 +270,18 @@
 
             <div
               class="setting-btn clickActive flex center-v"
+              @click="toGenerate"
+              v-if="network.id == 'wormholes-network-1'"
+            >
+            <van-icon name="photo-o" />
+              <span>{{
+                t("sidebar.generateNFT")
+              }}</span>
+            </div>
+
+
+            <div
+              class="setting-btn clickActive flex center-v"
               @click="tobrowser"
             >
               <i class="iconfont icon-network"></i>
@@ -833,7 +845,15 @@ export default defineComponent({
         return;
       }
     };
+
+
+    const toGenerate = () => {
+      router.push({
+        name:"generateNFT-ai"
+      })
+    }
     return {
+      toGenerate,
       minerpledge,
       ethAccountInfo,
       Coefficient,

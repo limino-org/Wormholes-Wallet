@@ -101,6 +101,7 @@ onMounted(async () => {
     padding: 16px 15px;
     transition: ease .3s;
     &:hover {
+      background: #F8F3F9;
       .acc-info {
         .name,
         .address {

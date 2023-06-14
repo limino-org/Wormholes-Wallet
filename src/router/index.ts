@@ -19,6 +19,7 @@ import doc from '@/views/doc/index'
 import mnemonic from '@/views/mnemonic/route'
 import createNft from '@/views/createNft/route'
 import sendNft from '@/views/sendNft/route'
+import generateNFT from '@/views/generateNFT/route'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -300,7 +301,8 @@ const routes: Array<RouteRecordRaw> = [
       mnemonic,
       doc,
       createNft,
-      sendNft
+      sendNft,
+      generateNFT
 
     ]
   },

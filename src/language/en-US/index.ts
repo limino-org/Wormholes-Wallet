@@ -242,9 +242,9 @@ export default {
 		"imageTips": "Click upper area to upload Recommended size: 500px * 500px Supported format: PNG, size: within 1m",
 		"next": "Next",
 		"collectibleName": "Collectible Name",
-		"collectibleNamePlaceholder": "4-60 characters, Chinese. English. Numbers. Underscore",
+		"collectibleNamePlaceholder": "4-60 characters, Chinese. English. Numbers.",
 		"collectionIntroduction": "Collection Introduction",
-		"collectionIntroductionPlaceholder": "4-60 characters, Chinese. English. Numbers. Underscore",
+		"collectionIntroductionPlaceholder": "4-60 characters, Chinese. English. Numbers.",
 		"royalty": "Royalty",
 		"royaltyPlaceholder": "Enter Royalties",
 		"category": "Category",
@@ -260,7 +260,7 @@ export default {
 		"errorEntered": "Entered is not in the correct format",
 		"numbersof": "Numbers of 0-10",
 		"selectaCollectionCategory": "Select a Collection Category",
-		"urlpopover": "Please Enter the nftMeta.SourceUrl",
+		"urlpopover": "Please enter the NFT source file URL.",
 		"urlpopover2": "nftMeta.SourceUrl = 'ipfs' + SourceUrl",
 		"namepopover": "can trigger key associations and enrich the audience experience~",
 		"namepopover2": "A good name ",
@@ -307,9 +307,30 @@ export default {
     aboutAs: "Official Website",
     receiveAward: "receive award",
     help: 'Help Center',
-    snftCreator:"SNFT Creator"
+    snftCreator:"SNFT Creator",
+    generateNFT:"AI Generate NFT",
+
 
   },
+  generateNFT: {
+    title:"AI Generate NFT",
+    promptWord:"Prompt Word",
+    placeholder:"Please enter text to describe the picture, for example: draw a sea tang in the style of Vermeer's “Girl with a Pearl Earring\"",
+    promptWordErr:"Enter up to 75 words, only English is supported slang and special symbols",
+    promptWordNotNull:"The prompt word cannot be empty",
+    emailNotNull:"The email address cannot be empty",
+    creativeMode:"Creative Mode",
+    AIDrawing:"AI drawing",
+    emailAddr:"Email Address",
+    placeEmail:"Please input the email address",
+    emailError:"This address does not comply with the email address rules",
+    geneateComfirm:"Generate NFT Confirm",
+    drawVal:"AI painting cost",
+
+
+
+
+},
   copy: {
     copy: 'Has been copied to clipboard',
     title: 'Public address has been copied to clipboard',
