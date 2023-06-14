@@ -28,7 +28,7 @@
     </div>
   </van-sticky>
   <div :class="`${!loading && list.length ? 'pb-80' : ''}`">
-  <van-list v-model:loading="loading" :finished="finished" @load="onLoad"  :finished-text="t('common.noMore')">
+  <van-list v-model:loading="loading" :finished="finished" @load="onLoad"  :finished-text="finished ? '' : t('common.noMore')">
     <div :class="`snft-list-box `">
       <div class="flex " v-for="(item) in list" :key="item.nft_address" >
         <div :class="`checkbox_img flex center-v pr-10 right pl-14 ${item.hasUnfreeze || typeof item.hasUnfreeze == 'undefined' ? '' : 'disabled'}`" v-show="isSelectComputed">
