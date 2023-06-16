@@ -275,7 +275,7 @@
             >
             <van-icon name="photo-o" />
               <span>{{
-                t("sidebar.generateNFT")
+                t("castingnft.createNFT")
               }}</span>
             </div>
 

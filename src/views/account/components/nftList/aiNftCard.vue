@@ -1,0 +1,200 @@
+<template>
+    <div
+      :class="`nft-card  clickActive  ${
+        layoutType == 'list'
+          ? ' flex between'
+          : 'van-hairline--surround'
+      } ${layoutType}`"
+    >
+      <div :class="`info  ${layoutType == 'list' ? 'flex between' : ''}`">
+        <div class="icon flex center">
+          <van-image :src="data.address" fit="cover" />
+        </div>
+        <div class="address flex center-v between">
+          <!-- <div class="name">{{ (data.info.name) }}</div> -->
+          <div class="add lh-14 h-14">{{ addressMask(data.address) }}</div>
+          <div class="draw-btn" @click="toDraw">{{ t('generateNFT.AIDrawing2') }}</div>
+        </div>
+      </div>
+     
+    </div>
+  </template>
+  
+  <script lang="ts">
+  import { defineComponent, ref, reactive, getCurrentInstance } from 'vue'
+  import { addressMask, decimal } from '@/utils/filters'
+  import { useStore } from 'vuex'
+  import { computed } from 'vue'
+  import { Image } from 'vant'
+  import { useRoute, useRouter } from 'vue-router'
+  import { web3 } from '@/utils/web3'
+import { useI18n } from 'vue-i18n'
+  export default defineComponent({
+    name: 'nft-card',
+    components: {
+      [Image.name]: Image
+    },
+    props: {
+      data: {
+        type: Object,
+        default: {}
+      }
+    },
+    setup(props: any) {
+        const {t} = useI18n()
+      const store = useStore()
+      const currentNetwork = computed(() => store.state.account.currentNetwork)
+      const layoutType = computed(() => store.state.system.layoutType)
+      const router = useRouter()
+      const datab: any = getCurrentInstance()
+      const nftname = (value: string) => {
+        web3.utils.hexToUtf8('0x' + value)
+      }
+      async function getdata() {
+        let info = datab.data
+        console.log(info)
+      }
+  
+      // Balance display type
+      const amountType = computed(() => store.state.system.amountType)
+      // let info = item.data.raw_met.a_url
+
+      const toDraw = () => {
+        router.push({ name: 'generateNFT-ai', query: props.data})
+      }
+      return {
+        toDraw,
+        addressMask,
+        currentNetwork,
+        layoutType,
+        amountType,
+        getdata,
+        t,
+        nftname
+      }
+    }
+  })
+  </script>
+  <style lang="scss" scoped>
+  .nft-card {
+    transition: 0.3s ease-in-out;
+    &.card:hover {
+      cursor: pointer;
+      box-shadow: 0px 2px 14px rgba($color: #ccc, $alpha: 0.4);
+      /* background:#F8F3F9; */
+      color:#9F54BA;
+      .usd,.address .add {
+        color:#9F54BA;
+      }
+    }
+    &.list:hover {
+      background:#F8F3F9;
+      color:#9F54BA;
+      .usd,.address .add {
+        color:#9F54BA !important;
+      }
+    }
+    &.list {
+      padding: 15px;
+      overflow: hidden;
+      border-bottom:1px solid #E4E7E8;
+      .info {
+        width: 100%;
+        .icon {
+          width: 40px;
+          height: 40px;
+          /* background: #9F54BA; */
+          border-radius: 6px;
+          margin-right: 15px;
+          overflow: hidden;
+          .van-image {
+            width: 1.06667rem;
+            height: 1.06667rem;
+  
+          }
+          img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            display: block;
+          }
+        }
+        .address {
+            width: 100%;
+          .add {
+            color: rgba(154, 154, 154, 1);
+          }
+        }
+      }
+      .name {
+        width: 220px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+    &.card {
+      width: calc(50vw - 15px - 7.5px);
+      margin-bottom: 15px;
+      &:after {
+        border-radius: 12px;
+      }
+      .info {
+        padding: 7.5px 7.5px 0 7.5px;
+        border-radius: 6px;
+        .icon {
+          width: 100%;
+          height: 150px;
+          display: flex;
+          justify-content: center;
+          .van-image {
+            width: 100%;
+            height: 100%;
+            border-radius:6px;
+            overflow: hidden;
+          }
+        }
+      }
+      .add {
+        color: rgba(154, 154, 154, 1);
+        margin: 5px 0;
+      }
+      .name {
+        margin-top: 5px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  
+    .name,
+    .add,
+    .val,
+    .usd {
+      font-size: 12px;
+      line-height: 16px;
+    }
+    .amount {
+      .usd {
+        color: rgba(154, 154, 154, 1);
+      }
+      .val,
+      .usd {
+        text-align: right;
+      }
+    }
+  }
+  .draw-btn {
+    min-width: 82px;
+    line-height: 24px;
+    text-align: center;
+    color:#fff;
+    background: #9F54BA;
+    border-radius: 12px;
+  }
+  
+  @media screen and (min-width: 756px) {
+    .nft-card.card {
+      width: 49%;
+      margin-right: 0 !important;
+    }
+  }
+  </style>

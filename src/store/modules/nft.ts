@@ -56,14 +56,22 @@ export default {
       const wallet = await getWallet();
       const { address } = wallet
       const { royalty, meta_url, name, desc, category } = nft_data;
-
-      const str = `wormholes:{"version": "0.0.1","type":0,"royalty":${royalty},"exchanger":"","meta_url":"${encode(JSON.stringify(nft_data))}"}`;
-      console.warn('str----', str,nft_data)
-      const data3 = web3.utils.fromUtf8(str);
+      const par = {
+        version: '0.0.1',
+        type: 0,
+        royalty: royalty,
+        exchanger: "",
+        meta_url: web3.utils.fromUtf8(JSON.stringify(nft_data))
+      }
+      const parstr = `wormholes:${JSON.stringify(par)}`
+      const newdata = web3.utils.fromUtf8(parstr)
+      // const str = `wormholes:{"version": "0.0.1","type":0,"royalty":${royalty},"exchanger":"","meta_url":"${web3.utils.fromUtf8(JSON.stringify(nft_data))}"}`;
+      // console.warn('str----', str,nft_data)
+      // const data3 = web3.utils.fromUtf8(str);
       const tx = {
         from: address,
         to: address,
-        data: data3,
+        data: newdata,
         value: "0",
       };
       const data = await store.dispatch('account/transaction', tx)

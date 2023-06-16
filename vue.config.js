@@ -62,14 +62,19 @@ module.exports = {
         }
       },
       '/contractApi': {
-        target: 'https://api.wormholesscan.com',
+        target: 'http://43.129.181.130:3001',
         changeOrigin: true,
         pathRewrite: {
           '^/contractApi': ''
         }
       },
-
-
+      '/aiService': {
+        target: 'http://192.168.1.235:18081',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/aiService': ''
+        }
+      },
       '/exchans': {
         target: 'http://192.168.1.235:9006',
         changeOrigin: true,

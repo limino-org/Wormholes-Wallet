@@ -4,80 +4,69 @@
       <van-cell-group class="formGroup">
         <div class="label mb-6">
           <span class="mr-4">*</span>{{ t("generateNFT.promptWord") }}
-          <van-popover v-model:show="showWord" theme="dark" placement="right">
-            <p class="pl-10 pr-10">{{ t("sendto.gastit") }}</p>
+          <van-popover v-model:show="showWord" theme="dark" placement="bottom-start">
+            <p class="pl-10 pr-10">{{ t("generateNFT.promptTip") }}</p>
             <template #reference>
-              <van-icon
-                name="question hover"
-                @mouseover="showWord = true"
-                @mouseleave="showWord = false"
-              />
+              <van-icon name="question hover" @mouseover="showWord = true" @mouseleave="showWord = false" />
             </template>
           </van-popover>
         </div>
-        <van-field
-         :class="wordErr ? 'error' : ''"
-          label-align="top"
-          v-model="promptWord"
-          autosize
-          :rows="6"
-          clearable
-          type="textarea"
-          label=""
-          :placeholder="t('generateNFT.placeholder')"
-          :rules="[
-            {validator: validatorWord},
-          ]"
-        />
+        <van-field :class="wordErr ? 'error' : ''" label-align="top" v-model="promptWord"
+          :disabled="query.address ? true : false" autosize :rows="6" clearable type="textarea" label=""
+          :placeholder="t('generateNFT.placeholder')" :rules="[
+              { validator: validatorWord },
+            ]" />
+
+
+        <div class="label  mt-16">
+          <span class="mr-4">*</span>{{ t("castingnft.royalty") }}
+          <van-popover v-model:show="showPopover3" theme="dark" placement="right"
+            class="createNft-popover" teleport="#page-box">
+            <div class="f-12 pl-10 pr-10 pt-10 pb-10" @click="showPopover3 = false">
+              {{ $t("castingnft.royaltypopover") }}
+            </div>
+            <template #reference>
+              <van-icon name="question hover" @mouseover="showPopover3 = true" @mouseout="showPopover3 = false" />
+            </template>
+          </van-popover>
+        </div>
+        <van-field v-model="royalty" name="royalty" :disabled="query.royalty" :class="royaltyErr ? 'error' : ''"
+          type="digit" @blur="blurRoyalty" :placeholder="$t('castingnft.royaltyPlaceholder')" :rules="[
+              { validator: validRoyalty },
+            ]" />
+
+
+
         <div class="label mt-16 mb-8">
           {{ t("generateNFT.creativeMode") }}
           <van-popover v-model:show="showSwitch" theme="dark" placement="right">
-            <p class="pl-10 pr-10">{{ t("sendto.gastit") }}</p>
+            <p class="pl-10 pr-10">{{ t("generateNFT.aiDrawTip") }}</p>
             <template #reference>
-              <van-icon
-                name="question hover"
-                @mouseover="showSwitch = true"
-                @mouseleave="showSwitch = false"
-              />
+              <van-icon name="question hover" @mouseover="showSwitch = true" @mouseleave="showSwitch = false" />
             </template>
           </van-popover>
         </div>
         <div class="form-item">
-          <van-switch v-model="checked" size="20" />
+          <van-switch v-model="checked" size="20" :disabled="readonlySwitch" />
         </div>
 
         <div v-if="checked">
           <div class="label mt-16 mb-8">
             <span class="mr-4">*</span>{{ t("generateNFT.emailAddr") }}
             <van-popover v-model:show="showAddr" theme="dark" placement="right">
-              <p class="pl-10 pr-10">{{ t("sendto.gastit") }}</p>
+              <p class="pl-10 pr-10">{{ t("generateNFT.emailTip") }}</p>
               <template #reference>
-                <van-icon
-                  name="question hover"
-                  @mouseover="showAddr = true"
-                  @mouseleave="showAddr = false"
-                />
+                <van-icon name="question hover" @mouseover="showAddr = true" @mouseleave="showAddr = false" />
               </template>
             </van-popover>
           </div>
-          <van-field
-            v-if="!isModif"
-            :class="emailErr ? 'error' : ''"
-            label-align="top"
-            v-model="emailAddr"
-            label=""
-            clearable
-            :placeholder="t('generateNFT.placeEmail')"
-            :rules="[
-              {validator: validatorEmail},
-            ]"
-          />
+          <van-field v-if="isModif || checked" :class="emailErr ? 'error' : ''" label-align="top" v-model="emailAddr"
+            label="" clearable :placeholder="t('generateNFT.placeEmail')" :rules="[
+                { validator: validatorEmail },
+              ]" />
           <div class="form-item" v-else>
             <span>{{ emailAddr }}</span>
-            <i
-              class="iconfont icon-bianji ml-6 hover"
-              @click="isModif = false"
-            ></i>
+            <i class="iconfont icon-bianji ml-6 hover" @click="isModif = false"></i>
           </div>
         </div>
       </van-cell-group>
@@ -90,16 +79,14 @@
       </div>
     </van-form>
 
-    <CommonModal
-      v-model="showGenerateModal"
-      :title="t('generateNFT.geneateComfirm')"
-    >
-      <CreateModal @cancel="showGenerateModal = false" @confirm="handleConfirm" />
+    <CommonModal v-model="showGenerateModal" :title="t('generateNFT.geneateComfirm')">
+      <CreateModal @cancel="showGenerateModal = false" @confirm="handleConfirm" :gasFee="gasFee" :sendAddr="sendAddr"
+        :promptWord="promptWord" :email="emailAddr" />
     </CommonModal>
   </div>
 </template>
 <script lang="ts" setup>
-import { collectibleRules, regAa, regEmail } from "@/enum/regexp";
+import { collectibleRules, regAa, regEmail, RegUrl } from "@/enum/regexp";
 import {
   Form as VanForm,
   CellGroup as VanCellGroup,
@@ -109,69 +96,269 @@ import {
   Popover as VanPopover,
   Switch as VanSwitch,
 } from "vant";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, Ref } from "vue";
+import BigNumber from "bignumber.js";
 import { useI18n } from "vue-i18n";
-import { encode, decode } from 'js-base64';
-
+import { getAiServerAddr, drawImage, getEmailByUser, DrawImageParams } from '@/http/modules/nft'
 import CommonModal from "@/components/commonModal/index.vue";
 import CreateModal from "../components/createModal.vue";
 import { getWallet } from "@/store/modules/account";
 import { useStore } from "vuex";
 import { ethers } from "ethers";
 import { web3 } from "@/utils/web3";
-import { createUUID } from "@/utils/utils";
-
+import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
+import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
+import { useToast } from "@/plugins/toast";
+import { useRouter, useRoute } from "vue-router";
+import { getGasFee } from "@/store/modules/account";
+const { $wtoast } = useToast()
+const { $tradeConfirm } = useTradeConfirm()
+const router = useRouter()
 const { dispatch, state } = useStore()
 const { t } = useI18n();
 const showWord = ref(false);
 const emailErr = ref(false)
 const wordErr = ref(false)
-const onSubmit = () => {
+const royaltyErr = ref(false)
+const showPopover3 = ref(false)
+const route = useRoute()
+const onSubmit = async () => {
+
+  if (checked.value && RegUrl.test(promptWord.value)) {
+    $wtoast.warn(t('generateNFT.normalNftTip'))
+    return
+  }
   showGenerateModal.value = true;
+  const isNormalCreate = checked.value && RegUrl.test(promptWord.value)
+  const myAddr = state.account.accountInfo.address
+
+  // Not ordinary casting to determine whether pure ai drawing
+  if (!isNormalCreate) {
+    const gas2 = await getGasFee(
+      {
+        to: myAddr,
+        value: ethers.utils.parseEther('1')
+      }
+    )
+    // Judge whether it is simple drawing or casting + drawing
+    if (readonlySwitch) {
+      gasFee.value = gas2
+    } else {
+      const gas1 = await handleGetGas()
+      gasFee.value = new BigNumber(gas1).plus(gas2).toString()
+    }
+  } else {
+    const gas1 = await handleGetGas()
+    gasFee.value = gas1
+  }
 };
-const promptWord = ref("");
-const checked = ref(false);
+
+const handleGetGas = async () => {
+  const isNormalCreate = checked.value && RegUrl.test(promptWord.value)
+  const myAddr = state.account.accountInfo.address
+  const randomNumber = Math.round(Math.random() * 2147483647) + ''
+  const nft_data: any = {
+  }
+  if (isNormalCreate) {
+    nft_data.meta_url = promptWord.value
+  } else {
+    nft_data.prompt = promptWord.value
+    nft_data.randomNumber = randomNumber
+  }
+  const par = {
+    version: '0.0.1',
+    type: 0,
+    royalty: Number(royalty.value) * 100,
+    exchanger: "",
+    meta_url: web3.utils.fromUtf8(JSON.stringify(nft_data))
+  }
+  const parstr = `wormholes:${JSON.stringify(par)}`
+  const newdata = web3.utils.fromUtf8(parstr)
+  const tx = {
+    to: myAddr,
+    from: myAddr,
+    data: newdata,
+    value: '0'
+  }
+  const gas1 = await getGasFee(tx)
+  return gas1
+}
+
+const query: any = route.query
+const info = query.info ? JSON.parse(query.info) : null
+const promptWord = ref(info ? info.prompt : '');
+const checked = ref(info ? true : false);
 const showAddr = ref(false);
 const showSwitch = ref(false);
-const emailAddr = ref("");
-
-const isModif = ref(emailAddr.value ? true : false);
+const readonlySwitch = ref(info ? true : false)
+const emailAddr = ref(query.user_mail || '');
+const isModif = ref(query.address ? true : false);
+const royalty: Ref<number | null> = ref(query.royalty_ratio ? Number(query.royalty_ratio) / 100 : '')
 
 const showGenerateModal = ref(false);
-// 
-const handleConfirm = async() => {
-  const myAddr = state.account.accountInfo.address
-  const randomNumber = createUUID().replaceAll('-','')
-  const nft_data =
-  {
-    prompt:promptWord.value,
+
+// 1 normal create nft
+const normalCreate = async () => {
+  const nft_data = {
+    meta_url: promptWord.value
+  }
+  const { receipt, nft_address, owner, hash } = await handleSendCreate(nft_data, () => {
+    $tradeConfirm.update({ status: "approve" });
+  })
+
+  $tradeConfirm.update({
+    status: "success", hash, callBack() {
+      router.replace({ name: "generateNFT-success" });
+    }
+  })
+
+  return { receipt, nft_address, owner }
+
+}
+// 2 ai create nft
+const aiCreate = async () => {
+  const randomNumber = Math.round(Math.random() * 2147483647) + ''
+  const nft_data = {
+    prompt: promptWord.value,
     randomNumber
   }
-  debugger
-  const str = `wormholes:{"version": "0.0.1","type":0,"royalty":200,"exchanger":"","meta_url":"${encode(JSON.stringify(nft_data))}"}`
- const data = web3.utils.fromUtf8(str);
+  const { receipt, nft_address, owner } = await handleSendCreate(nft_data)
+  const txData = await dispatch('account/transaction', {
+    value: 1,
+    to: sendAddr.value
+  })
+  $tradeConfirm.update({ status: "approve" });
+  const txReceipt = await txData.wait()
+  if (txReceipt.status != 1) {
+    $tradeConfirm.update({
+      status: "fail", hash: txData.hash, callBack() {
+        router.replace({ name: "wallet" });
+      }
+    });
+    return
+  }
+  return { nft_address, owner, hash: txData.hash }
+}
+
+
+
+// send create nft tx data
+const handleSendCreate = async (nft_data = {}, call = (v: any) => { }) => {
+  const myAddr = state.account.accountInfo.address
+  const par = {
+    version: '0.0.1',
+    type: 0,
+    royalty: Number(royalty.value) * 100,
+    exchanger: "",
+    meta_url: web3.utils.fromUtf8(JSON.stringify(nft_data))
+  }
+  const parstr = `wormholes:${JSON.stringify(par)}`
+  const newdata = web3.utils.fromUtf8(parstr)
   const tx = {
-    to:myAddr,
-    from:myAddr,
-    data,
+    to: myAddr,
+    from: myAddr,
+    data: newdata,
     value: '0'
   }
   const txRes = await dispatch('account/transaction', tx)
-  debugger
+  call(txRes)
   const receipt = await txRes.wait()
-  debugger
-  const {logs:[log]} = receipt
-  const [logData] = log
+  const { logs: [log], status } = receipt
+  if (!status) {
+    return Promise.reject('failure of transaction')
+  }
+  const { topics } = log
+  const [addr1, fullnftaddr, fullowner] = topics
+  const nft_address = '0x' + fullnftaddr.substr(fullnftaddr.length - 40)
+  const owner = '0x' + fullowner.substr(fullowner.length - 40)
+  return { receipt, nft_address, owner, hash: txRes.hash }
 
+}
+
+
+
+// const grnerateLoading = ref(false)
+const gasFee = ref('')
+const handleConfirm = async () => {
+  const isNormalCreate = checked.value && RegUrl.test(promptWord.value)
+  // grnerateLoading.value = true
+  showGenerateModal.value = false
+  $tradeConfirm.open({
+    disabled: [TradeStatus.pendding],
+    callback() {
+      router.push({
+        name: "generateNFT-success"
+      })
+    }
+  })
+  try {
+
+    const myAddr = state.account.accountInfo.address
+    debugger
+    if (!readonlySwitch.value) {
+      if (isNormalCreate) {
+        await normalCreate()
+      } else {
+        const { nft_address, owner, hash }: any = await aiCreate()
+        const drawParams = {
+          useraddr: owner,
+          nftaddr: nft_address,
+          email: emailAddr.value.toString(),
+          drawflag: '1'
+        }
+        const drawData = await drawImage(drawParams)
+        $tradeConfirm.update({
+          status: "success", hash: hash, callBack() {
+            router.replace({ name: "generateNFT-success" });
+          }
+        });
+      }
+
+    } else {
+      // Step 3 draw
+      const txData = await dispatch('account/transaction', {
+        value: 1,
+        to: sendAddr.value
+      })
+      $tradeConfirm.update({ status: "approve" });
+      const txReceipt = await txData.wait()
+      if (txReceipt.status != 1) {
+        $tradeConfirm.update({
+          status: "fail", hash: txData.hash, callBack() {
+            router.replace({ name: "wallet" });
+          }
+        });
+        return
+      }
+      const drawParams = {
+        useraddr: myAddr.toString(),
+        nftaddr: query.address ? query.address.toString() : '',
+        email: emailAddr.value.toString(),
+        drawflag: '1'
+      }
+      await drawImage(drawParams)
+      $tradeConfirm.update({
+        status: "success", hash: txData.hash, callBack() {
+          router.replace({ name: "generateNFT-success" });
+        }
+      });
+    }
+
+  } catch (err: any) {
+    console.error(err)
+    $wtoast.warn(err.reason)
+  } finally {
+    showGenerateModal.value = false
+  }
 
 }
 
 const validatorEmail = (v: string) => {
-  if(!v){
+  if (!v) {
     emailErr.value = true
     return t('generateNFT.emailNotNull')
   }
-  if(!regEmail.test(v)){
+  if (!regEmail.test(v)) {
     emailErr.value = true
     return t('generateNFT.emailError')
   }
@@ -179,11 +366,16 @@ const validatorEmail = (v: string) => {
   return true
 }
 const validatorWord = (v: string) => {
-  if(!v){
+  if (!v) {
     wordErr.value = true
     return t('generateNFT.promptWordNotNull')
   }
-  if(!regAa.test(v)){
+  if ((regAa.test(v) && !RegUrl.test(v)) || (!regAa.test(v) && RegUrl.test(v))) {
+    wordErr.value = false
+    return true
+  }
+
+  if (!regAa.test(v) && !RegUrl.test(v)) {
     wordErr.value = true
     return t('generateNFT.promptWordErr')
   }
@@ -191,49 +383,93 @@ const validatorWord = (v: string) => {
   return true
 }
 
+const validRoyalty = (v: string) => {
+  if (!v) {
+    royaltyErr.value = true
+    return t('castingnft.numbersof')
+  }
+  royaltyErr.value = false
+  return true
+}
+
+const blurRoyalty = () => {
+  const bigInt = new BigNumber(royalty.value || '0');
+  if (bigInt.gt(10)) {
+    royalty.value = 10;
+    return;
+  }
+  if (bigInt.lt(1)) {
+    royalty.value = 1;
+    return;
+  }
+  // Keep one decimal place
+  royalty.value = parseInt(bigInt.toFormat(1).toString());
+};
+
+const sendAddr = ref('')
+onMounted(async () => {
+  const res = await getAiServerAddr()
+  sendAddr.value = res.data
+  if (readonlySwitch.value) {
+    const myAddr = state.account.accountInfo.address
+    const resEmail = await getEmailByUser({ useraddr: myAddr })
+    emailAddr.value = resEmail.data
+  }
+})
+
 </script>
 <style lang="scss" scoped>
 .ai-page {
   padding: 20px 0 0;
 }
+
 :deep() {
   .van-cell .van-field__body {
     min-height: 44px;
     height: auto;
   }
+
   .van-field--label-top {
     padding: 0 15px;
   }
+
   .formGroup {
     &::after {
       display: none;
     }
   }
+
   .van-cell::after {
     display: none;
   }
+
   .van-field__error-message {
     margin-top: 7px;
   }
 }
+
 .label {
   padding: 0 15px;
   line-height: 17px;
   font-size: 12px;
   font-weight: bold;
+
   span {
     color: red;
     font-weight: normal;
   }
 }
+
 .form-item {
   padding: 0 15px;
   font-size: 12px;
+
   i {
     color: grey;
     font-size: 12px;
   }
 }
+
 .btn-box {
   position: fixed;
   left: 0;

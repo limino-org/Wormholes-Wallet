@@ -5,6 +5,15 @@ import { v4 as uuidv4 } from 'uuid';
 import store from '@/store';
 const { toClipboard } = useClipboard()
 
+
+export const createRondamInt = (len = 64) => {
+  let str = ''
+  for(let i = 0;i< len;i++){
+    str += Math.round(Math.random()*10);
+  }
+  return str
+}
+
 export const createUUID = () => {
   return uuidv4()
 }

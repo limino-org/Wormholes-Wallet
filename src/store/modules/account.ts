@@ -1084,7 +1084,7 @@ export default {
       { state, commit, dispatch }: any,
       params: SendTransactionParams
     ) {
-      const { to, value, gasPrice, gasLimit, data, transitionType, nft_address, checkTxQueue, nonce: sendNonce } = { checkTxQueue: true, ...params };
+      const { to, value, gasPrice, gasLimit, data, transitionType, nft_address, checkTxQueue, nonce: sendNonce } = { checkTxQueue: false, ...params };
       // Determine whether there are transactions in the current trading pool that have not returned transaction receipts, and if so, do not allow them to be sent
       if (checkTxQueue && await dispatch('hasPendingTransactions')) {
         return Promise.reject({ reason: i18n.global.t('common.sendTipPendding'), code: 500 })
@@ -1138,6 +1138,7 @@ export default {
 
         console.log("i18n", i18n);
         sendData.wallet = newwallet
+        dispatch('waitTxQueueResponse')
         return sendData
       } catch (err) {
         console.error(err)
@@ -1750,7 +1751,6 @@ export const DEL_TXQUEUE = async (tx: any) => {
     let queueKey = `txQueue-${id}-${chainId}-${from.toUpperCase()}`
     const list: any = await localforage.getItem(queueKey)
     const txQueue = list && list.length ? list : []
-    debugger
     const newList = txQueue.filter((item: any) => item.txId.toUpperCase() != txId.toUpperCase())
     await localforage.setItem(queueKey, newList)
     eventBus.emit('delTxQueue', tx)

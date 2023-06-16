@@ -3,7 +3,7 @@
     <NavHeader
       @clickRight="handleRight"
       backReplaceName="wallet"
-      :title="t('generateNFT.title')"
+      :title="t('castingnft.createNFT')"
       :hasRight="false"
     >
       <template v-slot:left>

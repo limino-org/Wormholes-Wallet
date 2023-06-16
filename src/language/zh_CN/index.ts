@@ -303,7 +303,7 @@ export default {
         "namepopover": "可以触发关键关联丰富观众体验~",
         "namepopover2": "一个好名字",
         "descpopover": "介绍你的藏品,让更多人了解TA的价值~",
-        "royaltypopover": "添加版税~",
+        "royaltypopover": "为你的NFT设定版税。",
         "categorypopover": "选择类别~"
     },
     createNft: {
@@ -360,18 +360,23 @@ export default {
     },
     generateNFT: {
         title:"AI生成NFT",
-        promptWord:"提示词",
-        placeholder:"请输入文字描述图片，例如:按照维米尔的《戴珍珠耳环的女孩》的风格画一幅海唐",
-        promptWordErr:"最多可输入75个单词，仅支持英语俚语和特殊符号",
-        promptWordNotNull:"提示词不能为空",
+        promptWord:"提示词/SourceUrl",
+        promptTip:"如果您想要使用AI生成NFT，您需要输入提示词。同时，需要开启AI绘图开关，以便AI程序生成对应NFT。若未开启，您将无法收到AI NFT，同时，在您需要时可以选择开启。\n 如果您想要将您已有NFT链接铸造上链，您需要输入源文件URL。",
+        placeholder:"提示词:请输入文字描述图片，例如:按照维米尔的《戴珍珠耳环的女孩》的风格画一个海唐。 \nSourceUrl:资产URL",
+        promptWordErr:"最多可输入75个单词，只支持英文俚语、特殊符号或url地址",
+        promptWordNotNull:"提示词/SourceUrl不能为空",
+        normalNftTip:"您已勾选AI绘画，请填写有效提示词，最多输入75个单词，仅支持英语俚语和特殊符号。",
         creativeMode:"创造模式",
-        AIDrawing:"AI绘画",
+        AIDrawing:"开启AI绘图",
+        AIDrawing2:"AI绘图",
         emailAddr:"邮箱地址",
         emailNotNull:"邮箱地址不能为空",
         placeEmail:"请输入电子邮件地址",
         emailError:"该地址不符合电子邮箱地址规则",
         geneateComfirm:"生成NFT确认",
         drawVal:"AI绘画费用",
+        aiDrawTip:"需要注意，开启时您将支付AI绘图费用。",
+        emailTip:"邮箱将接收 WormholesChain 为您生成的 AI NFT。"
     },
     // 复制弹窗
     copy: {

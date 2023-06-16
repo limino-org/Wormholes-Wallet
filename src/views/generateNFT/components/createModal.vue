@@ -3,45 +3,59 @@
     <div class="form-item">
       <div class="label text-left">{{ t("generateNFT.promptWord") }}</div>
       <div class="word">
-        sdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdfsdsdsfsfsdf
+        {{ props.promptWord }}
       </div>
     </div>
     <div class="van-hairline--bottom"></div>
     <div class="form-item flex between">
       <div class="label text-left">{{ t("send.from") }}</div>
-      <div class="val">sdsdsfsfsdf</div>
+      <div class="val">{{ addressMask(accountInfo.address) }}</div>
     </div>
     <div class="form-item flex between">
       <div class="label text-left">{{ t("send.to") }}</div>
-      <div class="val">sdsdsfsfsdf</div>
+      <div class="val">{{ addressMask(props.sendAddr || '') }}</div>
     </div>
     <div class="van-hairline--bottom"></div>
     <div class="form-item flex between">
       <div class="label text-left">{{ t("send.gasfee") }}</div>
-      <div class="val">≈2.22 ERB</div>
+      <div class="val">≈{{ props.gasFee }} ERB</div>
     </div>
     <div class="form-item flex between">
       <div class="label text-left">{{ t("generateNFT.drawVal") }}</div>
       <div class="val">3 ERB</div>
     </div>
-    <div class="van-hairline--bottom"></div>
-    <div class="form-item flex between">
+    <div class="van-hairline--bottom" v-if="props.email"></div>
+    <div class="form-item flex between" v-if="props.email">
       <div class="label text-left">{{ t("generateNFT.emailAddr") }}</div>
-      <div class="val">cbs8710064@163.com</div>
+      <div class="val">{{ props.email }}</div>
     </div>
   </div>
   <div class="btn-modal-group flex evenly pb-24">
     <van-button  @click="emit('cancel')">{{ t('common.cancel') }}</van-button>
-    <van-button type="primary" @click="emit('confirm')">{{ t('common.confirm') }}</van-button>
+    <van-button type="primary" @click="emit('confirm')" >{{ t('common.confirm') }}</van-button>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Button as VanButton } from "vant";
+import { getAiServerAddr, drawImage, getDrawInfoByUser } from '@/http/modules/nft'
+
 import { useI18n } from "vue-i18n";
+import {defineProps, onMounted,ref,computed} from 'vue'
+import { addressMask } from "@/utils/filters";
+import { useStore } from "vuex";
+const { state } = useStore()
+const accountInfo = computed(() => state.account.accountInfo)
+const props = defineProps({
+  email: String,
+  promptWord: String,
+  sendAddr: String,
+  gasFee: String
+})
 
 const emit = defineEmits(['cancel', 'confirm'])
 const { t } = useI18n();
+
 </script>
 <style lang="scss" scoped>
 :deep(){

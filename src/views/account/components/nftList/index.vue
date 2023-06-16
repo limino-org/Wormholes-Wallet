@@ -11,7 +11,9 @@
         <span class="f-12 text-bold label">
           <van-popover v-model:show="showPopover" :actions="actions" @select="onSelect" placement="bottom-start">
             <template #reference>
-              <span class="hover flex center">{{ sortVal.text }} <i :class="`iconfont ${showPopover ? 'icon-shangla' : 'icon-xiala'}`"></i> </span>
+              <span class="hover flex center">{{ sortVal.text }} 
+                <!-- <i :class="`iconfont ${showPopover ? 'icon-shangla' : 'icon-xiala'}`"></i> -->
+               </span>
             </template>
           </van-popover>
           </span>
@@ -19,11 +21,25 @@
       </div>
     </van-sticky>
     <div :class="`nft-list ${layoutType}`" v-show="pageData.nftList.length" >
-      <NftCard
+      <!-- <div v-if="sortVal.value == 0">
+        <NftCard
         v-for="item in pageData.nftList"
         :key="item.address"
         :data="item"
       />
+      </div>
+      <div v-else>
+        <AiNftCard
+        v-for="item in pageData.nftList"
+        :key="item.nft_address"
+        :data="item"
+       />
+      </div> -->
+      <AiNftCard
+        v-for="item in pageData.nftList"
+        :key="item.nft_address"
+        :data="item"
+       />
     </div>
 
   </van-list>
@@ -58,10 +74,11 @@
 
 <script lang="ts">
 import NftCard from "./nftCard.vue";
-import { getNftOwner } from "@/http/modules/nft";
+import AiNftCard from "./aiNftCard.vue";
+import { getNftOwner,getDrawInfoByUser,GetDrawInfoParams, getDrawInfoByNftaddrs,getOwnerNftList } from "@/http/modules/nft";
 import eventBus from "@/utils/bus";
 import NoData from "@/components/noData/index.vue";
-
+import {web3} from '@/utils/web3';
 import {
   computed,
   ref,
@@ -83,6 +100,7 @@ export default defineComponent({
   name: "nft-list",
   components: {
     NftCard,
+    AiNftCard,
     [List.name]: List,
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
@@ -106,39 +124,85 @@ export default defineComponent({
     const finished: Ref<boolean> = ref(false);
     const nftErr: Ref<boolean> = ref(false);
     let params = {
-      owner: accountInfo.value.address,
+      owner: accountInfo.value.address.toLowerCase(),
       page: "0",
       page_size: "8",
     };
+    let aiparams = {
+      useraddr: accountInfo.value.address,
+      index: '-8',
+      count: '8'
+    }
+
+    const getAiNftList = async (newAiparams: GetDrawInfoParams) => {
+      const {data} = await getDrawInfoByUser(newAiparams).finally(() => loadNft.value =false)
+
+      if(data && data.length) {
+        data.forEach((item: any) => {
+          const param = JSON.parse(item.Drawparams)
+          item['prompt'] = param.prompt
+          item['randomNumber'] = param.randomNumber
+        })
+        pageData.nftList.push(...data);
+      }
+      return Promise.resolve(data);
+    }
+
     // Get user NFT
     const getNftList = async (params: any) => {
       // Get user NFT Gets the NFT list of the current account
-      const { nfts, total }: any = await getNftOwner(params).finally(
-        () => (loadNft.value = false)
-      );
+      try {
+        const { nfts, total }: any = await getOwnerNftList(params)
+      const nftaddrs = nfts.map((item: any) => item.address)
+      
+      const drawList = await getDrawInfoByNftaddrs({nftaddrs})
+      debugger
       // @ts-ignore
       if (nfts && nfts.length) {
         nfts.forEach((item: any) => {
           try{
-            item.info = JSON.parse(decode(item.raw_meta_url));
+        //     data.forEach((item: any) => {
+        //   const param = JSON.parse(item.Drawparams)
+        //   item['prompt'] = param.prompt
+        //   item['randomNumber'] = param.randomNumber
+        // })
+        console.warn('web3.utils.toUtf8(item.raw_meta_url)', web3.utils.toUtf8(item.raw_meta_url))
+            item.info = web3.utils.toUtf8(item.raw_meta_url);
           }catch(err){
             console.error(err)
+            item.info = {}
           }
         });
         // @ts-ignore
         pageData.nftList.push(...nfts);
       }
       return Promise.resolve(nfts);
+
+      }catch(err){
+
+      }finally {
+        loadNft.value = false
+      }
+
     };
     // List loading event
     const handleOnLoad = async () => {
       console.log('load nft...')
       try {
-        params.page = Number(params.page) + 1 + "";
-        const list = await getNftList(params);
+        if(sortVal.value == 0) {
+          params.page = (Number(params.page) + 1) + "";
+          const list = await getNftList(params);
         if (!list || !list.length) {
           finished.value = true;
         }
+        }else {
+          aiparams.index = (Number(aiparams.index) + Number(aiparams.count)) + "";
+         const list = await getAiNftList(aiparams)
+         if (!list || !list.length) {
+          finished.value = true;
+        }
+        }
+       
       } catch (err) {
         nftErr.value = true;
         Toast(JSON.stringify(err));
@@ -149,7 +213,8 @@ export default defineComponent({
     const reLoading = () => {
       nftErr.value = false;
       finished.value = false;
-      params.page = "0";
+      params.page = "-1";
+      aiparams.index = '-8'
       pageData.nftList = [];
       handleOnLoad();
     };
@@ -164,12 +229,14 @@ export default defineComponent({
         $wtoast.warn(t("wallet.haveNoMoney"));
         return false;
       }
-      if(sortVal.value == 0) {
-        router.push({ path: "/createNft/step2" });
-      }
-      if(sortVal.value == 1) {
-        router.push({ name: "generateNFT" });
-      }
+      router.push({ name: "generateNFT" });
+
+      // if(sortVal.value == 0) {
+      //   router.push({ path: "/createNft/step2" });
+      // }
+      // if(sortVal.value == 1) {
+      //   router.push({ name: "generateNFT" });
+      // }
     };
 
     // The drop-down load
@@ -188,6 +255,7 @@ export default defineComponent({
     const onSelect = ({text, value}: any) => {
       sortVal.text = text
       sortVal.value = value
+      reLoading()
     };
 
     return {

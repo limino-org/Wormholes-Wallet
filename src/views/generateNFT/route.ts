@@ -13,6 +13,14 @@ export default {
           auth: true,
         },
       },
+      {
+        path: "/generateNFT/success",
+        name: "generateNFT-success",
+        component:() =>  import('@/views/generateNFT/pages/success.vue'),
+        meta: {
+          auth: true,
+        },
+      },
     ],
   };
   

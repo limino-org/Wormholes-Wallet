@@ -15,7 +15,9 @@ body {
   box-sizing: border-box;
   font-size: 12px;
 }
-
+.van-image__error-icon,.van-image__loading-icon {
+  background: #F8F3F9;
+}
 .container {
   max-width: 900px;
   margin: 0 auto;
@@ -57,6 +59,12 @@ body {
     color: #9643b4;
   }
 
+}
+a {
+  color: #9643b4;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 // hovering
 .hover {

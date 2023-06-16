@@ -3,6 +3,7 @@ import { httpGet, httpPost } from '../request'
 
 const isProduct = process.env.VUE_APP_NODE_ENV == 'production' || process.env.VUE_APP_NODE_ENV == 'test' ? true : false
 const service = '/exchans'
+const aiService = '/aiService'
 
 // const exchantest = isProduct ? '/c0x5051580802283c7b053d234d124b199045ead750' : ''
 const exchantest = isProduct ? '' : '/c0x5051580802283c7b053d234d124b199045ead750' 
@@ -36,6 +37,11 @@ export const getOwnerSnftList = (params = {}) => {
   return httpGet(`${contractApi}/snft/page`,params)
 }
 
+export const getOwnerNftList = (params = {}) => {
+  return httpGet(`${contractApi}/nft/page`,params)
+}
+
+
 export const getAccount = (address: string) => {
   return httpGet(`${contractApi}/account/${address}`)
 }
@@ -44,3 +50,48 @@ export const tokenIdByNftaddr = (address: string) => {
   return httpPost(`${isProduct ?'': service}${exchantest}/v2/queryTokenIdByNftaddr`, {nft_addr: address })
 }
 
+
+export interface GetDrawInfoParams {
+  useraddr: string
+  index: string
+  count: string
+}
+export const getDrawInfoByUser = (params: GetDrawInfoParams) => {
+  return httpPost(`${isProduct ?'': aiService}/v1/getDrawInfoByUser`, params)
+
+}
+
+export interface EmailParams {
+  useraddr: string
+}
+export const getEmailByUser = (params: EmailParams) => {
+  return httpPost(`${isProduct ?'': aiService}/v1/getEmailByUser`, params)
+
+}
+
+
+export interface DrawListParams {
+  nftaddrs: Array<string>
+}
+export const getDrawInfoByNftaddrs = (params: DrawListParams) => {
+  return httpPost(`${isProduct ?'': aiService}/v1/getDrawInfoByNftaddrs`, params)
+
+}
+
+
+
+export interface DrawImageParams {
+  useraddr: string
+  nftaddr: string
+  email: string
+  drawflag: string
+}
+export const drawImage = (params: DrawImageParams) => {
+  return httpPost(`${isProduct ?'': aiService}/v1/drawImage`, params)
+}
+
+
+export const getAiServerAddr = () => {
+  return httpPost(`${isProduct ?'': aiService}/v1/getAiServerAddr`, {})
+  
+}

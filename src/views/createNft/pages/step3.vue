@@ -35,7 +35,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Icon, Toast, Button, Tab, Tabs, Uploader, Form, Field, CellGroup, Dialog, Step, Steps, CountDown } from 'vant'
-import { ref, Ref, computed, toRaw, SetupContext, onMounted } from 'vue'
+import { ref, Ref, computed, toRaw, SetupContext, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { isTemplateNode } from '@vue/compiler-core'
@@ -80,7 +80,9 @@ export default {
         }
       }, 1000)
     }
-
+    onUnmounted(() => {
+        clearInterval(timer)
+      })
     return {
       t,
       active,
