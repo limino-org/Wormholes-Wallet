@@ -30,7 +30,7 @@
             </template>
           </van-popover>
         </div>
-        <van-field v-model="royalty" name="royalty" :disabled="query.royalty" :class="royaltyErr ? 'error' : ''"
+        <van-field v-model="royalty" name="royalty" :disabled="query.address ? true : false" :class="royaltyErr ? 'error' : ''"
           type="digit" @blur="blurRoyalty" :placeholder="$t('castingnft.royaltyPlaceholder')" :rules="[
               { validator: validRoyalty },
             ]" />
@@ -193,7 +193,7 @@ const showSwitch = ref(false);
 const readonlySwitch = ref(info ? true : false)
 const emailAddr = ref(query.user_mail || '');
 const isModif = ref(query.address ? true : false);
-const royalty: Ref<number | null> = ref(query.royalty_ratio ? Number(query.royalty_ratio) / 100 : '')
+const royalty: Ref<number | string> = ref(query.royalty_ratio ? Number(query.royalty_ratio) / 100 : '')
 
 const showGenerateModal = ref(false);
 
@@ -306,6 +306,7 @@ const handleConfirm = async () => {
           email: emailAddr.value.toString(),
           drawflag: '1'
         }
+        debugger
         const drawData = await drawImage(drawParams)
         $tradeConfirm.update({
           status: "success", hash: hash, callBack() {
