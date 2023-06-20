@@ -219,14 +219,16 @@ export default defineComponent({
           value ? "account/transaction" : "account/tokenTransaction",
           params
         );
+        debugger
         $tradeConfirm.update({ status: "approve" });
         eventBus.emit('sendComfirm')
-        const receipt = await txData.wallet.provider.waitForTransaction(txData.hash, null, 60000)
-        await store.dispatch("account/waitTxQueueResponse", {
-          callback(e: any) {
-            waitTime.value = e;
-          },
-        });
+        const receipt = await txData.wait()
+        debugger
+        // await store.dispatch("account/waitTxQueueResponse", {
+        //   callback(e: any) {
+        //     waitTime.value = e;
+        //   },
+        // });
         if(receipt.status) {
           $tradeConfirm.update({ status: "success", hash:txData.hash });
         } else {
@@ -234,7 +236,7 @@ export default defineComponent({
         }
       } catch (err: any) {
         console.warn('idx', err.toString().indexOf("timeout"))
-        console.log('err:===', err)
+        console.error('err:===', err)
         console.log('t("error.timeout")', t("error.timeout"))
         if (err.toString().indexOf("timeout") > -1) {
           if(await store.dispatch('account/checkIsTxHash', txData.hash)) {

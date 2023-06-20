@@ -323,7 +323,8 @@ export default {
 
 
 export function getInput(input) {
-    if (input) {
+    console.log('input', input)
+    if (input && input != '0x') {
         try {
             const wormStr = web3.utils.toAscii(input)
             console.log('wormStr',wormStr)

@@ -540,10 +540,7 @@ export default defineComponent({
         const { address } = wallet;
         account.value = await getAccount(address);
         blockNumber.value = await wallet.provider.getBlockNumber();
-        const accountInfo = await wallet.provider.send("eth_getAccountInfo", [
-          address,
-          "latest",
-        ]);
+        const accountInfo = await dispatch('account/getExchangeStatus')
         console.log(blockNumber.value - accountInfoBlockNumber.value);
         console.log("blockNumber.value - accountInfoBlockNumber.value");
         await dispatch("account/getExchangeStatus");
@@ -554,6 +551,7 @@ export default defineComponent({
         if (exchangeStatus.value.ExchangerFlag) {
           const { ExchangerBalance, ExchangerName, ExchangerURL, FeeRate } =
             accountInfo;
+            debugger
           let formatValue;
           money.value = new BigNumber(FeeRate).div(10).toNumber();
           if (ExchangerBalance.toString().indexOf("e") !== -1) {
@@ -787,7 +785,7 @@ export default defineComponent({
         }
       }
       try {
-        await formDom.value.validate();
+        // await formDom.value.validate();
         isError.value = false;
         isAffirmDialog.value = true;
         // open()

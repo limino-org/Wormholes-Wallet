@@ -1368,6 +1368,7 @@ export default {
       const data = {...res,...res.Worm,status:0}
       commit("UPDATE_EXCHANGERSTATUS", data);
       call(data);
+      return data
     },
     // Update current network, current address, current token list balance
     async updateTokensBalances({ commit, state, dispatch }: any) {
@@ -1461,6 +1462,7 @@ export default {
         waitTime = setTimeout(async () => {
           const list: any = await localforage.getItem(queuekey)
           const txQueue = list && list.length ? list : []
+          debugger
           if (!txQueue.length) {
             resolve(true)
           }
@@ -1496,7 +1498,7 @@ export default {
                   "eth_getAccountInfo",
                   [nft_address, web3.utils.toHex((data1.blockNumber - 1).toString())]
                 );
-                const { MergeLevel, MergeNumber } = nftAccountInfo
+                const { MergeLevel, MergeNumber } = nftAccountInfo.Worm
                 //  @ts-ignore
                 const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion
 
@@ -1864,7 +1866,8 @@ export const PUSH_TRANSACTION = async (da: any) => {
 
 
 export const UPDATE_TRANSACTION = async (da: any) => {
-  const state = store.state.account
+  try {
+    const state = store.state.account
   const { receipt, sendData, network, txId, value, date } = da
   const { id, currencySymbol } = network
   const { convertAmount, nonce, data } = sendData
@@ -1965,4 +1968,7 @@ export const UPDATE_TRANSACTION = async (da: any) => {
   }
   eventBus.emit('txUpdate', newReceipt)
   return newReceipt
+  }catch(err){
+    console.error(err)
+  }
 }

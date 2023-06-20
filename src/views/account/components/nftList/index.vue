@@ -48,6 +48,9 @@
       <AiNftCard :data="item" />
     </div>
   </masonry-infinite-grid>
+  <div class="flex center" v-show="loadNft">
+    <van-loading>{{ t('common.loading') }}</van-loading>
+  </div>
   </div>
 
 
@@ -99,7 +102,7 @@ import {
   SetupContext,
 } from "vue";
 import { useStore } from "vuex";
-import { List, Toast, Button, PullRefresh, Sticky, Icon, Popover } from "vant";
+import { List, Toast, Button, PullRefresh, Sticky, Icon, Popover, Loading } from "vant";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useToast } from "@/plugins/toast";
@@ -115,6 +118,7 @@ export default defineComponent({
     [Button.name]: Button,
     [PullRefresh.name]: PullRefresh,
     [Sticky.name]: Sticky,
+    [Loading.name]: Loading,
     [Icon.name]: Icon,
     [Popover.name]: Popover,
     NoData,
