@@ -43,22 +43,18 @@
     </div>
     <!-- function -->
     <div class="flex evenly">
-      <van-sticky position="bottom" :offset-bottom="30">
         <div class="actions-btn" @click="toSend">
           <div class="action-icon flex center">
             <i class="iconfont icon-teshujiantouzuoxiantiao-copy"></i>
           </div>
           <div class="send-action text-center">{{ t("sendNFT.send") }}</div>
         </div>
-      </van-sticky>
-      <van-sticky position="bottom" :offset-bottom="30">
         <div class="actions-btn" @click="tomore">
           <div class="action-icon flex center">
             <van-icon name="description" />
           </div>
           <div class="send-action text-center">{{ t("sendNFT.more") }}</div>
         </div>
-      </van-sticky>
     </div>
   </div>
 </template>

@@ -223,7 +223,7 @@ export default defineComponent({
       }
       show.value = false;
       if (
-        exchangeStatus.value.exchanger_flag &&
+        exchangeStatus.value.ExchangerFlag &&
         exchangeStatus.value.status == 2
       ) {
         $tradeConfirm.open({

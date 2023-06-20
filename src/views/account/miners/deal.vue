@@ -731,7 +731,7 @@ export default defineComponent({
     const sliderDisabled = computed(() => {
       // You can slide the slider only if you don't hand in both
       if (
-        exchangeStatus.value.exchanger_flag == false &&
+        exchangeStatus.value.ExchangerFlag == false &&
         exchangeStatus.value.status != 2
       ) {
         return false;
@@ -744,7 +744,7 @@ export default defineComponent({
       const v = parseFloat(store.state.account.accountInfo.amount);
       // @ts-ignore
       if (
-        exchangeStatus.value.exchanger_flag == true &&
+        exchangeStatus.value.ExchangerFlag == true &&
         exchangeStatus.value.status != 2
       ) {
         // The first fee was paid and the second one was not paid
@@ -757,7 +757,7 @@ export default defineComponent({
       // I didn't pay the first and I didn't pay the second
       // @ts-ignore
       if (
-        exchangeStatus.value.exchanger_flag == false &&
+        exchangeStatus.value.ExchangerFlag == false &&
         exchangeStatus.value.status != 2
       ) {
         if (v < 301) {
@@ -891,13 +891,13 @@ export default defineComponent({
     };
     const changeServerIndex = (value: number) => {
       if (
-        !exchangeStatus.value.exchanger_flag &&
+        !exchangeStatus.value.ExchangerFlag &&
         exchangeStatus.value.status == 2
       ) {
         return;
       }
       if (
-        !exchangeStatus.value.exchanger_flag ||
+        !exchangeStatus.value.ExchangerFlag ||
         exchangeStatus.value.status != 2
       ) {
         serverIndex.value = value;
@@ -997,8 +997,8 @@ export default defineComponent({
         isFirst.value = true;
       }
     };
-    const isExchanger_flag = computed(
-      () => store.state.account.exchangeStatus.exchanger_flag
+    const isExchangerFlag = computed(
+      () => store.state.account.exchangeStatus.ExchangerFlag
     );
 
     const Coefficient = computed(() => {
@@ -1010,7 +1010,7 @@ export default defineComponent({
       if (num >= 40 && num <= 50) return "neutral";
       if (num > 50) return "smile";
     });
-    console.log(isExchanger_flag);
+    console.log(isExchangerFlag);
     console.log("===============================11111111111==========");
 
     let cancelClick = () => {
@@ -1311,7 +1311,7 @@ export default defineComponent({
       accountList,
       isCloseDialog,
       isOpen,
-      isExchanger_flag,
+      isExchangerFlag,
       gradientColor,
       isAffirmDialog,
       isClose,

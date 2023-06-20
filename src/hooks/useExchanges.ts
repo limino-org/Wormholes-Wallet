@@ -215,7 +215,7 @@ export const useExchanges = () => {
     const exchangeStatus: ExchangeStatus = state.account.exchangeStatus
     const {
       status: newStatus,
-      exchanger_flag
+      ExchangerFlag
     } = exchangeStatus
     const { address } = wallet;
     // const baseName = encode(name);
@@ -248,7 +248,7 @@ export const useExchanges = () => {
       }
       // Send the second stroke
       if (isServer) {
-        if (!exchanger_flag && newStatus == 2) {
+        if (!ExchangerFlag && newStatus == 2) {
           $tradeConfirm.update({ status: "success", callBack() { router.replace({ name: "exchange-management" }) } })
           return
         }
@@ -425,11 +425,11 @@ export const useExchanges = () => {
     const exchangeStatus: ExchangeStatus = state.account.exchangeStatus
     const {
       status,
-      exchanger_flag
+      ExchangerFlag
     } = exchangeStatus
     console.log(status)
-    console.log(exchanger_flag)
-    if ((status != 2 && exchanger_flag == false) || (!exchanger_flag && status == 2)) {
+    console.log(ExchangerFlag)
+    if ((status != 2 && ExchangerFlag == false) || (!ExchangerFlag && status == 2)) {
       $tradeConfirm.open({
         approveMessage: i18n.global.t('createExchange.create_approve'),
         successMessage: i18n.global.t('createExchange.create_waiting'),
@@ -440,7 +440,7 @@ export const useExchanges = () => {
       return
     }
     // The first payment was made, the second was missed
-    if (exchanger_flag == true && status != 2) {
+    if (ExchangerFlag == true && status != 2) {
       $tradeConfirm.open({
         approveMessage: i18n.global.t('createExchange.create_approve'),
         successMessage: i18n.global.t('createExchange.create_waiting'),
@@ -449,7 +449,7 @@ export const useExchanges = () => {
       })
       send2(200, name)
     }
-    if (!exchanger_flag && status == 2) {
+    if (!ExchangerFlag && status == 2) {
       sendTo(name, amount, false, fee_rate);
     }
   };

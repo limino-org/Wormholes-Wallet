@@ -78,7 +78,7 @@ export enum NetStatus {
 }
 export type ExchangeStatus = {
   status: number;
-  exchanger_flag: boolean;
+  ExchangerFlag: boolean;
 };
 export interface AddressBalance {
   address: string;
@@ -230,10 +230,10 @@ export default {
       transactionRecord: [],
       token: [],
     },
-    //Open exchange status 2 Second successful exchanger_Flag true First successful
+    //Open exchange status 2 Second successful ExchangerFlag true First successful
     exchangeStatus: {
       status: 0,
-      exchanger_flag: false,
+      ExchangerFlag: false,
     },
     ethAccountInfo: {},
     ethNetwork: {

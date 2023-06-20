@@ -103,7 +103,7 @@ export default {
     const { emit }: any = context
 
     onBeforeMount(async () => {
-      if (exchangeStatus.exchanger_flag) {
+      if (exchangeStatus.ExchangerFlag) {
         const wallet = await getWallet()
         const { address } = wallet
         const data = await wallet.provider.send('eth_getAccountInfo', [address, 'latest'])

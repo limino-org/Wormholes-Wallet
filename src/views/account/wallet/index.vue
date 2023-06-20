@@ -183,7 +183,7 @@ trigger="manual"
             <div
               :class="[
                 'wallet-hint pt-10 pb-10 pl-10 pr-10 mr-12',
-                isExchanger_flag ? 'wallet-hint-h' : '',
+                isExchangerFlag ? 'wallet-hint-h' : '',
               ]"
               @click="toCreate"
             >
@@ -413,9 +413,9 @@ export default {
       Toast.loading({});
       try {
         const res = await dispatch("account/getExchangeStatus");
-        const { exchanger_flag, status } = res;
+        const { ExchangerFlag, status } = res;
         autoexchange.value = status;
-        autostat.value = exchanger_flag;
+        autostat.value = ExchangerFlag;
         console.warn("res", res);
         return res;
       } catch (err: any) {
@@ -427,8 +427,8 @@ export default {
 
     //Jump to open an exchange with one click
     // const goAutoexchange = async () => {
-    //   const {exchanger_flag,status} = await getStatus();
-    //   if(exchanger_flag) {
+    //   const {ExchangerFlag,status} = await getStatus();
+    //   if(ExchangerFlag) {
     //     router.push({ name: "exchange-management" });
     //   } else {
     //      router.push({ name: "bourse" });
@@ -446,8 +446,8 @@ export default {
         console.error(e);
       }
     };
-    const isExchanger_flag = computed(
-      () => store.state.account.exchangeStatus.exchanger_flag
+    const isExchangerFlag = computed(
+      () => store.state.account.exchangeStatus.ExchangerFlag
     );
     const isExchangeStatusStatus = computed(
       () => store.state.account.exchangeStatus.status == 2
@@ -498,8 +498,8 @@ export default {
       dispatch("account/getExchangeStatus").then((res) => {
         console.warn("getExchangeStatus", res);
         autoexchange.value = res.status;
-        autostat.value = res.exchanger_flag;
-        if (res.status == 2 && res.exchanger_flag) {
+        autostat.value = res.ExchangerFlag;
+        if (res.status == 2 && res.ExchangerFlag) {
           initExchangeData();
         }
       });
@@ -623,7 +623,7 @@ export default {
       handleClose,
       toSend,
       handleLeft,
-      isExchanger_flag,
+      isExchangerFlag,
       guideModalSuccess,
       theme,
       loading,

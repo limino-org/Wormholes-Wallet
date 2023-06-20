@@ -61,12 +61,12 @@
       class="nav-header-slider-box"
       teleport="#page-box"
     >
-      <div :class="`slider-con ${exchangeStatus.exchanger_flag ? 'isExchange' : ''}`">
+      <div :class="`slider-con ${exchangeStatus.ExchangerFlag ? 'isExchange' : ''}`">
         <div class="slider-bg">
           <div class="company">
             <div class="company-logo">
               <!-- <img class="compy_img" src="@/assets/token/icon_blue.svg" /> -->
-              <img class="compy_img" v-if="!exchangeStatus.exchanger_flag" src="@/assets/token/logowallet.png" />
+              <img class="compy_img" v-if="!exchangeStatus.ExchangerFlag" src="@/assets/token/logowallet.png" />
               <img class="compy_img" v-else src="@/assets/token/whitelogo.png" alt="">
             </div>
             <div class="company-name">Wormholes</div>
@@ -262,7 +262,7 @@
               <i
                 class="iconfont icon-fangwujianzhuwugoujianbeifen"
               ></i>
-              <span v-if="!exchangeStatus.exchanger_flag">{{
+              <span v-if="!exchangeStatus.ExchangerFlag">{{
                 t("sidebar.openexchange")
               }}</span>
               <span v-else>{{ t("sidebar.exchangemanagement") }}</span>
@@ -643,8 +643,9 @@ export default defineComponent({
       })
       show.value = false;
       const exchangeStatus = await dispatch('account/getExchangeStatus')
+      debugger
       Toast.clear()
-      if (exchangeStatus.exchanger_flag) {
+      if (exchangeStatus.ExchangerFlag) {
         router.push({
           name: "exchange-management",
         });

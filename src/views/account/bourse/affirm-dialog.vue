@@ -70,7 +70,7 @@
           </div> -->
           <!-- <div
             class="bourse-container-meaning bt"
-            v-if="!exchangeStatus.exchanger_flag && exchangeStatus.status == 0"
+            v-if="!exchangeStatus.ExchangerFlag && exchangeStatus.status == 0"
           >
             <span class="c1">{{ t("bourse.totalAmount") }} </span>
             <el-tooltip
