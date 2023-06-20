@@ -120,7 +120,7 @@
     </van-tabs>
     <van-sticky position="bottom" offset-bottom="30px">
       <div class="flex center btn-group">
-        <van-button type="primary" :loading="loading" @click="handleShowSendConfirm" block>{{
+        <van-button type="primary"  @click="handleShowSendConfirm" block>{{
           t("sendNFT.send")
         }}</van-button>
       </div>

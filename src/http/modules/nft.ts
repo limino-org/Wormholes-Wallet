@@ -1,7 +1,7 @@
 
 import { httpGet, httpPost } from '../request'
 
-const isProduct = process.env.VUE_APP_NODE_ENV == 'production' || process.env.VUE_APP_NODE_ENV == 'test' ? true : false
+const isProduct = process.env.VUE_APP_NODE_ENV == 'production' ? true : false
 const service = '/exchans'
 const aiService = '/aiService'
 
@@ -71,7 +71,7 @@ export const getEmailByUser = (params: EmailParams) => {
 
 
 export interface DrawListParams {
-  nftaddrs: Array<string>
+  nftaddrs: string
 }
 export const getDrawInfoByNftaddrs = (params: DrawListParams) => {
   return httpPost(`${isProduct ?'': aiService}/v1/getDrawInfoByNftaddrs`, params)
@@ -80,6 +80,10 @@ export const getDrawInfoByNftaddrs = (params: DrawListParams) => {
 
 
 
+
+export const getPaintFee = () => {
+  return httpPost(`${isProduct ?'': aiService}/v1/getPaintFee`, {})
+}
 export interface DrawImageParams {
   useraddr: string
   nftaddr: string

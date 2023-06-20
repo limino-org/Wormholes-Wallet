@@ -1,25 +1,31 @@
 <template>
   <div class="nft-detail">
-    <div class="quanping">
-      <i
-        class="iconfont icon-fangda hover"
-        color="#FDFDFD"
-        @click="showImg"
-      ></i>
+    <div class="quanping"  v-if="!isAiNft">
+      <van-icon name="expand-o" class="hover"  @click="showImg" />
     </div>
-    <div class="code flex center" @click="showImg">
+    <div class="code flex center" >
       <van-image
-        :src="nftInfo.info.meta_url"
+       @click="showImg"
+        v-if="!isAiNft"
+        :src="nftInfo.meta_url"
         width="6.8rem"
         height="6.8rem"
       ></van-image>
+      <div class="nft-ai " v-else>
+          <div class="flex center">
+            <div><img src="@/assets/ai-default.png" /></div>
+          </div>
+          <div class="flex center">
+            <div class="nft-ai-text">{{ t('generateNFT.noPic') }}</div>
+          </div>
+        </div>
     </div>
 
     <!-- NFT information -->
     <div class="form van-hairline--surround">
-      <div class="content van-hairline--bottom">
-        <div class="form-titie">{{ t("sendNFT.name") }}</div>
-        <div class="form-content name">{{ nftInfo.info.name }}</div>
+      <div class="content van-hairline--bottom" v-if="isAiNft">
+        <div class="form-titie">{{ t("generateNFT.promptTit") }}</div>
+        <div class="form-content name">{{ nftInfo.info.prompt }}</div>
       </div>
       <div class="content van-hairline--bottom">
         <div class="form-titie">{{ t("sendNFT.address") }}</div>
@@ -100,9 +106,11 @@ export default {
     const route = useRoute();
     // @ts-ignore
     const nftInfo = ref(JSON.parse(sessionStorage.getItem("nftInfo")));
+
     const { address, info } = nftInfo;
     const pageData = reactive({ data: nftInfo });
-
+    pageData.data.info = JSON.parse(pageData.data.info)
+    const isAiNft = ref(pageData.data.info.meta_url ? false : true)
     const handleLeft = () => {
       router.back();
     };
@@ -118,13 +126,14 @@ export default {
       Toast(t("sendNFT.tomore"));
     };
     const showImg = () => {
-      ImagePreview({ images: [nftInfo.value.info.meta_url], closeable: true });
+      ImagePreview({ images: [nftInfo.value.meta_url], closeable: true });
     };
 
     return {
       t,
       handleLeft,
       pageData,
+      isAiNft,
       toSend,
       addressMask,
       nftInfo,
@@ -136,6 +145,27 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+  .nft-ai {
+    background: #F3F3F3;
+    padding: 5px 0;
+    width: 256px;
+    height: 256px;
+    position: relative;
+
+    img {
+      display: block;
+      margin: 70px auto 0;
+      height: 80px;
+    }
+    &-text {
+      width: 160px;
+      margin-top: 5px;
+      text-align: center;
+      font-size: 12px;
+      color: #D9D5D5;
+      word-break: keep-all;
+    }
+  }
   .quanping {
     display: flex;
     justify-content: flex-end;
@@ -159,7 +189,6 @@ export default {
     width: 256px;
     height: 256px;
     margin: 25px auto 15px;
-    border: 1px solid #ccc;
     border-radius: 7px;
     overflow: hidden;
 

@@ -146,8 +146,13 @@ export default {
                         } else {
                             const json = getInput(item.input)
                             if (json) {
-                                item.txType = 'wormholes'
-                                item.jsonData = json
+                                if(json && json.nft_address && json.owner) {
+                                    item.txType = 'normal'
+                                }else {
+                                    const {txType} = json
+                                    item.txType = 'wormholes'
+                                    item.jsonData = json
+                                }
                             } else {
                                 item.txType = 'contract'
                             }
@@ -321,10 +326,29 @@ export function getInput(input) {
     if (input) {
         try {
             const wormStr = web3.utils.toAscii(input)
+            console.log('wormStr',wormStr)
             const [nullstr, jsonstr] = wormStr.split('wormholes:')
             let jsonData = null
-            if (jsonstr) {
+            const txType = wormStr.startsWith('wormholes:')
+            if (jsonstr && txType) {
                 jsonData = JSON.parse(jsonstr)
+            } else {
+                jsonData = JSON.parse(wormStr)
+            }
+  
+            console.warn('jsonData', jsonData)
+            if(txType) {
+                jsonData.txType = 'wormholes'
+            } else {
+                if(jsonData) {
+                    if(jsonData.nft_address && jsonData.owner) {
+                        jsonData.txType = 'normal'
+                    } else {
+                        jsonData.txType = 'contract'
+
+                    }
+                }
+                return jsonData
             }
             return jsonData
         } catch (err) {

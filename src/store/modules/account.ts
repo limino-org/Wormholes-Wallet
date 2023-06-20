@@ -1364,11 +1364,10 @@ export default {
     async getExchangeStatus({ commit, state }: any, call: Function = () => { }) {
       const wallet = await getWallet();
       const { address } = wallet;
-      return checkAuth(address).then((res: any) => {
-        commit("UPDATE_EXCHANGERSTATUS", res.data);
-        call(res.data);
-        return res.data;
-      });
+      const res = await wallet.provider.send('eth_getAccountInfo',[address, 'latest'])
+      const data = {...res,...res.Worm,status:0}
+      commit("UPDATE_EXCHANGERSTATUS", data);
+      call(data);
     },
     // Update current network, current address, current token list balance
     async updateTokensBalances({ commit, state, dispatch }: any) {
@@ -1431,8 +1430,9 @@ export default {
           state.accountInfo.address,
           "latest",
         ]);
-        commit('UPDATE_CHAINACCOUNTINFO', accountInfo)
-        return accountInfo
+        const data = {...accountInfo, ...accountInfo.Worm, status: 0}
+        commit('UPDATE_CHAINACCOUNTINFO', data)
+        return data
       } catch (err) {
         commit('UPDATE_CHAINACCOUNTINFO', {})
       }
@@ -1553,8 +1553,9 @@ export default {
         "eth_getAccountInfo",
         [state.accountInfo.address, "latest"]
       ).then((res: any) => {
-        commit('UPDATE_ETHACCOUNTINFO', res)
-        return res
+        const data = {...res, ...res.Worm, status: 0}
+        commit('UPDATE_ETHACCOUNTINFO', data)
+        return data
       });
     },
     // Indicates that the current transaction exists in the transaction queue

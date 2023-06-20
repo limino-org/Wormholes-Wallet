@@ -325,15 +325,34 @@ width: 420px;
 }
 
 
+.sliderLeft-enter-active {
+  animation: slider-left 0.4s ease-in-out;
+}
+.sliderLeft-leave-active {
+  animation: slider-left 0.4s reverse ease-in-out;
+}
 
+@keyframes slider-left {
+  0% {
+    transform: translateX(200px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
 @keyframes slider-in {
   0% {
     transform: translateY(90px);
+    opacity: 0;
   }
 
   100% {
     transform: translateY(0);
+    opacity: 1;
   }
 }
 

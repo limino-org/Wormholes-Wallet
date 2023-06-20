@@ -273,7 +273,7 @@ export default {
         "utility": "实用"
     },
     "castingnft": {
-        "createNFT": "创建 NFT",
+        "createNFT": "创造 NFT",
         "upload": "上传",
         "information": "信息",
         "done": "完成",
@@ -359,7 +359,9 @@ export default {
 
     },
     generateNFT: {
+        noPic:"No Picture",
         title:"AI生成NFT",
+        promptTit:"提示词",
         promptWord:"提示词/SourceUrl",
         promptTip:"如果您想要使用AI生成NFT，您需要输入提示词。同时，需要开启AI绘图开关，以便AI程序生成对应NFT。若未开启，您将无法收到AI NFT，同时，在您需要时可以选择开启。\n 如果您想要将您已有NFT链接铸造上链，您需要输入源文件URL。",
         placeholder:"提示词:请输入文字描述图片，例如:按照维米尔的《戴珍珠耳环的女孩》的风格画一个海唐。 \nSourceUrl:资产URL",

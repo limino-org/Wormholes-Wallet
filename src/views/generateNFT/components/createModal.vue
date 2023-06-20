@@ -20,9 +20,9 @@
       <div class="label text-left">{{ t("send.gasfee") }}</div>
       <div class="val">≈{{ props.gasFee }} ERB</div>
     </div>
-    <div class="form-item flex between">
+    <div class="form-item flex between" v-if="props.email">
       <div class="label text-left">{{ t("generateNFT.drawVal") }}</div>
-      <div class="val">3 ERB</div>
+      <div class="val">{{ props.value }} ERB</div>
     </div>
     <div class="van-hairline--bottom" v-if="props.email"></div>
     <div class="form-item flex between" v-if="props.email">
@@ -50,7 +50,8 @@ const props = defineProps({
   email: String,
   promptWord: String,
   sendAddr: String,
-  gasFee: String
+  gasFee: String,
+  value: String
 })
 
 const emit = defineEmits(['cancel', 'confirm'])

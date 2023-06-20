@@ -160,7 +160,7 @@ trigger="manual"
       </van-loading>
     </div>
     <div>
-      <Transition name="slider">
+      <Transition name="sliderLeft">
         <div class="help-center-box" v-if="!isSelect || active === 0">
           <div class="flex right pl-20 pr-20">
             <div
@@ -177,23 +177,20 @@ trigger="manual"
           </div>
         </div>
       </Transition>
-      <Transition name="slider">
-        <div class="btn-groups" v-if="currentNetwork.id == 'wormholes-network-1' && (!isSelect || active === 0)">
+      <Transition name="sliderLeft">
+        <div class="btn-groups" v-if="currentNetwork.id == 'wormholes-network-1' && active == 1">
           <div class="pl-20 pr-20 flex right center-v">
             <div
               :class="[
                 'wallet-hint pt-10 pb-10 pl-10 pr-10 mr-12',
                 isExchanger_flag ? 'wallet-hint-h' : '',
               ]"
-              @click="goAutoexchange"
+              @click="toCreate"
             >
-              <span v-if="!isExchanger_flag">{{
-                t("sidebar.openexchange")
-              }}</span>
-              <span v-else>{{ t("sidebar.exchangemanagement") }}</span>
+              <span >{{ t("castingnft.createNFT") }}</span>
             </div>
-            <div class="wallet-suspension hover" @click="goAutoexchange">
-              <i class="iconfont icon-fangwujianzhuwugoujianbeifen"></i>
+            <div class="wallet-suspension hover" @click="toCreate">
+              <van-icon name="plus" />
             </div>
           </div>
         </div>
@@ -429,14 +426,14 @@ export default {
     };
 
     //Jump to open an exchange with one click
-    const goAutoexchange = async () => {
-      const {exchanger_flag,status} = await getStatus();
-      if(exchanger_flag) {
-        router.push({ name: "exchange-management" });
-      } else {
-         router.push({ name: "bourse" });
-      }
-    };
+    // const goAutoexchange = async () => {
+    //   const {exchanger_flag,status} = await getStatus();
+    //   if(exchanger_flag) {
+    //     router.push({ name: "exchange-management" });
+    //   } else {
+    //      router.push({ name: "bourse" });
+    //   }
+    // };
     const toSend = () => {
       router.push({ name: "send" });
     };
@@ -580,8 +577,16 @@ export default {
       const handleSetListType1 = (type: number) => {
       dispatch("system/setListLayout", type == 1 ? "card" : "list");
     };
+     const toCreate = () => {
+      if (Number(accountInfo.value.amount) == 0) {
+        $wtoast.warn(t("wallet.haveNoMoney"));
+        return false;
+      }
+      router.push({ name: "generateNFT" });
+      };
 
     return {
+      toCreate,
       handleSetListType1,
       onClickTab,
       handleShowSwitch,
@@ -609,7 +614,7 @@ export default {
       canbtns,
       autoexchange,
       autostat,
-      goAutoexchange,
+      // goAutoexchange,
       active,
       // showAcceptCode,
       toogleAcceptCode,

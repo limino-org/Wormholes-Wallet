@@ -1,5 +1,6 @@
 <template>
   <van-list
+    v-if="layoutType == 'list'"
     v-model:loading="loadNft"
     :finished="finished"
     @load="handleOnLoad"
@@ -7,78 +8,87 @@
   >
     <van-sticky offset-top="91">
       <div class="flex between center-v create-box">
-
         <span class="f-12 text-bold label">
-          <van-popover v-model:show="showPopover" :actions="actions" @select="onSelect" placement="bottom-start">
+          <van-popover
+            v-model:show="showPopover"
+            :actions="actions"
+            @select="onSelect"
+            placement="bottom-start"
+          >
             <template #reference>
-              <span class="hover flex center">{{ sortVal.text }} 
-                <!-- <i :class="`iconfont ${showPopover ? 'icon-shangla' : 'icon-xiala'}`"></i> -->
-               </span>
+              <span class="hover flex center"
+                >{{ sortVal.text }}
+              </span>
             </template>
           </van-popover>
-          </span>
-        <span class="add flex center" @click="toCreate"><van-icon name="plus" /></span>
+        </span>
+
       </div>
     </van-sticky>
-    <div :class="`nft-list ${layoutType}`" v-show="pageData.nftList.length" >
-      <!-- <div v-if="sortVal.value == 0">
-        <NftCard
-        v-for="item in pageData.nftList"
-        :key="item.address"
-        :data="item"
-      />
-      </div>
-      <div v-else>
-        <AiNftCard
-        v-for="item in pageData.nftList"
-        :key="item.nft_address"
-        :data="item"
-       />
-      </div> -->
+    <div :class="`nft-list ${layoutType}`">
       <AiNftCard
         v-for="item in pageData.nftList"
         :key="item.nft_address"
         :data="item"
-       />
+      />
     </div>
-
   </van-list>
-  <div
-      class="no-list"
-      v-show="!pageData.nftList.length && !nftErr && finished"
+
+  <div    v-else   class="list-box">
+    <masonry-infinite-grid
+    :column="2"
+    @request-append="handleOnLoad"
+  >
+    <div
+    class="nftCard-card"
+      v-for="item in pageData.nftList"
+      :key="item.nft_address"
+      :data-grid-groupkey="item.nft_address"
     >
-      <NoData :hasText="false" />
+      <AiNftCard :data="item" />
     </div>
-    <SliderBottom :finished="finished">
-        <div class="text-center tip1">
-          {{ t("wallet.notoken", { type: "NFT" }) }}
-          <span class="toCreate hover mr-4" @click="toCreate">{{
-           sortVal.text
-          }}</span>
-          <span class="tip2 disabled">{{ t("createNft.findMore") }}</span>
-        </div>
-    </SliderBottom>
+  </masonry-infinite-grid>
+  </div>
 
 
-    <!-- error -->
-    <div class="err-nft p-20" v-if="nftErr">
-      <div class="text-center mt-20 mb-20 f-14">
-        {{ t("createNft.pullagain") }}
-      </div>
-      <div class="flex center">
-        <van-button @click="reLoading">{{ t("createNft.retry") }}</van-button>
-      </div>
+  <div class="no-list" v-show="!pageData.nftList.length && !nftErr && finished">
+    <NoData :hasText="false" />
+  </div>
+  <SliderBottom :finished="finished">
+    <div class="text-center tip1">
+      {{ t("wallet.notoken", { type: "NFT" }) }}
+      <span class="toCreate hover mr-4" @click="toCreate">{{
+        sortVal.text
+      }}</span>
+      <span class="tip2 disabled">{{ t("createNft.findMore") }}</span>
     </div>
+  </SliderBottom>
+
+  <!-- error -->
+  <div class="err-nft p-20" v-if="nftErr">
+    <div class="text-center mt-20 mb-20 f-14">
+      {{ t("createNft.pullagain") }}
+    </div>
+    <div class="flex center">
+      <van-button @click="reLoading">{{ t("createNft.retry") }}</van-button>
+    </div>
+  </div>
   <!-- </van-pull-refresh> -->
 </template>
 
 <script lang="ts">
 import NftCard from "./nftCard.vue";
 import AiNftCard from "./aiNftCard.vue";
-import { getNftOwner,getDrawInfoByUser,GetDrawInfoParams, getDrawInfoByNftaddrs,getOwnerNftList } from "@/http/modules/nft";
+import {
+  getNftOwner,
+  getDrawInfoByUser,
+  GetDrawInfoParams,
+  getDrawInfoByNftaddrs,
+  getOwnerNftList,
+} from "@/http/modules/nft";
 import eventBus from "@/utils/bus";
 import NoData from "@/components/noData/index.vue";
-import {web3} from '@/utils/web3';
+import { web3 } from "@/utils/web3";
 import {
   computed,
   ref,
@@ -94,8 +104,8 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useToast } from "@/plugins/toast";
 import { decode } from "js-base64";
-import SliderBottom from '@/components/sliderBottom/index.vue'
-
+import SliderBottom from "@/components/sliderBottom/index.vue";
+import { MasonryInfiniteGrid,PackingInfiniteGrid  } from "@egjs/vue3-infinitegrid";
 export default defineComponent({
   name: "nft-list",
   components: {
@@ -108,7 +118,9 @@ export default defineComponent({
     [Icon.name]: Icon,
     [Popover.name]: Popover,
     NoData,
-    SliderBottom
+    SliderBottom,
+    MasonryInfiniteGrid,
+    PackingInfiniteGrid 
   },
   emits: ["onLoad"],
   setup(props: any, context: SetupContext) {
@@ -130,79 +142,104 @@ export default defineComponent({
     };
     let aiparams = {
       useraddr: accountInfo.value.address,
-      index: '-8',
-      count: '8'
-    }
+      index: "-8",
+      count: "8",
+    };
 
     const getAiNftList = async (newAiparams: GetDrawInfoParams) => {
-      const {data} = await getDrawInfoByUser(newAiparams).finally(() => loadNft.value =false)
+      const { data } = await getDrawInfoByUser(newAiparams).finally(
+        () => (loadNft.value = false)
+      );
 
-      if(data && data.length) {
+      if (data && data.length) {
         data.forEach((item: any) => {
-          const param = JSON.parse(item.Drawparams)
-          item['prompt'] = param.prompt
-          item['randomNumber'] = param.randomNumber
-        })
+          const param = JSON.parse(item.Drawparams);
+          item["prompt"] = param.prompt;
+          item["randomNumber"] = param.randomNumber;
+        });
         pageData.nftList.push(...data);
       }
       return Promise.resolve(data);
-    }
+    };
 
     // Get user NFT
     const getNftList = async (params: any) => {
       // Get user NFT Gets the NFT list of the current account
       try {
-        const { nfts, total }: any = await getOwnerNftList(params)
-      const nftaddrs = nfts.map((item: any) => item.address)
-      
-      const drawList = await getDrawInfoByNftaddrs({nftaddrs})
-      debugger
-      // @ts-ignore
-      if (nfts && nfts.length) {
-        nfts.forEach((item: any) => {
-          try{
-        //     data.forEach((item: any) => {
-        //   const param = JSON.parse(item.Drawparams)
-        //   item['prompt'] = param.prompt
-        //   item['randomNumber'] = param.randomNumber
-        // })
-        console.warn('web3.utils.toUtf8(item.raw_meta_url)', web3.utils.toUtf8(item.raw_meta_url))
-            item.info = web3.utils.toUtf8(item.raw_meta_url);
-          }catch(err){
-            console.error(err)
-            item.info = {}
-          }
+        const { nfts, total }: any = await getOwnerNftList(params);
+        const nftaddrs = nfts.map((item: any) => item.address);
+        const drawList = await getDrawInfoByNftaddrs({
+          nftaddrs: JSON.stringify(nftaddrs),
         });
+        const darwedList =
+          drawList.data && drawList.data.length
+            ? drawList.data.map((item: any) => item.nft_address)
+            : [];
         // @ts-ignore
-        pageData.nftList.push(...nfts);
+        if (nfts && nfts.length) {
+          nfts.forEach((item: any) => {
+            try {
+              // three category nft
+              // 1: normal  value = 0
+              // 2: ai drawed value = 1
+              // 3: ai not draw value = 2
+              const pa = JSON.parse(web3.utils.toUtf8(item.raw_meta_url));
+              if (darwedList.includes(item.address)) {
+                item.category = 1;
+              } else {
+                if (pa.meta_url) {
+                  item.category = 0;
+                } else {
+                  item.category = 2;
+                }
+              }
+              item.meta_url = pa.meta_url;
+              item.prompt = pa.meta_url;
+              item.randomNumber = pa.randomNumber;
+              // item.nftCategory =
+              console.warn(
+                "web3.utils.toUtf8(item.raw_meta_url)",
+                web3.utils.toUtf8(item.raw_meta_url)
+              );
+              item.info = web3.utils.toUtf8(item.raw_meta_url);
+            } catch (err) {
+              console.error(err);
+              item.info = {};
+            }
+          });
+          console.warn("nfts", nfts);
+          // @ts-ignore
+          pageData.nftList.push(...nfts);
+        }
+        return Promise.resolve(nfts);
+      } catch (err) {
+      } finally {
+        loadNft.value = false;
       }
-      return Promise.resolve(nfts);
-
-      }catch(err){
-
-      }finally {
-        loadNft.value = false
-      }
-
     };
     // List loading event
     const handleOnLoad = async () => {
-      console.log('load nft...')
+      if(layoutType.value == 'card') {
+        if(loadNft.value || finished.value){
+          return
+        }
+        loadNft.value = true;
+      }
+      console.log("load nft...");
       try {
-        if(sortVal.value == 0) {
-          params.page = (Number(params.page) + 1) + "";
+        if (sortVal.value == 0) {
+          params.page = Number(params.page) + 1 + "";
           const list = await getNftList(params);
-        if (!list || !list.length) {
-          finished.value = true;
+          if (!list || !list.length) {
+            finished.value = true;
+          }
+        } else {
+          aiparams.index = Number(aiparams.index) + Number(aiparams.count) + "";
+          const list = await getAiNftList(aiparams);
+          if (!list || !list.length) {
+            finished.value = true;
+          }
         }
-        }else {
-          aiparams.index = (Number(aiparams.index) + Number(aiparams.count)) + "";
-         const list = await getAiNftList(aiparams)
-         if (!list || !list.length) {
-          finished.value = true;
-        }
-        }
-       
       } catch (err) {
         nftErr.value = true;
         Toast(JSON.stringify(err));
@@ -213,15 +250,17 @@ export default defineComponent({
     const reLoading = () => {
       nftErr.value = false;
       finished.value = false;
-      params.page = "-1";
-      aiparams.index = '-8'
+      params.page = "0";
+      aiparams.index = "-8";
       pageData.nftList = [];
+
       handleOnLoad();
     };
 
     // Update the current collectibles list each time you switch accounts
     eventBus.on("changeAccount", (address) => {
       params.owner = address;
+      debugger;
       reLoading();
     });
     const toCreate = () => {
@@ -230,13 +269,6 @@ export default defineComponent({
         return false;
       }
       router.push({ name: "generateNFT" });
-
-      // if(sortVal.value == 0) {
-      //   router.push({ path: "/createNft/step2" });
-      // }
-      // if(sortVal.value == 1) {
-      //   router.push({ name: "generateNFT" });
-      // }
     };
 
     // The drop-down load
@@ -244,18 +276,19 @@ export default defineComponent({
       reLoading();
     };
 
-    const showPopover = ref(false)
+    const showPopover = ref(false);
     const sortVal = reactive({
-      text: t('castingnft.createNFT'), value:0
-    })
+      text: t("castingnft.createNFT"),
+      value: 0,
+    });
     const actions = [
-      { text: t('castingnft.createNFT'), value:0,className:'hoverMenuItem' },
-      { text: t('generateNFT.title'),value:1 ,className:'hoverMenuItem'},
+      { text: t("castingnft.createNFT"), value: 0, className: "hoverMenuItem" },
+      { text: t("generateNFT.title"), value: 1, className: "hoverMenuItem" },
     ];
-    const onSelect = ({text, value}: any) => {
-      sortVal.text = text
-      sortVal.value = value
-      reLoading()
+    const onSelect = ({ text, value }: any) => {
+      sortVal.text = text;
+      sortVal.value = value;
+      reLoading();
     };
 
     return {
@@ -272,14 +305,21 @@ export default defineComponent({
       loadNft,
       reLoading,
       onRefresh,
-
       t,
     };
   },
 });
 </script>
 <style lang="scss" scoped>
+.list-box {
+  min-height: 400px;
+  padding: 20px 15px;
+  overflow: hidden scroll;
+  .nftCard-card {
+    width: 48%;
 
+  }
+}
 .icon-shangla {
   font-size: 18px;
 }
@@ -293,23 +333,27 @@ export default defineComponent({
   }
   .add {
     width: 36px;
-height: 18px;
-background: #9F54BA;
-border-radius: 9px;
-cursor: pointer;
-i {
-  color: #fff;
-  font-size: 14px;
-}
+    height: 18px;
+    background: #9f54ba;
+    border-radius: 9px;
+    cursor: pointer;
+    i {
+      color: #fff;
+      font-size: 14px;
+    }
   }
 }
 .nft-list {
   &.card {
     padding: 15px;
-    display: flex;
+    display: grid;
+    grid-gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+
+    /* display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-content: flex-start;
+    align-content: flex-start; */
     // :deep(.nft-card:nth-of-type(odd)) {
     //   margin-right: 15px;
     // }
@@ -317,7 +361,7 @@ i {
 }
 .tip1 {
   .toCreate {
-    color: #9F54BA;
+    color: #9f54ba;
     font-size: 12px;
     &:hover {
       text-decoration: underline;

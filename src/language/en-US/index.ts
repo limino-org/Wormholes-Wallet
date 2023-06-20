@@ -235,7 +235,7 @@ export default {
 
 	},
   "castingnft": {
-		"createNFT": "Create NFT",
+		"createNFT": "Generate NFT",
 		"upload": "Upload",
 		"information": "Information",
 		"done": "Done",
@@ -313,8 +313,10 @@ export default {
 
   },
   generateNFT: {
+    noPic:"No Picture",
     title:"AI Generate NFT",
-    promptWord:"Prompt Word / SoreceUrl",
+    promptTit:"Prompt Word",
+    promptWord:"Prompt Word / SourceUrl",
     promptTip:"If you want to use AI to generate NFT, you need to enter a prompt word. At the same time, the AI drawing switch needs to be turned on so that the AI program can generate the corresponding NFT. If it is not turned on, you will not receive the AI NFT, and you can choose to turn it on when you need it. \n\n If you want to mint your existing NFT links, you need to enter the source file URL.",
     placeholder:"Prompt Word: Please enter text to describe the picture, for example: draw a sea tang in the style of Vermeer's \"Girl with a Pearl Earring\"  \nSourceUrl: Asset URL",
     promptWordErr:"A maximum of 75 words can be entered, and only English slang and special symbols or url addresses are supported",

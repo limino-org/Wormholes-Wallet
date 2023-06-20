@@ -221,6 +221,12 @@ export const txTypeToIcon = (data: any) => {
 export const handleTxType = (item: any) => {
   const { to, from, contractAddress, sendStatus, txType, input } = item
   const myAddr = store.state.account.accountInfo.address.toUpperCase()
+  if (sendStatus && sendStatus === 'pendding') {
+    // if (txType === 'contract') {
+    //   return i18n.global.t('transationHistory.contract')
+    // }
+    return i18n.global.t('transationHistory.send')
+  }
   if (txType === 'wormholes') {
     const data = getInput(input)
     if (data) {
@@ -239,17 +245,25 @@ export const handleTxType = (item: any) => {
             return `SNFT(${level}) ` + i18n.global.t('transationHistory.send')
           }
         }
+        if (data.type == 0) {
+          if (to.toUpperCase() == myAddr) {
+            return `NFT ` + i18n.global.t('transactiondetails.recive')
+          } else {
+            return `NFT ` + i18n.global.t('transationHistory.send')
+          }
+        }
       if (txTypes.includes(data.type)) {
         return i18n.global.t('transationHistory.send')
       }
     }
-  }
-  if (sendStatus && sendStatus === 'pendding') {
-    if (txType === 'contract') {
+  } else {
+    if(txType == 'contract') {
       return i18n.global.t('transationHistory.contract')
+    } else {
+      return i18n.global.t('transationHistory.send')
     }
-    return i18n.global.t('transationHistory.send')
   }
+
 
   if (txType === 'contract') return i18n.global.t('transationHistory.contract')
   const bigTo = to.toUpperCase()
