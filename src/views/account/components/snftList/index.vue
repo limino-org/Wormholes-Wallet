@@ -1198,6 +1198,7 @@ export default defineComponent({
 }
 .conver-label {
   font-weight: bold;
+  color: #848484;
 }
 .red {
   color: rgb(215, 58, 73);

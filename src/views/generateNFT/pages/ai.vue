@@ -9,7 +9,11 @@
             theme="dark"
             placement="bottom-start"
           >
-            <p class="pl-10 pr-10">{{ t("generateNFT.promptTip") }}</p>
+            <div class="p-10">
+              <div>{{ t("generateNFT.promptTip") }}</div>
+              <div>{{ t("generateNFT.promptTip1") }}</div>
+              <div>{{ t("generateNFT.promptTip2") }}</div>
+            </div>
             <template #reference>
               <van-icon
                 name="question hover"
@@ -34,28 +38,8 @@
         />
 
         <div class="label mt-16">
-          <span class="mr-4">*</span>{{ t("castingnft.royalty") }}
-          <van-popover
-            v-model:show="showPopover3"
-            theme="dark"
-            placement="right"
-            class="createNft-popover"
-            teleport="#page-box"
-          >
-            <div
-              class="f-12 pl-10 pr-10 pt-10 pb-10"
-              @click="showPopover3 = false"
-            >
-              {{ $t("castingnft.royaltypopover") }}
-            </div>
-            <template #reference>
-              <van-icon
-                name="question hover"
-                @mouseover="showPopover3 = true"
-                @mouseout="showPopover3 = false"
-              />
-            </template>
-          </van-popover>
+          <span class="mr-4">*</span>{{ t("castingnft.royalty") }} ( 1%-10% )
+       
         </div>
         <van-field
           v-model="royalty"
@@ -202,8 +186,9 @@ const onSubmit = async () => {
       to: myAddr,
       value: ethers.utils.parseEther("1"),
     });
+
     // Judge whether it is simple drawing or casting + drawing
-    if (readonlySwitch) {
+    if (readonlySwitch.value) {
       gasFee.value = gas2;
     } else {
       const gas1 = await handleGetGas();
@@ -225,6 +210,7 @@ const handleGetGas = async () => {
   } else {
     nft_data.prompt = promptWord.value;
     nft_data.randomNumber = randomNumber;
+    nft_data.version = 'v1'
   }
   const par = {
     version: "0.0.1",
@@ -294,6 +280,7 @@ const aiCreate = async () => {
   const nft_data = {
     prompt: promptWord.value,
     randomNumber,
+    version: 'v1'
   };
   const { receipt, nft_address, owner } = await handleSendCreate(nft_data);
   const drawParams = {
@@ -305,7 +292,8 @@ const aiCreate = async () => {
   const drawData = await drawImage(drawParams);
   const sendData = {
     nft_address,
-    owner
+    owner,
+    version: "v1"
   }
   const txData = await dispatch("account/transaction", {
     value: sendVal.value,
@@ -401,6 +389,7 @@ const handleConfirm = async () => {
           const nft_data = {
             prompt: promptWord.value,
             randomNumber,
+            version: 'v1'
           };
           const { receipt, nft_address, owner } = await handleSendCreate(
             nft_data
@@ -419,7 +408,8 @@ const handleConfirm = async () => {
       const nft_address = query.address ? query.address.toString() : ""
       const sendData = {
         owner: myAddr,
-        nft_address
+        nft_address,
+        version: "v1"
       }
       const drawParams = {
         useraddr: myAddr.toString(),
@@ -460,6 +450,7 @@ const handleConfirm = async () => {
     console.error(err);
     $wtoast.warn(err.reason);
   } finally {
+    dispatch('account/waitTxQueueResponse')
     showGenerateModal.value = false;
   }
 };

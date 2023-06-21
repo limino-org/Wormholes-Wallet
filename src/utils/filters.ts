@@ -239,11 +239,20 @@ export const handleTxType = (item: any) => {
         if (data.type == 1) {
           const { nft_address } = data
           const level = getSNFTLevel(nft_address)
+          let txType = ''
+          let nftType = ''
           if (to.toUpperCase() == myAddr) {
-            return `SNFT(${level}) ` + i18n.global.t('transactiondetails.recive')
+            txType = i18n.global.t('transactiondetails.recive')
           } else {
-            return `SNFT(${level}) ` + i18n.global.t('transationHistory.send')
+            txType = i18n.global.t('transationHistory.send')
           }
+          if(nft_address.substr(0,3) == '0x8') {
+            nftType = `SNFT(${level}) `
+          }
+          if(nft_address.substr(0,3) == '0x0') {
+            nftType = 'NFT '
+          }
+          return `${nftType}${txType}`
         }
         if (data.type == 0) {
           if (to.toUpperCase() == myAddr) {

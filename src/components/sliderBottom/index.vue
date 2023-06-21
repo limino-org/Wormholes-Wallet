@@ -35,6 +35,9 @@ import { watch, ref, onMounted, onUnmounted } from "vue";
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       let scrollStep = scrollTop - oldScrollTop;
       oldScrollTop = scrollTop;
+      if(scrollStep == 0){
+        return
+      }
         if(scrollTop >= props.triggerTop && scrollStep <0){
             !bugTipClass.value ? bugTipClass.value = 'fixed' : ''
         } else {

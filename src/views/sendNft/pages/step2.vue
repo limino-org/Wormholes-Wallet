@@ -98,7 +98,7 @@
           @handleClick="handleClickAccount"
           :indexList="indexList3"
           :accountList="contacts3"
-          offsetTop="46"
+          :offsetTop="46"
         />
       </van-tab>
       <van-tab :title="t('contacts.tab_recents')">
@@ -106,7 +106,7 @@
           @handleClick="handleClickAccount"
           :indexList="indexList2"
           :accountList="contacts2"
-          offsetTop="46"
+          :offsetTop="46"
         />
       </van-tab>
       <!-- <van-tab name="3" :title="t('contacts.tab_rolodex')">
@@ -119,7 +119,7 @@
       </van-tab> -->
     </van-tabs>
     <van-sticky position="bottom" offset-bottom="30px">
-      <div class="flex center btn-group">
+      <div class="flex center pl-20 pr-20 container">
         <van-button type="primary"  @click="handleShowSendConfirm" block>{{
           t("sendNFT.send")
         }}</van-button>

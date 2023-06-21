@@ -47,7 +47,7 @@ export default {
       sessionStorage.setItem('nft_address', nft_address)
       sessionStorage.setItem("blockNumber", blockNumber)
       const data: any = await store.dispatch('account/transaction', tx1)
-      const receipt: any = await wallet.provider.waitForTransaction(data.hash)
+      const receipt: any = await data.wait()
       store.dispatch('account/waitTxQueueResponse')
       return receipt
     },

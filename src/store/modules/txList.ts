@@ -326,6 +326,7 @@ export function getInput(input) {
     console.log('input', input)
     if (input && input != '0x') {
         try {
+            debugger
             const wormStr = web3.utils.toAscii(input)
             console.log('wormStr',wormStr)
             const [nullstr, jsonstr] = wormStr.split('wormholes:')
@@ -353,7 +354,7 @@ export function getInput(input) {
             }
             return jsonData
         } catch (err) {
-            console.error('err', err)
+            console.log('err', err)
             return null
         }
     }
@@ -411,7 +412,7 @@ export async function getConverAmount(wallet, data) {
                     "eth_getAccountInfo",
                     [nft_address, web3.utils.toHex((blockNumber - 1).toString())]
                 );
-                const { MergeLevel, MergeNumber } = nftAccountInfo
+                const { MergeLevel, MergeNumber } = nftAccountInfo.Worm
                 //  @ts-ignore
                 const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion
 

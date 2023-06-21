@@ -2,7 +2,7 @@
 <template>
   <van-dialog
     v-model:show="show"
-    show-cancel-button
+    :show-cancel-button="fasle"
     class="minus-pledge-dialog"
     teleport="#page-box"
     :showConfirmButton="false"

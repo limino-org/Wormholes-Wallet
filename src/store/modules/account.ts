@@ -1138,7 +1138,6 @@ export default {
 
         console.log("i18n", i18n);
         sendData.wallet = newwallet
-        dispatch('waitTxQueueResponse')
         return sendData
       } catch (err) {
         console.error(err)

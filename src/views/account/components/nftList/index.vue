@@ -1,12 +1,5 @@
 <template>
-  <van-list
-    v-if="layoutType == 'list'"
-    v-model:loading="loadNft"
-    :finished="finished"
-    @load="handleOnLoad"
-    v-model:error="nftErr"
-  >
-    <van-sticky offset-top="91">
+  <van-sticky offset-top="91">
       <div class="flex between center-v create-box">
         <span class="f-12 text-bold label">
           <van-popover
@@ -25,6 +18,14 @@
 
       </div>
     </van-sticky>
+  <van-list
+    v-if="layoutType == 'list'"
+    v-model:loading="loadNft"
+    :finished="finished"
+    @load="handleOnLoad"
+    v-model:error="nftErr"
+  >
+    
     <div :class="`nft-list ${layoutType}`">
       <AiNftCard
         v-for="item in pageData.nftList"
@@ -34,7 +35,7 @@
     </div>
   </van-list>
 
-  <div    v-else   class="list-box">
+  <div v-else   :class="`list-box ${pageData.nftList.length ? 'pt-20 hasLen' : ''}`">
     <masonry-infinite-grid
     :column="2"
     @request-append="handleOnLoad"
@@ -49,7 +50,7 @@
     </div>
   </masonry-infinite-grid>
   <div class="flex center" v-show="loadNft">
-    <van-loading>{{ t('common.loading') }}</van-loading>
+    <van-loading size="small">{{ t('common.loading') }}</van-loading>
   </div>
   </div>
 
@@ -316,8 +317,11 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .list-box {
-  min-height: 400px;
-  padding: 20px 15px;
+  &.hasLen {
+    min-height:50px;
+  }
+  padding-left: 15px;
+  padding-right: 15px;
   overflow: hidden scroll;
   .nftCard-card {
     width: 48%;
@@ -329,7 +333,7 @@ export default defineComponent({
 }
 .create-box {
   background: #f1f3f4;
-  height: 30px;
+  height: 36px;
   padding: 0 15px;
   position: relative;
   .label {

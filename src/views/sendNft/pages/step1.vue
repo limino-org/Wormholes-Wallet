@@ -11,12 +11,16 @@
         width="6.8rem"
         height="6.8rem"
       ></van-image>
-      <div class="nft-ai " v-else>
+      <div :class="`nft-ai ${nftInfo.category == 2 ? 'fail' : 'success'}`" v-else>
           <div class="flex center">
-            <div><img src="@/assets/ai-default.png" /></div>
+            <div>
+              <img src="@/assets/ai-default.png" v-if="nftInfo.category == 2" />
+              <img src="@/assets/ai-success.png" v-else/>
+            </div>
           </div>
           <div class="flex center">
-            <div class="nft-ai-text">{{ t('generateNFT.noPic') }}</div>
+            <div class="nft-ai-text" v-if="nftInfo.category == 2">{{ t('generateNFT.noPic') }} <br> {{ t('generateNFT.noPic2') }}</div>
+            <div class="nft-ai-text success" v-else>{{ t('generateNFT.okPic') }} <br> {{ t('generateNFT.okPic2') }}</div>
           </div>
         </div>
     </div>
@@ -24,7 +28,7 @@
     <!-- NFT information -->
     <div class="form van-hairline--surround">
       <div class="content van-hairline--bottom" v-if="isAiNft">
-        <div class="form-titie">{{ t("generateNFT.promptTit") }}</div>
+        <div class="form-titie">{{ t("generateNFT.aiPromptTit") }}</div>
         <div class="form-content name">{{ nftInfo.info.prompt }}</div>
       </div>
       <div class="content van-hairline--bottom">
@@ -147,7 +151,12 @@ export default {
     width: 256px;
     height: 256px;
     position: relative;
-
+    &.success {
+      background: #FCF5FF;
+    }
+    &.fail {
+      background: #F3F3F3;
+    }
     img {
       display: block;
       margin: 70px auto 0;
@@ -160,6 +169,9 @@ export default {
       font-size: 12px;
       color: #D9D5D5;
       word-break: keep-all;
+      &.success {
+        color: #D5B4E0;
+      }
     }
   }
   .quanping {

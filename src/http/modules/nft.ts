@@ -4,15 +4,16 @@ import { httpGet, httpPost } from '../request'
 const isProduct = process.env.VUE_APP_NODE_ENV == 'production' ? true : false
 const service = '/exchans'
 const aiService = '/aiService'
-
+const isDev = process.env.VUE_APP_NODE_ENV == 'development'
+const isTest = process.env.VUE_APP_NODE_ENV == 'test' || process.env.VUE_APP_NODE_ENV == 'development'
 // const exchantest = isProduct ? '/c0x5051580802283c7b053d234d124b199045ead750' : ''
-const exchantest = isProduct ? '' : '/c0x5051580802283c7b053d234d124b199045ead750' 
+const exchantest = isTest ?  '/c0x5051580802283c7b053d234d124b199045ead750' : '' 
 
 
 const contractApi = '/contractApi'  
 
 export const queryArraySnft = (params = {}) => {
-  return httpPost(`${isProduct ?'': service}${exchantest}/v2/queryArraySnft`,params)
+  return httpPost(`${isDev ?service: ''}${exchantest}/v2/queryArraySnft`,params)
  
 }
 
@@ -47,7 +48,7 @@ export const getAccount = (address: string) => {
 }
 
 export const tokenIdByNftaddr = (address: string) => {
-  return httpPost(`${isProduct ?'': service}${exchantest}/v2/queryTokenIdByNftaddr`, {nft_addr: address })
+  return httpPost(`${isDev ?service : ''}${exchantest}/v2/queryTokenIdByNftaddr`, {nft_addr: address })
 }
 
 

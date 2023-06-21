@@ -25,4 +25,5 @@ export const regExchangeName: RegExp =  /^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA
 export const regEmail = /^\w{3,}(\.\w+)*@[A-z0-9]+(\.[A-z]{2,5}){1,2}$/;
 
 
-export const regAa = /^[A-Za-z0-9*\s]{4,100}$/
+// export const regAa = /^[A-Za-z0-9*\s]{4,100}$/
+export const regAa = /^[a-z_A-Z0-9*\s-\.!@#\$%\\\^&\*\)\(\+=\{\}\[\]\/",'<>~\·`\?:;|]{3,100}$/

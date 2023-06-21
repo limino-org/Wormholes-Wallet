@@ -8,12 +8,16 @@
     <div :class="`info  ${layoutType == 'list' ? 'flex between' : ''}`">
       <div class="icon flex center">
         <van-image :src="data.meta_url" fit="cover" v-if="data.meta_url" />
-        <div class="nft-ai " v-else>
+        <div :class="`nft-ai ${data.category == 2 ? 'fail' : 'success'}` " v-else>
           <div class="flex center">
-            <div><img src="@/assets/ai-default.png" /></div>
+            <div>
+              <img src="@/assets/ai-default.png" v-if="data.category == 2" />
+              <img src="@/assets/ai-success.png" v-else/>
+            </div>
           </div>
           <div class="flex center">
-            <div class="nft-ai-text">{{ t('generateNFT.noPic') }}</div>
+            <div class="nft-ai-text" v-if="data.category == 2">{{ t('generateNFT.noPic') }} <br> {{ t('generateNFT.noPic2') }}</div>
+            <div class="nft-ai-text success" v-else>{{ t('generateNFT.okPic') }} <br> {{ t('generateNFT.okPic2') }}</div>
           </div>
         </div>
       </div>
@@ -91,32 +95,43 @@ export default defineComponent({
 </script>
   <style lang="scss" scoped>
   .nft-ai {
-    background: #F3F3F3;
     padding: 5px 0;
 
     position: relative;
-
+    &.success {
+      background: #FCF5FF;
+    }
+    &.fail {
+      background: #F3F3F3;
+    }
     &-text {
-
+ 
       color: #D9D5D5;
       word-break: keep-all;
+      &.success {
+        color: #D5B4E0;
+      }
     }
   }
   .nft-card.list{
     .nft-ai {
-      width: 44px;
-    height: 38px;
+      width: 50px;
+    height: 50px;
+    border-radius: 6px;
+    overflow: hidden;
     img {
       width: 20px;
     }
     &-text {
-      position: absolute;
-      width: 60px;
-      left: -11px;
-      bottom: 3px;
       text-align: center;
       transform-origin: center center;
-      transform: scale(.5);
+
+      transform: scale(.6);
+      width: 90px;
+      left: -20px;
+      bottom: 0;
+      position: absolute;
+      
     }
     }
   }
@@ -128,6 +143,7 @@ export default defineComponent({
       padding: 25px 0 0;
       &-text {
         margin-top: 5px;
+        text-align: center;
       }
       img {
         width: 80px;
@@ -146,7 +162,7 @@ export default defineComponent({
   &.card:hover {
     cursor: pointer;
   .info {
-    transition: 0.3s ease-in-out;
+    transition: 0.3s ease;
     box-shadow: 0px 2px 14px rgba($color: #ccc, $alpha: 0.4);
 
     /* background:#F8F3F9; */
@@ -166,13 +182,14 @@ export default defineComponent({
     }
   }
   &.list {
-    padding: 15px;
+    padding:5px 15px;
     overflow: hidden;
     border-bottom: 1px solid #e4e7e8;
     .info {
       width: 100%;
       .icon {
-        width: 44px;
+        width: 60px;
+        height: 60px;
         /* background: #9F54BA; */
         border-radius: 6px;
         margin-right: 15px;
@@ -180,7 +197,10 @@ export default defineComponent({
         .van-image {
           /* width: 1.06667rem;
             height: 1.06667rem; */
-          width: 100%;
+          width: 50px;
+          height:50px;
+          overflow: hidden;
+          border-radius: 6px;
      
         }
 
@@ -216,6 +236,8 @@ export default defineComponent({
         height: 150px;
         display: flex;
         justify-content: center;
+        border-radius: 6px;
+        overflow: hidden;
         .van-image {
           width: 100%;
           height: 100%;

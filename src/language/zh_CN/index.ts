@@ -359,16 +359,22 @@ export default {
 
     },
     generateNFT: {
-        noPic:"No Picture",
+        noPic:"The creation",
+        noPic2:"has failed",
+        okPic:"Check your",
+        okPic2:"Email",
+        aiPromptTit:"AI 提示词",
         title:"AI生成NFT",
         promptTit:"提示词",
         promptWord:"提示词/SourceUrl",
-        promptTip:"如果您想要使用AI生成NFT，您需要输入提示词。同时，需要开启AI绘图开关，以便AI程序生成对应NFT。若未开启，您将无法收到AI NFT，同时，在您需要时可以选择开启。\n 如果您想要将您已有NFT链接铸造上链，您需要输入源文件URL。",
+        promptTip1:"使用人工智能:输入你想要描绘的提示或描述，选择人工智能模式，并支付一定的ERB费用。AI将专门为您创建NFT内容并将其发送到您的电子邮件。",
+        promptTip2:"使用URL:输入现有NFT内容的URL，这些内容可以从OpenSea等可以读取图像信息的平台上获取。",
+        promptTip:"可以通过两种方式生成链层NFT:",
         placeholder:"提示词:请输入文字描述图片，例如:按照维米尔的《戴珍珠耳环的女孩》的风格画一个海唐。 \nSourceUrl:资产URL",
         promptWordErr:"最多可输入75个单词，只支持英文俚语、特殊符号或url地址",
         promptWordNotNull:"提示词/SourceUrl不能为空",
         normalNftTip:"您已勾选AI绘画，请填写有效提示词，最多输入75个单词，仅支持英语俚语和特殊符号。",
-        creativeMode:"创造模式",
+        creativeMode:"AI绘画模式",
         AIDrawing:"开启AI绘图",
         AIDrawing2:"AI绘图",
         emailAddr:"邮箱地址",
@@ -377,7 +383,7 @@ export default {
         emailError:"该地址不符合电子邮箱地址规则",
         geneateComfirm:"生成NFT确认",
         drawVal:"AI绘画费用",
-        aiDrawTip:"需要注意，开启时您将支付AI绘图费用。",
+        aiDrawTip:"输入AI提示词并选择此模式后，AI会为您创建一个NFT。这需要少量的ERB费用，在测试网阶段，10 ERB是测试标准。",
         emailTip:"邮箱将接收 WormholesChain 为您生成的 AI NFT。"
     },
     // 复制弹窗
@@ -1104,7 +1110,7 @@ export default {
     sendNFT: {
         sendNFT: "发送NFT",
         name: "名称",
-        address: "地址",
+        address: "NFT地址",
         amount: "数量",
         send: "发送",
         more: "更多",
