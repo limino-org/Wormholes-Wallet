@@ -176,7 +176,7 @@ export default {
           "latest",
         ]);
         console.warn(accountInfo)
-        exchangeName.value = accountInfo.ExchangerName;
+        exchangeName.value = accountInfo.Worm.ExchangerName;
       } finally {
         loading.value = false;
       }

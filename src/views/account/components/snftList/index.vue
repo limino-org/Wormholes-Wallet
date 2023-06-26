@@ -519,14 +519,7 @@ export default defineComponent({
       },
     });
 
-    onMounted(async() => {
-      // const wallet = await getWallet()
-      // const nftAccountInfo = await wallet.provider.send(
-      //         "eth_getAccountInfo",
-      //         ['0x8000000000000000000000000000000000015a94', "latest"]
-      //       );
-      //       debugger
-    })
+
     const show = ref(false);
     
     const hex2int = (hex: any) => {
@@ -611,18 +604,7 @@ export default defineComponent({
       sort:"1"
     };
     
-    const getSnftList = async(snftlist: Array<any>, blockNumber: number)=> {
-      if(!wallet) {
-        wallet = await getWallet()
-      }
-      const obj: any = {}
-      for await (const nft_address of snftlist) {
-        const nftAccountInfo = await wallet.provider.send("eth_getAccountInfo",[nft_address, web3.utils.toHex((blockNumber - 1).toString())])
-        nftAccountInfo.nft_address = nft_address
-        obj[nft_address.toString().toUpperCase()] = nftAccountInfo
-      }
-      return obj
-    }
+
 
 
     const onLoad = async () => {
@@ -659,9 +641,7 @@ export default defineComponent({
           loading.value = false;
         }
         
-        // const newlist = list.value.map((item: any) => item.address)
-        // const newNftList = nftAddList.filter((item: any) => item.nft_address.toUpperCase())
-        // const metaDataList = await getSnftList(nftAddList, blockNumber)
+
         const { data: nftInfoList } = await queryArraySnft({
           array: `${JSON.stringify(nftAddList)}`,
         });

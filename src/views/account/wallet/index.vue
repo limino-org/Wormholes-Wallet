@@ -8,7 +8,7 @@
   <div class="wallet">
     <div v-if="!loading" class="container page-container">
       <div class="circle flex center">
-      <div            v-show="ethAccountInfo.PledgedBalance">
+      <div            v-show="validator">
         <van-popover
 
 v-model:show="showExpresion"
@@ -38,16 +38,6 @@ trigger="manual"
       <span class="gotIt" @click="showExpresion = false">{{t('minerspledge.gotIt')}}</span>
     </template>
   </i18n-t>
-  
-  <!-- <div v-if="expresionClass == 'smile'">
-    {{ t("minerspledge.smileTip", { value: Coefficient }) }}
-  </div>
-  <div v-if="expresionClass == 'sad'">
-    {{ t("minerspledge.sadTip", { value: Coefficient }) }}
-  </div>
-  <div v-if="expresionClass == 'neutral'">
-    {{ t("minerspledge.neutralTip", { value: Coefficient }) }}
-  </div> -->
 </div>
 <template #reference>
   <div
@@ -61,7 +51,7 @@ trigger="manual"
 </van-popover>
 
       </div>
-      <div class="account-icon"  v-show="!ethAccountInfo.PledgedBalance" >
+      <div class="account-icon"  v-show="!validator" >
       <AccountIcon :data="accountInfo.icon" />
       </div>
       </div>
@@ -178,7 +168,7 @@ trigger="manual"
         </div>
       </Transition>
       <Transition name="sliderLeft">
-        <div class="btn-groups" v-if="currentNetwork.id == 'wormholes-network-1' && active == 1">
+        <div class="btn-groups" v-if="active == 1">
           <div class="pl-20 pr-20 flex right center-v">
             <div
               :class="[
@@ -326,6 +316,7 @@ export default {
     const exchangeStatus = computed(() => store.state.account.exchangeStatus);
     const currentNetwork = computed(() => store.state.account.currentNetwork);
     const layoutList = computed(() => store.state.system.layoutList);
+    const validator = computed(() => store.state.account.validator)
     const layoutType = computed(() => store.state.system.layoutType);
     const symbol = currentNetwork.value.currencySymbol;
     const { $wtoast } = useToast();
@@ -409,21 +400,21 @@ export default {
       showSlider();
     };
 
-    const getStatus = async () => {
-      Toast.loading({});
-      try {
-        const res = await dispatch("account/getExchangeStatus");
-        const { ExchangerFlag, status } = res;
-        autoexchange.value = status;
-        autostat.value = ExchangerFlag;
-        console.warn("res", res);
-        return res;
-      } catch (err: any) {
-        Toast(err.toString());
-      } finally {
-        Toast.clear();
-      }
-    };
+    // const getStatus = async () => {
+    //   Toast.loading({});
+    //   try {
+    //     const res = await dispatch("account/getExchangeStatus");
+    //     const { ExchangerFlag, status } = res;
+    //     autoexchange.value = status;
+    //     autostat.value = ExchangerFlag;
+    //     console.warn("res", res);
+    //     return res;
+    //   } catch (err: any) {
+    //     Toast(err.toString());
+    //   } finally {
+    //     Toast.clear();
+    //   }
+    // };
 
     //Jump to open an exchange with one click
     // const goAutoexchange = async () => {
@@ -459,13 +450,19 @@ export default {
     const nftErr: Ref<boolean> = ref(false);
     const autoexchange = ref(0);
     const autostat = ref(false);
+
+    const handleGetValidator = async() => {
+      dispatch('account/getValidator')
+    }
+
     eventBus.on('changeAccount', async() => {
      dispatch('account/getEthAccountInfo')
      dispatch("account/updateBalance");
+     handleGetValidator()
     })
-    eventBus.on('walletReady',() => {
+    eventBus.on('walletReady',(wallet) => {
       // dispatch("account/updateBalance");
-   
+      handleGetValidator()
     })
 
     
@@ -508,6 +505,9 @@ export default {
     });
     onUnmounted(() => {
       clearInterval(time);
+      eventBus.off('changeAccount')
+      eventBus.off('walletReady')
+      eventBus.off('beforeChangeAccount')
     });
     onDeactivated(() => {
       clearInterval(time);
@@ -548,8 +548,9 @@ export default {
       showExpresion.value = false
     })
     const ethAccountInfo = computed(() => store.state.account.ethAccountInfo)
-    watch(() => ethAccountInfo.value, (n) => {
-      if(n.PledgedBalance) {
+    watch(() => validator.value, (n) => {
+      console.warn('validator', n)
+      if(n) {
         showExpresion.value = true
       } else {
         showExpresion.value = false
@@ -604,6 +605,7 @@ export default {
       isMouseover,
       isSelect,
       pageDatas,
+      validator,
       snft_cancels,
       snft_cancel,
       snft_flag,

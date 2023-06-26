@@ -248,7 +248,7 @@
             <div
               class="setting-btn clickActive flex center-v"
               @click="goPledge()"
-              v-if="network.id == 'wormholes-network-1'"
+
             >
               <i class="iconfont icon-chuiziicon"></i>
               <span>{{ t("sidebar.minerspledge") }}</span>
@@ -257,7 +257,7 @@
             <div
               class="setting-btn clickActive flex center-v"
               @click="oneClick"
-              v-if="network.id == 'wormholes-network-1'"
+   
             >
               <i
                 class="iconfont icon-fangwujianzhuwugoujianbeifen"
@@ -271,7 +271,7 @@
             <div
               class="setting-btn clickActive flex center-v"
               @click="toGenerate"
-              v-if="network.id == 'wormholes-network-1'"
+
             >
             <van-icon name="photo-o" />
               <span>{{
@@ -587,13 +587,13 @@ export default defineComponent({
         wallet.address,
         "latest",
       ]);
-      if (ethAcc.PledgedBalance) {
+      if (ethAcc.Worm.PledgedBalance) {
         router.push({ name: "minersDeal" });
         return;
       }
       let accountAmount = new BigNumber(accountInfo.value.amount);
       
-      if (accountAmount.gte(70001)) {
+      if (accountAmount.gte(701)) {
         show.value = false;
         // router.push({ name: 'minersPledge' })
         router.push({ name: "minersDeal" });
@@ -701,7 +701,7 @@ export default defineComponent({
       ]);
       show.value = false;
       console.log(accountInfo);
-      if (blockNumber - accountInfo.BlockNumber >= (currentNetwork.value.chainId == 51888 ?  72 : 6307200)) {
+      if (blockNumber - accountInfo.Worm.BlockNumber >= (currentNetwork.value.chainId == 51888 ?  72 : 6307200)) {
         isAffirmDialogB.value = true;
       } else {
         isAffirmDialogA.value = true;

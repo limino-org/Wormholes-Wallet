@@ -49,8 +49,8 @@
       <AiNftCard :data="item" />
     </div>
   </masonry-infinite-grid>
-  <div class="flex center" v-show="loadNft">
-    <van-loading size="small">{{ t('common.loading') }}</van-loading>
+  <div class="flex center pt-20" v-show="loadNft">
+    <van-loading size="16px">{{ t('common.loading') }}</van-loading>
   </div>
   </div>
 
@@ -101,6 +101,7 @@ import {
   Ref,
   defineComponent,
   SetupContext,
+  onUnmounted,
 } from "vue";
 import { useStore } from "vuex";
 import { List, Toast, Button, PullRefresh, Sticky, Icon, Popover, Loading } from "vant";
@@ -262,10 +263,12 @@ export default defineComponent({
       handleOnLoad();
     };
 
+    onUnmounted(() => {
+      eventBus.off("changeAccount")
+    })
     // Update the current collectibles list each time you switch accounts
     eventBus.on("changeAccount", (address) => {
       params.owner = address;
-      debugger;
       reLoading();
     });
     const toCreate = () => {

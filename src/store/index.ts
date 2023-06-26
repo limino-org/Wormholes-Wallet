@@ -34,8 +34,8 @@ const vuexLocal = new VuexPersistence({
       firstTime,
       tranactionList,
       exchangeStatus,
-      exchangeServer
-
+      exchangeServer,
+      validator
     },
     price,
     system: {
@@ -89,6 +89,7 @@ const vuexLocal = new VuexPersistence({
         tranactionList,
         exchangeStatus,
         exchangeServer,
+        validator
       },
       common,
       price,

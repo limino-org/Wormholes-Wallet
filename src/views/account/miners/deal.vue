@@ -643,14 +643,14 @@ export default defineComponent({
         const blockn = web3.utils.toHex(blockNumber.value.toString());
         // Amount of the first pledge/total amount of the pledge *36 (start time of the second cancellation of the pledge calculation)+ Amount of the second pledge/total amount *72=54 = (time when the second cancellation of the pledge can be revoked)
         showCloseBtn.value = new BigNumber(blockNumber.value)
-          .minus(ethAccountInfo.value.PledgedBlockNumber)
+          .minus(ethAccountInfo.value.Worm.PledgedBlockNumber)
           .gt(network.value.chainId == 51888 ? 72 : 6307200);
         const pledgeList = await wallet.provider.send("eth_getValidator", [
           `${blockn}`,
         ]);
         console.log("pledgeList", pledgeList);
 
-        if (!ethAccountInfo.value.PledgedBalance) {
+        if (!ethAccountInfo.value.Worm.PledgedBalance) {
           isModif.value = false;
           // $wdialog.open({title:t('minerspledge.beValidator'),message:t("minerspledge.warn"),type:'warn'});
         } else {
@@ -675,7 +675,7 @@ export default defineComponent({
             console.error(err);
           }
         }
-        accountInfoBlockNumber.value = ethAccountInfo.value.BlockNumber;
+        accountInfoBlockNumber.value = ethAccountInfo.value.Worm.BlockNumber;
         console.log(blockNumber.value - accountInfoBlockNumber.value);
         console.log("blockNumber.value - accountInfoBlockNumber.value");
       } finally {
@@ -970,8 +970,8 @@ export default defineComponent({
         address,
         "latest",
       ]);
-      ethAccountInfo.value = data;
-      const { PledgedBalance } = data;
+      ethAccountInfo.value = data.Worm;
+      const { PledgedBalance } = data.Worm;
       let formatValue;
 
       const toPledge = (PledgedBalance - 0).toLocaleString();
@@ -1002,7 +1002,7 @@ export default defineComponent({
     );
 
     const Coefficient = computed(() => {
-      return ethAccountInfo.value.Coefficient;
+      return ethAccountInfo.value.Worm.Coefficient;
     });
     const expresionClass = computed(() => {
       const num = Number(Coefficient.value)
@@ -1127,12 +1127,12 @@ export default defineComponent({
 
     const PledgedBalance = computed(() => {
       console.warn("ethAccountInfo.value", ethAccountInfo.value);
-      if (!ethAccountInfo.value?.PledgedBalance) {
+      if (!ethAccountInfo.value?.Worm.PledgedBalance) {
         return 70000;
       }
       console.warn("ethAccountInfo.value", ethAccountInfo.value);
       return decimal(
-        new BigNumber(ethAccountInfo.value?.PledgedBalance)
+        new BigNumber(ethAccountInfo.value?.Worm.PledgedBalance)
           .div(1000000000000000000)
           .toFixed(6)
       );

@@ -412,7 +412,7 @@ export async function getConverAmount(wallet, data) {
                     "eth_getAccountInfo",
                     [nft_address, web3.utils.toHex((blockNumber - 1).toString())]
                 );
-                const { MergeLevel, MergeNumber } = nftAccountInfo.Worm
+                const { MergeLevel, MergeNumber } = nftAccountInfo.Nft
                 //  @ts-ignore
                 const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion
 

@@ -212,7 +212,8 @@ async function toSend() {
     $tradeConfirm.update({ status: "approve" });
     let name = ''
     if(!tx1){
-      const {ExchangerName} = await wallet.provider.send("eth_getAccountInfo", [address,"latest"]);
+      const res = await wallet.provider.send("eth_getAccountInfo", [address,"latest"]);
+      const {ExchangerName} = res.Worm
       name = ExchangerName
     } else {
       name = tx1.name

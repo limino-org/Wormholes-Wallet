@@ -12,7 +12,6 @@ import {
   createExchange,
   getSysParams,
   getExchangeSig,
-  checkAuth,
   setExchangeSig,
   is_install
 } from "@/http/modules/common";
@@ -412,9 +411,8 @@ export const useExchanges = () => {
    */
   const exchangeStatus = async () => {
     try {
-      let wallet = await getWallet();
-      const status = await checkAuth(wallet.address);
-      return Promise.resolve(status.data);
+      const status = await store.dispatch('account/getEthAccountInfo')
+      return Promise.resolve(status);
     } catch (err) {
       console.error(err);
     }
@@ -504,7 +502,7 @@ export const useExchanges = () => {
     const { address } = wallet
     console.warn('wallet', wallet)
     const res = await wallet.provider.send('eth_getAccountInfo', [address, "latest"])
-    const { ExchangerName, BlockNumber } = res
+    const { ExchangerName, BlockNumber } = res.Worm
     let exchange_name = ExchangerName;
     try {
       // If the exchange is not successfully deployed, redeploy it

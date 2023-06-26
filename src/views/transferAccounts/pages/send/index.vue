@@ -558,6 +558,12 @@ export default {
       amount.value = null
       commit("transfer/CLEAR_TX");
     })
+
+    onUnmounted(() => {
+      eventBus.off('sendComfirm')
+      eventBus.off('changeAccount')
+
+    })
     // Balance display type
     const amountType = computed(() => store.state.system.amountType);
 

@@ -2,7 +2,7 @@ import { Toast, Notify } from "vant";
 import { ethers, utils } from "ethers";
 import BigNumber from "bignumber.js";
 import eventBus from "@/utils/bus";
-import { checkAuth, getAccountAddr, getCreator, getPeriodById } from "@/http/modules/common";
+import { getAccountAddr, getCreator, getPeriodById } from "@/http/modules/common";
 
 // @ts-ignore
 window.utils = utils;
@@ -44,6 +44,15 @@ import { web3 } from "@/utils/web3";
 import { Console } from "console";
 import { getConverAmount, getInput } from "./txList";
 import storeObj from '@/store/index'
+
+interface ValidatorInfo {
+  Addr:string
+  Balance: number
+  Proxy: string
+  Weight: Array<any>
+}
+type Validator = null | ValidatorInfo
+
 export interface State {
   mnemonic: Mnemonic;
   path: string;
@@ -68,7 +77,7 @@ export interface State {
   exchangeTotalProfit: number
   ethAccountInfo: Object,
   creatorStatus: Object | null
-
+  validator: Validator
 }
 
 export enum NetStatus {
@@ -202,8 +211,10 @@ export const getGasFee = async (tx: any) => {
   }
 }
 
+
 export default {
   state: {
+    validator: null,
     mnemonic: {
       path: "",
       phrase: "",
@@ -764,9 +775,20 @@ export default {
     // Update EthAccountInfo
     UPDATE_ETHACCOUNTINFO(state: State, info: any) {
       state.ethAccountInfo = info
+    },
+    UPDATE_VALIDATOR(state: State, info: Validator) {
+      state.validator = info
     }
   },
   actions: {
+    async getValidator({state,commit}: any) {
+      const provider = await getProvider()
+      const res = await provider.send("eth_getValidator", ['latest'])
+      const {Validators} = res || {}
+      debugger
+      const addInfo = Validators.find((item: Validator) => item?.Addr.toUpperCase() == state.accountInfo.address.toUpperCase())
+      commit('UPDATE_VALIDATOR', addInfo || null)
+    },
     getProvider({ state }: any) {
       const { URL } = state.currentNetwork;
       if (!provider || !provider.connection || provider.connection.url.toUpperCase() != URL.toUpperCase()) {
@@ -1461,7 +1483,6 @@ export default {
         waitTime = setTimeout(async () => {
           const list: any = await localforage.getItem(queuekey)
           const txQueue = list && list.length ? list : []
-          debugger
           if (!txQueue.length) {
             resolve(true)
           }
@@ -1497,7 +1518,7 @@ export default {
                   "eth_getAccountInfo",
                   [nft_address, web3.utils.toHex((data1.blockNumber - 1).toString())]
                 );
-                const { MergeLevel, MergeNumber } = nftAccountInfo.Worm
+                const { MergeLevel, MergeNumber } = nftAccountInfo.Nft
                 //  @ts-ignore
                 const { t0, t1, t2, t3 } = store.state.configuration.setting.conversion
 
