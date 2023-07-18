@@ -785,8 +785,7 @@ export default {
       const provider = await getProvider()
       const res = await provider.send("eth_getValidator", ['latest'])
       const {Validators} = res || {}
-      debugger
-      const addInfo = Validators.find((item: Validator) => item?.Addr.toUpperCase() == state.accountInfo.address.toUpperCase())
+      const addInfo = Validators.find((item: Validator) => item.Addr.toUpperCase() == state.accountInfo.address.toUpperCase())
       commit('UPDATE_VALIDATOR', addInfo || null)
     },
     getProvider({ state }: any) {

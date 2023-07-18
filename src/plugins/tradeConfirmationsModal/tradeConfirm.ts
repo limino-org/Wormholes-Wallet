@@ -20,6 +20,7 @@ export type TradeConfirmOpt = {
 export default {
     install: (app: App, options: any) => {
         const vnode: VNode = createVNode(TradeConfirm)
+        console.warn('vnode', vnode)
         const $tradeConfirm: TradeConfirmType = {
             open: (opt: TradeConfirmOpt) => {
                 render(vnode, document.body)

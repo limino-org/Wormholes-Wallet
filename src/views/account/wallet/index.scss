@@ -355,16 +355,16 @@
     }
   }
 
-  :deep(.page-container) {
-    min-height: calc(100vh - 48px);
-    scrollbar-width: none;
-    position: relative;
-    box-sizing: border-box;
+  // :deep(.page-container) {
+  //   min-height: calc(100vh - 48px);
+  //   scrollbar-width: none;
+  //   position: relative;
+  //   box-sizing: border-box;
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
+  //   &::-webkit-scrollbar {
+  //     display: none;
+  //   }
+  // }
 
   .wallet-hint-h {
     span {

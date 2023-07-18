@@ -13,7 +13,7 @@
       {{ t("wallet.account") }}
     </div>
     <div class="account-container">
-      <div class="account-list" ref="listDom" id="listDom">
+      <div class="account-list scrollBar" ref="listDom" id="listDom">
         <div
           v-for="(item, index) in options"
           :key="item.value"

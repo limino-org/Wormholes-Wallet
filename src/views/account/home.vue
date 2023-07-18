@@ -49,13 +49,13 @@ export default {
 
 .page-container {
   min-height: calc(100vh - 48px);
-  scrollbar-width: none;
+  // scrollbar-width: none;
   // overflow-y: scroll;
   position: relative;
   box-sizing: border-box;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  // &::-webkit-scrollbar {
+  //   display: none;
+  // }
 }
 :deep(.van-popup) {
   position: absolute;

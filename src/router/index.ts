@@ -174,6 +174,14 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
+        name:'staker',
+        path:'/staker',
+        component: () => import('@/views/staker/staker.vue'),
+        meta: {
+          auth: true
+        }
+      },
+      {
         path: '/currency',
         name: 'currency',
         redirect: {

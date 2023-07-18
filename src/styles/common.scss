@@ -33,9 +33,47 @@ body {
   color: #3AAE55;
 }
 *::-webkit-scrollbar {
-  width: 0 !important;
+  width: 0;
   display: none;
 }
+.scrollBar {
+  &::-webkit-scrollbar {
+    display: inherit;
+  }
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    width: 6px;
+    background: #fff;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em;
+    opacity: .6;
+
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: #0003;
+    background-clip: padding-box;
+    min-height: 20px;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em;
+    transition: background-color .3s;
+    cursor: pointer;
+    opacity: .6;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #0000004d;
+    opacity: 1;
+  }
+  
+}
+
 
 .clickActive:hover {
   cursor: pointer;

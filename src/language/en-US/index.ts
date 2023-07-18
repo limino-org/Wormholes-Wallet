@@ -826,6 +826,28 @@ export default {
 
     link3:"Token Staking Terms For Staker Operator"
   },
+  validator:{
+    modalTit:"Staker",
+    placeholder:"Select or enter an address",
+    addValids:"Add Validators",
+    pageTit:"Become a Staker / Validator",
+    recoveryCred:"Credibility Recovery",
+    addressErr:"Please enter or select the address to pledge",
+    addrHasExits:"Address already exists",
+    pleaseSelectedAddr:"Please select the address you want to pledge",
+    pledgeAmountErr:"The amount pledged cannot be less than 700 ERB",
+    pledgeAmountErr1:"The amount pledged must be greater than 0",
+    redemAmountErr:"The redemption amount cannot be greater than the amount pledged",
+    redemAmountErr2:"The redemption amount cannot be empty",
+    redemAmountErr3:"The redemption amount must be greater than 0",
+    fromPledgeErr:"The current address to pledge must be greater than 700",
+    updateLoadingText:"Data uploading...",
+    leftPledgeErr:"The minimum pledge amount is 700ERB and you can choose to redeem the entire pledge amount",
+    totalStaking:"Total Staking",
+    amount:"Amount"
+
+
+},
   closeexchange: {
     closeexchange: 'CLOSE THE EXCHANGE',
     lessthan: 'Your exchange is less than a year old',

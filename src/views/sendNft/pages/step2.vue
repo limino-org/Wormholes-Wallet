@@ -753,6 +753,8 @@ export default {
     }
     & .van-cell {
       padding-left: 0;
+      padding-top: 0;
+      padding-bottom: 0;
     }
     & .van-cell:after {
       display: none;

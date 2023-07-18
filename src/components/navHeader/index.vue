@@ -244,8 +244,19 @@
               <i class="iconfont icon-zailiulanqidakai"></i>
               <span>{{ t("sidebar.aboutAs") }}</span>
             </div>
-
             <div
+            class="setting-btn flex between center-v clickActive"
+              @click="toStaker"
+            >
+              <div class="flex center">
+                <i class="iconfont icon-chuiziicon"></i>
+                {{
+                 t('validator.pageTit')
+                }}
+              </div>
+              <!-- <van-icon name="arrow" /> -->
+            </div>
+            <!-- <div
               class="setting-btn clickActive flex center-v"
               @click="goPledge()"
 
@@ -266,7 +277,7 @@
                 t("sidebar.openexchange")
               }}</span>
               <span v-else>{{ t("sidebar.exchangemanagement") }}</span>
-            </div>
+            </div> -->
 
             <div
               class="setting-btn clickActive flex center-v"
@@ -853,7 +864,13 @@ export default defineComponent({
         name:"generateNFT-ai"
       })
     }
+
+    const toStaker = () => {
+      router.push({name:"staker"})
+    }
+
     return {
+      toStaker,
       toGenerate,
       minerpledge,
       ethAccountInfo,

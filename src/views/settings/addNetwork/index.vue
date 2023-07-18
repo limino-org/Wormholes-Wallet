@@ -180,6 +180,7 @@ export default {
             let provider = ethers.getDefaultProvider(URL.value);
             const { chainId } = await provider.getNetwork();
             console.log(chainId);
+            // @ts-ignore
             ID.value = chainId;
             return true;
           } catch (err) {

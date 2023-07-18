@@ -82,6 +82,14 @@ module.exports = {
           '^/exchans': ''
         }
       },
+      "/aiApi": {
+        target: 'http://192.168.1.237:18081',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/aiApi': ''
+        }
+        
+      },
 
       '/walletIframe': {
         target: 'http://192.168.27.48:8080/wallet/#/',

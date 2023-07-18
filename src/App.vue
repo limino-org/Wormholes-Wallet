@@ -147,10 +147,10 @@ export default {
   min-height: 100vh;
   background: #fff;
   box-sizing: border-box;
-  &::-webkit-scrollbar {
-    width: 0 !important;
-    display: none;
-  }
+  // &::-webkit-scrollbar {
+  //   width: 0 !important;
+  //   display: none;
+  // }
   :deep(.van-toast) {
     word-break: keep-all !important;
   }

@@ -67,6 +67,26 @@ export default {
         link3:"质押者的SNFT权益条款"
 
     },
+    validator:{
+        modalTit:"验证者",
+        placeholder:"选择或输入地址",
+        addValids:"添加验证者",
+        pageTit:"成为质押者/验证者",
+        recoveryCred:"信誉恢复",
+        addressErr:"请输入或者选择要质押的地址",
+        addrHasExits:"地址已存在",
+        pleaseSelectedAddr:"请选择要质押的地址",
+        pledgeAmountErr:"质押金额不能小于700ERB",
+        pledgeAmountErr1:"质押金额必须大于0",
+        redemAmountErr:"赎回金额不能大于已质押的金额",
+        redemAmountErr2:"赎回金额不能为空",
+        redemAmountErr3:"赎回金额必须大于0",
+        fromPledgeErr:"当前要质押的地址质押金额必须要大于700",
+        updateLoadingText:"数据更新中...",
+        leftPledgeErr:"最少质押金额为700ERB，您可以选择赎回全部质押金额",
+        totalStaking:"总质押金额",
+        amount:"账户余额"
+    },
     // 引导窗口
     bootstrapwindow: {
         welcome: "Welcome",

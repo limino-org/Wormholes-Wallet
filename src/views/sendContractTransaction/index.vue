@@ -145,6 +145,7 @@ export default {
         debugger
         package_id = package_id + '';
         let newPrice = ''
+        // @ts-ignore
         price ? newPrice = utils.parseEther(price.toString()) : ''
         switch(contractMethod){
             case 'addPackage':
