@@ -5,32 +5,30 @@
       <div class="left-b"></div>
       <div class="container flex">
         <div class="header-left"></div>
-      <div class="header-right">
-        <div class="footer-text">
-          <div class="flex center h-10">
-            <div class="dot"></div>
-          </div>
-          <div class="flex center lh-30">
-            {{ t("sendNFT.more") }}
+        <div class="header-right">
+          <div class="footer-text">
+            <div class="flex center h-10">
+              <div class="dot"></div>
+            </div>
+            <div class="flex center lh-30">
+              {{ t("common.switchNet") }}
+            </div>
           </div>
         </div>
       </div>
-      </div>
       <div class="right-b"></div>
+
     </div>
     <div class="custom-popover-container"></div>
     <div class="custom-popover-footer">
       <div class="footer-btns">
-        <div class="container pl-20 pr-20 evenly flex">          <span @click="dispatchClose">{{ t("common.cancel") }}</span>
-          <span @click="handleClick(5)">{{ t("common.next") }} 5/7</span>
+        <div class="container pl-20 pr-20 evenly flex"> <span @click="dispatchClose">{{ t("common.cancel") }}</span>
+          <span @click="handleClick(5)">{{ t("common.next") }} 5/8</span>
         </div>
       </div>
     </div>
-
-
   </div>
-  <dialog-warning @warningSuccess="warningSuccess" theme="light"  @close="handleClose"  :text="t('common.confirmExit')"  v-model:isWarning="isWarning"></dialog-warning>
-
+  <dialog-warning @warningSuccess="warningSuccess" theme="light" @close="handleClose" :text="t('common.confirmExit')" v-model:isWarning="isWarning"></dialog-warning>
 </template>
 
 <script lang="ts">
@@ -40,8 +38,9 @@ import WormTransition from "@/components/wromTransition/index.vue";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
 import dialogWarning from "@/components/dialogWarning/indexAffirm.vue";
+
 export default defineComponent({
-  name: 'guide-modal4',
+  name: 'guide-modal3',
   components: {
     [Popover.name]: Popover,
     [Dialog.Component.name]: Dialog.Component,
@@ -83,7 +82,6 @@ export default defineComponent({
       }
     };
     let isWarning = ref(false);
-
     const warningSuccess = () => {
       dispatch("system/closeGuide");
       showModal.value = false;
@@ -98,11 +96,11 @@ export default defineComponent({
       showModal.value = true
     }
     return {
-      t,
       handleClose,
-      beforeClose,
+      t,
       handleClick,
       showModal,
+      beforeClose,
       dispatchClose,
       warningSuccess,
       isWarning,
@@ -119,41 +117,53 @@ export default defineComponent({
   height: 100%;
   z-index: 100000;
 }
+
 .custom-popover-header {
   height: 48px;
   width: 100%;
   display: flex;
-  display: flex;
-  .left-b,.right-b {
+
+  .left-b,
+  .right-b {
     background-color: rgba(0, 0, 0, 0.7);
     // width: 100%;
     // height: 100%;
     flex: 1;
   }
+
   .container {
     height: 100%;
     width: 100%;
-    
+
   }
+
   .header-left {
+    height: 100%;
+    width: calc(100% - 50px);
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  .header-right {
     width: 50px;
     height: 100%;
     position: relative;
+
     &:before {
       content: "";
       position: absolute;
       top: 25px;
-      left: 50px;
+      left: -70px;
       width: 70px;
       display: inline-block;
       z-index: 999999;
       border-top: 1px dotted #9F54BA;
     }
+
     &:after {
       content: "";
       position: absolute;
       top: 59.5px;
-      left: 86px;
+      left: -106px;
       width: 70px;
       display: inline-block;
       z-index: 999999;
@@ -161,62 +171,68 @@ export default defineComponent({
       border-top: 1px dotted #9F54BA;
     }
   }
-  .header-right {
-    height: 100%;
-    width: calc(100% - 50px);
-    background-color: rgba(0, 0, 0, 0.7);
-  }
 }
+
 .custom-popover-container {
+  position: relative;
   height: 272px;
   background-color: rgba(0, 0, 0, 0.7);
 }
+
 .custom-popover-footer {
   position: relative;
   height: calc(100% - 320px);
   background-color: rgba(0, 0, 0, 0.7);
 }
+
 .footer-btns {
-    position: fixed;
-    bottom: 30px;
-    left: 0;
-    right: 0;
-    width: 100%;
+  position: fixed;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  width: 100%;
+
   div {
     span {
       display: inline-block;
       width: 100px;
       height: 45px;
       cursor: pointer;
+
       font-size: 12px;
       border-radius: 50px;
       text-align: center;
       line-height: 45px;
       color: #fff;
       box-sizing: border-box;
+
       &:first-child {
         border: 1px solid #fff;
         margin-right: 40px;
       }
+
       &:last-child {
         background-color: #9F54BA;
       }
     }
   }
 }
+
 .footer-text {
   position: absolute;
   font-size: 12px;
   color: #fff;
   top: 93px;
-  left: 70.5px;
+  right: 70.5px;
   z-index: 100;
   width: 100px;
   text-align: center;
+
   div {
     position: relative;
     // display: inline-block;
   }
+
   .dot {
     width: 4px;
     height: 4px;
@@ -224,9 +240,11 @@ export default defineComponent({
     border-radius: 50%;
   }
 }
+
 .dialog-box {
   // width: 340px;
   padding-bottom: 25px;
+
   .serial-number {
     display: flex;
     justify-content: flex-end;
@@ -235,10 +253,12 @@ export default defineComponent({
     padding-right: 14px;
     font-size: 12px;
     font-size: 12px;
+
     .left {
       color: #9F54BA;
     }
   }
+
   .title {
     text-align: center;
     font-size: 24px;
@@ -246,19 +266,21 @@ export default defineComponent({
     line-height: 30px;
     margin-top: 44px;
   }
+
   .small-tit {
     text-align: center;
     margin-bottom: 50px;
     font-size: 12px;
     color: #848484;
   }
+
   :deep {
     button {
       min-width: 100px;
     }
   }
+
   :deep(.van-popover__wrapper) {
     height: 0;
   }
-}
-</style>
+}</style>

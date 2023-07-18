@@ -11,7 +11,7 @@
       <div class="footer-btns">
         <div class="container pl-20 pr-20 evenly flex">
           <span class="hover" @click="dispatchClose">{{t('common.cancel')}}</span>
-        <span class="hover" @click="handleClick(1)">{{t('common.next')}} 1/7</span>
+        <span class="hover" @click="handleClick(1)">{{t('common.next')}} 1/8</span>
         </div>
       </div>
     </div>

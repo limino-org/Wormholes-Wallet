@@ -14,6 +14,14 @@ export default {
         },
       },
       {
+        path: "/generateNFT/ai-create",
+        name: "ai-create",
+        component:() =>  import('@/views/generateNFT/pages/aiCreate.vue'),
+        meta: {
+          auth: true,
+        },
+      },
+      {
         path: "/generateNFT/success",
         name: "generateNFT-success",
         component:() =>  import('@/views/generateNFT/pages/success.vue'),

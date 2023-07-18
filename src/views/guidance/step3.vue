@@ -5,18 +5,18 @@
       <div class="footer-btns">
         <div class="container pl-20 pr-20 evenly flex">
           <span @click="dispatchClose">{{t('common.cancel')}}</span>
-          <span @click="handleClick(3)">{{t('common.next')}} 3/7</span>
+          <span @click="handleClick(3)">{{t('common.next')}} 3/8</span>
         </div>
       </div>
       <div class="footer-text">
         <div>
-          {{t('common.nftN')}}
+          {{t('wallet.collection')}}
         </div>
       </div>
     </div>
     <div class="custom-popover-container">
       <div class="container list-container">
-        <SnftCard v-for="item in list" :data="item" :key="item.nft_address" />
+
       </div>
     </div>
     <div class="custom-popover-footer">
@@ -36,7 +36,7 @@ import { useI18n } from "vue-i18n";
 import dialogWarning from '@/components/dialogWarning/indexAffirm.vue'
 import eventBus from "@/utils/bus";
 import { nextTick } from "process";
-import SnftCard from '@/views/account/components/nftList/nftCard.vue'
+import AiNftCard from '@/views/account/components/nftList/aiNftCard.vue'
 export default defineComponent({
   name: 'guide-modal2',
     components: {
@@ -45,7 +45,7 @@ export default defineComponent({
     [Button.name]: Button,
     WormTransition,
     'dialog-warning': dialogWarning,
-    SnftCard
+    AiNftCard
   },
   props: {
     type: {
@@ -59,38 +59,7 @@ export default defineComponent({
     const { state, dispatch } = useStore();
     const showModal = ref(false);
     const show3 = computed(() => state.system.show3);
-    const list = ref([
-      {
-        nft_address:'0x1232',
-        tagName:'L0',
-        tagIdx: 0,
-        pidx: 9,
-        cidx: 88,
-        nidx:110,
-        fidx: 220
-      },
-      {
-        nft_address:'0x1232',
-        tagName:'L1',
-        tagIdx: 1,
-        pidx: 9,
-        cidx: 88,
-        nidx:110
-      },
-      {
-        nft_address:'0x1232',
-        tagName:'L2',
-        tagIdx: 2,
-        pidx: 9,
-        cidx: 88
-      },
-      {
-        nft_address:'0x1232',
-        tagName:'L3',
-        tagIdx: 3,
-        pidx: 9
-      }
-    ])
+   
     watch(
       () => show3,
       (n) => {
@@ -135,12 +104,6 @@ export default defineComponent({
     const handleClose = () => {
       showModal.value = true
     }
-    // onMounted(() => {
-    //   let time = setTimeout(() => {
-    //       eventBus.emit('guideSnftModal',1)
-    //       clearTimeout(time)
-    //   },1000)
-    // })
     return {
       t,
       // show2,
@@ -151,7 +114,7 @@ export default defineComponent({
       dispatchClose,
       warningSuccess,
       isWarning,
-      list
+
     };
   },
 });

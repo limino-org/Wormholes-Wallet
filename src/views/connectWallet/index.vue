@@ -32,6 +32,7 @@ export enum Actions {
   sigMessage = "sigMessage",
   sendTransaction = "sendTransaction",
   sendOpenExchangeTransaction = 'sendOpenExchangeTransaction',
+  createNft = "createNft"
 }
 type URLParams = {
   action: Actions;
@@ -89,7 +90,8 @@ export default {
         "sendTransaction",
         "sendOpenExchangeTransaction",
         "sendContractTransaction",
-        "addNetwork"
+        "addNetwork",
+        "createNft"
       ];
       if (!backUrl || !action) {
         $wtoast.warn("Parameter error");
@@ -119,6 +121,9 @@ export default {
         case "sigMessage":
           sigMessage();
           break;
+        case "createNft":
+          createNft();
+          break
         case "sendTransaction":
         if (!nowAccount.value) {
         $wtoast.warn("common.addressnotfound");
@@ -166,6 +171,19 @@ export default {
         name: "sendContractTransaction",
         query: {
           tx: JSON.stringify(queryData),
+          backUrl,
+          address,
+        },
+      });
+    }
+
+    async function createNft() {
+      debugger
+      const wallet = await getWallet2();
+      router.replace({
+        name: "ai-create",
+        query: {
+          data: JSON.stringify(queryData),
           backUrl,
           address,
         },

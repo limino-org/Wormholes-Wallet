@@ -235,7 +235,7 @@ export default {
 
 	},
   "castingnft": {
-		"createNFT": "Generate NFT",
+		"createNFT": "NFTs Create",
 		"upload": "Upload",
 		"information": "Information",
 		"done": "Done",
@@ -325,9 +325,9 @@ export default {
     promptTip2:"By URL: Input the URL of the existing NFT content, which can be sourced from platforms like OpenSea that can read image information.",
     promptTip:"You can mint chain-layer NFTs in two ways:",
     placeholder:"Prompts Word: Please enter text to describe the picture, for example: draw a sea tang in the style of Vermeer's \"Girl with a Pearl Earring\"  \nimage source URL: Asset URL",
-    promptWordErr:"A maximum of 75 words can be entered, and only English slang and special symbols or url addresses are supported",
+    promptWordErr:"A maximum of 70 words can be entered, and only English slang and special symbols or url addresses are supported",
     promptWordNotNull:"The Prompts word / Image source URL cannot be empty",
-    normalNftTip:"You have checked AI painting, please fill in valid prompts words, enter up to 75 words, only English is supported slang and special symbols.",
+    normalNftTip:"You have checked AI painting, please fill in valid prompts words, enter up to 70 words, only English is supported slang and special symbols.",
     emailNotNull:"The email address cannot be empty",
     creativeMode:"AI Painting Mode",
     AIDrawing:"Enable AI drawing",

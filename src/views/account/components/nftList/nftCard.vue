@@ -7,7 +7,7 @@
         : 'van-hairline--surround'
     } ${layoutType}`"
   >
-    <div :class="`info  ${layoutType == 'list' ? 'flex between' : ''}`">
+    <!-- <div :class="`info  ${layoutType == 'list' ? 'flex between' : ''}`">
       <div class="icon flex center">
         <van-image :src="data.info.meta_url" fit="cover" />
       </div>
@@ -18,9 +18,8 @@
     </div>
     <div class="amount flex center-v" v-if="layoutType == 'list' && amountType != 'mask'">
       <div class="val">{{ data.info.royalty }} {{ currentNetwork.currencySymbol }}</div>
-      <!-- <div class="usd">≈ ${{ data.to_doller }}</div> -->
     </div>
-    <div class="flex right center-v f-12" v-if="amountType == 'mask' && layoutType =='list'">********</div>
+    <div class="flex right center-v f-12" v-if="amountType == 'mask' && layoutType =='list'">********</div> -->
   </div>
 </template>
 
@@ -40,7 +39,14 @@ export default defineComponent({
   props: {
     data: {
       type: Object,
-      default: {}
+      default: () => ({
+        address: "",
+        info:{
+          meta_url:"",
+          name:"",
+          royalty:0
+        }
+      })
     }
   },
   setup(props: any) {

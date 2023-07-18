@@ -146,7 +146,7 @@ import {
   drawImage,
   getEmailByUser,
   DrawImageParams,
-getPaintFee,
+  getPaintFee,
 } from "@/http/modules/nft";
 import CommonModal from "@/components/commonModal/index.vue";
 import CreateModal from "../components/createModal.vue";
@@ -347,10 +347,9 @@ const handleSendCreate = async (nft_data = {}, call = (v: any) => {}) => {
     return Promise.reject("failure of transaction");
   }
   const { topics } = log;
-  const [addr1, fullnftaddr, fullowner] = topics;
+  const [addr1, fullnftaddr] = topics;
   const nft_address = "0x" + fullnftaddr.substr(fullnftaddr.length - 40);
-  const owner = "0x" + fullowner.substr(fullowner.length - 40);
-  return { receipt, nft_address, owner, hash: txRes.hash };
+  return { receipt, nft_address, owner: myAddr, hash: txRes.hash };
 };
 
 // const grnerateLoading = ref(false)

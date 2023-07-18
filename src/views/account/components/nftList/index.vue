@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import NftCard from "./nftCard.vue";
+// import NftCard from "./nftCard.vue";
 import AiNftCard from "./aiNftCard.vue";
 import {
   getNftOwner,
@@ -110,11 +110,11 @@ import { useRouter } from "vue-router";
 import { useToast } from "@/plugins/toast";
 import { decode } from "js-base64";
 import SliderBottom from "@/components/sliderBottom/index.vue";
-import { MasonryInfiniteGrid,PackingInfiniteGrid  } from "@egjs/vue3-infinitegrid";
+import { MasonryInfiniteGrid  } from "@egjs/vue3-infinitegrid";
 export default defineComponent({
   name: "nft-list",
   components: {
-    NftCard,
+    // NftCard,
     AiNftCard,
     [List.name]: List,
     [Button.name]: Button,
@@ -126,7 +126,6 @@ export default defineComponent({
     NoData,
     SliderBottom,
     MasonryInfiniteGrid,
-    PackingInfiniteGrid 
   },
   emits: ["onLoad"],
   setup(props: any, context: SetupContext) {
@@ -144,7 +143,7 @@ export default defineComponent({
     let params = {
       owner: accountInfo.value.address.toLowerCase(),
       page: "0",
-      page_size: "8",
+      page_size: "8"
     };
     let aiparams = {
       useraddr: accountInfo.value.address,

@@ -251,7 +251,7 @@ export default {
       .name {
         width: 100%;
         overflow: hidden;
-        white-space: nowrap;
+        word-wrap:break-word;
       }
     }
     .line {

@@ -198,6 +198,7 @@ trigger="manual"
     <guide-five></guide-five>
     <guide-six></guide-six>
     <guide-seven></guide-seven>
+    <guide-eight></guide-eight>
     <action-sheet v-model="actionSheetShow"></action-sheet>
     <BackUpBottom />
   </div>
@@ -259,6 +260,7 @@ import GuideModal4 from "@/views/guidance/step4.vue";
 import GuideModal5 from "@/views/guidance/step5.vue";
 import GuideModal6 from "@/views/guidance/step6.vue";
 import GuideModal7 from "@/views/guidance/step7.vue";
+import GuideModal8 from "@/views/guidance/step8.vue";
 import actionSheet from "./action-sheet.vue";
 import dialogWarning from "@/components/dialogWarning/message.vue";
 import { useToast } from "@/plugins/toast";
@@ -298,6 +300,7 @@ export default {
     "guide-five":GuideModal5,
     "guide-six":GuideModal6,
     'guide-seven':GuideModal7,
+    'guide-eight':GuideModal8,
     "dialog-warning": dialogWarning,
   },
   setup() {
@@ -375,11 +378,6 @@ export default {
     const closeModal = () => {
       showModal.value = false;
     };
-    const tofaucet = () => {
-      window.open(
-        "http://faucet.wormholesscan.com/?address=" + accountInfo.value.address
-      );
-    };
 
 
     const actionSheetShow = ref(false);
@@ -400,31 +398,7 @@ export default {
       showSlider();
     };
 
-    // const getStatus = async () => {
-    //   Toast.loading({});
-    //   try {
-    //     const res = await dispatch("account/getExchangeStatus");
-    //     const { ExchangerFlag, status } = res;
-    //     autoexchange.value = status;
-    //     autostat.value = ExchangerFlag;
-    //     console.warn("res", res);
-    //     return res;
-    //   } catch (err: any) {
-    //     Toast(err.toString());
-    //   } finally {
-    //     Toast.clear();
-    //   }
-    // };
-
-    //Jump to open an exchange with one click
-    // const goAutoexchange = async () => {
-    //   const {ExchangerFlag,status} = await getStatus();
-    //   if(ExchangerFlag) {
-    //     router.push({ name: "exchange-management" });
-    //   } else {
-    //      router.push({ name: "bourse" });
-    //   }
-    // };
+   
     const toSend = () => {
       router.push({ name: "send" });
     };
@@ -643,7 +617,6 @@ export default {
       pageData,
       layoutList,
       layoutType,
-      tofaucet,
       tobuy,
       dispatch,
       accountTokens,
@@ -651,7 +624,6 @@ export default {
       loadNft,
       finished,
       nftErr,
-      // showExchangeSuccess,
       sonShow,
       actionSheetShow,
     };

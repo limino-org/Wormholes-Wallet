@@ -3,7 +3,7 @@ import { httpGet, httpPost } from '../request'
 
 const isProduct = process.env.VUE_APP_NODE_ENV == 'production' ? true : false
 const service = '/exchans'
-const aiService = '/aiService'
+const aiService = '/nftaimint'
 const isDev = process.env.VUE_APP_NODE_ENV == 'development'
 const isTest = process.env.VUE_APP_NODE_ENV == 'test' || process.env.VUE_APP_NODE_ENV == 'development'
 // const exchantest = isProduct ? '/c0x5051580802283c7b053d234d124b199045ead750' : ''
