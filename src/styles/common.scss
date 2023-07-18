@@ -47,7 +47,7 @@ body {
   
   &::-webkit-scrollbar-track {
     width: 6px;
-    background: #fff;
+    background: rgba($color: #fff, $alpha: 0);
     -webkit-border-radius: 2em;
     -moz-border-radius: 2em;
     border-radius: 2em;
