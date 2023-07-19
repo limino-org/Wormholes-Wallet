@@ -230,7 +230,7 @@ width: 420px;
 }
 
 .el-popper {
-  z-index: 100 !important;
+  z-index: 9999 !important;
   max-width: 200px;
 }
 
@@ -396,10 +396,10 @@ width: 420px;
 
 @media  screen and (min-width: 750px) and (max-width: 1281px){
   html {
-    font-size: 44PX !important; // ignored
+    font-size: 48PX !important; // ignored
   }
   .container {
-    max-width: 800PX;
+    max-width: 700px;
   }
   .van-dialog {
     width:360px;
@@ -415,7 +415,7 @@ width: 420px;
     font-size: 52PX !important; // ignored
   }
   .container {
-    max-width: 800px;
+    max-width: 750px;
   }
   .van-dialog {
     width:360px;
@@ -436,15 +436,3 @@ width: 420px;
 
 }
 
-// .van-dialog-bounce-enter-from {
-//   transform: translate3d(0,-50%,0) scale(.7);
-//   opacity: 0
-// }
-
-// .van-dialog-bounce-leave-active {
-//   transform: translate3d(0,-50%,0) scale(.9);
-//   opacity: 0
-// }
-// .van-dialog-bounce-enter-to{
-
-// }

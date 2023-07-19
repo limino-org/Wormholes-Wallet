@@ -56,14 +56,14 @@ export default {
         continue: "继续",
         back: '返回',
         next: '下一步',
-        serviceandPrivacyNotice: '请查看 Wormholes ERB 钱包服务条款和隐私声明',
+        serviceandPrivacyNotice: '请查看 Erbie ERB 钱包服务条款和隐私声明',
         memErr: "助记词格式有误，请确认后重新提交",
         isServiceandPrivacyNotice: "请务必检查服务条款和隐私政策 ",
         isServiceandPrivacyNotices: "请务必勾选用户协议 ",
-        pwdTip: "通过继续，您同意 Wormholes 的 {br} {link1}&{link2}",
+        pwdTip: "通过继续，您同意 Erbie 的 {br} {link1}&{link2}",
         link1: "Terms Of Service",
         link2: "Privacy Notice.",
-        pwdTip2: "通过继续，您同意 Wormholes 的 {br} {link1}",
+        pwdTip2: "通过继续，您同意 Erbie 的 {br} {link1}",
         link3:"质押者的SNFT权益条款"
 
     },
@@ -235,9 +235,9 @@ export default {
         suretomodifytheexchangepledgeamountcustodyservicefee: '确认修改质押者质押金额/托管服务费吗？',
         suretocancel: '你确定要取消吗？',
         breakGuide: "确定取消引导操作流程吗?",
-        connect: "连接到 Wormholes",
-        connect2: "使用Wormholes连接",
-        connect3: "已成功连接到Wormholes",
+        connect: "连接到 Erbie",
+        connect2: "使用Erbie连接",
+        connect3: "已成功连接到Erbie",
         connectTxt: "连接",
         installMetaMask: "你未安装钱包，请先安装MetaMask",
         back: "返回",
@@ -515,7 +515,7 @@ export default {
     // 导入账户
     import: {
         importaccount: '导入账户',
-        announcement: '导入的账户可在你的钱包中查看的,但无法通过Wormholes助记词找回。',
+        announcement: '导入的账户可在你的钱包中查看的,但无法通过Erbie助记词找回。',
         learnmore: '在此处详细了解导入的账号。',
         copy: '粘贴您的私钥字符串',
         forexample: '例如 ,3a1076bf45ab87712ad64ccb3b10217737faacbf2872e88fdd9a537d8fe266',
@@ -533,7 +533,7 @@ export default {
     // 导入成功
     importsuccess: {
         success: '账户导入成功!',
-        check: '您现在将能够在Wormholes查看您导入的账户。',
+        check: '您现在将能够在Erbie查看您导入的账户。',
         scanning: '正在扫描…'
 
     },
@@ -602,7 +602,7 @@ export default {
     },
     // 重新登录页面
     loginwithpassword: {
-        welcome: '欢迎再次使用Wormholes钱包',
+        welcome: '欢迎再次使用Erbie钱包',
         login: '登录',
         input: '输入密码',
         pleaseinput: '请输入密码',
@@ -639,14 +639,14 @@ export default {
         tips: "如果您在使用钱包之前不进行备份，您的资金将面临风险。 确保立即备份。",
         yourRecoveryPhrase: "你的恢复短语",
         yourRecoveryPhraseTitle:
-            "在任何情况下,Wormholes 都不会要求您提供恢复短语。保护您的资金，不要与任何人分享您的恢复短语。",
+            "在任何情况下,Erbie 都不会要求您提供恢复短语。保护您的资金，不要与任何人分享您的恢复短语。",
         remindMeLater: "稍后提醒我",
         backUp: "备份",
         hint1: "以正确的顺序写下或复制这些单词并将它们保存在安全的地方。",
         suggest: "建议您将它们写下来。",
         getStarted: "让我们开始吧",
         saveTips:
-            "将您的密钥存储在安全的位置。这是找回钱包的唯一方法。Wormholes不保留副本。",
+            "将您的密钥存储在安全的位置。这是找回钱包的唯一方法。Erbie不保留副本。",
         continue: "继续",
         verifyMnemonicPhrase: "验证助记词",
         protectYourFunds: "保护您的资金，不要与任何人分享您的恢复短语。",
@@ -668,7 +668,7 @@ export default {
     // 创建钱包
     createwallet: {
         createwallet: '创建钱包',
-        title: '此密码仅限于在该设备上解锁您的 Wormholes 钱包',
+        title: '此密码仅限于在该设备上解锁您的 Erbie 钱包',
         password: '新密码',
         password2: '确认密码',
         failed: '创建钱包失败',
@@ -1091,7 +1091,7 @@ export default {
     },
     // 网络列表
     networklist: {
-        wormholes: "Wormholes 网络",
+        wormholes: "Erbie 网络",
         rinkeby: 'rinkeby 测试网络',
         homestead: 'homestead 主网',
         ropsten: 'ropsten 测试网络',
@@ -1192,7 +1192,7 @@ export default {
         tiptit2: "质押者奖励:",
         tiptit3: "ERB奖励:",
         tip1: "在虫洞活动期间获得的SNFT将会显示在这个页面上。点击“认领”按钮，一键认领所有SNFT, SNFT将直接存入您的当前钱包。{br}您可以通过右下角的NFT交易中心操作您的权益。",
-        tip2: "如果您的帐户在WormholesNFT上没有开放的质押者，我们将为您打开一个WormholesNFT质押者:一旦打开，您将需要遵循我们的教程来部署您的质押者;您也可以进入我们的钱包，选择我们的服务来帮助您部署质押者。如果您的帐户尚未在虫洞上交易，我们将自动增加相应的存款金额。",
+        tip2: "如果您的帐户在Erbie NFT上没有开放的质押者，我们将为您打开一个Erbie NFT质押者:一旦打开，您将需要遵循我们的教程来部署您的质押者;您也可以进入我们的钱包，选择我们的服务来帮助您部署质押者。如果您的帐户尚未在虫洞上交易，我们将自动增加相应的存款金额。",
         tip3: "你在虫洞活动中收到的erb将会显示在这个页面上。按下“申领”按钮，即可申领所有雇员再培训费，而所得的雇员再培训费会直接存入你现时的钱包。",
         hasBrought: "已领取",
         success: "获取成功！",

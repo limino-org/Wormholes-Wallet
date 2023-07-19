@@ -1,5 +1,7 @@
 import {version} from '@/enum/version'
 import router from '@/router';
+import { decimal } from "@/utils/filters";
+
 import { erb_price } from '@/http/modules/price'
 import Cookies from 'js-cookie'
 import localforage from 'localforage';
@@ -227,6 +229,11 @@ export default {
     },
   },
   getters: {
+        // Current account balance
+    getAmount(state: State) {
+      const amount = store.state.account.accountInfo.amount;
+      return decimal(amount);
+    },
     // Whether the pop-up window guides the pop-up window
     getGuideModal(state: State){
       const { finishedGuide, show0, show1, show2,show3,show4, show5, show6, show7 } = state

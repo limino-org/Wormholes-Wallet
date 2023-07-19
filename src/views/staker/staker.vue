@@ -90,7 +90,7 @@
                 </div>
             </van-form>
         </div>
-        <div class="flex evenly mt-24 mb-24 btnBox" v-if="isStaker">
+        <div class="flex evenly mt-24 pb-24 btnBox" v-if="isStaker">
             <van-button @click="handleMinusClick" :disabled="freezeStatus">
                 <el-tooltip
               popper-class="tooltip2"

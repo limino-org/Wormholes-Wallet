@@ -71,6 +71,7 @@ export default {
         commit("account/UPDATE_WORMHOLES_URL", {
           URL: "https://api.wormholes.com",
           browser: "https://www.wormholesscan.com/#/",
+          label: "Erbie"
         });
         clearTimeout(time2);
       },0);

@@ -30,6 +30,8 @@ export default defineComponent({
 <style lang="scss" scoped>
 .account-icon-component {
   transition: ease .3s;
+  border-radius: 50%;
+    overflow: hidden;
   &:hover {
     transform: scale(1.2);
   }

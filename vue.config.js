@@ -82,11 +82,11 @@ module.exports = {
           '^/exchans': ''
         }
       },
-      "/aiApi": {
+      "/stakerApi": {
         target: 'http://192.168.1.237:18081',
         changeOrigin: true,
         pathRewrite: {
-          '^/aiApi': ''
+          '^/stakerApi': ''
         }
         
       },

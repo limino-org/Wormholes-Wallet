@@ -69,7 +69,7 @@
               <img class="compy_img" v-if="!exchangeStatus.ExchangerFlag" src="@/assets/token/logowallet.png" />
               <img class="compy_img" v-else src="@/assets/token/whitelogo.png" alt="">
             </div>
-            <div class="company-name">Wormholes</div>
+            <div class="company-name">Erbie</div>
           </div>
 
           <div class="user-img flex center-v">
@@ -129,7 +129,7 @@
                     >
                       <template v-slot:value>{{ Coefficient }}</template>
                       <template v-slot:btn>
-                        <span class="gotIt hover" @click="minerpledge">{{
+                        <span class="gotIt hover" @click="toStaker">{{
                           t("minerspledge.gotIt")
                         }}</span>
                       </template>
@@ -141,7 +141,7 @@
                     >
                       <!-- <template v-slot:value>{{Coefficient}}</template> -->
                       <template v-slot:btn>
-                        <span class="gotIt hover" @click="minerpledge">{{
+                        <span class="gotIt hover" @click="toStaker">{{
                           t("minerspledge.gotIt")
                         }}</span>
                       </template>
@@ -153,7 +153,7 @@
                     >
                       <!-- <template v-slot:value>{{Coefficient}}</template> -->
                       <template v-slot:btn>
-                        <span class="gotIt hover" @click="minerpledge">{{
+                        <span class="gotIt hover" @click="toStaker">{{
                           t("minerspledge.gotIt")
                         }}</span>
                       </template>
@@ -164,7 +164,7 @@
                       class="tag-user type2 position relative hover ml-8"
                       @mouseover="showPopover1 = true"
                       @mouseleave="handleMouseLeave1"
-                      @click="minerpledge"
+                      @click="toStaker"
                       v-show="
                         ethAccountInfo
                           ? ethAccountInfo.PledgedBalance > 0
@@ -198,7 +198,7 @@
                       class="tag-user type3 position relative ml-8 hover"
                       @mouseover="showPopover2 = true"
                       @mouseleave="handleMouseLeave2"
-                      @click="oneClick"
+                      @click="toStaker"
                       v-show="
                         ethAccountInfo ? ethAccountInfo.ExchangerFlag : false
                       "
@@ -254,31 +254,7 @@
                  t('validator.pageTit')
                 }}
               </div>
-              <!-- <van-icon name="arrow" /> -->
             </div>
-            <!-- <div
-              class="setting-btn clickActive flex center-v"
-              @click="goPledge()"
-
-            >
-              <i class="iconfont icon-chuiziicon"></i>
-              <span>{{ t("sidebar.minerspledge") }}</span>
-            </div>
-
-            <div
-              class="setting-btn clickActive flex center-v"
-              @click="oneClick"
-   
-            >
-              <i
-                class="iconfont icon-fangwujianzhuwugoujianbeifen"
-              ></i>
-              <span v-if="!exchangeStatus.ExchangerFlag">{{
-                t("sidebar.openexchange")
-              }}</span>
-              <span v-else>{{ t("sidebar.exchangemanagement") }}</span>
-            </div> -->
-
             <div
               class="setting-btn clickActive flex center-v"
               @click="toGenerate"

@@ -139,11 +139,11 @@ const handleSelect = (e: any) => {
         }
     })
 }
-const { $toast } = useToast()
+const { $wtoast } = useToast()
 const btnLoading = ref(false)
 const handleConfirm = async() => {
     if (!value1.value) {
-        $toast.fail(t('validator.addressErr'))
+        $wtoast.fail(t('validator.addressErr'))
         return
     }
     btnLoading.value = true
@@ -154,7 +154,7 @@ const handleConfirm = async() => {
         console.warn('acc', acc)
         const PledgedBalance = acc.Worm?.PledgedBalance ? new BigNumber(acc.Worm?.PledgedBalance).div(1000000000000000000).toNumber() : 0
         if(PledgedBalance < 700 && accountInfo.value.address.toUpperCase() != value1.value.toUpperCase()) {
-            $toast.warn(t('validator.fromPledgeErr'))
+            $wtoast.warn(t('validator.fromPledgeErr'))
             return
         }
         emits('confirm', {
@@ -168,7 +168,7 @@ const handleConfirm = async() => {
         showModal.value = false
     } catch (err) {
         console.error(err)
-        $toast.fail(t('transaction.malformedaddress'))
+        $wtoast.fail(t('transaction.malformedaddress'))
     } finally {
         btnLoading.value = false
     }

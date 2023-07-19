@@ -318,7 +318,7 @@ export default {
       state.accountList = value;
     },
     // New account updated the URL of the Wormholes network
-    UPDATE_WORMHOLES_URL(state: State, { URL, browser, chainId }: any) {
+    UPDATE_WORMHOLES_URL(state: State, { URL, browser, chainId, label }: any) {
       console.warn('URL', URL, browser)
       let flag = false
       if (state.currentNetwork.isMain) {
@@ -327,11 +327,13 @@ export default {
         }
         state.currentNetwork.URL = URL;
         state.currentNetwork.browser = browser;
+        state.currentNetwork.label = label;
       }
       state.netWorkList.forEach(item => {
         if (item.isMain) {
           item.URL = URL;
           item.browser = browser;
+          item.label = label
         }
       })
       // if (flag) {
