@@ -181,7 +181,8 @@ const onSubmit = async () => {
   const myAddr = state.account.accountInfo.address;
 
   // Not ordinary casting to determine whether pure ai drawing
-  if (!isNormalCreate) {
+  try {
+    if (!isNormalCreate) {
     const gas2 = await getGasFee({
       to: myAddr,
       value: ethers.utils.parseEther("1"),
@@ -197,6 +198,9 @@ const onSubmit = async () => {
   } else {
     const gas1 = await handleGetGas();
     gasFee.value = gas1;
+  }
+  }catch(err) {
+    $wtoast.fail(t('common.noMoney'))
   }
 };
 
@@ -225,7 +229,7 @@ const handleGetGas = async () => {
     to: myAddr,
     from: myAddr,
     data: newdata,
-    value: "0",
+    value: ethers.utils.parseEther(sendVal.value.toString()),
   };
   const gas1 = await getGasFee(tx);
   return gas1;
@@ -320,7 +324,8 @@ const aiCreate = async () => {
 
 // send create nft tx data
 const handleSendCreate = async (nft_data = {}, call = (v: any) => {}) => {
-  const myAddr = state.account.accountInfo.address;
+  try {
+    const myAddr = state.account.accountInfo.address;
   const par = {
     version: "0.0.1",
     type: 0,
@@ -337,6 +342,7 @@ const handleSendCreate = async (nft_data = {}, call = (v: any) => {}) => {
     value: "0",
   };
   const txRes = await dispatch("account/transaction", tx);
+  
   call(txRes);
   const receipt = await txRes.wait();
   const {
@@ -350,6 +356,10 @@ const handleSendCreate = async (nft_data = {}, call = (v: any) => {}) => {
   const [addr1, fullnftaddr] = topics;
   const nft_address = "0x" + fullnftaddr.substr(fullnftaddr.length - 40);
   return { receipt, nft_address, owner: myAddr, hash: txRes.hash };
+  } catch(err){
+   return Promise.reject(err)
+  }
+
 };
 
 // const grnerateLoading = ref(false)
@@ -516,7 +526,7 @@ onMounted(async () => {
   const res = await getAiServerAddr();
   sendAddr.value = res.data;
   const res2 = await getPaintFee()
-  sendVal.value = ethers.utils.formatUnits(res2.data, 'ether')
+  sendVal.value = Number(ethers.utils.formatUnits(res2.data, 'ether'))
   if (readonlySwitch.value) {
     const myAddr = state.account.accountInfo.address;
     const resEmail = await getEmailByUser({ useraddr: myAddr });

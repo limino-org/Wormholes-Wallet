@@ -1,7 +1,7 @@
 <template>
   <div :class="`valid-card flex between position relative pl-8 pr-8 pt-10 pb-10 mb-8 ${props.data.selected ? 'selected' : ''}`" @click="handleClick">
     <div class="flex valid-info">
-      <div class="flex center ">
+      <div class="flex center iconBox">
         <AccountIcon :data="props.data?.icon" />
       </div>
       <div class="flex center-v text-left valid-addr ml-8 van-ellipsis">
@@ -13,8 +13,8 @@
         <img class="expresion" src="@/assets/neutral.png" alt="" v-if="getIconClass == 'neutral'" />
       </div>
     </div>
-    <div class="flex valid-balance green">
-      <div class="flex column between">
+    <div class="flex valid-balance">
+      <div class="flex column between" :style="{color: percentColor}">
         <div class="lh-18 text-right">{{ props.data.Balance }} ERB</div>
         <div class="lh-18 text-right">{{props.data.percent}}%</div>
       </div>
@@ -29,12 +29,7 @@ import { addressMask } from '@/utils/filters'
 const { state } = useStore();
 const accountInfo = computed(() => state.account.accountInfo);
 const props = defineProps({
-  data: {
-    type: Object,
-    default: {
-      selected: false
-    }
-  }
+  data: Object
 });
 
 const emits = defineEmits(['handleClick'])
@@ -43,6 +38,19 @@ const getIconClass = computed(() => {
       if (num < 40) return "sad";
       if (num >= 40 && num <= 50) return "neutral";
       if (num > 50) return "smile";
+})
+
+const percentColor = computed(() => {
+  const per = Number(props.data.percent)
+  if(per < 33) {
+    return '#3aae55'
+  }
+  if(per >= 33 && per < 66) {
+    return 'black'
+  }
+  if(per > 66) {
+    return '#9F54BA'
+  }
 })
 
 const handleClick = () => {
@@ -63,6 +71,13 @@ $fontColor: #848484;
   transition: ease .3s;
   height: 54px;
   cursor: pointer;
+  .iconBox {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #fff;
+  }
   &.selected {
     border: 1px solid #9F54BA;
   }

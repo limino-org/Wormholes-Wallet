@@ -51,7 +51,7 @@ const props = defineProps({
   promptWord: String,
   sendAddr: String,
   gasFee: String,
-  value: String
+  value: Number
 })
 
 const emit = defineEmits(['cancel', 'confirm'])

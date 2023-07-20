@@ -37,6 +37,12 @@ body {
   display: none;
 }
 .scrollBar {
+  overflow-y: scroll;
+  &:hover {
+    &::-webkit-scrollbar-track{
+      background: #f1f1f1;
+    }
+  }
   &::-webkit-scrollbar {
     display: inherit;
   }
@@ -47,16 +53,16 @@ body {
   
   &::-webkit-scrollbar-track {
     width: 6px;
-    background: rgba($color: #fff, $alpha: 0);
+    background: transparent;
     -webkit-border-radius: 2em;
     -moz-border-radius: 2em;
     border-radius: 2em;
     opacity: .6;
-
+    transition: ease .3s;
   }
   
   &::-webkit-scrollbar-thumb {
-    background-color: #0003;
+    background-color: rgb(202, 201, 201);
     background-clip: padding-box;
     min-height: 20px;
     -webkit-border-radius: 2em;
@@ -68,13 +74,10 @@ body {
   }
   
   &::-webkit-scrollbar-thumb:hover {
-    background-color: #0000004d;
+    background-color:  #a7a7a7;
     opacity: 1;
   }
-  
 }
-
-
 .clickActive:hover {
   cursor: pointer;
 }
@@ -87,6 +90,11 @@ body {
 .van-toast__text {
   word-break: break-word;
 }
+.popover-expresion {
+  background-color: #fff;
+}
+
+
 .hoverMenuItem {
   .van-popover__action-text {
     text-align: left;
@@ -435,4 +443,3 @@ width: 420px;
   }
 
 }
-

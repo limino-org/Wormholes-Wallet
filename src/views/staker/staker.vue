@@ -1,21 +1,13 @@
 <template>
     <NavHeader :title="t('validator.pageTit')" :hasRight="false">
         <template v-slot:left>
-            <span class="back" @click="back">{{t('common.back')}}</span>
+            <span class="back" @click="back">{{ t('common.back') }}</span>
         </template>
     </NavHeader>
     <div class="staker-validator-page">
         <div class="staker-card">
-            <div class="label lh-28 flex center-v">
-                <span>{{ t('createExchange.exchange') }}</span>
-                <van-popover v-model:show="stakerModal" theme="dark" placement="bottom-start">
-                    <p class="pl-10 pr-10">{{ t("sendto.gastit") }}</p>
-                    <template #reference>
-                        <van-icon name="question hover" @mouseover="stakerModal = true" @mouseleave="stakerModal = false" />
-                    </template>
-                </van-popover>
-            </div>
-            <div class="stakerAddr pl-8 pr-8 pt-16 pb-16 flex  position relative" @click="showAccountModal = true">
+
+            <div class="stakerAddr pl-8 pr-8 pt-14 pb-14 flex" @click="showAccountModal = true">
                 <div class="flex cenetr">
                     <AccountIcon :data="accountInfo.icon" />
                 </div>
@@ -23,35 +15,52 @@
                     <div>{{ accountInfo.name }}</div>
                     <div class="addr">{{ accountInfo.address }}</div>
                 </div>
-                <!-- icon-shangjiantou icon-xiajiantou -->
-                <i class="iconfont icon-xiajiantou f-14"></i>
+                <!-- icon-shangjiantou icon-shangjiantou -->
+                <div class="flex center">
+                    <i :class="`iconfont  f-14 ${showAccountModal ? 'icon-shangjiantou' : 'icon-xiajiantou'}`"></i>
+                </div>
+            </div>
+
+            <div class="label lh-28 flex center-v">
+                <span>{{ t('validator.ownValidator') }}</span>
+                <van-popover v-model:show="stakerModal" theme="dark" placement="bottom-start">
+                    <p class="pl-10 pr-10">{{ t("validator.ownValidatorTip") }}</p>
+                    <template #reference>
+                        <van-icon name="question hover" @mouseover="stakerModal = true" @mouseleave="stakerModal = false" />
+                    </template>
+                </van-popover>
+            </div>
+            <div>
+                <ValidCard v-for="item in myAccounts" :key="item.Addr" :title="item.Addr" :data="item" @handleClick="handleClick(item)" />
+            </div>
+            <div class="flex between  pt-10 " v-if="coefficient < 70 && isValidator">
+                <div class="lh-14 flex center-v pr-10 neutral ">{{ t('minerspledge.resetBtnTip', { value: resetWeightNum }) }}</div>
+                <div class="flex center">
+                    <div class="add-btn flex center hover" @click="handleShowReconveryModal">
+                        <i class="iconfont icon-plus mr-4"></i>
+                        <span> {{ t('common.recovery') }} </span>
+                    </div>
+                </div>
             </div>
             <div class="label lh-28  flex center-v">
-                <span>Validators</span>
+                <span>{{ t('validator.otherValidator') }}</span>
                 <van-popover v-model:show="validModal" theme="dark" placement="bottom-start">
-                    <p class="pl-10 pr-10">{{ t("sendto.gastit") }}</p>
+                    <p class="pl-10 pr-10">{{ t("validator.otherValidatorTip") }}</p>
                     <template #reference>
                         <van-icon name="question hover" @mouseover="validModal = true" @mouseleave="validModal = false" />
                     </template>
                 </van-popover>
             </div>
             <div class="valist">
-                <ValidCard v-for="item in stakerExtensions" :key="item.Addr" :data="item" :title="item.Addr" @handleClick="handleClick(item)" />
-                <div class="flex between  pt-10 " v-if="coefficient < 70 && isValidator">
-                    <div class="lh-14 flex center-v pr-10 neutral ">{{ t('minerspledge.resetBtnTip', { value: resetWeightNum }) }}</div>
-                    <div class="flex center">
-                        <div class="add-btn flex center hover" @click="handleShowReconveryModal">
-                            <i class="iconfont icon-icplus mr-4"></i><span> {{ t('common.recovery') }} </span>
-                        </div>
-                    </div>
-                </div>
+                <ValidCard v-for="item in otherAccounts" :key="item.Addr" :data="item" :title="item.Addr" @handleClick="handleClick(item)" />
+
             </div>
             <div class="add-valid-btn flex center mt-12 mb-12" @click="showValidModal = true"><van-icon name="plus" class="mr-8" />{{ t('validator.addValids') }}</div>
         </div>
         <div class="van-hairline--top"></div>
         <div class="staker-card pt-8">
             <div class="label lh-28  flex center-v">
-                <span>{{t('validator.totalStaking')}}</span>
+                <span>{{ t('validator.totalStaking') }}</span>
                 <van-popover v-model:show="totalModal" theme="dark" placement="bottom-start">
                     <p class="pl-10 pr-10">{{ t("common.exchange_pledge") }}</p>
                     <template #reference>
@@ -60,15 +69,15 @@
                 </van-popover>
             </div>
             <div class="staker-con flex center-v">
-                <span>{{ totalPledgeAmount }}ERB</span>
+                <span>{{ allTotalPledgeAmount }}ERB</span>
             </div>
         </div>
         <div class="van-hairline--top"></div>
         <div class="staker-card pt-8">
             <div class="label lh-28  flex center-v">
-                <span>{{t('validator.amount')}}</span>
+                <span>{{ t('validator.amount') }}</span>
                 <van-popover v-model:show="amountModal" theme="dark" placement="bottom-start">
-                    <p class="pl-10 pr-10">{{ t("sendto.gastit") }}</p>
+                    <p class="pl-10 pr-10">{{ t("validator.amountTip") }}</p>
                     <template #reference>
                         <van-icon name="question hover" @mouseover="amountModal = true" @mouseleave="amountModal = false" />
                     </template>
@@ -90,22 +99,15 @@
                 </div>
             </van-form>
         </div>
-        <div class="flex evenly mt-24 pb-24 btnBox" v-if="isStaker">
+        <div class="flex evenly mt-24 mb-24 btnBox" v-if="isStaker">
             <van-button @click="handleMinusClick" :disabled="freezeStatus">
-                <el-tooltip
-              popper-class="tooltip2"
-              class="box-item"
-              effect="dark"
-              :content="t('minerspledge.closeTip2')"
-              placement="top"
-              trigger="hover"
-            >
-                <div  :class="`hover redeemBtn ${freezeStatus ? ' disabled' : ''}`">
-                    {{ t('createExchange.pledgeRed') }}
-                </div>
+                <el-tooltip popper-class="tooltip2" class="box-item" effect="dark" :content="t('minerspledge.closeTip2')" placement="top" trigger="hover">
+                    <div :class="`hover redeemBtn ${freezeStatus ? ' disabled' : ''}`">
+                        {{ t('createExchange.pledgeRed') }}
+                    </div>
 
                 </el-tooltip>
-            
+
             </van-button>
             <van-button type="primary" @click="handleAddClick">{{ t('bourse.addTit') }}</van-button>
         </div>
@@ -118,7 +120,7 @@
     <ValidListModal v-model="showValidModal" @confirm="childConfirm" @cancel="showValidModal = false" @error="handleMinusError" />
     <MinusStackDialog v-model:show="showMinusDialog" @confirm="minusConfirm" :to="toAddr" :minusNumber="addNumber" :amount="totalPledgeAmount" />
     <CommonModal v-model="showReconveryModal" :title="t('validator.recoveryCred')">
-        <ReconveryDetail @cancel="showReconveryModal = false" @confirm="reconveryConfirm" :data="reconveryDetail"  />
+        <ReconveryDetail @cancel="showReconveryModal = false" @confirm="reconveryConfirm" :data="reconveryDetail" />
     </CommonModal>
     <AddStackDialog :address="accountInfo.address" :to="toAddr" :amount="totalPledgeAmount" :addNumber="addNumber" v-model:show="showAddDialog" @error="handleAddError" @open="addStakeConfirm" />
 </template>
@@ -165,11 +167,10 @@ const showAddDialog = ref(false)
 const { state, dispatch, getters } = useStore()
 const accountInfo = computed(() => state.account.accountInfo)
 const ethAccountInfo = computed(() => state.account.ethAccountInfo)
-const addProfit = ref('')
 const toAddr = ref('')
 const value2 = ref(0)
 const isError = ref(false)
-const addNumber: Ref<number> = ref(0)
+const addNumber: Ref<number> = ref()
 const showReconveryModal = ref(false);
 const reconveryDetail = ref({});
 const showMinusDialog = ref(false)
@@ -206,7 +207,7 @@ watch(() => ethAccountInfo.value, (n) => {
     deep: true,
 })
 
-const updateAddrInitData = async() => {
+const updateAddrInitData = async () => {
     const list = ethAccountInfo.value.StakerExtension?.StakerExtensions || []
     const totalPledge = list.length ? list.reduce((cur: any, b: any) => cur + new BigNumber(b.Balance).div(1000000000000000000).toNumber(), 0) : 0
     stakerExtensions.value = list.map((item: any, idx: number) => {
@@ -218,17 +219,18 @@ const updateAddrInitData = async() => {
             Balance: myPledge,
             percent: new BigNumber(myPledge).div(totalPledge).multipliedBy(100).toFixed(2),
             totalPledge,
-            icon: getRandomIcon(),
+            icon: accountInfo.value.address.toUpperCase() == item.Addr.toUpperCase() ? accountInfo.value.icon : getRandomIcon(),
             selected: false
         }
-    }).sort((a: any, b: any) => b.Balance - a.Balance)
+    })
 
     myExtensions.value = list.map((item: any) => {
         return {
             ...item,
             Balance: new BigNumber(item.Balance).div(1000000000000000000).toFixed(2)
         }
-    }).sort((a: any, b: any) => a.Balance - b.Balance)
+    })
+    console.log('stakerExtensions', stakerExtensions.value)
     const users = list.map((item: { Addr: string; }) => item.Addr)
     if (users && users.length) {
         getUsersCoefficient({ users: JSON.stringify(users) }).then(res => {
@@ -240,14 +242,32 @@ const updateAddrInitData = async() => {
                     }
                 })
             })
+            stakerExtensions.value.sort((a: any, b: any) => a.Balance - b.Balance).sort((a, b) => {
+                if (b.Addr.toUpperCase() === accountInfo.value.address.toUpperCase()) {
+                    return 1
+                } else {
+                    return -1
+                }
+            })
         })
     }
     const wallet = await getWallet();
     const blockNum = await wallet.provider.getBlockNumber();
     console.log('blockNum', blockNum)
     blockNumber.value = blockNum
+    const myAccount = stakerExtensions.value.find(item => item.Addr.toUpperCase() == accountInfo.value.address.toUpperCase())
+    if (!myAccount) {
+        const { address, icon } = accountInfo.value
+        stakerExtensions.value.unshift({
+            Addr: address,
+            icon,
+            Balance: 0,
+            percent: 0,
+            selected: true
+        })
+    }
     toAddr.value = stakerExtensions.value.length ? stakerExtensions.value[0].Addr : ''
-    if(stakerExtensions.value && stakerExtensions.value.length) {
+    if (stakerExtensions.value && stakerExtensions.value.length) {
         stakerExtensions.value[0].selected = true
     }
 
@@ -266,7 +286,7 @@ const handleSliderChange = (e) => {
     console.log(e)
     addNumber.value = e
 }
-const childConfirm = async(v: any) => {
+const childConfirm = async (v: any) => {
     console.log(v)
     const hasAddr = stakerExtensions.value.find(item => item.Addr.toUpperCase() == v.Addr.toUpperCase())
     if (hasAddr) {
@@ -387,7 +407,8 @@ const minusConfirm = async () => {
 }
 const handleMinusError = (err: any) => {
     // showMinusDialog.value = false
-    $wtoast.fail(t('sendto.insufficientfunds'))
+    console.warn('hahahah', err)
+    $wtoast.fail(err.reason)
 }
 const reconveryConfirm = async () => {
     showReconveryModal.value = false;
@@ -437,7 +458,7 @@ const reconveryConfirm = async () => {
 }
 
 const handleAddClick = () => {
-    const e: any = stakerExtensions.value.find(item => item.selected)
+    const e = stakerExtensions.value.find(item => item.selected)
     if (!e) {
         $wtoast.warn(t('validator.pleaseSelectedAddr'))
         return
@@ -491,7 +512,7 @@ const addStakeConfirm = async () => {
 
 const handleAddError = (err: any) => {
     // showAddDialog.value = false
-    $wtoast.fail(t('sendto.insufficientfunds'))
+    $wtoast.fail(err.reason)
 }
 
 const handleClick = (item: any) => {
@@ -506,10 +527,15 @@ const handleClick = (item: any) => {
         }
     })
 }
-
+// now account total pledgeAmount
 const totalPledgeAmount = computed(() => {
     const myExtension = stakerExtensions.value.find(item => item.Balance && item.selected)
     return myExtension ? myExtension.Balance : 0
+})
+
+// all account total pledge
+const allTotalPledgeAmount = computed(() => {
+    return stakerExtensions.value.reduce((a, c) => a + c.Balance, 0)
 })
 
 const sliderMaxNum = computed(() => {
@@ -547,7 +573,7 @@ const isStaker = computed(() => {
 
 const freezeStatus = computed(() => {
     const select = stakerExtensions.value.find(item => item.selected)
-    if(select && select.BlockNumber) {
+    if (select && select.BlockNumber) {
         // TODO: 6307200
         return (blockNumber.value - select.BlockNumber) > 1 ? false : true
     } else {
@@ -559,6 +585,14 @@ const resetWeightNum = computed(() => {
     const { Coefficient } = ethAccountInfo.value
     const sendAmount = (70 - Coefficient) / 10;
     return sendAmount
+})
+
+const otherAccounts = computed(() => {
+    return stakerExtensions.value.filter(item => item.Addr.toUpperCase() != accountInfo.value.address.toUpperCase())
+})
+
+const myAccounts = computed(() => {
+    return stakerExtensions.value.filter(item => item.Addr.toUpperCase() == accountInfo.value.address.toUpperCase())
 })
 
 const back = () => {

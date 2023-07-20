@@ -1,80 +1,55 @@
 <template>
-  <NavHeader
-    @clickLeft="handleLeft"
-
-    @handleShowAccount="handleShowAccount"
-    :showAccount="actionSheetShow"
-  ></NavHeader>
+  <NavHeader @clickLeft="handleLeft" @handleShowAccount="handleShowAccount" :showAccount="actionSheetShow"></NavHeader>
   <div class="wallet">
     <div v-if="!loading" class="container page-container">
       <div class="circle flex center">
-      <div            v-show="validator">
-        <van-popover
 
-v-model:show="showExpresion"
-theme="dark"
-:close-on-click-outside="false"
-z-index="1"
-placement="right"
-trigger="manual"
-:class="`popover-btn-tip ${expresionClass}bg`"
->
-<div :class="`${expresionClass}box popover-expresion p-10 hover`">
-  <i18n-t tag="div" v-if="expresionClass == 'smile'" keypath="minerspledge.smileTip">
-    <template v-slot:value>{{Coefficient}}</template>
-    <template v-slot:btn>
-      <span class="gotIt"  @click="showExpresion = false">{{t('minerspledge.gotIt')}}</span>
-    </template>
-  </i18n-t>
-  <i18n-t tag="div" v-if="expresionClass == 'sad'" keypath="minerspledge.homeTip">
-    <!-- <template v-slot:value>{{Coefficient}}</template> -->
-    <template v-slot:btn>
-      <span class="gotIt"  @click="showExpresion = false">{{t('minerspledge.gotIt')}}</span>
-    </template>
-  </i18n-t>
-  <i18n-t tag="div" v-if="expresionClass == 'neutral'" keypath="minerspledge.homeTip">
-    <!-- <template v-slot:value>{{Coefficient}}</template> -->
-    <template v-slot:btn>
-      <span class="gotIt" @click="showExpresion = false">{{t('minerspledge.gotIt')}}</span>
-    </template>
-  </i18n-t>
-</div>
-<template #reference>
-  <div
-    class="hover pl-4 pr-4"
-  >
-  <div class="account-icon">
-<AccountIcon :data="accountInfo.icon" />
-</div>
-  </div>
-</template>
-</van-popover>
+        <van-popover v-model:show="showExpresion" theme="dark" :close-on-click-outside="false" z-index="1" placement="right" trigger="manual" :class="`popover-btn-tip validator-popover  ${expresionClass}bg`">
+          <div :class="`${expresionClass}box popover-expresion p-10 hover`">
+            <i18n-t tag="div" v-if="expresionClass == 'smile'" keypath="minerspledge.smileTip">
+              <template v-slot:value>{{ Coefficient }}</template>
+              <template v-slot:btn>
+              </template>
+            </i18n-t>
+            <i18n-t tag="div" v-if="expresionClass == 'sad'" keypath="minerspledge.homeTip">
+              <template v-slot:btn>
+                <span class="gotIt" @click="toStaker">{{ t('minerspledge.gotIt') }}</span>
+              </template>
+            </i18n-t>
+            <i18n-t tag="div" v-if="expresionClass == 'neutral'" keypath="minerspledge.homeTip">
+              <template v-slot:btn>
+                <span class="gotIt" @click="toStaker">{{ t('minerspledge.gotIt') }}</span>
+              </template>
+            </i18n-t>
+          </div>
+          <template #reference>
+            <div class="hover">
+              <div class="account-icon">
+                <AccountIcon :data="accountInfo.icon" />
+              </div>
+            </div>
+          </template>
+        </van-popover>
 
-      </div>
-      <div class="account-icon"  v-show="!validator" >
-      <AccountIcon :data="accountInfo.icon" />
-      </div>
+        <!-- 
+        <div class="account-icon" v-show="!validator">
+          <AccountIcon :data="accountInfo.icon" />
+        </div> -->
       </div>
       <AccountModal v-model:show="showModal" @close="closeModal" />
 
       <div class="account-name text-center hover" @click="showaccount">
         <span>{{ accountInfo.name }}</span>
         <div>
-          <i
-            :class="`iconfont ${
-              !actionSheetShow ? 'icon-xiala' : 'icon-shangla'
-            }`"
-          ></i>
+          <i :class="`iconfont ${!actionSheetShow ? 'icon-xiala' : 'icon-shangla'
+            }`"></i>
         </div>
       </div>
-      <div class="account-amount text-center" >
+      <div class="account-amount text-center">
         {{ decimal(accountInfo.amount) }} {{ currentNetwork.currencySymbol }}
       </div>
 
-      <div
-        class="account-address van-ellipsis text-center hover"
-        @click="toCopy"
-      >
+      <div class="account-address van-ellipsis text-center hover" @click="toCopy">
         {{ addressMask(accountInfo.address) }}
       </div>
       <div class="flex center actions">
@@ -98,26 +73,14 @@ trigger="manual"
           <div class="action-name text-center">{{ t("wallet.swap") }}</div>
         </div>
       </div>
-      <van-tabs v-model:active="active" sticky :offset-top="48" @click-tab="onClickTab" >
+      <van-tabs v-model:active="active" sticky :offset-top="48" @click-tab="onClickTab">
         <div class="listType" v-show="active == 1">
-          <i
-            class="iconfont icon-fenlei2"
-            @click="handleSetListType1(1)"
-            v-if="layoutType == 'list'"
-          ></i>
-          <i
-            class="iconfont icon-liebiao"
-            @click="handleSetListType1(2)"
-            v-else
-          ></i>
+          <i class="iconfont icon-fenlei2" @click="handleSetListType1(1)" v-if="layoutType == 'list'"></i>
+          <i class="iconfont icon-liebiao" @click="handleSetListType1(2)" v-else></i>
         </div>
         <van-tab :title="$t('wallet.token')">
           <TokenCard :data="myToken" :networkIcon="false" />
-          <TokenCard
-            v-for="(item, idx) in accountTokens"
-            :key="idx"
-            :data="item"
-          />
+          <TokenCard v-for="(item, idx) in accountTokens" :key="idx" :data="item" />
           <div class="flex center noTokenBox">
             <div>
               <div class="text-center tip1">
@@ -133,14 +96,7 @@ trigger="manual"
           <NftList v-if="active === 1" />
         </van-tab>
         <van-tab :title="$t('wallet.SNFTs')">
-              <SNftList
-                @success="isSelect = false"
-                v-model:isSelect="isSelect"
-                :active="active"
-                v-if="active === 2"
-                @updateLength="handleLength"
-                @showSwitch="handleShowSwitch"
-              />
+          <SNftList @success="isSelect = false" v-model:isSelect="isSelect" :active="active" v-if="active === 2" @updateLength="handleLength" @showSwitch="handleShowSwitch" />
         </van-tab>
       </van-tabs>
     </div>
@@ -153,12 +109,7 @@ trigger="manual"
       <Transition name="sliderLeft">
         <div class="help-center-box" v-if="!isSelect || active === 0">
           <div class="flex right pl-20 pr-20">
-            <div
-              class="help-btn flex center hover"
-              @click="toHelp"
-              @mouseover="showHelp = true"
-              @mouseout="showHelp = false"
-            >
+            <div class="help-btn flex center hover" @click="toHelp" @mouseover="showHelp = true" @mouseout="showHelp = false">
               <i class="iconfont icon-bangzhuzhongxin31"></i>
             </div>
             <div class="hint pl-10 pr-10" v-show="showHelp">
@@ -170,14 +121,8 @@ trigger="manual"
       <Transition name="sliderLeft">
         <div class="btn-groups" v-if="active == 1">
           <div class="pl-20 pr-20 flex right center-v">
-            <div
-              :class="[
-                'wallet-hint pt-10 pb-10 pl-10 pr-10 mr-12',
-                isExchangerFlag ? 'wallet-hint-h' : '',
-              ]"
-              @click="toCreate"
-            >
-              <span >{{ t("castingnft.createNFT") }}</span>
+            <div :class="['wallet-hint pt-10 pb-10 pl-10 pr-10 mr-12']" @click="toCreate">
+              <span>{{ t("castingnft.createNFT") }}</span>
             </div>
             <div class="wallet-suspension hover" @click="toCreate">
               <van-icon name="plus" />
@@ -187,10 +132,7 @@ trigger="manual"
       </Transition>
 
     </div>
-    <GuideModal
-      @guideModalSuccess="guideModalSuccess"
-      v-model="showGuideModal"
-    />
+    <GuideModal @guideModalSuccess="guideModalSuccess" v-model="showGuideModal" />
     <guide-one></guide-one>
     <guide-two></guide-two>
     <guide-three></guide-three>
@@ -297,10 +239,10 @@ export default {
     "guide-two": GuideModal2,
     "guide-three": GuideModal3,
     "guide-fore": GuideModal4,
-    "guide-five":GuideModal5,
-    "guide-six":GuideModal6,
-    'guide-seven':GuideModal7,
-    'guide-eight':GuideModal8,
+    "guide-five": GuideModal5,
+    "guide-six": GuideModal6,
+    'guide-seven': GuideModal7,
+    'guide-eight': GuideModal8,
     "dialog-warning": dialogWarning,
   },
   setup() {
@@ -381,7 +323,7 @@ export default {
 
 
     const actionSheetShow = ref(false);
-    const tobuy = () => {};
+    const tobuy = () => { };
     let transactionData: any = reactive({ data: {} });
     const showTransactionModal: Ref<boolean> = ref(false);
     const handleView = (e: any) => {
@@ -398,7 +340,7 @@ export default {
       showSlider();
     };
 
-   
+
     const toSend = () => {
       router.push({ name: "send" });
     };
@@ -411,12 +353,8 @@ export default {
         console.error(e);
       }
     };
-    const isExchangerFlag = computed(
-      () => store.state.account.exchangeStatus.ExchangerFlag
-    );
-    const isExchangeStatusStatus = computed(
-      () => store.state.account.exchangeStatus.status == 2
-    );
+
+
     const pageData = reactive({ nftList: new Array<any>() });
     const pageDatas = reactive({ nftLists: [] });
     const loadNft: Ref<boolean> = ref(false);
@@ -425,21 +363,12 @@ export default {
     const autoexchange = ref(0);
     const autostat = ref(false);
 
-    const handleGetValidator = async() => {
+    const handleGetValidator = async () => {
       dispatch('account/getValidator')
     }
 
-    eventBus.on('changeAccount', async() => {
-     dispatch('account/getEthAccountInfo')
-     dispatch("account/updateBalance");
-     handleGetValidator()
-    })
-    eventBus.on('walletReady',(wallet) => {
-      // dispatch("account/updateBalance");
-      handleGetValidator()
-    })
 
-    
+
 
     let time: any = null;
     const getWalletBalance = () => {
@@ -447,21 +376,28 @@ export default {
       dispatch("account/updateTokensBalances");
     }
     const handleLoopBalance = () => {
-      if(!time) {
+      if (!time) {
         time = setInterval(() => {
           getWalletBalance()
-      }, 10000);
+        }, 10000);
       }
     };
-    onMounted(async() => {
+    onMounted(async () => {
       dispatch('account/waitTxQueueResponse')
-      // const wallet = await getWallet()
-      // const res = await wallet.provider.send('eth_call', [{
-      //   to:'0x6FCBf98129d354A0f3403C6E418BD7c991cc7c8f',data: '0x4b165090'
-      // },'latest'])
-      // console.log('res', res)
       eventBus.on('guideSnftModal', (n) => {
         active.value = n
+      })
+      eventBus.on('changeAccount', async (e) => {
+        console.warn('changeAccount', e)
+        dispatch('account/getEthAccountInfo')
+        dispatch("account/updateBalance");
+        handleGetValidator()
+      })
+      eventBus.on('walletReady', (wallet) => {
+        handleGetValidator()
+      })
+      eventBus.on('beforeChangeAccount', async () => {
+        showExpresion.value = false
       })
       dispatch('account/getEthAccountInfo')
       dispatch("transfer/clearTx");
@@ -474,7 +410,7 @@ export default {
           initExchangeData();
         }
       });
-      
+
       handleLoopBalance()
     });
     onUnmounted(() => {
@@ -482,6 +418,7 @@ export default {
       eventBus.off('changeAccount')
       eventBus.off('walletReady')
       eventBus.off('beforeChangeAccount')
+      eventBus.off('guideSnftModal')
     });
     onDeactivated(() => {
       clearInterval(time);
@@ -514,22 +451,23 @@ export default {
       window.open("https://www.wormholes.com/docs/wallet/");
     };
 
-    const handleShowSwitch = (v:any) => {
+    const handleShowSwitch = (v: any) => {
       isSelect.value = v
     }
     const showExpresion = ref(false)
-    eventBus.on('beforeChangeAccount', async() => {
-      showExpresion.value = false
-    })
+
     const ethAccountInfo = computed(() => store.state.account.ethAccountInfo)
     watch(() => validator.value, (n) => {
       console.warn('validator', n)
-      if(n) {
-        showExpresion.value = true
+      if (n) {
+        let time = setTimeout(() => {
+          showExpresion.value = true
+          clearTimeout(time)
+        }, 300)
       } else {
         showExpresion.value = false
       }
-    },{
+    }, {
       deep: true,
       immediate: true
     })
@@ -542,26 +480,32 @@ export default {
       if (Coefficient.value > 50) return "smile";
     });
 
-    const onClickTab = ({name}: any) => {
+    const onClickTab = ({ name }: any) => {
       console.warn('onClickTab', name)
-      if(name != 2) {
+      if (name != 2) {
         isSelect.value = false
       }
     }
-      // Control nft
-      const handleSetListType1 = (type: number) => {
+    // Control nft
+    const handleSetListType1 = (type: number) => {
       dispatch("system/setListLayout", type == 1 ? "card" : "list");
     };
-     const toCreate = () => {
+    const toCreate = () => {
       if (Number(accountInfo.value.amount) == 0) {
         $wtoast.warn(t("wallet.haveNoMoney"));
         return false;
       }
       router.push({ name: "generateNFT" });
-      };
+    };
+
+
+    const toStaker = () => {
+      router.push({ name: "staker" })
+    }
 
     return {
       toCreate,
+      toStaker,
       handleSetListType1,
       onClickTab,
       handleShowSwitch,
@@ -599,7 +543,6 @@ export default {
       handleClose,
       toSend,
       handleLeft,
-      isExchangerFlag,
       guideModalSuccess,
       theme,
       loading,

@@ -336,19 +336,6 @@ export default {
           item.label = label
         }
       })
-      // if (flag) {
-      //   Toast.loading({
-      //     message: i18n.global.t('common.asyncData'),
-      //     duration: 0
-      //   })
-      //   setTimeout(() => {
-      //     if (flag) {
-      //       location.reload()
-      //     }
-      //   },5000)
-      // }
-
-
     },
     // Example Update the ID of the primary network chain
     UPDATE_WORMHOLES_CHAINID(state: State, chainId: number) {

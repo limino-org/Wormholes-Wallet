@@ -2,7 +2,13 @@ $fontColor: #848484;
 
 .staker-validator-page {
     padding: 15px 15px 0;
-
+    .iconBox {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid #fff;
+    }
     .staker-card {
         .stakerAddr {
             background: #F3F3F3;
@@ -15,9 +21,6 @@ $fontColor: #848484;
 
             i {
                 color: $fontColor;
-                position: absolute;
-                right: 10px;
-                top: 15px;
             }
         }
 

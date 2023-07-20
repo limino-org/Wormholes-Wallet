@@ -71,7 +71,7 @@ export default {
         modalTit:"验证者",
         placeholder:"选择或输入地址",
         addValids:"添加验证者",
-        pageTit:"成为质押者/验证者",
+        pageTit:"验证者/质押者",
         recoveryCred:"信誉恢复",
         addressErr:"请输入或者选择要质押的地址",
         addrHasExits:"地址已存在",
@@ -85,7 +85,12 @@ export default {
         updateLoadingText:"数据更新中...",
         leftPledgeErr:"最少质押金额为700ERB，您可以选择赎回全部质押金额",
         totalStaking:"总质押金额",
-        amount:"账户余额"
+        amount:"账户余额",
+        amountTip:"提示:您帐户中的剩余可用余额。",
+        ownValidator:"您自己的验证器地址",
+        ownValidatorTip:"验证者需要将至少700个ERB押注到他们自己的地址，才能成为合格的完整节点，他们押注的越多，他们的权重就越高。",
+        otherValidator:"其他验证器地址",
+        otherValidatorTip:"通过将ERB与具有高在线权重的验证器或指定的验证器进行押注，参与者可以参与SNFT挖矿。"
     },
     // 引导窗口
     bootstrapwindow: {
@@ -293,7 +298,7 @@ export default {
         "utility": "实用"
     },
     "castingnft": {
-        "createNFT": "创造 NFT",
+        "createNFT": "链层NFT",
         "upload": "上传",
         "information": "信息",
         "done": "完成",
@@ -355,7 +360,7 @@ export default {
         imported: '导入',
         send: '发送',
         add: '接收',
-        browser: '虫洞浏览器',
+        browser: '浏览器',
         backstage: '后台',
         autoNFTexchange: '成为质押者',
         wallet: '钱包',
@@ -369,7 +374,7 @@ export default {
         exchangemanagement: '质押者管理',
         closeexchange: '关闭质押者',
         minerspledge: '成为验证者',
-        aboutAs: "虫洞官网",
+        aboutAs: "Erbie官网",
         receiveAward: "领取奖励",
         help: '使用帮助',
         snftCreator:"S-NFT创造者",
@@ -1128,7 +1133,7 @@ export default {
     },
     // sendNFT
     sendNFT: {
-        sendNFT: "发送NFT",
+        sendNFT: "NFT管理",
         name: "名称",
         address: "NFT地址",
         amount: "数量",

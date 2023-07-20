@@ -1,9 +1,10 @@
 
 import { httpGet,httpPost } from '../request'
+import { nftaimint } from './nft'
 const isProduct = process.env.VUE_APP_NODE_ENV == 'production' ? true : false
-const aiService = '/stakerApi'
 
-const aiServicePath = isProduct? '' :aiService
+
+const aiServicePath = isProduct? '' :nftaimint
 export type ValidParams = {
     index: string
     count: string

@@ -235,7 +235,7 @@ export default {
 
 	},
   "castingnft": {
-		"createNFT": "NFTs Create",
+		"createNFT": "ChainLayer NFT",
 		"upload": "Upload",
 		"information": "Information",
 		"done": "Done",
@@ -279,7 +279,7 @@ export default {
 		"utility": "Utility"
 	},
   createNft: {
-		createNFTs: "NFTs Create",
+		createNFTs: "ChainLayer NFT",
 		findMore: "Find More",
 		pullagain: "Failed to pull data, please pull again",
 		retry: "Retry",
@@ -290,7 +290,7 @@ export default {
     imported: 'Imported',
     send: 'Send',
     add: 'Receive',
-    browser: 'Blockchain Explorer',
+    browser: 'Explorer',
     backstage: 'Backstage',
     autoNFTexchange: 'AutoNFTexchange',
     wallet: 'Wallet ',
@@ -304,7 +304,7 @@ export default {
     exchangemanagement: 'Staker Management',
     closeexchange: 'Close the Staker',
     minerspledge: 'Become a Validator',
-    aboutAs: "Official Website",
+    aboutAs: "Erbie Website",
     receiveAward: "receive award",
     help: 'Help Center',
     snftCreator:"SNFT Creator",
@@ -830,7 +830,7 @@ export default {
     modalTit:"Staker",
     placeholder:"Select or enter an address",
     addValids:"Add Validators",
-    pageTit:"Become a Staker / Validator",
+    pageTit:"Validator/Staker",
     recoveryCred:"Credibility Recovery",
     addressErr:"Please enter or select the address to pledge",
     addrHasExits:"Address already exists",
@@ -844,7 +844,13 @@ export default {
     updateLoadingText:"Data uploading...",
     leftPledgeErr:"The minimum pledge amount is 700ERB and you can choose to redeem the entire pledge amount",
     totalStaking:"Total Staking",
-    amount:"Amount"
+    amount:"Amount",
+    amountTip:"Tips: The remaining available balance in your account.",
+		ownValidator:"Your own validator address",
+    ownValidatorTip:"Validators need to stake a minimum of 700 ERB to their own address to become qualified full nodes, and the more they stake, the higher their weight will be.",
+    otherValidator:"Other validator addresses",
+    otherValidatorTip:"Stakers can participate in SNFT mining by staking ERB either with validators who have high online weights or with specified validators."
+
 
 
 },
@@ -1113,7 +1119,7 @@ export default {
 
   },
   sendNFT: {
-    sendNFT: "Send NFT",
+    sendNFT: "NFT Management",
     name: "Name",
     address: "NFT Address",
     amount: "Amount",

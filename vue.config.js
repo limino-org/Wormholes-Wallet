@@ -82,22 +82,6 @@ module.exports = {
           '^/exchans': ''
         }
       },
-      "/stakerApi": {
-        target: 'http://192.168.1.237:18081',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/stakerApi': ''
-        }
-        
-      },
-
-      '/walletIframe': {
-        target: 'http://192.168.27.48:8080/wallet/#/',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/walletIframe': ''
-        }
-      },
       '/nftApi': {
         target: 'http://43.129.181.130:3001',
         changeOrigin: true,

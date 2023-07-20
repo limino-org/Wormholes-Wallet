@@ -8,7 +8,7 @@
             </van-field>
             <div class="valid-list scrollBar" @scroll="scrollList">
                 <div v-for="item in list" :key="item.useraddr" :class="`flex valid-card pl-10 pr-10 pt-12 pb-12 ${item.selected ? 'selected' : ''}`" :title="item.useraddr" @click="handleSelect(item)">
-                    <div class="flex center">
+                    <div class="flex center iconBox">
                         <AccountIcon :data="item.icon" />
                     </div>
                     <div class="info flex column between ml-8 flex-1">
@@ -200,7 +200,13 @@ const cancelClick = () => {
         cursor: pointer;
         color: #838383;
         transition: ease .26s;
-
+        .iconBox {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 1px solid #fff;
+        }
         &:hover {
             background-color: #F8F3F9;
         }
